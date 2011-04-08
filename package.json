@@ -1,0 +1,15 @@
+{
+    "name": "soap",
+    "version": "0.0.1",
+    "description": "A minimal node SOAP client",
+    "engines": { "node": ">=0.4.0" },
+    "author": "Vinay Pulim <v@pulim.com>",
+    "repository" : { 
+        "type":"git", 
+        "url":"https://github.com/milewise/node-soap.git" },
+    "main": "./index.js",
+    "directories": { "lib": "./lib" },
+    "licenses": [{ 
+        "type" :  "Apache License, Version 2.0",
+        "url" :   "http://www.apache.org/licenses/LICENSE-2.0" }]
+}
