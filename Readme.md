@@ -19,7 +19,7 @@ Install with [npm](http://github.com/isaacs/npm):
         });
     });
 
-### soap.listen(server, path, services, wsdl) - create a new SOAP server that listens on <path> and provides <services>. <wsdl> is an xml string that defines the service.
+### soap.listen(*server*, *path*, *services*, *wsdl*) - create a new SOAP server that listens on *path* and provides *services*. *wsdl* is an xml string that defines the service.
 
     var myService = { 
         MyService: { 
@@ -60,13 +60,13 @@ An instance of Client is passed to the soap.createClient callback.  It is used t
 
     client.setSecurity(new WSSecurity('username', 'password'))
     
-### Client.<method>(args, callback) - call <method> on the SOAP service.  
+### Client.*method*(args, callback) - call *method* on the SOAP service.  
 
     client.MyFunction({name: 'value'}, function(err, result) {
         // result is a javascript object        
     })
     
-### Client.<service>.<port>.<method>(args, callback) - call a method using a specific service and port
+### Client.*service*.*port*.*method*(args, callback) - call a *method* using a specific *service* and *port*
 
     client.MyService.MyPort.MyFunction({name: 'value'}, function(err, result) {
         // result is a javascript object                
