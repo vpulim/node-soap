@@ -4,12 +4,17 @@
     "description": "A minimal node SOAP client",
     "engines": { "node": ">=0.4.0" },
     "author": "Vinay Pulim <v@pulim.com>",
+    "dependencies": {
+        "node-expat": ">= 1.3.0",
+        "compress": ">= 0.1.9"
+     },
     "repository" : { 
         "type":"git", 
         "url":"https://github.com/milewise/node-soap.git" },
     "main": "./index.js",
     "directories": { "lib": "./lib" },
+    "keywords": ["soap"],
     "licenses": [{ 
-        "type" :  "Apache License, Version 2.0",
-        "url" :   "http://www.apache.org/licenses/LICENSE-2.0" }]
+        "type" :  "MIT License",
+        "url" :   "http://www.opensource.org/licenses/mit-license.php" }]
 }
