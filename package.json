@@ -1,6 +1,6 @@
 {
     "name": "soap",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "A minimal node SOAP client",
     "engines": { "node": ">=0.4.0" },
     "author": "Vinay Pulim <v@pulim.com>",
