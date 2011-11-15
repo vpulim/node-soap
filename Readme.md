@@ -2,7 +2,6 @@ This module lets you connect to web services using SOAP.  It also provides a ser
 
 Current limitations:
 
-* Only the *document* style is supported (no rpc support yet)
 * Only a few XSD Schema types are supported
 * Only WS-Security is supported using UsernameToken and PasswordText encoding
 
