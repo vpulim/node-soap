@@ -27,7 +27,8 @@ Install with [npm](http://github.com/isaacs/npm):
   });
 ```
 
-### soap.listen(*server*, *path*, *services*, *wsdl*) - create a new SOAP server that listens on *path* and provides *services*. *wsdl* is an xml string that defines the service.
+### soap.listen(*server*, *path*, *services*, *wsdl*) - create a new SOAP server that listens on *path* and provides *services*.
+*wsdl* is an xml string that defines the service.
 
 ``` javascript
   var myService = {
@@ -74,6 +75,19 @@ If server.authenticate is not defined no authentation will take place.
     token = security.UsernameToken, user = token.Username,
             password = token.Password, nonce = token.Nonce, created = token.Created;
     return user === 'user' && password === soap.passwordDigest(nonce, created, 'password');
+  };
+```
+
+### server connection authorisation
+
+This is called prior to soap service method
+If the method is defined and returns false the incoming connection is
+terminated.
+
+``` javascript
+  server = soap.listen(...)
+  server.authoriseConnection = function(req) {
+    return true; // or false
   };
 ```
 
