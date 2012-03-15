@@ -1,6 +1,6 @@
 {
     "name": "soap",
-    "version": "0.1.0",
+    "version": "0.1.2",
     "description": "A minimal node SOAP client",
     "engines": { "node": ">=0.4.0" },
     "author": "Vinay Pulim <v@pulim.com>",
@@ -13,6 +13,7 @@
         "url":"https://github.com/milewise/node-soap.git" },
     "main": "./index.js",
     "directories": { "lib": "./lib" },
+    "scripts": {"test": "mocha -R spec -u exports test/*-test.js"},
     "keywords": ["soap"],
     "licenses": [{ 
         "type" :  "MIT License",
