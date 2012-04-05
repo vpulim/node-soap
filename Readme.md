@@ -5,6 +5,23 @@ Current limitations:
 * Only a few XSD Schema types are supported
 * Only WS-Security is supported using UsernameToken and PasswordText encoding
 
+## Update of kaven276's node-soap from milewise's node-soap
+
+### can parse multiRef request, use=encoding support
+
+  Soap request can use multiRef to mapping language's object model to xml, now node-soap can parse the request and mapping it to a javascript object that use object reference as multiRef.
+
+### support both RPC/Document style request/response
+
+### correct method routing
+
+  How to determine the javascript service method? Firstly, use wsdl:service->wsdl:port->wsdlsoap:address.location to determine what binding/portType to use, Secondly, if style=RPC, then treat top element's name under soap body as the portType's method name,
+if style=RPC, then use http header SOAPAction to match the operation's soapAction, if there is no http header SOAPAction or no soapAction defined in wsdl, then check every method's input message's element name to find the match.
+
+### generate minimum of parsed javascript definition object
+
+  For the standard parsed format, remove any child/children when the child or child's useful information is attached to the parent's properties, remove fixed attribute of WSDL xml node, remove parent properties so there is no circular reference. The result is a clean and more clear parsed definition object.
+
 ## Install
 
 Install with [npm](http://github.com/isaacs/npm):
