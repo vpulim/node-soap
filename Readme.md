@@ -18,6 +18,14 @@ Current limitations:
   How to determine the javascript service method? Firstly, use wsdl:service->wsdl:port->wsdlsoap:address.location to determine what binding/portType to use, Secondly, if style=RPC, then treat top element's name under soap body as the portType's method name,
 if style=RPC, then use http header SOAPAction to match the operation's soapAction, if there is no http header SOAPAction or no soapAction defined in wsdl, then check every method's input message's element name to find the match.
 
+### xml namespace support
+
+  For WSDL parsing, different schema definitions will go into their respective schema parsed javascript objects, it allow the same named types/complexTypes/elements/... in different schemas. Formerly, different schema object with same name will just override and keep the last one, it's totally namespace ignorant and has potential serious problems.
+
+  For soap xml generation, the soap envelope has all the xmlns definition(exception for wsdl/soap itself related) defined in the wsdl that not only bring from the wsdl definition element, but from all of the wsdl and its import/include subs. But notice that if a xmlns defined in wsdl's element is conflict with definition element's xmlns map, it may have problems, but it's very rare case.
+
+  The soap request by client or response by server will give top element in soap:body a xml namespace prefix that is defined in envelope. And your javascript object for xml can have object attribute with xml namespace prefix, so the result xml payload will have the same namespace prefix. This way, you can use your javascript to make the right namespaced soap xml.
+
 ### generate minimum of parsed javascript definition object
 
   For the standard parsed format, remove any child/children when the child or child's useful information is attached to the parent's properties, remove fixed attribute of WSDL xml node, remove parent properties so there is no circular reference. The result is a clean and more clear parsed definition object.
