@@ -11,12 +11,53 @@ Current limitations:
 
   Soap request can use multiRef to mapping language's object model to xml, now node-soap can parse the request and mapping it to a javascript object that use object reference as multiRef.
 
-### support both RPC/Document style request/response
+### Fiber integration, support async javascript service
+
+  For soap server, it has javascript service defined, when node-soap received and parse the soap request, it will route to call the javascript service function, and it will take the return value to convert to response soap xml. But the javascript service function may need to call some other file/network async functions to get the final return value, but node-soap will not wait for it, it just synchronously call and get return value. But this version integrate Fiber to support async service.
+
+	var SoapServices = {
+	    'ESyncNotifySPServiceService': {
+	        'ESyncNotifySP': {
+	            'eOrderRelationUpdateNotify': function(args) {
+	                var fiber = Fiber.current;
+	                var oraReqNV = args["eOrderRelationUpdateNotifyRequest"];
+	                Request({
+	                    uri: cfg.psp_url + '.e',
+	                    method: 'post',
+	                    headers: {
+	                        'Content-Type': "application/x-www-form-urlencoded"
+	                    },
+	                    body: QueryString.stringify(oraReqNV)
+	                },
+	                function(error, response, body) {
+	                    if (!error && response.statusCode === 200) {
+	                        fiber.run({
+	                            'eOrderRelationUpdateNotifyResponse': {
+	                                'RecordSequenceID': oraReqNV.RecordSequenceID,
+	                                'ResultCode': body
+	                            }
+	                        });
+	                    } else {
+	                        fiber.run({
+	                            'eOrderRelationUpdateNotifyResponse': {
+	                                'RecordSequenceID': oraReqNV.RecordSequenceID,
+	                                'ResultCode': 1
+	                            }
+	                        });
+	                    }
+	                });
+	                return yield();
+	            }
+	        }
+	    }
+	}
 
 ### correct method routing
 
   How to determine the javascript service method? Firstly, use wsdl:service->wsdl:port->wsdlsoap:address.location to determine what binding/portType to use, Secondly, if style=RPC, then treat top element's name under soap body as the portType's method name,
 if style=RPC, then use http header SOAPAction to match the operation's soapAction, if there is no http header SOAPAction or no soapAction defined in wsdl, then check every method's input message's element name to find the match.
+
+### support both RPC/Document style request/response
 
 ### xml namespace support
 
