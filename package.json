@@ -1,13 +1,11 @@
 {
     "name": "soap",
-    "version": "0.1.3",
+    "version": "0.2.0",
     "description": "A minimal node SOAP client",
-    "engines": { "node": ">=0.4.0" },
+    "engines": { "node": ">=0.6.0" },
     "author": "Vinay Pulim <v@pulim.com>",
     "dependencies": {
-        "node-expat": ">= 1.3.0",
-        "request": "=2.2.6"
-        ,"fibers": "0.6.4"
+        "node-expat": ">= 1.3.0"
      },
     "repository" : { 
         "type":"git", 
