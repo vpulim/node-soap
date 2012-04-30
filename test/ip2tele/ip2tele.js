@@ -1,6 +1,5 @@
 var http = require('http');
-var soap = require('node-soap-ly');
-var moment = require('moment');
+var soap = require('../..');
 var inspect = require('util').inspect;
 var url = require('url');
 var path = require('path');
@@ -37,7 +36,7 @@ var web_server = http.createServer(function(req, res) {
         },
         'ServerInfo': {
             'ServerID': cfg.ServerID,
-            'TimeStamp': moment().format('YYYYMMDDHHmmss')
+            'TimeStamp': +new Date
         }
     }
     console.log(QueryUserInfoRequest);

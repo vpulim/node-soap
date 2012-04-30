@@ -4,12 +4,11 @@ var cfg = {
     service_port: 8007,
     psp_url: 'http://61.181.22.71:81/admin/if_vac_h'
 }
-var soap = require('node-soap-ly');
+var soap = require('../..');
 var path = require('path');
 var http = require('http');
 var QueryString = require('querystring');
 var Request = require('request');
-var moment = require('moment');
 var fs = require('fs');
 
 var reqSeq = 0;
@@ -18,8 +17,7 @@ var defLog = false;
 var SoapServices = {
     'ESyncNotifySPServiceService': {
         'ESyncNotifySP': {
-            'eOrderRelationUpdateNotify': function(args) {
-                var fiber = Fiber.current;
+            'eOrderRelationUpdateNotify': function(args, callback) {
                 var oraReqNV = args["eOrderRelationUpdateNotifyRequest"];
                 oraReqNV.SubInfo.split(',').forEach(function(line) {
                     if (!line) return;
@@ -37,14 +35,14 @@ var SoapServices = {
                 },
                 function(error, response, body) {
                     if (!error && response.statusCode === 200) {
-                        fiber.run({
+                        callback({
                             'eOrderRelationUpdateNotifyResponse': {
                                 'RecordSequenceID': oraReqNV.RecordSequenceID,
                                 'ResultCode': body
                             }
                         });
                     } else {
-                        fiber.run({
+                        callback({
                             'eOrderRelationUpdateNotifyResponse': {
                                 'RecordSequenceID': oraReqNV.RecordSequenceID,
                                 'ResultCode': 1
@@ -52,10 +50,8 @@ var SoapServices = {
                         });
                     }
                 });
-                return yield();
             },
-            'eMemOrderRelationUpdateNotify': function(args) {
-                var fiber = Fiber.current;
+            'eMemOrderRelationUpdateNotify': function(args, callback) {
                 args = args["eMemOrderRelationUpdateNotifyRequest"];
                 var oraReqNV = {
                     'billnum': args.EUserId,
@@ -75,14 +71,14 @@ var SoapServices = {
                 },
                 function(error, response, body) {
                     if (!error && response.statusCode === 200) {
-                        fiber.run({
+                        callback({
                             'eMemOrderRelationUpdateNotifyResponse': {
                                 'RecordSequenceID': args.RecordSequenceID,
                                 'ResultCode': body
                             }
                         });
                     } else {
-                        fiber.run({
+                        callback({
                             'eMemOrderRelationUpdateNotifyResponse': {
                                 'RecordSequenceID': args.RecordSequenceID,
                                 'ResultCode': 1
@@ -90,7 +86,6 @@ var SoapServices = {
                         });
                     }
                 });
-                return yield();
             }
         }
     }
@@ -104,7 +99,7 @@ var wsdl_string = require('fs').readFileSync(path.resolve(cfg.wsdl_file), 'utf8'
 var soap_server = soap.listen(server, cfg.service_url_path, SoapServices, wsdl_string);
 
 soap_server.logger_req = function(xml, req, res) {
-    req.__time = moment().format('MMDD-HHmmss');
+    req.__time = +new Date;
     var cip = req.connection.remoteAddress;
     var filename = 'logs/srv-' + req.__time + '-' + (++reqSeq) + '-' + cip + '-req.log.xml';
     var ws = fs.createWriteStream(filename);
@@ -155,14 +150,14 @@ setTimeout(function() {
 var logSeq = 0;
 function do_test(client) {
     client.logger_req = function(xml) {
-        var time = moment().format('MMDD-HHmmss');
+        var time = +new Date;
         var filename = 'logs/cli-' + time + '-' + (++logSeq) + '-req.log.xml';
         var ws = fs.createWriteStream(filename);
         ws.write(xml);
         ws.end();
     };
     client.logger_res = function(xml) {
-        var time = moment().format('MMDD-HHmmss');
+        var time = +new Date;
         var filename = 'logs/cli-' + time + '-' + '-' + (++logSeq) + '-res.log.xml';
         var ws = fs.createWriteStream(filename);
         ws.write(xml);

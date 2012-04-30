@@ -4,14 +4,12 @@ var path = require('path');
 var http = require('http');
 var QueryString = require('querystring');
 var Request = require('request');
-var moment = require('moment');
 var fs = require('fs');
 
 var SoapServices = {
     'QueryUserInfoServiceApply': {
         'QueryUserInfoServiceApplyHttpPort': {
             'QueryUserInfoServiceApply': function(args) {
-                var fiber = Fiber.current;
                 console.log('received args = ');
                 console.log(args);
                 return ({
@@ -37,7 +35,7 @@ server.listen(cfg.fake_port);
 var wsdl_string = require('fs').readFileSync(path.resolve(cfg.wsdl_file), 'utf8');
 var soap_server = soap.listen(server, cfg.path, SoapServices, wsdl_string);
 soap_server.logger_req = function(xml, req, res) {
-    req.__time = moment().format('MMDD-HHmmss');
+    req.__time = +new Date;
     var cip = req.connection.remoteAddress;
     var filename = 'logs/svr-' + req.__time + '-' + cip + '-req.log.xml';
     var ws = fs.createWriteStream(filename);
