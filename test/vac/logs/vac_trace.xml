@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<soapenv:Body>
+		<ns1:eMemOrderRelationUpdateNotify xmlns:ns1="http://spclient.evac.ericsson.com" soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+			<eMemOrderRelationUpdateNotifyRequest href="#id0"/>
+		</ns1:eMemOrderRelationUpdateNotify>
+		<multiRef xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:ns2="http://req.spclient.evac.ericsson.com" id="id0" soapenc:root="0" soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xsi:type="ns2:EMemOrderRelationUpdateNotifyReq">
+			<RecordSequenceID xsi:type="soapenc:string">1493804</RecordSequenceID>
+			<UserIdType href="#id1"/>
+			<UserId xsi:type="soapenc:string">860224922113</UserId>
+			<ServiceType xsi:type="soapenc:string">1</ServiceType>
+			<SpId xsi:type="soapenc:string">60123</SpId>
+			<ProductId xsi:type="soapenc:string">4212345681</ProductId>
+			<UpdateType href="#id1"/>
+			<UpdateTime xsi:type="soapenc:string">20120301092540</UpdateTime>
+			<UpdateDesc xsi:type="soapenc:string">1</UpdateDesc>
+			<LinkID xsi:type="soapenc:string"/>
+			<Content xsi:type="soapenc:string"/>
+			<EffectiveDate xsi:type="soapenc:string">20120228163657</EffectiveDate>
+			<ExpireDate xsi:type="soapenc:string">20500101000000</ExpireDate>
+			<Time_Stamp xsi:type="soapenc:string">0328125033</Time_Stamp>
+			<EncodeStr xsi:type="soapenc:string"/>
+			<EUserIdType href="#id1"/>
+			<EUserId xsi:type="soapenc:string">8615620001781</EUserId>
+		</multiRef>
+		<multiRef xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" id="id1" soapenc:root="0" soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xsi:type="soapenc:int">1</multiRef>
+	</soapenv:Body>
+</soapenv:Envelope>

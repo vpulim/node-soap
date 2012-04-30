@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:tns3="http://rsp.spclient.evac.ericsson.com" 
+				  xmlns:impl="http://spclient.evac.ericsson.com" 
+				  xmlns:apachesoap="http://xml.apache.org/xml-soap" 
+				  xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" 
+				  xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" 
+				  xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+				  xmlns:tns2="http://req.spclient.evac.ericsson.com" 
+				  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+				  targetNamespace="http://spclient.evac.ericsson.com">
+	<wsdl:types>
+		<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://req.spclient.evac.ericsson.com">
+			<import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+			<complexType name="EOrderRelationUpdateNotifyReq">
+				<sequence>
+					<element name="RecordSequenceID" nillable="true" type="soapenc:string"/>
+					<element name="UserIdType" nillable="true" type="soapenc:int"/>
+					<element name="UserId" nillable="true" type="soapenc:string"/>
+					<element name="ServiceType" nillable="true" type="soapenc:string"/>
+					<element name="SpId" nillable="true" type="soapenc:string"/>
+					<element name="ProductId" nillable="true" type="soapenc:string"/>
+					<element name="UpdateType" nillable="true" type="soapenc:int"/>
+					<element name="UpdateTime" nillable="true" type="soapenc:string"/>
+					<element name="UpdateDesc" nillable="true" type="soapenc:string"/>
+					<element name="LinkID" nillable="true" type="soapenc:string"/>
+					<element name="Content" nillable="true" type="soapenc:string"/>
+					<element name="EffectiveDate" nillable="true" type="soapenc:string"/>
+					<element name="ExpireDate" nillable="true" type="soapenc:string"/>
+					<element name="Time_Stamp" nillable="true" type="soapenc:string"/>
+					<element name="EncodeStr" nillable="true" type="soapenc:string"/>
+					<element name="SubInfo" nillable="true" type="soapenc:string"/>
+				</sequence>
+			</complexType>
+
+			<complexType name="EMemOrderRelationUpdateNotifyReq">
+				<sequence>
+					<element name="RecordSequenceID" nillable="true" type="soapenc:string"/>
+					<element name="UserIdType" nillable="true" type="soapenc:int"/>
+					<element name="UserId" nillable="true" type="soapenc:string"/>
+					<element name="ServiceType" nillable="true" type="soapenc:string"/>
+					<element name="SpId" nillable="true" type="soapenc:string"/>
+					<element name="ProductId" nillable="true" type="soapenc:string"/>
+					<element name="UpdateType" nillable="true" type="soapenc:int"/>
+					<element name="UpdateTime" nillable="true" type="soapenc:string"/>
+					<element name="UpdateDesc" nillable="true" type="soapenc:string"/>
+					<element name="LinkID" nillable="true" type="soapenc:string"/>
+					<element name="Content" nillable="true" type="soapenc:string"/>
+					<element name="EffectiveDate" nillable="true" type="soapenc:string"/>
+					<element name="ExpireDate" nillable="true" type="soapenc:string"/>
+					<element name="Time_Stamp" nillable="true" type="soapenc:string"/>
+					<element name="EncodeStr" nillable="true" type="soapenc:string"/>
+					<element name="EUserIdType" nillable="true" type="soapenc:int"/>
+					<element name="EUserId" nillable="true" type="soapenc:string"/>
+				</sequence>
+			</complexType>
+		</schema>
+		<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://rsp.spclient.evac.ericsson.com">
+			<import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+			<complexType name="EOrderRelationUpdateNotifyRsp">
+				<sequence>
+					<element name="RecordSequenceID" nillable="true" type="soapenc:string"/>
+					<element name="ResultCode " type="xsd:int"/>
+				</sequence>
+			</complexType>
+
+			<complexType name="EMemOrderRelationUpdateNotifyRsp">
+				<sequence>
+					<element name="RecordSequenceID" nillable="true" type="soapenc:string"/>
+					<element name="ResultCode " type="xsd:int"/>
+				</sequence>
+			</complexType>
+		</schema>
+	</wsdl:types>
+	
+	
+	<wsdl:message name="eOrderRelationUpdateNotifyRequest">
+		<wsdl:part name="eOrderRelationUpdateNotifyRequest" type="tns2:EOrderRelationUpdateNotifyReq"/>
+	</wsdl:message>
+	<wsdl:message name="eOrderRelationUpdateNotifyResponse">
+		<wsdl:part name="eOrderRelationUpdateNotifyResponse" type="tns3:EOrderRelationUpdateNotifyRsp"/>
+	</wsdl:message>
+	
+	<wsdl:message name="eMemOrderRelationUpdateNotifyRequest">
+		<wsdl:part name="eMemOrderRelationUpdateNotifyRequest" type="tns2:EMemOrderRelationUpdateNotifyReq"/>
+	</wsdl:message>
+	<wsdl:message name="eMemOrderRelationUpdateNotifyResponse">
+		<wsdl:part name="eMemOrderRelationUpdateNotifyResponse" type="tns3:EMemOrderRelationUpdateNotifyRsp"/>
+	</wsdl:message>
+	
+	
+	<wsdl:portType name="SyncNotifySPService">
+		<wsdl:operation name="eOrderRelationUpdateNotify" parameterOrder="eOrderRelationUpdateNotifyRequest">
+			<wsdl:input name="eOrderRelationUpdateNotifyRequest" message="impl:eOrderRelationUpdateNotifyRequest"/>
+			<wsdl:output name="eOrderRelationUpdateNotifyResponse" message="impl:eOrderRelationUpdateNotifyResponse"/>
+		</wsdl:operation>
+		
+		<wsdl:operation name="eMemOrderRelationUpdateNotify" parameterOrder="eMemOrderRelationUpdateNotifyRequest">
+			<wsdl:input name="eMemOrderRelationUpdateNotifyRequest" message="impl:eMemOrderRelationUpdateNotifyRequest"/>
+			<wsdl:output name="eMemOrderRelationUpdateNotifyResponse" message="impl:eMemOrderRelationUpdateNotifyResponse"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	
+	
+	<wsdl:binding name="SyncNotifySPSoapBinding" type="impl:SyncNotifySPService">
+		<wsdlsoap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+		
+		<wsdl:operation name="eOrderRelationUpdateNotify">
+			<wsdlsoap:operation/>
+			<wsdl:input>
+				<wsdlsoap:body use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://spclient.evac.ericsson.com"/>
+			</wsdl:input>
+			<wsdl:output>
+				<wsdlsoap:body use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://spclient.evac.ericsson.com"/>
+			</wsdl:output>
+		</wsdl:operation>
+		
+		<wsdl:operation name="eMemOrderRelationUpdateNotify">
+			<wsdlsoap:operation/>
+			<wsdl:input>
+				<wsdlsoap:body use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://spclient.evac.ericsson.com"/>
+			</wsdl:input>
+			<wsdl:output>
+				<wsdlsoap:body use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://spclient.evac.ericsson.com"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	
+	
+	<wsdl:service name="ESyncNotifySPServiceService">
+		<wsdl:port name="ESyncNotifySP" binding="impl:SyncNotifySPSoapBinding">
+			<wsdlsoap:address location="http://localhost:8007/services/ESyncNotifySP"/>
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>
