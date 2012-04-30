@@ -36,6 +36,14 @@ Install with [npm](http://github.com/isaacs/npm):
                     return {
                         name: args.name
                     };
+                },
+
+                // This is how to define an asynchronous function.  
+                MyAsyncFunction: function(args, callback) {
+                    // do some work
+                    callback({
+                        name: args.name
+                    })
                 }
             }
         }
@@ -48,6 +56,8 @@ Install with [npm](http://github.com/isaacs/npm):
         
     server.listen(8000);
     soap.listen(server, '/wsdl', myService, xml);
+
+
 
 ## Client
 
