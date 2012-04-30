@@ -14,11 +14,34 @@ var service = {
     }
 }
 
+var wsdlStrictTests = {},
+    wsdlNonStrictTests = {};
+
+fs.readdirSync(__dirname+'/wsdl/strict').forEach(function(file) {
+    if (!/.wsdl$/.exec(file)) return;
+    wsdlStrictTests['should parse '+file] = function(done) {
+        soap.createClient(__dirname+'/wsdl/strict/'+file, {strict: true}, function(err, client) {
+            assert.ok(!err);
+            done();
+        });        
+    };
+})
+
+fs.readdirSync(__dirname+'/wsdl').forEach(function(file) {
+    if (!/.wsdl$/.exec(file)) return;
+    wsdlNonStrictTests['should parse '+file] = function(done) {
+        soap.createClient(__dirname+'/wsdl/'+file, function(err, client) {
+            assert.ok(!err);
+            done();
+        });        
+    };
+})
+
 module.exports = {
     'SOAP Server': {
 
         'should start': function(done) {
-            var wsdl = fs.readFileSync(__dirname+'/stockquote.wsdl', 'utf8'),
+            var wsdl = fs.readFileSync(__dirname+'/wsdl/strict/stockquote.wsdl', 'utf8'),
                 server = http.createServer(function(req, res) {
                     res.statusCode = 404;
                     res.end();
@@ -58,5 +81,7 @@ module.exports = {
                 });            
             });
         }
-    }
+    },
+    'WSDL Parser (strict)': wsdlStrictTests,
+    'WSDL Parser (non-strict)': wsdlNonStrictTests  
 }

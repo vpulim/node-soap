@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:soapenc12="http://www.w3.org/2003/05/soap-encoding" xmlns:tns="http://webservice.iuim.zoomtech.com/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap11="http://schemas.xmlsoap.org/soap/envelope/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc11="http://schemas.xmlsoap.org/soap/encoding/" xmlns:soap12="http://www.w3.org/2003/05/soap-envelope" targetNamespace="http://webservice.iuim.zoomtech.com/">
+	<wsdl:types>
+		<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://webservice.iuim.zoomtech.com/">
+			<xs:element xmlns:xs="http://www.w3.org/2001/XMLSchema" name="QueryUserInfoRespone">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element minOccurs="0" name="ServerInfo">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="ResultCode" type="xs:string"/>
+									<xs:element name="Description" type="xs:string"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element minOccurs="0" name="UserInfo">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="UserName" type="xs:string"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element xmlns:xs="http://www.w3.org/2001/XMLSchema" name="QueryUserInfoRequest">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="UserInfo">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="IP" type="xs:string"/>
+									<xs:element name="Port" type="xs:string"/>
+									<xs:element name="ServerIP" type="xs:string"/>
+									<xs:element name="ServerPort" type="xs:string"/>
+									<xs:element name="SessionID" type="xs:string"/>
+									<xs:element name="SKey" type="xs:string"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="ServerInfo">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="ServerID" type="xs:string"/>
+									<xs:element name="TimeStamp" type="xs:string"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xsd:schema>
+	</wsdl:types>
+	
+	<wsdl:message name="QueryUserInfoServiceApplyResponse">
+		<wsdl:part name="QueryUserInfoRespone" element="tns:QueryUserInfoRespone"/>
+	</wsdl:message>
+	<wsdl:message name="QueryUserInfoServiceApplyRequest">
+		<wsdl:part name="QueryUserInfoRequest" element="tns:QueryUserInfoRequest"/>
+	</wsdl:message>
+	
+	<wsdl:portType name="QueryUserInfoServiceApply">
+		<wsdl:operation name="QueryUserInfoServiceApply">
+			<wsdl:input name="QueryUserInfoServiceApplyRequest" message="tns:QueryUserInfoServiceApplyRequest"/>
+			<wsdl:output name="QueryUserInfoServiceApplyResponse" message="tns:QueryUserInfoServiceApplyResponse"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	
+	<wsdl:binding name="QueryUserInfoServiceApplyHttpBinding" type="tns:QueryUserInfoServiceApply">
+		<wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="QueryUserInfoServiceApply">
+			<wsdlsoap:operation soapAction="http://webservice.iuim.zoomtech.com/QueryUserInfoServiceApply"/>
+			<wsdl:input name="QueryUserInfoServiceApplyRequest">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="QueryUserInfoServiceApplyResponse">
+				<wsdlsoap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	
+	<wsdl:service name="QueryUserInfoServiceApply">
+		<wsdl:port name="QueryUserInfoServiceApplyHttpPort" binding="tns:QueryUserInfoServiceApplyHttpBinding">
+			<wsdlsoap:address location="http://localhost:8008/webservice_iuim/services/QueryUserInfoServiceApply"/>
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>
