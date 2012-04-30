@@ -1,75 +1,12 @@
 This module lets you connect to web services using SOAP.  It also provides a server that allows you to run your own SOAP services.
 
-Current limitations:
+Features:
 
-* Only a few XSD Schema types are supported
-* Only WS-Security is supported using UsernameToken and PasswordText encoding
-
-## Update of kaven276's node-soap from milewise's node-soap
-
-### can parse multiRef request, use=encoding support
-
-  Soap request can use multiRef to mapping language's object model to xml, now node-soap can parse the request and mapping it to a javascript object that use object reference as multiRef.
-
-### Fiber integration, support async javascript service
-
-  For soap server, it has javascript service defined, when node-soap received and parse the soap request, it will route to call the javascript service function, and it will take the return value to convert to response soap xml. But the javascript service function may need to call some other file/network async functions to get the final return value, but node-soap will not wait for it, it just synchronously call and get return value. But this version integrate Fiber to support async service.
-
-	var SoapServices = {
-	    'ESyncNotifySPServiceService': {
-	        'ESyncNotifySP': {
-	            'eOrderRelationUpdateNotify': function(args) {
-	                var fiber = Fiber.current;
-	                var oraReqNV = args["eOrderRelationUpdateNotifyRequest"];
-	                Request({
-	                    uri: cfg.psp_url + '.e',
-	                    method: 'post',
-	                    headers: {
-	                        'Content-Type': "application/x-www-form-urlencoded"
-	                    },
-	                    body: QueryString.stringify(oraReqNV)
-	                },
-	                function(error, response, body) {
-	                    if (!error && response.statusCode === 200) {
-	                        fiber.run({
-	                            'eOrderRelationUpdateNotifyResponse': {
-	                                'RecordSequenceID': oraReqNV.RecordSequenceID,
-	                                'ResultCode': body
-	                            }
-	                        });
-	                    } else {
-	                        fiber.run({
-	                            'eOrderRelationUpdateNotifyResponse': {
-	                                'RecordSequenceID': oraReqNV.RecordSequenceID,
-	                                'ResultCode': 1
-	                            }
-	                        });
-	                    }
-	                });
-	                return yield();
-	            }
-	        }
-	    }
-	}
-
-### correct method routing
-
-  How to determine the javascript service method? Firstly, use wsdl:service->wsdl:port->wsdlsoap:address.location to determine what binding/portType to use, Secondly, if style=RPC, then treat top element's name under soap body as the portType's method name,
-if style=RPC, then use http header SOAPAction to match the operation's soapAction, if there is no http header SOAPAction or no soapAction defined in wsdl, then check every method's input message's element name to find the match.
-
-### support both RPC/Document style request/response
-
-### xml namespace support
-
-  For WSDL parsing, different schema definitions will go into their respective schema parsed javascript objects, it allow the same named types/complexTypes/elements/... in different schemas. Formerly, different schema object with same name will just override and keep the last one, it's totally namespace ignorant and has potential serious problems.
-
-  For soap xml generation, the soap envelope has all the xmlns definition(exception for wsdl/soap itself related) defined in the wsdl that not only bring from the wsdl definition element, but from all of the wsdl and its import/include subs. But notice that if a xmlns defined in wsdl's element is conflict with definition element's xmlns map, it may have problems, but it's very rare case.
-
-  The soap request by client or response by server will give top element in soap:body a xml namespace prefix that is defined in envelope. And your javascript object for xml can have object attribute with xml namespace prefix, so the result xml payload will have the same namespace prefix. This way, you can use your javascript to make the right namespaced soap xml.
-
-### generate minimum of parsed javascript definition object
-
-  For the standard parsed format, remove any child/children when the child or child's useful information is attached to the parent's properties, remove fixed attribute of WSDL xml node, remove parent properties so there is no circular reference. The result is a clean and more clear parsed definition object.
+* Very simple API
+* Handles both RPC and Document schema types
+* Supports multiRef SOAP messages (thanks to [@kaven276](https://github.com/kaven276))
+* Support for both synchronous and asynchronous method handlers
+* WS-Security (currently only UsernameToken and PasswordText encoding is supported)
 
 ## Install
 
@@ -148,3 +85,4 @@ An instance of Client is passed to the soap.createClient callback.  It is used t
 WSSecurity implements WS-Security.  Currently, only UsernameToken and PasswordText is supported. An instance of WSSecurity is passed to Client.setSecurity.
 
     new WSSecurity(username, password)
+
