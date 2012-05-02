@@ -1,0 +1,710 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+Version: 0.07
+
+Date: 09.09.2011
+
+History:
+    v0.02 + Service getVersion added
+    v0.03 + Documentation added.
+    v0.04 + namespace attributes in body elements deleted
+    v0.05 + Service GetExportDoc added
+    v0.06 + AuthentificationHeaderMessage extended by DeveloperAuthentification part
+    v0.07 + <wsdl:input> sections extended by explicit reference to devheader part of the AuthentificationHeaderMessage element
+-->
+<wsdl:definitions targetNamespace="http://de.ws.intrashipservice" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:is="http://de.ws.intraship" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cis="http://dhl.de/webservice/cisbase" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:ns="http://de.ws.intrashipservice" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/">
+	
+	<wsdl:types>
+		<xs:schema attributeFormDefault="unqualified" elementFormDefault="unqualified">
+			<xs:import namespace="http://dhl.de/webservice/cisbase" schemaLocation="http://test-intraship.dhl.com/ws/1_0/ISService/DE/cis_base.xsd"/>
+			<xs:import namespace="http://de.ws.intraship" schemaLocation="http://test-intraship.dhl.com/ws/1_0/ISService/DE/is_base_de.xsd"/> 
+	    </xs:schema>
+	</wsdl:types>
+	  
+  	<wsdl:message name="AuthentificationHeaderMessage">
+  	    <wsdl:documentation>The authentication data.</wsdl:documentation>
+		<wsdl:part name="header" element="cis:Authentification"></wsdl:part>
+		<wsdl:part name="devheader" element="is:DeveloperAuthentification"></wsdl:part>
+  	</wsdl:message>
+	 
+  	<wsdl:message name="createShipmentTDMessage">
+  	    <wsdl:documentation>The shipmentdata for creating a TD shipment.</wsdl:documentation>
+   	 	<wsdl:part name="part1" element="is:CreateShipmentTDRequest">
+    	</wsdl:part>
+  	</wsdl:message>
+	  
+	  <wsdl:message name="createShipmentTDResponseMessage">
+	    <wsdl:documentation>The status of the createShipment operation and the identifier for the shipment.</wsdl:documentation>
+	    <wsdl:part name="part1" element="is:CreateShipmentResponse">
+	    </wsdl:part>
+	  </wsdl:message>
+	  
+	  <wsdl:message name="createShipmentDDMessage">
+	    <wsdl:documentation>The shipmentdata for creating a DD shipment.</wsdl:documentation>
+	    <wsdl:part name="part1" element="is:CreateShipmentDDRequest">
+	    </wsdl:part>
+	  </wsdl:message>
+	  
+	   <wsdl:message name="createShipmentDDResponseMessage">
+	    <wsdl:documentation>The status of the createShipment operation and the identifier for the shipment.</wsdl:documentation>
+	    <wsdl:part name="part1" element="is:CreateShipmentResponse">
+	    </wsdl:part>
+	  </wsdl:message> 
+	  
+	  <wsdl:message name="deleteShipmentTDMessage">
+	    <wsdl:documentation>The identifier for the shipment which should be deleted.</wsdl:documentation>
+	    <wsdl:part name="part1" element="is:DeleteShipmentTDRequest">
+	    </wsdl:part>
+	  </wsdl:message>
+	  
+	  <wsdl:message name="deleteShipmentTDResponseMessage">
+	    <wsdl:documentation>The status of the deletion operation.</wsdl:documentation>
+	    <wsdl:part name="part1" element="is:DeleteShipmentResponse">
+	    </wsdl:part>
+	  </wsdl:message>
+	    
+	  <wsdl:message name="deleteShipmentDDMessage">
+	    <wsdl:documentation>The identifier for the shipment which should be deleted.</wsdl:documentation>
+	    <wsdl:part name="part1" element="is:DeleteShipmentDDRequest">
+	    </wsdl:part>
+	  </wsdl:message>
+  
+   <wsdl:message name="deleteShipmentDDResponseMessage">
+    <wsdl:documentation>The status of the deletion operation.</wsdl:documentation>
+    <wsdl:part name="part1" element="is:DeleteShipmentResponse">
+    </wsdl:part>
+  </wsdl:message>
+ 
+  <wsdl:message name="doManifestTDMessage">
+    <wsdl:documentation>The identifier for the shipment which should be manifested.</wsdl:documentation>
+    <wsdl:part name="part1" element="is:DoManifestTDRequest">
+    </wsdl:part>
+  </wsdl:message>
+  
+  <wsdl:message name="doManifestTDResponseMessage">
+    <wsdl:documentation>The status of the manifest operation.</wsdl:documentation>
+    <wsdl:part name="part1" element="is:DoManifestResponse">
+    </wsdl:part>
+  </wsdl:message>
+    
+  <wsdl:message name="doManifestDDMessage">
+    <wsdl:documentation>The identifier for the shipment which should be manifested.</wsdl:documentation>
+    <wsdl:part name="part1" element="is:DoManifestDDRequest">
+    </wsdl:part>
+  </wsdl:message>
+  
+   <wsdl:message name="doManifestDDResponseMessage">
+    <wsdl:documentation>The status of the manifest operation.</wsdl:documentation>
+    <wsdl:part name="part1" element="is:DoManifestResponse">
+    </wsdl:part>
+  </wsdl:message> 
+ 
+  <wsdl:message name="getLabelTDMessage">
+    <wsdl:documentation>The identifier for the TD shipment for which the label url is requested.</wsdl:documentation>
+    <wsdl:part name="part1" element="is:GetLabelTDRequest">
+    </wsdl:part>
+  </wsdl:message>
+  
+  <wsdl:message name="getLabelTDResponseMessage">
+    <wsdl:documentation>The status of the operation and the label url (if available).</wsdl:documentation>
+    <wsdl:part name="part1" element="is:GetLabelResponse">
+    </wsdl:part>
+  </wsdl:message>
+    
+  <wsdl:message name="getLabelDDMessage">
+    <wsdl:documentation>The identifier for the DD shipment for which the label url is requested.</wsdl:documentation>
+    <wsdl:part name="part1" element="is:GetLabelDDRequest">
+    </wsdl:part>
+  </wsdl:message>
+  
+   <wsdl:message name="getLabelDDResponseMessage">
+    <wsdl:documentation>The status of the operation and the label url (if available).</wsdl:documentation>
+    <wsdl:part name="part1" element="is:GetLabelResponse">
+    </wsdl:part>
+  </wsdl:message>
+   
+  <wsdl:message name="bookPickupMessage">
+    <wsdl:documentation>The data for a pickup order.</wsdl:documentation>
+    <wsdl:part name="part1" element="is:BookPickupRequest">
+    </wsdl:part>
+  </wsdl:message>
+  
+  <wsdl:message name="bookPickupResponseMessage">
+    <wsdl:documentation>The status of the book pickup operation and a confirmation number (if available).</wsdl:documentation>
+    <wsdl:part name="part1" element="is:BookPickupResponse">
+    </wsdl:part>
+  </wsdl:message> 
+
+  <wsdl:message name="cancelPickupMessage">
+    <wsdl:documentation>The confirmation number of the pickup order which should be canceled.</wsdl:documentation>
+    <wsdl:part name="part1" element="is:CancelPickupRequest">
+    </wsdl:part>
+  </wsdl:message>
+  
+  <wsdl:message name="cancelPickupResponseMessage">
+    <wsdl:documentation>The status of cancel pickup operation.</wsdl:documentation>
+    <wsdl:part name="part1" element="is:CancelPickupResponse">
+    </wsdl:part>
+  </wsdl:message>
+          
+  <wsdl:message name="getVersionRequestMessage"/>
+
+  <wsdl:message name="getVersionResponseMessage">
+    <wsdl:documentation>The version of webservice implementation.</wsdl:documentation>
+    <wsdl:part name="part1" element="is:GetVersionResponse">
+    </wsdl:part>
+  </wsdl:message>
+  
+   <wsdl:message name="getExportDocTDMessage">
+    <wsdl:documentation>The identifier for the TD shipment for which the label url is requested.</wsdl:documentation>
+    <wsdl:part name="part1" element="is:GetExportDocTDRequest">
+    </wsdl:part>
+  </wsdl:message>
+  
+  <wsdl:message name="getExportDocTDResponseMessage">
+    <wsdl:documentation>The status of the operation and the label url (if available).</wsdl:documentation>
+    <wsdl:part name="part1" element="is:GetExportDocResponse">
+    </wsdl:part>
+  </wsdl:message>
+    
+  <wsdl:message name="getExportDocDDMessage">
+    <wsdl:documentation>The identifier for the DD shipment for which the label url is requested.</wsdl:documentation>
+    <wsdl:part name="part1" element="is:GetExportDocDDRequest">
+    </wsdl:part>
+  </wsdl:message>
+  
+   <wsdl:message name="getExportDocDDResponseMessage">
+    <wsdl:documentation>The status of the operation and the label url (if available).</wsdl:documentation>
+    <wsdl:part name="part1" element="is:GetExportDocResponse">
+    </wsdl:part>
+  </wsdl:message>
+  
+  <wsdl:portType name="ISWSServicePortType">
+  
+    <wsdl:operation name="createShipmentTD">     
+       <wsdl:documentation>Creates TD shipments.</wsdl:documentation> 
+      <wsdl:input message="ns:createShipmentTDMessage">      
+      <wsdl:documentation>The shipment data.</wsdl:documentation>	
+	  </wsdl:input>
+      <wsdl:output message="ns:createShipmentTDResponseMessage">
+      <wsdl:documentation>The status of the createShipment operation and the identifier for the shipment.</wsdl:documentation>
+    </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="createShipmentDD"> 
+         <wsdl:documentation>Creates DD shipments.</wsdl:documentation>     
+      	<wsdl:input message="ns:createShipmentDDMessage">
+      	<wsdl:documentation>The shipment data.</wsdl:documentation>      	
+	  	</wsdl:input>
+      	<wsdl:output message="ns:createShipmentDDResponseMessage">
+      	<wsdl:documentation>The status of the createShipment operation and the identifier for the shipment.</wsdl:documentation>
+	    </wsdl:output>
+    </wsdl:operation>    
+    
+    <wsdl:operation name="deleteShipmentTD">      
+        <wsdl:documentation>Deletes the requested TD shipments.</wsdl:documentation>
+      	<wsdl:input message="ns:deleteShipmentTDMessage">
+      	<wsdl:documentation>The identifier for the shipment which should be deleted.</wsdl:documentation>      	
+	  	</wsdl:input>
+      	<wsdl:output message="ns:deleteShipmentTDResponseMessage">
+      	<wsdl:documentation>The status of the deletion operation.</wsdl:documentation>
+	    </wsdl:output>
+    </wsdl:operation>
+    
+    <wsdl:operation name="deleteShipmentDD">      
+      	<wsdl:documentation>Deletes the requested DD shipments.</wsdl:documentation>
+      	<wsdl:input message="ns:deleteShipmentDDMessage">
+      	<wsdl:documentation>The identifier for the shipment which should be deleted.</wsdl:documentation>      	
+	  	</wsdl:input>
+      	<wsdl:output message="ns:deleteShipmentDDResponseMessage">
+      	<wsdl:documentation>The status of the deletion operation.</wsdl:documentation>
+	    </wsdl:output>
+    </wsdl:operation>
+    
+    <wsdl:operation name="doManifestTD">
+        <wsdl:documentation>Manifest the requested TD shipments.</wsdl:documentation>      
+      	<wsdl:input message="ns:doManifestTDMessage">
+      	<wsdl:documentation>The identifier for the shipment which should be manifested.</wsdl:documentation>      	
+	  	</wsdl:input>
+      	<wsdl:output message="ns:doManifestTDResponseMessage">
+      	<wsdl:documentation>The status of the manifest operation.</wsdl:documentation>
+	    </wsdl:output>
+    </wsdl:operation>
+    
+    <wsdl:operation name="doManifestDD">
+        <wsdl:documentation>Manifest the requested DD shipments.</wsdl:documentation>      
+      	<wsdl:input message="ns:doManifestDDMessage">  
+      	<wsdl:documentation>The identifier for the shipment which should be manifested.</wsdl:documentation>    	
+	  	</wsdl:input>
+      	<wsdl:output message="ns:doManifestDDResponseMessage">
+      	<wsdl:documentation>The status of the manifest operation.</wsdl:documentation>
+	    </wsdl:output>
+    </wsdl:operation>        
+    
+    <wsdl:operation name="getLabelTD">
+        <wsdl:documentation>Returns the request-url for getting a TD label.</wsdl:documentation>      
+      	<wsdl:input message="ns:getLabelTDMessage">
+      	<wsdl:documentation>The identifier for the TD shipment for which the label url is requested.</wsdl:documentation>      	
+	  	</wsdl:input>
+      	<wsdl:output message="ns:getLabelTDResponseMessage">
+      	<wsdl:documentation>The status of the operation and the label url (if available).</wsdl:documentation>
+	    </wsdl:output>
+    </wsdl:operation>
+    
+    <wsdl:operation name="getLabelDD">      
+      	<wsdl:documentation>Returns the request-url for getting a DD label.</wsdl:documentation>
+      	<wsdl:input message="ns:getLabelDDMessage">
+      	<wsdl:documentation>The identifier for the DD shipment for which the label url is requested.</wsdl:documentation>      	
+	  	</wsdl:input>
+      	<wsdl:output message="ns:getLabelDDResponseMessage">
+      	<wsdl:documentation>The status of the operation and the label url (if available).</wsdl:documentation>
+	    </wsdl:output>
+    </wsdl:operation>
+    
+    <wsdl:operation name="bookPickup">
+        <wsdl:documentation>Books a pickup order.</wsdl:documentation>      
+      	<wsdl:input message="ns:bookPickupMessage">
+      	<wsdl:documentation>The data for a pickup order.</wsdl:documentation>      	
+	  	</wsdl:input>
+      	<wsdl:output message="ns:bookPickupResponseMessage">
+      	<wsdl:documentation>The status of the book pickup operation and a confirmation number (if available).</wsdl:documentation>
+	    </wsdl:output>
+    </wsdl:operation>
+    
+    <wsdl:operation name="cancelPickup">
+        <wsdl:documentation>Cancels a pickup order.</wsdl:documentation>      
+      	<wsdl:input message="ns:cancelPickupMessage">
+      	<wsdl:documentation>The confirmation number of the pickup order which should be canceled.</wsdl:documentation>      	
+	  	</wsdl:input>
+      	<wsdl:output message="ns:cancelPickupResponseMessage">
+      	<wsdl:documentation>The status of cancel pickup operation.</wsdl:documentation>
+	    </wsdl:output>
+    </wsdl:operation>
+
+	<wsdl:operation name="getVersion">
+	    <wsdl:documentation>Returns the actual version of the implementation of the whole ISService webservice.</wsdl:documentation>      
+      	<wsdl:input message="ns:getVersionRequestMessage" />    
+      	<wsdl:output message="ns:getVersionResponseMessage">
+      	<wsdl:documentation>The version of webservice implementation.</wsdl:documentation>
+	    </wsdl:output>
+    </wsdl:operation>
+    
+    <wsdl:operation name="getExportDocTD">
+        <wsdl:documentation>Returns the request-url for getting a TD export document.</wsdl:documentation>      
+      	<wsdl:input message="ns:getExportDocTDMessage">
+      	<wsdl:documentation>The identifier for the TD shipment for which the  export document url is requested.</wsdl:documentation>      	
+	  	</wsdl:input>
+      	<wsdl:output message="ns:getExportDocTDResponseMessage">
+      	<wsdl:documentation>The status of the operation and the export document url (if available).</wsdl:documentation>
+	    </wsdl:output>
+    </wsdl:operation>
+    
+    <wsdl:operation name="getExportDocDD">      
+      	<wsdl:documentation>Returns the request-url for getting a DD  export document.</wsdl:documentation>
+      	<wsdl:input message="ns:getExportDocDDMessage">
+      	<wsdl:documentation>The identifier for the DD shipment for which the  export document url is requested.</wsdl:documentation>      	
+	  	</wsdl:input>
+      	<wsdl:output message="ns:getExportDocDDResponseMessage">
+      	<wsdl:documentation>The status of the operation and the  export document url (if available).</wsdl:documentation>
+	    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+
+  <wsdl:binding name="ShipmentServiceSOAP11Binding" type="ns:ISWSServicePortType">
+    
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    
+    <wsdl:operation name="createShipmentTD">
+      <wsdl:documentation>Creates TD shipments.</wsdl:documentation>
+      <soap:operation soapAction="urn:createShipmentTD" style="document"/>
+      <wsdl:input>
+        <wsdl:documentation>The authentication data and the shipment data.</wsdl:documentation>
+      	<soap:header message="ns:AuthentificationHeaderMessage" part="header" use="literal"/>
+      	<soap:header message="ns:AuthentificationHeaderMessage" part="devheader" use="literal"/>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <wsdl:documentation>The status of the operation and the shipment identifier.</wsdl:documentation>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    
+    <wsdl:operation name="createShipmentDD">
+      <wsdl:documentation>Creates DD shipments.</wsdl:documentation>
+      <soap:operation soapAction="urn:createShipmentDD" style="document"/>
+      <wsdl:input>
+        <wsdl:documentation>The authentication data and the shipment data.</wsdl:documentation>
+      	<soap:header message="ns:AuthentificationHeaderMessage" part="header" use="literal"/>
+      	<soap:header message="ns:AuthentificationHeaderMessage" part="devheader" use="literal"/>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <wsdl:documentation>The status of the operation and the shipment identifier.</wsdl:documentation>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>   
+
+    <wsdl:operation name="deleteShipmentTD">
+      <wsdl:documentation>Deletes the requested TD shipments.</wsdl:documentation>
+      <soap:operation soapAction="urn:deleteShipmentTD" style="document"/>
+      <wsdl:input>
+        <wsdl:documentation>The authentication data and the shipment identifier.</wsdl:documentation>
+      	<soap:header message="ns:AuthentificationHeaderMessage" part="header" use="literal"/>
+      	<soap:header message="ns:AuthentificationHeaderMessage" part="devheader" use="literal"/>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <wsdl:documentation>The status of the operation.</wsdl:documentation>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    
+    <wsdl:operation name="deleteShipmentDD">
+      <wsdl:documentation>Deletes the requested DD shipments.</wsdl:documentation>
+      <soap:operation soapAction="urn:deleteShipmentDD" style="document"/>
+      <wsdl:input>
+        <wsdl:documentation>The authentication data and the shipment identifier.</wsdl:documentation>
+      	<soap:header message="ns:AuthentificationHeaderMessage" part="header" use="literal"/>
+      	<soap:header message="ns:AuthentificationHeaderMessage" part="devheader" use="literal"/>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <wsdl:documentation>The status of the operation.</wsdl:documentation>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    
+    <wsdl:operation name="doManifestTD">
+      <wsdl:documentation>Manifest the requested TD shipments.</wsdl:documentation>
+      <soap:operation soapAction="urn:doManifestTD" style="document"/>
+      <wsdl:input>
+        <wsdl:documentation>The authentication data and the shipment identifier.</wsdl:documentation>
+      	<soap:header message="ns:AuthentificationHeaderMessage" part="header" use="literal"/>
+      	<soap:header message="ns:AuthentificationHeaderMessage" part="devheader" use="literal"/>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <wsdl:documentation>The status of the operation.</wsdl:documentation>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    
+    <wsdl:operation name="doManifestDD">
+      <wsdl:documentation>Manifest the requested DD shipments.</wsdl:documentation>
+      <soap:operation soapAction="urn:doManifestDD" style="document"/>
+      <wsdl:input>
+        <wsdl:documentation>The authentication data and the shipment identifier.</wsdl:documentation>
+      	<soap:header message="ns:AuthentificationHeaderMessage" part="header" use="literal"/>
+      	<soap:header message="ns:AuthentificationHeaderMessage" part="devheader" use="literal"/>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <wsdl:documentation>The status of the operation.</wsdl:documentation>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>   
+    
+    <wsdl:operation name="getLabelTD">
+      <wsdl:documentation>Returns the request-url for getting a TD label.</wsdl:documentation>
+      <soap:operation soapAction="urn:getLabelTD" style="document"/>
+      <wsdl:input>
+        <wsdl:documentation>The authentication data and the shipment identifier.</wsdl:documentation>
+      	<soap:header message="ns:AuthentificationHeaderMessage" part="header" use="literal"/>
+      	<soap:header message="ns:AuthentificationHeaderMessage" part="devheader" use="literal"/>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <wsdl:documentation>The status of the operation and the url for requesting the label.</wsdl:documentation>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    
+    <wsdl:operation name="getLabelDD">
+      <wsdl:documentation>Returns the request-url for getting a DD label.</wsdl:documentation>
+      <soap:operation soapAction="urn:getLabelDD" style="document"/>
+      <wsdl:input>
+        <wsdl:documentation>The authentication data and the shipment identifier.</wsdl:documentation>
+      	<soap:header message="ns:AuthentificationHeaderMessage" part="header" use="literal"/>
+      	<soap:header message="ns:AuthentificationHeaderMessage" part="devheader" use="literal"/>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <wsdl:documentation>The status of the operation and the url for requesting the label.</wsdl:documentation>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>    
+    
+    <wsdl:operation name="bookPickup">
+      <wsdl:documentation>Books a pickup order.</wsdl:documentation>
+      <soap:operation soapAction="urn:bookPickup" style="document"/>
+      <wsdl:input>
+        <wsdl:documentation>The authentication data and the order data for the pickup</wsdl:documentation>
+      	<soap:header message="ns:AuthentificationHeaderMessage" part="header" use="literal"/>
+      	<soap:header message="ns:AuthentificationHeaderMessage" part="devheader" use="literal"/>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <wsdl:documentation>The status of the operation and the confirmation number (if available).</wsdl:documentation>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    
+    <wsdl:operation name="cancelPickup">
+      <wsdl:documentation>Cancels a pickup order.</wsdl:documentation>
+      <soap:operation soapAction="urn:cancelPickup" style="document"/>
+      <wsdl:input>
+        <wsdl:documentation>The authentication data and the confirmation number of the pickuporder, which should be canceled</wsdl:documentation>
+      	<soap:header message="ns:AuthentificationHeaderMessage" part="header" use="literal"/>
+      	<soap:header message="ns:AuthentificationHeaderMessage" part="devheader" use="literal"/>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <wsdl:documentation>The status of the operation.</wsdl:documentation>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>   
+    
+    
+    <wsdl:operation name="getVersion">
+      <wsdl:documentation>Returns the actual version of the implementation of the whole ISService webservice.</wsdl:documentation>
+      <soap:operation soapAction="urn:getVersion" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+      	<wsdl:documentation>The version of the implementation.</wsdl:documentation>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>  
+    
+    <wsdl:operation name="getExportDocTD">
+      <wsdl:documentation>Returns the request-url for getting a TD export document.</wsdl:documentation>
+      <soap:operation soapAction="urn:getExportDocTD" style="document"/>
+      <wsdl:input>
+        <wsdl:documentation>The authentication data and the shipment identifier.</wsdl:documentation>
+      	<soap:header message="ns:AuthentificationHeaderMessage" part="header" use="literal"/>
+      	<soap:header message="ns:AuthentificationHeaderMessage" part="devheader" use="literal"/>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdl:documentation>The status of the operation and the url for requesting the export document.</wsdl:documentation>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    
+    <wsdl:operation name="getExportDocDD">
+      <wsdl:documentation>Returns the request-url for getting a DD  export document.</wsdl:documentation>
+      <soap:operation soapAction="urn:getExportDocDD" style="document"/>
+      <wsdl:input>
+        <wsdl:documentation>The authentication data and the shipment identifier.</wsdl:documentation>
+      	<soap:header message="ns:AuthentificationHeaderMessage" part="header" use="literal"/>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdl:documentation>The status of the operation and the url for requesting the export document.</wsdl:documentation>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  
+  <wsdl:binding name="ShipmentServiceSOAP12Binding" type="ns:ISWSServicePortType">
+    <soap12:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="createShipmentTD">
+      <wsdl:documentation>Creates TD shipments.</wsdl:documentation>
+      <soap12:operation soapAction="urn:createShipmentTD" style="document"/>
+      <wsdl:input>
+        <wsdl:documentation>The authentication data and the shipment data.</wsdl:documentation>
+      	<soap12:header message="ns:AuthentificationHeaderMessage" part="header" use="literal"/>
+      	<soap12:header message="ns:AuthentificationHeaderMessage" part="devheader" use="literal"/>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <wsdl:documentation>The status of the operation and the shipment identifier.</wsdl:documentation>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+	<wsdl:operation name="createShipmentDD">
+	  <wsdl:documentation>Creates DD shipments.</wsdl:documentation>
+      <soap12:operation soapAction="urn:createShipmentDD" style="document"/>
+      <wsdl:input>
+         <wsdl:documentation>The authentication data and the shipment data.</wsdl:documentation>
+      	<soap12:header message="ns:AuthentificationHeaderMessage" part="header" use="literal"/>
+      	<soap12:header message="ns:AuthentificationHeaderMessage" part="devheader" use="literal"/>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <wsdl:documentation>The status of the operation and the shipment identifier.</wsdl:documentation>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    
+    <wsdl:operation name="deleteShipmentTD">
+      <wsdl:documentation>Deletes the requested TD shipments.</wsdl:documentation>
+      <soap12:operation soapAction="urn:deleteShipmentTD" style="document"/>
+      <wsdl:input>
+        <wsdl:documentation>The authentication data and the shipment identifier.</wsdl:documentation>
+      	<soap12:header message="ns:AuthentificationHeaderMessage" part="header" use="literal"/>
+      	<soap12:header message="ns:AuthentificationHeaderMessage" part="devheader" use="literal"/>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    
+    <wsdl:operation name="deleteShipmentDD">
+      <wsdl:documentation>Deletes the requested DD shipments.</wsdl:documentation>
+      <soap12:operation soapAction="urn:deleteShipmentDD" style="document"/>
+      <wsdl:input>
+        <wsdl:documentation>The authentication data and the shipment identifier.</wsdl:documentation>
+      	<soap12:header message="ns:AuthentificationHeaderMessage" part="header" use="literal"/>
+      	<soap12:header message="ns:AuthentificationHeaderMessage" part="devheader" use="literal"/>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>    
+    
+    <wsdl:operation name="doManifestTD">
+      <wsdl:documentation>Manifest the requested TD shipments.</wsdl:documentation>
+      <soap12:operation soapAction="urn:doManifestTD" style="document"/>
+      <wsdl:input>
+        <wsdl:documentation>The authentication data and the shipment identifier.</wsdl:documentation>
+      	<soap12:header message="ns:AuthentificationHeaderMessage" part="header" use="literal"/>
+      	<soap12:header message="ns:AuthentificationHeaderMessage" part="devheader" use="literal"/>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    
+    <wsdl:operation name="doManifestDD">
+      <wsdl:documentation>Manifest the requested DD shipments.</wsdl:documentation>
+      <soap12:operation soapAction="urn:doManifestDD" style="document"/>
+      <wsdl:input>
+        <wsdl:documentation>The authentication data and the shipment identifier.</wsdl:documentation>
+      	<soap12:header message="ns:AuthentificationHeaderMessage" part="header" use="literal"/>
+      	<soap12:header message="ns:AuthentificationHeaderMessage" part="devheader" use="literal"/>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>    
+    
+    <wsdl:operation name="getLabelTD">
+      <wsdl:documentation>Returns the request-url for getting a TD label.</wsdl:documentation>
+      <soap12:operation soapAction="urn:getLabelTD" style="document"/>
+      <wsdl:input>
+        <wsdl:documentation>The authentication data and the shipment identifier.</wsdl:documentation>
+      	<soap12:header message="ns:AuthentificationHeaderMessage" part="header" use="literal"/>
+      	<soap12:header message="ns:AuthentificationHeaderMessage" part="devheader" use="literal"/>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <wsdl:documentation>The status of the operation and the url for requesting the label.</wsdl:documentation>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    
+    <wsdl:operation name="getLabelDD">
+      <wsdl:documentation>Returns the request-url for getting a DD label.</wsdl:documentation>
+      <soap12:operation soapAction="urn:getLabelDD" style="document"/>
+      <wsdl:input>
+        <wsdl:documentation>The authentication data and the shipment identifier.</wsdl:documentation>
+      	<soap12:header message="ns:AuthentificationHeaderMessage" part="header" use="literal"/>
+      	<soap12:header message="ns:AuthentificationHeaderMessage" part="devheader" use="literal"/>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <wsdl:documentation>The status of the operation and the url for requesting the label.</wsdl:documentation>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>    
+    
+    <wsdl:operation name="bookPickup">
+      <wsdl:documentation>Books a pickup order.</wsdl:documentation>
+      <soap12:operation soapAction="urn:bookPickup" style="document"/>
+      <wsdl:input>
+        <wsdl:documentation>The authentication data and the order data for the pickup</wsdl:documentation>
+      	<soap12:header message="ns:AuthentificationHeaderMessage" part="header" use="literal"/>
+      	<soap12:header message="ns:AuthentificationHeaderMessage" part="devheader" use="literal"/>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <wsdl:documentation>The status of the operation and the confirmation number (if available).</wsdl:documentation>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    
+    <wsdl:operation name="cancelPickup">
+      <wsdl:documentation>Cancels a pickup order.</wsdl:documentation>
+      <soap12:operation soapAction="urn:cancelPickup" style="document"/>
+      <wsdl:input>
+        <wsdl:documentation>The authentication data and the confirmation number of the pickuporder, which should be canceled</wsdl:documentation>
+      	<soap12:header message="ns:AuthentificationHeaderMessage" part="header" use="literal"/>
+      	<soap12:header message="ns:AuthentificationHeaderMessage" part="devheader" use="literal"/>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <wsdl:documentation>The status of the operation.</wsdl:documentation>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>   
+    
+    <wsdl:operation name="getVersion">
+      <wsdl:documentation>Returns the actual version of the implementation of the whole ISService webservice.</wsdl:documentation>
+      <soap12:operation soapAction="urn:getVersion" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <wsdl:documentation>The version of the implementation.</wsdl:documentation>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation> 
+    
+    <wsdl:operation name="getExportDocTD">
+      <wsdl:documentation>Returns the request-url for getting a TD export document.</wsdl:documentation>
+      <soap12:operation soapAction="urn:getExportDocTD" style="document"/>
+      <wsdl:input>
+        <wsdl:documentation>The authentication data and the shipment identifier.</wsdl:documentation>
+      	<soap12:header message="ns:AuthentificationHeaderMessage" part="header" use="literal"/>
+      	<soap12:header message="ns:AuthentificationHeaderMessage" part="devheader" use="literal"/>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdl:documentation>The status of the operation and the url for requesting the export document.</wsdl:documentation>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    
+    <wsdl:operation name="getExportDocDD">
+      <wsdl:documentation>Returns the request-url for getting a DD export document.</wsdl:documentation>
+      <soap12:operation soapAction="urn:getExportDocDD" style="document"/>
+      <wsdl:input>
+        <wsdl:documentation>The authentication data and the shipment identifier.</wsdl:documentation>
+      	<soap12:header message="ns:AuthentificationHeaderMessage" part="header" use="literal"/>
+      	<soap12:header message="ns:AuthentificationHeaderMessage" part="devheader" use="literal"/>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdl:documentation>The status of the operation and the url for requesting the export document.</wsdl:documentation>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+    
+  <wsdl:service name="ISService_1_0_de">
+    <wsdl:port name="ShipmentServiceSOAP11port0" binding="ns:ShipmentServiceSOAP11Binding">
+      <soap:address location="http://test-intraship.dhl.com/ws/1_0/de/ISService"/>
+    </wsdl:port>
+    <wsdl:port name="ShipmentServiceSOAP12port0" binding="ns:ShipmentServiceSOAP12Binding">
+      <soap12:address location="http://test-intraship.dhl.com/ws/1_0/de/ISService"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
