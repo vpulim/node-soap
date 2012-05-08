@@ -71,6 +71,16 @@ module.exports = {
             })            
         },
 
+        'should return complete client description': function(done) {
+            soap.createClient('http://localhost:15099/stockquote?wsdl', function(err, client) {
+                assert.ok(!err);
+                var description = client.describe(),
+                    expected = { input: { tickerSymbol: "string" }, output:{ price: "float" } };
+                assert.deepEqual(expected , description.StockQuoteService.StockQuotePort.GetLastTradePrice );
+                done();
+            });
+        },
+
         'should return correct results': function(done) {
             soap.createClient('http://localhost:15099/stockquote?wsdl', function(err, client) {
                 assert.ok(!err);
