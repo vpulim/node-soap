@@ -2,10 +2,10 @@
     "name": "soap",
     "version": "0.2.5",
     "description": "A minimal node SOAP client",
-    "engines": { "node": ">=0.6.0" },
+    "engines": { "node": ">=0.8.0" },
     "author": "Vinay Pulim <v@pulim.com>",
     "dependencies": {
-        "node-expat": ">= 1.3.0",
+        "node-expat": "git://github.com/TooTallNate/node-expat.git#gyp",
         "request": ">=2.9.0"
     },
     "repository" : { 
