@@ -43,7 +43,7 @@ Install with [npm](http://github.com/isaacs/npm):
                   };
               }
 
-              // This is how to define an asynchronous function.  
+              // This is how to define an asynchronous function.
               MyAsyncFunction: function(args, callback) {
                   // do some work
                   callback({
@@ -54,13 +54,16 @@ Install with [npm](http://github.com/isaacs/npm):
       }
   }
 
-  var xml = require('fs').readFileSync('myservice.wsdl', 'utf8'),
-      server = http.createServer(function(request,response) {
+  var server = http.createServer(function(request,response) {
           response.end("404: Not Found: "+request.url)
       });
 
   server.listen(8000);
-  soap.listen(server, '/wsdl', myService, xml);
+  soap.listen(server, '/wsdl', myService, 'myservice.wsdl', function(err, server) {
+      if (err) {
+          console.error("creating a server failed", err);
+      }
+  });
 ```
 
 ### server logging
