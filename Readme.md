@@ -17,7 +17,7 @@ Install with [npm](http://github.com/isaacs/npm):
 ```
 ## Module
 
-### soap.createClient(url, callback) - create a new SOAP client from a WSDL url
+### soap.createClient(url, callback) - create a new SOAP client from a WSDL url. Also supports a local filesystem path.
 
 ``` javascript
   var soap = require('soap');
