@@ -150,7 +150,7 @@ An instance of Client is passed to the soap.createClient callback.  It is used t
  - `soapHeader`     Object({rootName: {name: "value"}}) or strict xml-string
 
 ##### Optional parameters when first arg is object :
- - `name`           Unknown parameter 
+ - `name`           Unknown parameter (it could just a empty string)
  - `namespace`      prefix of xml namespace
  - `xmlns`          URI
 
