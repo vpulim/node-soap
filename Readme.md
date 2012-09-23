@@ -154,7 +154,7 @@ An instance of Client is passed to the soap.createClient callback.  It is used t
  - `namespace`      prefix of xml namespace
  - `xmlns`          URI
 
- ### Client.*lastRequest* - the property that contains last full soap request for client logging
+### Client.*lastRequest* - the property that contains last full soap request for client logging
 
 ## WSSecurity
 
