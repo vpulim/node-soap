@@ -144,6 +144,17 @@ An instance of Client is passed to the soap.createClient callback.  It is used t
       // result is a javascript object
   })
 ```
+### Client.*addSoapHeader*(soapHeader[, name, namespace, xmlns]) - add soapHeader to soap:Header node
+#### Options
+
+ - `soapHeader`     Object({rootName: {name: "value"}}) or strict xml-string
+
+##### Optional parameters when first arg is object :
+ - `name`           Unknown parameter (it could just a empty string)
+ - `namespace`      prefix of xml namespace
+ - `xmlns`          URI
+
+### Client.*lastRequest* - the property that contains last full soap request for client logging
 
 ## WSSecurity
 
