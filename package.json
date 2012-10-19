@@ -26,10 +26,6 @@
       "url": "http://www.opensource.org/licenses/mit-license.php"
     }
   ],
-  "bundledDependencies": [
-    "node-expat",
-    "request"
-  ],
   "dependencies": {
     "node-expat": ">=1.6.1",
     "request": ">=2.9.0"
