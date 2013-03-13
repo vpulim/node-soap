@@ -2,7 +2,7 @@
     "name": "soap",
     "version": "0.2.7",
     "description": "A minimal node SOAP client",
-    "engines": { "node": ">=0.8.0" },
+    "engines": { "node": ">=0.6.17" },
     "author": "Vinay Pulim <v@pulim.com>",
     "dependencies": {
         "node-expat": ">=1.6.1",
