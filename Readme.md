@@ -156,6 +156,16 @@ An instance of Client is passed to the soap.createClient callback.  It is used t
 
 ### Client.*lastRequest* - the property that contains last full soap request for client logging
 
+### Client: allow using custom attributes, for instance for inheritance
+
+A complex type that inherits from another complex type can be declared like this:
+
+``` javascript
+  {productId:{
+       '@':{'xmlns:xsi':'http://www.w3.org/2001/XMLSchema-instance','xsi:type':'{namespace}SubscriptionIdS'},
+       subscriptionId:12345
+  }
+```
 ## WSSecurity
 
 WSSecurity implements WS-Security.  UsernameToken and PasswordText/PasswordDigest is supported. An instance of WSSecurity is passed to Client.setSecurity.
