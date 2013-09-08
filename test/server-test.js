@@ -4,9 +4,9 @@ var fs = require('fs'),
     request = require('request'),
     http = require('http');
 
-var service = { 
-    StockQuoteService: { 
-        StockQuotePort: { 
+var service = {
+    StockQuoteService: {
+        StockQuotePort: {
             GetLastTradePrice: function(args) {
                 return { price: 19.56 };
             }
@@ -23,7 +23,7 @@ fs.readdirSync(__dirname+'/wsdl/strict').forEach(function(file) {
         soap.createClient(__dirname+'/wsdl/strict/'+file, {strict: true}, function(err, client) {
             assert.ok(!err);
             done();
-        });        
+        });
     };
 })
 
@@ -33,7 +33,7 @@ fs.readdirSync(__dirname+'/wsdl').forEach(function(file) {
         soap.createClient(__dirname+'/wsdl/'+file, function(err, client) {
             assert.ok(!err);
             done();
-        });        
+        });
     };
 })
 
@@ -68,7 +68,7 @@ module.exports = {
                 assert.equal(res.statusCode, 200);
                 assert.ok(body.length);
                 done();
-            })            
+            })
         },
 
         'should return complete client description': function(done) {
@@ -88,10 +88,10 @@ module.exports = {
                     assert.ok(!err);
                     assert.equal(19.56, parseFloat(result.price));
                     done();
-                });            
+                });
             });
         }
     },
     'WSDL Parser (strict)': wsdlStrictTests,
-    'WSDL Parser (non-strict)': wsdlNonStrictTests  
+    'WSDL Parser (non-strict)': wsdlNonStrictTests
 }
