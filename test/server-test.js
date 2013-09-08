@@ -8,7 +8,11 @@ var service = {
     StockQuoteService: {
         StockQuotePort: {
             GetLastTradePrice: function(args) {
-                return { price: 19.56 };
+                if (args.tickerSymbol == 'trigger error') {
+                   throw new Error('triggered server error');
+                } else {
+                    return { price: 19.56 };
+                }
             }
         }
     }
@@ -87,6 +91,18 @@ module.exports = {
                 client.GetLastTradePrice({ tickerSymbol: 'AAPL'}, function(err, result) {
                     assert.ok(!err);
                     assert.equal(19.56, parseFloat(result.price));
+                    done();
+                });
+            });
+        },
+
+        'should include response and body in error object': function(done) {
+            soap.createClient('http://localhost:15099/stockquote?wsdl', function(err, client) {
+                assert.ok(!err);
+                client.GetLastTradePrice({ tickerSymbol: 'trigger error' }, function(err, response, body) {
+                    assert.ok(err);
+                    assert.strictEqual(err.response, response);
+                    assert.strictEqual(err.body, body);
                     done();
                 });
             });
