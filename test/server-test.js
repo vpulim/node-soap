@@ -79,7 +79,7 @@ module.exports = {
             soap.createClient('http://localhost:15099/stockquote?wsdl', function(err, client) {
                 assert.ok(!err);
                 var description = client.describe(),
-                    expected = { input: { tickerSymbol: "string" }, output:{ price: "float" } };
+                    expected = { input: { tickerSymbol: { type: "string", nillable: false } }, output: { price: { type: "float", nillable: false } } };
                 assert.deepEqual(expected , description.StockQuoteService.StockQuotePort.GetLastTradePrice );
                 done();
             });
