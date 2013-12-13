@@ -4,11 +4,15 @@ var fs = require('fs'),
     request = require('request'),
     http = require('http');
 
-var service = { 
-    StockQuoteService: { 
-        StockQuotePort: { 
+var service = {
+    StockQuoteService: {
+        StockQuotePort: {
             GetLastTradePrice: function(args) {
-                return { price: 19.56 };
+                if (args.tickerSymbol == 'trigger error') {
+                   throw new Error('triggered server error');
+                } else {
+                    return { price: 19.56 };
+                }
             }
         }
     }
@@ -23,7 +27,7 @@ fs.readdirSync(__dirname+'/wsdl/strict').forEach(function(file) {
         soap.createClient(__dirname+'/wsdl/strict/'+file, {strict: true}, function(err, client) {
             assert.ok(!err);
             done();
-        });        
+        });
     };
 })
 
@@ -33,7 +37,7 @@ fs.readdirSync(__dirname+'/wsdl').forEach(function(file) {
         soap.createClient(__dirname+'/wsdl/'+file, function(err, client) {
             assert.ok(!err);
             done();
-        });        
+        });
     };
 })
 
@@ -68,7 +72,7 @@ module.exports = {
                 assert.equal(res.statusCode, 200);
                 assert.ok(body.length);
                 done();
-            })            
+            })
         },
 
         'should return complete client description': function(done) {
@@ -88,10 +92,22 @@ module.exports = {
                     assert.ok(!err);
                     assert.equal(19.56, parseFloat(result.price));
                     done();
-                });            
+                });
+            });
+        },
+
+        'should include response and body in error object': function(done) {
+            soap.createClient('http://localhost:15099/stockquote?wsdl', function(err, client) {
+                assert.ok(!err);
+                client.GetLastTradePrice({ tickerSymbol: 'trigger error' }, function(err, response, body) {
+                    assert.ok(err);
+                    assert.strictEqual(err.response, response);
+                    assert.strictEqual(err.body, body);
+                    done();
+                });
             });
         }
     },
     'WSDL Parser (strict)': wsdlStrictTests,
-    'WSDL Parser (non-strict)': wsdlNonStrictTests  
+    'WSDL Parser (non-strict)': wsdlNonStrictTests
 }
