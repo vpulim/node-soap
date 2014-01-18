@@ -158,9 +158,10 @@ An instance of Client is passed to the soap.createClient callback.  It is used t
 
 ## WSSecurity
 
-WSSecurity implements WS-Security.  UsernameToken and PasswordText/PasswordDigest is supported. An instance of WSSecurity is passed to Client.setSecurity.
+WSSecurity implements WS-Security.  UsernameToken and PasswordText/PasswordDigest is supported. Option disableTimeStamp will turn of timeStamp xml element generation. An instance of WSSecurity is passed to Client.setSecurity.
 
 ``` javascript
-  new WSSecurity(username, password, passwordType)
+  var options = { passwordType: 'PasswordDigest', disableTimeStamp: true }
     //'PasswordDigest' or 'PasswordText' default is PasswordText
+  new WSSecurity(username, password, options)
 ```
