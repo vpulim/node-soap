@@ -1,21 +1,36 @@
 {
-    "name": "soap",
-    "version": "0.3.1",
-    "description": "A minimal node SOAP client",
-    "engines": { "node": ">=0.8.0" },
-    "author": "Vinay Pulim <v@pulim.com>",
-    "dependencies": {
-        "node-expat": ">=1.6.1",
-        "request": ">=2.9.0"
-    },
-    "repository" : { 
-        "type":"git", 
-        "url":"https://github.com/milewise/node-soap.git" },
-    "main": "./index.js",
-    "directories": { "lib": "./lib" },
-    "scripts": {"test": "mocha -R spec -u exports test/*-test.js"},
-    "keywords": ["soap"],
-    "licenses": [{ 
-        "type" :  "MIT License",
-        "url" :   "http://www.opensource.org/licenses/mit-license.php" }]
+  "name": "soap",
+  "version": "0.3.1",
+  "description": "A minimal node SOAP client",
+  "engines": {
+    "node": ">=0.8.0"
+  },
+  "author": "Vinay Pulim <v@pulim.com>",
+  "dependencies": {
+    "node-expat": ">=1.6.1",
+    "request": ">=2.9.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/milewise/node-soap.git"
+  },
+  "main": "./index.js",
+  "directories": {
+    "lib": "./lib"
+  },
+  "scripts": {
+    "test": "mocha -R spec -u exports test/*-test.js"
+  },
+  "keywords": [
+    "soap"
+  ],
+  "licenses": [
+    {
+      "type": "MIT License",
+      "url": "http://www.opensource.org/licenses/mit-license.php"
+    }
+  ],
+  "devDependencies": {
+    "mocha": "~1.17.0"
+  }
 }
