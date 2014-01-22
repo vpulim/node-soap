@@ -45,6 +45,13 @@ fs.readdirSync(__dirname + '/wsdl').forEach(function(file) {
   };
 });
 
+wsdlNonStrictTests['should not parse connection error'] = function(done) {
+    soap.createClient(__dirname+'/wsdl/connection/econnrefused.wsdl', function(err, client) {
+        assert.ok(/EADDRNOTAVAIL/.test(err));
+        done();
+    });
+};
+
 module.exports = {
   'SOAP Server': {
     'should start': function(done) {
