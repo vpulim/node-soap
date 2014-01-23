@@ -49,18 +49,28 @@ wsdlNonStrictTests['should not parse connection error'] = function(done) {
 };
 
 
-// Server object used in test requests later
-var server = http.createServer(function(req, res) {
-    res.statusCode = 404;
-    res.end();
-});
+var server = null;
 module.exports = {
+    beforeEach: function() {
+        var wsdl = fs.readFileSync(__dirname+'/wsdl/strict/stockquote.wsdl', 'utf8');
+        server = http.createServer(function(req, res) {
+            res.statusCode = 404;
+            res.end();
+        });
+        server.listen(15099);
+        soap.listen(server, '/stockquote', service, wsdl);
+    },
+    afterEach: function(done) {
+        if (!server) return done()
+        server.close(function() {
+            server = null;
+            done();
+        });
+    },
+
     'SOAP Server': {
 
-        'should start': function(done) {
-            var wsdl = fs.readFileSync(__dirname+'/wsdl/strict/stockquote.wsdl', 'utf8');
-            server.listen(15099);
-            soap.listen(server, '/stockquote', service, wsdl);
+        'should be running': function(done) {
             request('http://localhost:15099', function(err, res, body) {
                 assert.ok(!err);
                 done();
@@ -82,6 +92,19 @@ module.exports = {
                 assert.ok(body.length);
                 done();
             })
+        },
+
+        'should return a valid error if the server stops responding': function(done) {
+            soap.createClient('http://localhost:15099/stockquote?wsdl', function(err, client) {
+                assert.ok(!err);
+                server.close(function() {
+                  server = null;
+                  client.GetLastTradePrice({ tickerSymbol: 'trigger error' }, function(err, response, body) {
+                      assert.ok(err);
+                      done();
+                  });
+                });
+            });
         },
 
         'should return complete client description': function(done) {
@@ -116,18 +139,6 @@ module.exports = {
                 });
             });
         },
-
-        'should return a valid error if the server stops responding': function(done) {
-            soap.createClient('http://localhost:15099/stockquote?wsdl', function(err, client) {
-                assert.ok(!err);
-                server.close(function() {
-                  client.GetLastTradePrice({ tickerSymbol: 'trigger error' }, function(err, response, body) {
-                      assert.ok(err);
-                      done();
-                  });
-                });
-            });
-        }
     },
     'WSDL Parser (strict)': wsdlStrictTests,
     'WSDL Parser (non-strict)': wsdlNonStrictTests
