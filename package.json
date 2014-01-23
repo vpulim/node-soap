@@ -20,6 +20,7 @@
   },
   "scripts": {
     "mocha": "mocha -R spec -u exports test/*-test.js",
+    "jshint" : "jshint index.js lib/http.js lib/client.js lib/soap.js",
     "test": "npm run-script jshint && npm run-script mocha"
   },
   "keywords": [
