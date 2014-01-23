@@ -19,7 +19,9 @@
     "lib": "./lib"
   },
   "scripts": {
-    "test": "mocha -R spec -u exports test/*-test.js"
+    "mocha": "mocha -R spec -u exports test/*-test.js",
+    "jshint" : "jshint test/*-test.js", 
+    "test": "npm run-script jshint && npm run-script mocha"
   },
   "keywords": [
     "soap"
@@ -31,6 +33,7 @@
     }
   ],
   "devDependencies": {
-    "mocha": "~1.17.0"
+    "mocha": "~1.17.0",
+    "jshint": "~2.4.2"
   }
 }
