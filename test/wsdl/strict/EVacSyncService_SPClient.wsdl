@@ -30,6 +30,11 @@
 					<element name="EncodeStr" nillable="true" type="soapenc:string"/>
 					<element name="SubInfo" nillable="true" type="soapenc:string"/>
 				</sequence>
+                <annotation>
+                    <documentation>
+                        Test keepText
+                    </documentation>
+                </annotation>
 			</complexType>
 
 			<complexType name="EMemOrderRelationUpdateNotifyReq">
