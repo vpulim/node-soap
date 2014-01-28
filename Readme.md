@@ -1,5 +1,7 @@
 This module lets you connect to web services using SOAP.  It also provides a server that allows you to run your own SOAP services.
 
+[![Build Status](https://travis-ci.org/milewise/node-soap.png?branch=master)](https://travis-ci.org/milewise/node-soap)
+
 Features:
 
 * Very simple API
