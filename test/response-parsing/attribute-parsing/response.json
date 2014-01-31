@@ -1,0 +1,30 @@
+{
+  "Body":{
+    "GetAccountXmlResponse":{
+      "ResultCode":0,
+      "AccountXml":{
+        "Foo": {
+          "Foo":{
+            "attributes":{
+              "PrivateLabelID":"1",
+              "ResourceID":"034b7ea5-8a04-11e3-9710-0050569575d8",
+              "IsPastDue":"False",
+              "IsFree":"True",
+              "CurrentTreeID":"1091",
+              "CurrentUnifiedProductID":"70761"
+            },
+            "Tree":{
+              "attributes":{
+                "TreeID":"1091",
+                "NodeID":"1091",
+                "UnifiedProductID":"70761",
+                "IsFree":"True"
+              },
+              "FilteredTransitions":{}
+            }
+          }
+        }
+      }
+    }
+  }
+}
