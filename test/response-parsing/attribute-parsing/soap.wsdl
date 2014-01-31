@@ -1,0 +1,86 @@
+<wsdl:definitions
+  xmlns:s="http://www.w3.org/2001/XMLSchema"
+  xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+  xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+  xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+  xmlns:tns="#Foo"
+  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+  xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/"
+  xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+  targetNamespace="#Foo"
+>
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="#Foo">
+      <s:element name="GetAccountXml">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ResourceID" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="ResourceType" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="IDType" type="s:string"/>
+            <s:element minOccurs="1" maxOccurs="1" name="TreeID" type="s:int"/>
+            <s:element minOccurs="1" maxOccurs="1" name="PrivateLabelID" type="s:int"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAccountXmlResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="ResultCode" type="s:int"/>
+            <s:element minOccurs="0" maxOccurs="1" name="AccountXml">
+              <s:complexType mixed="true">
+                <s:sequence>
+                  <s:any/>
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="GetAccountXmlSoapIn">
+    <wsdl:part name="parameters" element="tns:GetAccountXml"/>
+  </wsdl:message>
+  <wsdl:message name="GetAccountXmlSoapOut">
+    <wsdl:part name="parameters" element="tns:GetAccountXmlResponse"/>
+  </wsdl:message>
+  <wsdl:portType name="ServiceSoap">
+    <wsdl:operation name="GetAccountXml">
+      <wsdl:input message="tns:GetAccountXmlSoapIn"/>
+      <wsdl:output message="tns:GetAccountXmlSoapOut"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ServiceSoap" type="tns:ServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="GetAccountXml">
+      <soap:operation soapAction="#Foo/GetAccountXml" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="ServiceSoap12" type="tns:ServiceSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="GetAccountXml">
+      <soap12:operation soapAction="#Foo/GetAccountXml" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Service">
+    <wsdl:port name="ServiceSoap" binding="tns:ServiceSoap">
+      <soap:address location="http://localhost:1509"/>
+    </wsdl:port>
+    <wsdl:port name="ServiceSoap12" binding="tns:ServiceSoap12">
+      <soap12:address location="http://localhost:1509"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
