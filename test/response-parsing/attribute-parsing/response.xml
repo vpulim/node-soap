@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope
+  xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+>
+  <soap:Body>
+    <GetAccountXmlResponse xmlns="#Foo">
+      <ResultCode>0</ResultCode>
+      <AccountXml>
+        <Foo>
+          <Foo
+            PrivateLabelID="1"
+            ResourceID="034b7ea5-8a04-11e3-9710-0050569575d8"
+            IsPastDue="False"
+            IsFree="True"
+            CurrentTreeID="1091"
+            CurrentUnifiedProductID="70761"
+            xmlns=""
+          >
+            <Tree
+              TreeID="1091"
+              NodeID="1091"
+              UnifiedProductID="70761"
+              IsFree="True"
+            >
+              <FilteredTransitions />
+            </Tree>
+          </Foo>
+        </Foo>
+      </AccountXml>
+    </GetAccountXmlResponse>
+  </soap:Body>
+</soap:Envelope>
