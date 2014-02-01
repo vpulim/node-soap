@@ -8,6 +8,7 @@
   "author": "Vinay Pulim <v@pulim.com>",
   "dependencies": {
     "node-expat": ">=1.6.1",
+    "sax": ">=0.6",
     "request": ">=2.9.0"
   },
   "repository": {
