@@ -11,9 +11,6 @@ var go = function (parser) {
   soap.createClient(url, {parser: parser}, function(err, client) {
     i[parser]++;
     if (i[parser] < n) {
-      if (i[parser] % 100 === 0) {
-        console.log('go ' + parser + ' for the ' + i[parser] + 'th time.');
-      }
       setTimeout(function() {
         go(parser);
       }, 0);
