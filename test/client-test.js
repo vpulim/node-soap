@@ -5,7 +5,7 @@ var fs = require('fs'),
 module.exports = {
     'SOAP Client': {
         'should error on invalid host': function(done) {
-            soap.createClient('http://localhost:1', function(err, client) {
+            soap.createClient('http://localhost:123', function(err, client) {
                 assert.ok(err);
                 done();
             });
