@@ -1,8 +1,8 @@
 #Contribution Guidelines
----
+
 Thank you for your support!  node-soap wouldn't be where it is today without contributors like you who are willing to take the time to improve it for everyone else.
 
-Because SOAP Web Services differ greatly amongst implementations, there is high risk involved in making changes.  What works for your WSDL, might not work with another.  It is therefore _essential_ that contributions to node-soap adhere to these guidelines:
+Because SOAP Web Services can differ amongst implementations, there is high risk involved in making changes.  What works for your WSDL, might not work with another.  It is therefore _essential_ that contributors to node-soap adhere to these guidelines:
 
 ##Making Changes
 * If your issue is WSDL related:
@@ -16,10 +16,11 @@ Because SOAP Web Services differ greatly amongst implementations, there is high 
 * If your issue is client related:
 ````
     1. Capture the request / response XMl via client.lastRequest and client.lastResponse as well as the WSDL.
-    2. Make the WSDL, request, and response XML as generic as possible, and remove any messages or operations that aren't causing issues.
-    3. Add the appropriate files to test/request-response-samples (see the README therein)
-    4. Commit your changes to a feature branch within your fork.
-    5. Issue a Pull Request
+    2. Make the WSDL, request, and response XML as generic as possible.
+    3. Only include the messages or operations that are having issues.
+    4. Add the appropriate files to test/request-response-samples (see the README therein)
+    5. Commit your changes to a feature branch within your fork.
+    6. Issue a pull request
 ````
 
 * If your issue is neither WSDL nor client related:
@@ -44,4 +45,4 @@ It's really easy to file an issue, it's much harder to submit a pull request.  T
 Any pull request or issue filed is subject to an expiration date.  We will close any open issue that has not recieved a response within a 2 week timeframe.  The goal is not to sweep dirt under the rug, but to keep the focus on merging in pull requests.  Please provide pull requests that meet the above criteria wherever possible.
 
 ##Other ways you can contribute
-Please add response, request, and WSDL files to test/wsdl, and test/request-response-samples (see README therein).  Doing to documents behavior and reduces the likelihood that bugs will be introduced by future pull requests.
+Please add response, request, and WSDL files to test/wsdl, and test/request-response-samples (see README therein).  Doing so documents behavior and reduces the likelihood that bugs will be introduced by future pull requests.
