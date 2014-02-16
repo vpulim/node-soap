@@ -23,9 +23,10 @@ var wsdlStrictTests = {},
 
 fs.readdirSync(__dirname+'/wsdl/strict').forEach(function(file) {
     if (!/.wsdl$/.exec(file)) return;
-    wsdlStrictTests['should parse '+file] = function(done) {
+    wsdlStrictTests['should parse and describe '+file] = function(done) {
         soap.createClient(__dirname+'/wsdl/strict/'+file, {strict: true}, function(err, client) {
             assert.ok(!err);
+            client.describe();
             done();
         });
     };
