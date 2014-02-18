@@ -2,7 +2,8 @@ var fs = require('fs'),
     soap = require('..'),
     assert = require('assert'),
     request = require('request'),
-    http = require('http');
+    http = require('http'),
+    path = require('path');
 
 var service = {
     StockQuoteService: {
@@ -140,6 +141,15 @@ module.exports = {
                 });
             });
         },
+
+        'should return wsdl description from VMware VIM wsdl': function (done) {
+            soap.createClient(path.resolve(__dirname+'/wsdl/vmware', 'vim.wsdl'), function (err, client) {
+                assert.ok(!err);
+                var description = client.describe();
+                assert.ok(Object.keys(description).length);
+                done();
+            });
+        }
     },
     'WSDL Parser (strict)': wsdlStrictTests,
     'WSDL Parser (non-strict)': wsdlNonStrictTests
