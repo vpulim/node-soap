@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!-- ATL Server generated Web Service Description -->
+<definitions 
+	xmlns:s="http://www.w3.org/2001/XMLSchema" 
+	xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" 
+	xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" 
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+	xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" 
+	xmlns:s0="urn:MessageService" 
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:atls="http://tempuri.org/vc/atl/server/"
+	targetNamespace="urn:MessageService" 
+	xmlns="http://schemas.xmlsoap.org/wsdl/"
+>
+	<types>
+		<s:schema targetNamespace="urn:MessageService" attributeFormDefault="qualified" elementFormDefault="qualified">
+			<s:import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+		</s:schema>
+	</types>
+	<message name="MessageIn">
+		<part name="bstrResourceID" type="s:string"/>
+	</message>
+	<message name="MessageOut">
+		<part name="return" type="s:string"/>
+		<part name="bstrError" type="s:string"/>
+	</message>
+	<portType name="MessageServiceSoap">
+		<operation name="Message">
+			<input message="s0:MessageIn"/>
+			<output message="s0:MessageOut"/>
+		</operation>
+	</portType>
+	<binding name="MessageServiceSoap" type="s0:MessageServiceSoap">
+		<soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="rpc"/>
+		<operation name="Message">
+			<soap:operation soapAction="#Message" style="rpc"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:MessageService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:MessageService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+	</binding>
+	<service name="MessageService">
+		<port name="MessageServiceSoap" binding="s0:MessageServiceSoap">
+			<soap:address location="http://localhost/Message/Message.dll?Handler=Default"/>
+		</port>
+	</service>
+</definitions>
