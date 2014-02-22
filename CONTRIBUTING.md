@@ -2,9 +2,10 @@
 
 Thank you for your support!  node-soap wouldn't be where it is today without contributors like you who are willing to take the time to improve it for everyone else.
 
-Because SOAP Web Services can differ amongst implementations, there is high risk involved in making changes.  What works for your WSDL, might not work with another.  It is therefore _essential_ that contributors to node-soap adhere to these guidelines:
+Because SOAP Web Services can differ amongst implementations, there is high risk involved in making changes.  What works for your WSDL, might not work with another.  It is therefore _essential_ that contributors to node-soap adhere to these guidelines.
 
 ##Making Changes
+* Any and all pull requests to change documentation or typos are welcome!
 * If your issue is WSDL related:
 ````
     1. Make your WSDL as generic as possible to recreate the issue
