@@ -1,0 +1,722 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:platformMsgs="urn:messages_2013_2.platform.webservices.netsuite.com" xmlns:platformFaultTyp="urn:types.faults_2013_2.platform.webservices.netsuite.com" xmlns:platformCore="urn:core_2013_2.platform.webservices.netsuite.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:messages_2013_2.platform.webservices.netsuite.com" elementFormDefault="qualified" attributeFormDefault="unqualified">
+    <import namespace="urn:core_2013_2.platform.webservices.netsuite.com" schemaLocation="platform.core.xsd"/>
+    <import namespace="urn:types.faults_2013_2.platform.webservices.netsuite.com" schemaLocation="platform.faultTypes.xsd"/>
+    <!-- ******************************************************************** -->
+    <!-- Header Information -->
+    <!-- ******************************************************************** -->
+    <complexType name="ApplicationInfo">
+        <sequence>
+            <element name="applicationId" minOccurs="0" type="xsd:string"/>
+        </sequence>
+    </complexType>
+    <element name="applicationInfo" type="platformMsgs:ApplicationInfo"/>
+    <complexType name="PartnerInfo">
+        <sequence>
+            <element name="partnerId" minOccurs="0" type="xsd:string"/>
+        </sequence>
+    </complexType>
+    <element name="partnerInfo" type="platformMsgs:PartnerInfo"/>
+    <complexType name="DocumentInfo">
+        <sequence>
+            <element name="nsId" type="xsd:string"/>
+        </sequence>
+    </complexType>
+    <element name="documentInfo" type="platformMsgs:DocumentInfo"/>
+    <complexType name="Preferences">
+        <sequence>
+            <element name="warningAsError" minOccurs="0" type="xsd:boolean"/>
+            <element name="disableMandatoryCustomFieldValidation" minOccurs="0" type="xsd:boolean"/>
+            <element name="disableSystemNotesForCustomFields" minOccurs="0" type="xsd:boolean"/>
+            <element name="ignoreReadOnlyFields" minOccurs="0" type="xsd:boolean"/>
+        </sequence>
+    </complexType>
+    <element name="preferences" type="platformMsgs:Preferences"/>
+    <complexType name="SearchPreferences">
+        <sequence>
+            <element name="bodyFieldsOnly" minOccurs="0" type="xsd:boolean" default="true"/>
+            <element name="returnSearchColumns" minOccurs="0" type="xsd:boolean" default="true"/>
+            <element name="pageSize" minOccurs="0" type="xsd:int"/>
+        </sequence>
+    </complexType>
+    <element name="searchPreferences" type="platformMsgs:SearchPreferences"/>
+    <element name="passport" type="platformCore:Passport"/>
+    <!-- ******************************************************************** -->
+    <!-- Responses -->
+    <!-- ******************************************************************** -->
+    <complexType name="SessionResponse">
+        <sequence>
+            <element ref="platformCore:status"/>
+            <element name="userId" type="platformCore:RecordRef" minOccurs="0"/>
+            <element ref="platformCore:wsRoleList" minOccurs="0"/>
+        </sequence>
+    </complexType>
+    <element name="sessionResponse" type="platformMsgs:SessionResponse"/>
+    <complexType name="WriteResponse">
+        <sequence>
+            <element ref="platformCore:status"/>
+            <element name="baseRef" type="platformCore:BaseRef" minOccurs="0"/>
+        </sequence>
+    </complexType>
+    <element name="writeResponse" type="platformMsgs:WriteResponse"/>
+    <complexType name="ReadResponse">
+        <sequence>
+            <element ref="platformCore:status"/>
+            <element name="record" type="platformCore:Record" minOccurs="0"/>
+        </sequence>
+    </complexType>
+    <element name="readResponse" type="platformMsgs:ReadResponse"/>
+    <complexType name="WriteResponseList">
+        <sequence>
+            <element name="writeResponse" type="platformMsgs:WriteResponse" maxOccurs="unbounded"/>
+        </sequence>
+    </complexType>
+    <element name="writeResponseList" type="platformMsgs:WriteResponseList"/>
+    <complexType name="ReadResponseList">
+        <sequence>
+            <element name="readResponse" type="platformMsgs:ReadResponse" minOccurs="0" maxOccurs="unbounded"/>
+        </sequence>
+    </complexType>
+    <element name="readResponseList" type="platformMsgs:ReadResponseList"/>
+    <!-- ******************************************************************** -->
+    <!-- Message Responses -->
+    <!-- ******************************************************************** -->
+    <!-- Login -->
+    <complexType name="LoginResponse">
+        <sequence>
+            <element ref="platformMsgs:sessionResponse"/>
+        </sequence>
+    </complexType>
+    <element name="loginResponse" type="platformMsgs:LoginResponse"/>
+    <!-- SSO Login -->
+    <complexType name="SsoLoginResponse">
+        <sequence>
+            <element ref="platformMsgs:sessionResponse"/>
+        </sequence>
+    </complexType>
+    <element name="ssoLoginResponse" type="platformMsgs:SsoLoginResponse"/>
+    <!-- Map SSO-->
+    <complexType name="MapSsoResponse">
+        <sequence>
+            <element ref="platformMsgs:sessionResponse"/>
+        </sequence>
+    </complexType>
+    <element name="mapSsoResponse" type="platformMsgs:MapSsoResponse"/>
+    <!-- Change Password-->
+    <complexType name="ChangePasswordResponse">
+        <sequence>
+            <element ref="platformMsgs:sessionResponse"/>
+        </sequence>
+    </complexType>
+    <element name="changePasswordResponse" type="platformMsgs:ChangePasswordResponse"/>
+    <!-- Change Password-->
+    <complexType name="ChangeEmailResponse">
+        <sequence>
+            <element ref="platformMsgs:sessionResponse"/>
+        </sequence>
+    </complexType>
+    <element name="changeEmailResponse" type="platformMsgs:ChangeEmailResponse"/>
+    <!-- Logout -->
+    <complexType name="LogoutResponse">
+        <sequence>
+            <element ref="platformMsgs:sessionResponse"/>
+        </sequence>
+    </complexType>
+    <element name="logoutResponse" type="platformMsgs:LogoutResponse"/>
+    <!-- Add -->
+    <complexType name="AddResponse">
+        <sequence>
+            <element ref="platformMsgs:writeResponse"/>
+        </sequence>
+    </complexType>
+    <element name="addResponse" type="platformMsgs:AddResponse"/>
+    <complexType name="AddListResponse">
+        <sequence>
+            <element ref="platformMsgs:writeResponseList"/>
+        </sequence>
+    </complexType>
+    <element name="addListResponse" type="platformMsgs:AddListResponse"/>
+    <!-- Updates -->
+    <complexType name="UpdateResponse">
+        <sequence>
+            <element ref="platformMsgs:writeResponse"/>
+        </sequence>
+    </complexType>
+    <element name="updateResponse" type="platformMsgs:UpdateResponse"/>
+    <complexType name="UpdateListResponse">
+        <sequence>
+            <element ref="platformMsgs:writeResponseList"/>
+        </sequence>
+    </complexType>
+    <element name="updateListResponse" type="platformMsgs:UpdateListResponse"/>
+    <!-- Upserts -->
+    <complexType name="UpsertResponse">
+        <sequence>
+            <element ref="platformMsgs:writeResponse"/>
+        </sequence>
+    </complexType>
+    <element name="upsertResponse" type="platformMsgs:UpsertResponse"/>
+    <complexType name="UpsertListResponse">
+        <sequence>
+            <element ref="platformMsgs:writeResponseList"/>
+        </sequence>
+    </complexType>
+    <element name="upsertListResponse" type="platformMsgs:UpsertListResponse"/>
+    <!-- Deletes -->
+    <complexType name="DeleteResponse">
+        <sequence>
+            <element ref="platformMsgs:writeResponse"/>
+        </sequence>
+    </complexType>
+    <element name="deleteResponse" type="platformMsgs:DeleteResponse"/>
+    <complexType name="DeleteListResponse">
+        <sequence>
+            <element ref="platformMsgs:writeResponseList"/>
+        </sequence>
+    </complexType>
+    <element name="deleteListResponse" type="platformMsgs:DeleteListResponse"/>
+    <!-- Search -->
+    <!-- Searches -->
+    <!-- ******************************************************************** -->
+    <complexType name="SearchResponse">
+        <sequence>
+            <element ref="platformCore:searchResult"/>
+        </sequence>
+    </complexType>
+    <element name="searchResponse" type="platformMsgs:SearchResponse"/>
+    <complexType name="SearchMoreResponse">
+        <sequence>
+            <element ref="platformCore:searchResult"/>
+        </sequence>
+    </complexType>
+    <element name="searchMoreResponse" type="platformMsgs:SearchMoreResponse"/>
+    <complexType name="SearchMoreWithIdResponse">
+        <sequence>
+            <element ref="platformCore:searchResult"/>
+        </sequence>
+    </complexType>
+    <element name="searchMoreWithIdResponse" type="platformMsgs:SearchMoreWithIdResponse"/>
+    <complexType name="SearchNextResponse">
+        <sequence>
+            <element ref="platformCore:searchResult"/>
+        </sequence>
+    </complexType>
+    <element name="searchNextResponse" type="platformMsgs:SearchNextResponse"/>
+    <!-- Get -->
+    <complexType name="GetResponse">
+        <sequence>
+            <element ref="platformMsgs:readResponse"/>
+        </sequence>
+    </complexType>
+    <element name="getResponse" type="platformMsgs:GetResponse"/>
+    <complexType name="GetListResponse">
+        <sequence>
+            <element ref="platformMsgs:readResponseList"/>
+        </sequence>
+    </complexType>
+    <element name="getListResponse" type="platformMsgs:GetListResponse"/>
+    <complexType name="GetAllResponse">
+        <sequence>
+            <element ref="platformCore:getAllResult"/>
+        </sequence>
+    </complexType>
+    <element name="getAllResponse" type="platformMsgs:GetAllResponse"/>
+    <complexType name="GetSavedSearchResponse">
+        <sequence>
+            <element ref="platformCore:getSavedSearchResult"/>
+        </sequence>
+    </complexType>
+    <element name="getSavedSearchResponse" type="platformMsgs:GetSavedSearchResponse"/>
+    <complexType name="GetCustomizationIdResponse">
+        <sequence>
+            <element ref="platformCore:getCustomizationIdResult"/>
+        </sequence>
+    </complexType>
+    <element name="getCustomizationIdResponse" type="platformMsgs:GetCustomizationIdResponse"/>
+    <complexType name="InitializeResponse">
+        <sequence>
+            <element ref="platformMsgs:readResponse"/>
+        </sequence>
+    </complexType>
+    <element name="initializeResponse" type="platformMsgs:InitializeResponse"/>
+    <complexType name="InitializeListResponse">
+        <sequence>
+            <element ref="platformMsgs:readResponseList"/>
+        </sequence>
+    </complexType>
+    <element name="initializeListResponse" type="platformMsgs:InitializeListResponse"/>
+    <complexType name="getSelectValueResponse">
+        <sequence>
+            <element ref="platformCore:getSelectValueResult"/>
+        </sequence>
+    </complexType>
+    <element name="getSelectValueResponse" type="platformMsgs:getSelectValueResponse"/>
+    <!-- Item Availability-->
+    <complexType name="GetItemAvailabilityResponse">
+        <sequence>
+            <element ref="platformCore:getItemAvailabilityResult"/>
+        </sequence>
+    </complexType>
+    <element name="getItemAvailabilityResponse" type="platformMsgs:GetItemAvailabilityResponse"/>
+    <!-- Budget ExchangeRate-->
+    <complexType name="GetBudgetExchangeRateResponse">
+        <sequence>
+            <element ref="platformCore:getBudgetExchangeRateResult"/>
+        </sequence>
+    </complexType>
+    <element name="getBudgetExchangeRateResponse" type="platformMsgs:GetBudgetExchangeRateResponse"/>
+    <!-- Consolidated ExchangeRate-->
+    <complexType name="GetConsolidatedExchangeRateResponse">
+        <sequence>
+            <element ref="platformCore:getConsolidatedExchangeRateResult"/>
+        </sequence>
+    </complexType>
+    <element name="getConsolidatedExchangeRateResponse" type="platformMsgs:GetConsolidatedExchangeRateResponse"/>
+    <!-- CurrencyRate-->
+    <complexType name="GetCurrencyRateResponse">
+        <sequence>
+            <element ref="platformCore:getCurrencyRateResult"/>
+        </sequence>
+    </complexType>
+    <element name="getCurrencyRateResponse" type="platformMsgs:GetCurrencyRateResponse"/>
+    <!-- DataCenterUrls-->
+    <complexType name="GetDataCenterUrlsResponse">
+        <sequence>
+            <element ref="platformCore:getDataCenterUrlsResult"/>
+        </sequence>
+    </complexType>
+    <element name="getDataCenterUrlsResponse" type="platformMsgs:GetDataCenterUrlsResponse"/>
+    <!-- Posting Activity-->
+    <complexType name="GetPostingTransactionSummaryResponse">
+        <sequence>
+            <element ref="platformCore:getPostingTransactionSummaryResult"/>
+        </sequence>
+    </complexType>
+    <element name="getPostingTransactionSummaryResponse" type="platformMsgs:GetPostingTransactionSummaryResponse"/>
+    <!-- Server Time-->
+    <complexType name="GetServerTimeResponse">
+        <sequence>
+            <element ref="platformCore:getServerTimeResult"/>
+        </sequence>
+    </complexType>
+    <element name="getServerTimeResponse" type="platformMsgs:GetServerTimeResponse"/>
+    <!-- Attach-->
+    <complexType name="AttachResponse">
+        <sequence>
+            <element ref="platformMsgs:writeResponse"/>
+        </sequence>
+    </complexType>
+    <element name="attachResponse" type="platformMsgs:AttachResponse"/>
+    <!-- Detach-->
+    <complexType name="DetachResponse">
+        <sequence>
+            <element ref="platformMsgs:writeResponse"/>
+        </sequence>
+    </complexType>
+    <element name="detachResponse" type="platformMsgs:DetachResponse"/>
+    <!-- updateInviteeStatus Responses -->
+    <complexType name="UpdateInviteeStatusResponse">
+        <sequence>
+            <element ref="platformMsgs:writeResponse"/>
+        </sequence>
+    </complexType>
+    <element name="updateInviteeStatusResponse" type="platformMsgs:UpdateInviteeStatusResponse"/>
+    <complexType name="UpdateInviteeStatusListResponse">
+        <sequence>
+            <element ref="platformMsgs:writeResponseList"/>
+        </sequence>
+    </complexType>
+    <element name="updateInviteeStatusListResponse" type="platformMsgs:UpdateInviteeStatusListResponse"/>
+    <!-- Async Responses -->
+    <complexType name="AsyncStatusResponse">
+        <sequence>
+            <element ref="platformCore:asyncStatusResult"/>
+        </sequence>
+    </complexType>
+    <element name="asyncAddListResponse" type="platformMsgs:AsyncStatusResponse"/>
+    <element name="asyncUpdateListResponse" type="platformMsgs:AsyncStatusResponse"/>
+    <element name="asyncUpsertListResponse" type="platformMsgs:AsyncStatusResponse"/>
+    <element name="asyncDeleteListResponse" type="platformMsgs:AsyncStatusResponse"/>
+    <element name="asyncGetListResponse" type="platformMsgs:AsyncStatusResponse"/>
+    <element name="asyncInitializeListResponse" type="platformMsgs:AsyncStatusResponse"/>
+    <element name="asyncSearchResponse" type="platformMsgs:AsyncStatusResponse"/>
+    <element name="checkAsyncStatusResponse" type="platformMsgs:AsyncStatusResponse"/>
+    <complexType name="GetAsyncResultResponse">
+        <sequence>
+            <element ref="platformMsgs:asyncResult" minOccurs="1" maxOccurs="1"/>
+        </sequence>
+    </complexType>
+    <element name="getAsyncResultResponse" type="platformMsgs:GetAsyncResultResponse"/>
+    <!-- Async Results -->
+    <complexType name="AsyncResult" abstract="true"/>
+    <element name="asyncResult" type="platformMsgs:AsyncResult"/>
+    <complexType name="AsyncAddListResult">
+        <complexContent>
+            <extension base="platformMsgs:AsyncResult">
+                <sequence>
+                    <element ref="platformMsgs:writeResponseList"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    <element name="asyncAddListResult" type="platformMsgs:AsyncAddListResult"/>
+    <complexType name="AsyncUpdateListResult">
+        <complexContent>
+            <extension base="platformMsgs:AsyncResult">
+                <sequence>
+                    <element ref="platformMsgs:writeResponseList"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    <element name="asyncUpdateListResult" type="platformMsgs:AsyncUpdateListResult"/>
+    <complexType name="AsyncUpsertListResult">
+        <complexContent>
+            <extension base="platformMsgs:AsyncResult">
+                <sequence>
+                    <element ref="platformMsgs:writeResponseList"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    <element name="asyncUpsertListResult" type="platformMsgs:AsyncUpsertListResult"/>
+    <complexType name="AsyncDeleteListResult">
+        <complexContent>
+            <extension base="platformMsgs:AsyncResult">
+                <sequence>
+                    <element ref="platformMsgs:writeResponseList"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    <element name="asyncDeleteListResult" type="platformMsgs:AsyncDeleteListResult"/>
+    <complexType name="AsyncGetListResult">
+        <complexContent>
+            <extension base="platformMsgs:AsyncResult">
+                <sequence>
+                    <element ref="platformMsgs:readResponseList"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    <element name="asyncGetListResult" type="platformMsgs:AsyncGetListResult"/>
+    <complexType name="AsyncSearchResult">
+        <complexContent>
+            <extension base="platformMsgs:AsyncResult">
+                <sequence>
+                    <element ref="platformCore:searchResult"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    <complexType name="AsyncInitializeListResult">
+        <complexContent>
+            <extension base="platformMsgs:AsyncResult">
+                <sequence>
+                    <element ref="platformMsgs:readResponseList"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    <element name="asyncInitializeListResult" type="platformMsgs:AsyncInitializeListResult"/>
+    <element name="asyncSearchResult" type="platformMsgs:AsyncSearchResult"/>
+    <!-- Deletion-->
+    <complexType name="GetDeletedResponse">
+        <sequence>
+            <element ref="platformCore:getDeletedResult"/>
+        </sequence>
+    </complexType>
+    <element name="getDeletedResponse" type="platformMsgs:GetDeletedResponse"/>
+    <!-- ******************************************************************** -->
+    <!-- Requests -->
+    <!-- ******************************************************************** -->
+    <!-- Method signatures -->
+    <!-- Login-->
+    <complexType name="LoginRequest">
+        <sequence>
+            <element name="passport" type="platformCore:Passport"/>
+        </sequence>
+    </complexType>
+    <element name="login" type="platformMsgs:LoginRequest"/>
+    <!-- SSO Login -->
+    <complexType name="SsoLoginRequest">
+        <sequence>
+            <element name="ssoPassport" type="platformCore:SsoPassport"/>
+        </sequence>
+    </complexType>
+    <element name="ssoLogin" type="platformMsgs:SsoLoginRequest"/>
+    <!-- Map SSO-->
+    <complexType name="MapSsoRequest">
+        <sequence>
+            <element name="ssoCredentials" type="platformCore:SsoCredentials"/>
+        </sequence>
+    </complexType>
+    <element name="mapSso" type="platformMsgs:MapSsoRequest"/>
+    <!-- Change Password-->
+    <complexType name="ChangePasswordRequest">
+        <sequence>
+            <element name="changePassword" type="platformCore:ChangePassword"/>
+        </sequence>
+    </complexType>
+    <element name="changePassword" type="platformMsgs:ChangePasswordRequest"/>
+    <!-- Change Email-->
+    <complexType name="ChangeEmailRequest">
+        <sequence>
+            <element name="changeEmail" type="platformCore:ChangeEmail"/>
+        </sequence>
+    </complexType>
+    <element name="changeEmail" type="platformMsgs:ChangeEmailRequest"/>
+    <!-- Logout-->
+    <complexType name="LogoutRequest"/>
+    <element name="logout" type="platformMsgs:LogoutRequest"/>
+    <complexType name="AddRequest">
+        <sequence>
+            <element name="record" type="platformCore:Record"/>
+        </sequence>
+    </complexType>
+    <element name="add" type="platformMsgs:AddRequest"/>
+    <complexType name="DeleteRequest">
+        <sequence>
+            <element name="baseRef" type="platformCore:BaseRef"/>
+        </sequence>
+    </complexType>
+    <element name="delete" type="platformMsgs:DeleteRequest"/>
+    <!-- Search -->
+    <complexType name="SearchRequest">
+        <sequence>
+            <element name="searchRecord" type="platformCore:SearchRecord"/>
+        </sequence>
+    </complexType>
+    <element name="search" type="platformMsgs:SearchRequest"/>
+    <complexType name="SearchMoreRequest">
+        <sequence>
+            <element name="pageIndex" type="xsd:int"/>
+        </sequence>
+    </complexType>
+    <element name="searchMore" type="platformMsgs:SearchMoreRequest"/>
+    <complexType name="SearchMoreWithIdRequest">
+        <sequence>
+            <element name="searchId" type="xsd:string"/>
+            <element name="pageIndex" type="xsd:int"/>
+        </sequence>
+    </complexType>
+    <element name="searchMoreWithId" type="platformMsgs:SearchMoreWithIdRequest"/>
+    <complexType name="SearchNextRequest">
+        <sequence/>
+    </complexType>
+    <element name="searchNext" type="platformMsgs:SearchNextRequest"/>
+    <complexType name="UpdateRequest">
+        <sequence>
+            <element name="record" type="platformCore:Record"/>
+        </sequence>
+    </complexType>
+    <element name="update" type="platformMsgs:UpdateRequest"/>
+    <complexType name="UpsertRequest">
+        <sequence>
+            <element name="record" type="platformCore:Record"/>
+        </sequence>
+    </complexType>
+    <element name="upsert" type="platformMsgs:UpsertRequest"/>
+    <complexType name="AddListRequest">
+        <sequence>
+            <element name="record" type="platformCore:Record" minOccurs="1" maxOccurs="unbounded"/>
+        </sequence>
+    </complexType>
+    <element name="addList" type="platformMsgs:AddListRequest"/>
+    <complexType name="DeleteListRequest">
+        <sequence>
+            <element name="baseRef" type="platformCore:BaseRef" minOccurs="1" maxOccurs="unbounded"/>
+        </sequence>
+    </complexType>
+    <element name="deleteList" type="platformMsgs:DeleteListRequest"/>
+    <complexType name="UpdateListRequest">
+        <sequence>
+            <element name="record" type="platformCore:Record" minOccurs="1" maxOccurs="unbounded"/>
+        </sequence>
+    </complexType>
+    <element name="updateList" type="platformMsgs:UpdateListRequest"/>
+    <complexType name="UpsertListRequest">
+        <sequence>
+            <element name="record" type="platformCore:Record" minOccurs="1" maxOccurs="unbounded"/>
+        </sequence>
+    </complexType>
+    <element name="upsertList" type="platformMsgs:UpsertListRequest"/>
+    <complexType name="GetRequest">
+        <sequence>
+            <element name="baseRef" type="platformCore:BaseRef"/>
+        </sequence>
+    </complexType>
+    <element name="get" type="platformMsgs:GetRequest"/>
+    <complexType name="GetListRequest">
+        <sequence>
+            <element name="baseRef" type="platformCore:BaseRef" minOccurs="1" maxOccurs="unbounded"/>
+        </sequence>
+    </complexType>
+    <element name="getList" type="platformMsgs:GetListRequest"/>
+    <complexType name="GetAllRequest">
+        <sequence>
+            <element name="record" type="platformCore:GetAllRecord" minOccurs="1"/>
+        </sequence>
+    </complexType>
+    <element name="getAll" type="platformMsgs:GetAllRequest"/>
+    <complexType name="GetSavedSearchRequest">
+        <sequence>
+            <element name="record" type="platformCore:GetSavedSearchRecord" minOccurs="1"/>
+        </sequence>
+    </complexType>
+    <element name="getSavedSearch" type="platformMsgs:GetSavedSearchRequest"/>
+    <complexType name="GetCustomizationIdRequest">
+        <sequence>
+            <element name="customizationType" type="platformCore:CustomizationType" minOccurs="1"/>
+            <element name="includeInactives" type="xsd:boolean" minOccurs="1"/>
+        </sequence>
+    </complexType>
+    <element name="getCustomizationId" type="platformMsgs:GetCustomizationIdRequest"/>
+    <complexType name="InitializeRequest">
+        <sequence>
+            <element name="initializeRecord" type="platformCore:InitializeRecord" minOccurs="1"/>
+        </sequence>
+    </complexType>
+    <element name="initialize" type="platformMsgs:InitializeRequest"/>
+    <complexType name="InitializeListRequest">
+        <sequence>
+            <element name="initializeRecord" type="platformCore:InitializeRecord" minOccurs="1" maxOccurs="unbounded"/>
+        </sequence>
+    </complexType>
+    <element name="initializeList" type="platformMsgs:InitializeListRequest"/>
+    <complexType name="getSelectValueRequest">
+        <sequence>
+            <element name="fieldDescription" type="platformCore:GetSelectValueFieldDescription" minOccurs="1" maxOccurs="1"/>
+            <element name="pageIndex" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+        </sequence>
+    </complexType>
+    <element name="getSelectValue" type="platformMsgs:getSelectValueRequest"/>
+    <complexType name="GetItemAvailabilityRequest">
+        <sequence>
+            <element name="itemAvailabilityFilter" type="platformCore:ItemAvailabilityFilter" minOccurs="1" maxOccurs="1"/>
+        </sequence>
+    </complexType>
+    <element name="getItemAvailability" type="platformMsgs:GetItemAvailabilityRequest"/>
+    <complexType name="GetBudgetExchangeRateRequest">
+        <sequence>
+            <element name="budgetExchangeRateFilter" type="platformCore:BudgetExchangeRateFilter" minOccurs="1" maxOccurs="1"/>
+        </sequence>
+    </complexType>
+    <element name="getBudgetExchangeRate" type="platformMsgs:GetBudgetExchangeRateRequest"/>
+    <complexType name="GetConsolidatedExchangeRateRequest">
+        <sequence>
+            <element name="consolidatedExchangeRateFilter" type="platformCore:ConsolidatedExchangeRateFilter" minOccurs="1" maxOccurs="1"/>
+        </sequence>
+    </complexType>
+    <element name="getConsolidatedExchangeRate" type="platformMsgs:GetConsolidatedExchangeRateRequest"/>
+    <complexType name="GetCurrencyRateRequest">
+        <sequence>
+            <element name="currencyRateFilter" type="platformCore:CurrencyRateFilter" minOccurs="1" maxOccurs="1"/>
+        </sequence>
+    </complexType>
+    <element name="getCurrencyRate" type="platformMsgs:GetCurrencyRateRequest"/>
+    <complexType name="GetDataCenterUrlsRequest">
+        <sequence>
+            <element name="account" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+        </sequence>
+    </complexType>
+    <element name="getDataCenterUrls" type="platformMsgs:GetDataCenterUrlsRequest"/>
+    <complexType name="GetPostingTransactionSummaryRequest">
+        <sequence>
+            <element name="fields" type="platformCore:PostingTransactionSummaryField" minOccurs="1" maxOccurs="1"/>
+            <element name="filters" type="platformCore:PostingTransactionSummaryFilter" minOccurs="0" maxOccurs="1"/>
+            <element name="pageIndex" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+        </sequence>
+    </complexType>
+    <element name="getPostingTransactionSummary" type="platformMsgs:GetPostingTransactionSummaryRequest"/>
+    <complexType name="GetServerTimeRequest"/>
+    <element name="getServerTime" type="platformMsgs:GetServerTimeRequest"/>
+    <complexType name="AttachRequest">
+        <sequence>
+            <element name="attachReference" type="platformCore:AttachReference" minOccurs="1" maxOccurs="1"/>
+        </sequence>
+    </complexType>
+    <element name="attach" type="platformMsgs:AttachRequest"/>
+    <complexType name="DetachRequest">
+        <sequence>
+            <element name="detachReference" type="platformCore:DetachReference" minOccurs="1" maxOccurs="1"/>
+        </sequence>
+    </complexType>
+    <element name="detach" type="platformMsgs:DetachRequest"/>
+    <!-- Async -->
+    <complexType name="AsyncAddListRequest">
+        <sequence>
+            <element name="record" type="platformCore:Record" minOccurs="1" maxOccurs="unbounded"/>
+        </sequence>
+    </complexType>
+    <!-- UpdateInviteeStatus requests -->
+    <complexType name="UpdateInviteeStatusRequest">
+        <sequence>
+            <element name="updateInviteeStatusReference" type="platformCore:UpdateInviteeStatusReference" minOccurs="1"/>
+        </sequence>
+    </complexType>
+    <element name="updateInviteeStatus" type="platformMsgs:UpdateInviteeStatusRequest"/>
+    <complexType name="UpdateInviteeStatusListRequest">
+        <sequence>
+            <element name="updateInviteeStatusReference" type="platformCore:UpdateInviteeStatusReference" minOccurs="1" maxOccurs="unbounded"/>
+        </sequence>
+    </complexType>
+    <element name="updateInviteeStatusList" type="platformMsgs:UpdateInviteeStatusListRequest"/>
+    <element name="asyncAddList" type="platformMsgs:AsyncAddListRequest"/>
+    <complexType name="AsyncUpdateListRequest">
+        <sequence>
+            <element name="record" type="platformCore:Record" minOccurs="1" maxOccurs="unbounded"/>
+        </sequence>
+    </complexType>
+    <element name="asyncUpdateList" type="platformMsgs:AsyncUpdateListRequest"/>
+    <complexType name="AsyncUpsertListRequest">
+        <sequence>
+            <element name="record" type="platformCore:Record" minOccurs="1" maxOccurs="unbounded"/>
+        </sequence>
+    </complexType>
+    <element name="asyncUpsertList" type="platformMsgs:AsyncUpsertListRequest"/>
+    <complexType name="AsyncDeleteListRequest">
+        <sequence>
+            <element name="baseRef" type="platformCore:BaseRef" minOccurs="1" maxOccurs="unbounded"/>
+        </sequence>
+    </complexType>
+    <element name="asyncDeleteList" type="platformMsgs:AsyncDeleteListRequest"/>
+    <complexType name="AsyncGetListRequest">
+        <sequence>
+            <element name="baseRef" type="platformCore:BaseRef" minOccurs="1" maxOccurs="unbounded"/>
+        </sequence>
+    </complexType>
+    <element name="asyncGetList" type="platformMsgs:AsyncGetListRequest"/>
+    <complexType name="AsyncInitializeListRequest">
+        <sequence>
+            <element name="initializeRecord" type="platformCore:InitializeRecord" minOccurs="1" maxOccurs="unbounded"/>
+        </sequence>
+    </complexType>
+    <element name="asyncInitializeList" type="platformMsgs:AsyncInitializeListRequest"/>
+    <complexType name="AsyncSearchRequest">
+        <sequence>
+            <element name="searchRecord" type="platformCore:SearchRecord"/>
+        </sequence>
+    </complexType>
+    <element name="asyncSearch" type="platformMsgs:AsyncSearchRequest"/>
+    <complexType name="CheckAsyncStatusRequest">
+        <sequence>
+            <element name="jobId" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+        </sequence>
+    </complexType>
+    <element name="checkAsyncStatus" type="platformMsgs:CheckAsyncStatusRequest"/>
+    <complexType name="GetAsyncResultRequest">
+        <sequence>
+            <element name="jobId" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+            <element name="pageIndex" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+        </sequence>
+    </complexType>
+    <element name="getAsyncResult" type="platformMsgs:GetAsyncResultRequest"/>
+    <!-- Deletion-->
+    <complexType name="GetDeletedRequest">
+        <sequence>
+            <element name="getDeletedFilter" type="platformCore:GetDeletedFilter" minOccurs="1" maxOccurs="1"/>
+        </sequence>
+    </complexType>
+    <element name="getDeleted" type="platformMsgs:GetDeletedRequest"/>
+</schema>
