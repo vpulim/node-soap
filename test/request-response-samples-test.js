@@ -54,7 +54,12 @@ tests.forEach(function(test){
   var wsdl = path.resolve(test, 'soap.wsdl');
   var requestJSON = require(path.resolve(test, 'request.json'));
   var requestXML = ""+fs.readFileSync(path.resolve(test, 'request.xml'));
-  var responseJSON = require(path.resolve(test, 'response.json'));
+  if (fs.existsSync(path.resolve(test, 'response.json'))) {
+    var responseJSON = require(path.resolve(test, 'response.json'));
+  } else {
+    // assume testing error condition if response.json not found
+    var responseJSON = require(path.resolve(test, 'error_response.json'));
+  }
   var responseXML = ""+fs.readFileSync(path.resolve(test, 'response.xml'));
 
   generateTest(name, methodName, wsdl, requestXML, requestJSON, responseXML, responseJSON);
@@ -66,7 +71,11 @@ function generateTest(name, methodName, wsdlPath, requestXML, requestJSON, respo
     requestContext.responseToSend = responseXML;
     soap.createClient(wsdlPath, function(err, client){
       client[methodName](requestJSON, function(err, json, body){
-        assert.deepEqual(json, responseJSON);
+        if (err) {
+          assert.deepEqual(err.root, responseJSON);
+        } else {
+          assert.deepEqual(json, responseJSON);
+        }
         assert.deepEqual(body, responseXML);
         done();
       });

@@ -1,0 +1,17 @@
+{
+  "Envelope":{
+    "Body":{
+      "Fault":{
+        "faultcode":"soapenv:Server.userException",
+        "faultstring":"You have entered an invalid email address or password. Please try again.",
+        "detail":{
+          "invalidCredentialsFault":{
+            "code":"INVALID_LOGIN_CREDENTIALS",
+            "message":"You have entered an invalid email address or password. Please try again."
+          },
+          "hostname":"partners-java10009.bos.netledger.com"
+        }
+      }
+    }
+  }
+}
