@@ -16,5 +16,13 @@
   "node":true,
   "strict": true,
   "trailing":true,
-  "undef":true
+  "undef":true,
+  "predef": [
+    "describe",         // Used by mocha
+    "it",               // Used by mocha
+    "before",           // Used by mocha
+    "beforeEach",       // Used by mocha
+    "after",            // Used by mocha
+    "afterEach"         // Used by mocha
+  ]
 }
