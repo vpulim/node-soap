@@ -7,70 +7,10 @@
             <element name="message" type="xsd:string"/>
         </sequence>
     </complexType>
-    <complexType name="InsufficientPermissionFault">
-        <complexContent>
-            <extension base="platformFaults:SoapFault"/>
-        </complexContent>
-    </complexType>
-    <element name="insufficientPermissionFault" type="platformFaults:InsufficientPermissionFault"/>
-    <complexType name="InvalidAccountFault">
-        <complexContent>
-            <extension base="platformFaults:SoapFault"/>
-        </complexContent>
-    </complexType>
-    <element name="invalidAccountFault" type="platformFaults:InvalidAccountFault"/>
     <complexType name="InvalidCredentialsFault">
         <complexContent>
             <extension base="platformFaults:SoapFault"/>
         </complexContent>
     </complexType>
     <element name="invalidCredentialsFault" type="platformFaults:InvalidCredentialsFault"/>
-    <complexType name="InvalidSessionFault">
-        <complexContent>
-            <extension base="platformFaults:SoapFault"/>
-        </complexContent>
-    </complexType>
-    <element name="invalidSessionFault" type="platformFaults:InvalidSessionFault"/>
-    <complexType name="ExceededRequestLimitFault">
-        <complexContent>
-            <extension base="platformFaults:SoapFault"/>
-        </complexContent>
-    </complexType>
-    <element name="exceededRequestLimitFault" type="platformFaults:ExceededRequestLimitFault"/>
-    <complexType name="ExceededUsageLimitFault">
-        <complexContent>
-            <extension base="platformFaults:SoapFault"/>
-        </complexContent>
-    </complexType>
-    <element name="exceededUsageLimitFault" type="platformFaults:ExceededUsageLimitFault"/>
-    <complexType name="ExceededRecordCountFault">
-        <complexContent>
-            <extension base="platformFaults:SoapFault"/>
-        </complexContent>
-    </complexType>
-    <element name="exceededRecordCountFault" type="platformFaults:ExceededRecordCountFault"/>
-    <complexType name="InvalidVersionFault">
-        <complexContent>
-            <extension base="platformFaults:SoapFault"/>
-        </complexContent>
-    </complexType>
-    <element name="exceededRequestSizeFault" type="platformFaults:ExceededRequestSizeFault"/>
-    <complexType name="ExceededRequestSizeFault">
-        <complexContent>
-            <extension base="platformFaults:SoapFault"/>
-        </complexContent>
-    </complexType>
-    <element name="invalidVersionFault" type="platformFaults:InvalidVersionFault"/>
-    <complexType name="AsyncFault">
-        <complexContent>
-            <extension base="platformFaults:SoapFault"/>
-        </complexContent>
-    </complexType>
-    <element name="asyncFault" type="platformFaults:AsyncFault"/>
-    <complexType name="UnexpectedErrorFault">
-        <complexContent>
-            <extension base="platformFaults:SoapFault"/>
-        </complexContent>
-    </complexType>
-    <element name="unexpectedErrorFault" type="platformFaults:UnexpectedErrorFault"/>
 </schema>
