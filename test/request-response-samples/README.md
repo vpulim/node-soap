@@ -16,4 +16,5 @@ Follow this process to add samples:
   * `request.xml` - This is the expected XML that should be sent to the server
   * `response.xml` - This is the XMl that the server responds with
   * `response.json` - This is the expected JSON from parsing the response XML
+  * `error_response.json` - This is the expected JSON root attached to the error object when a fault occurs  
   * `soap.wsdl` - This is the WSDL that defines the operation and messages
