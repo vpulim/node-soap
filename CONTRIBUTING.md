@@ -6,6 +6,7 @@ Because SOAP Web Services can differ amongst implementations, there is high risk
 
 ##Making Changes
 * Any and all pull requests to change documentation or typos are welcome!
+* Any WSDL checked in should be as small and as generic as possible.  This is to keep the size of the codebase from growing too large and to keep the reason for submitting the WSDL clear I.E. if the WSDL was submitted because attributes were not being parsed on response XML, then it would be appropriate to submit a WSDL that defines a response with attributes *and nothing else*.  If you find an issue with the parser not being able to handle large WSDLs, then it would be approprate to sumbit a large WSDL to recreate the issue with.
 * If your issue is WSDL related:
 ````
     1. Make your WSDL as generic as possible to recreate the issue
