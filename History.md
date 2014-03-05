@@ -1,3 +1,15 @@
+0.4.1 / 2014-03-04
+=================
+ * package; increased minor version to 0.4.1
+ * Adding an npmignore on test/
+ * Tests are linted
+ * Attributes may be added to requests and parsed from responses
+ * Tests were added for ssl and client authentication
+ * Support for import elements in WSDL documents.
+ * Version in server response matches package.json
+ * Describe errors fixed on OutputElements.
+ * Support for Fault handling.
+
 0.4.0 / 2014-02-15
 ==================
 
