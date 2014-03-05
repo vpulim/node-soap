@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:platformFaults="urn:faults_2013_2.platform.webservices.netsuite.com" xmlns:platformFaultTyp="urn:types.faults_2013_2.platform.webservices.netsuite.com" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" targetNamespace="urn:faults_2013_2.platform.webservices.netsuite.com" elementFormDefault="qualified" attributeFormDefault="unqualified">
+    <import namespace="urn:types.faults_2013_2.platform.webservices.netsuite.com" schemaLocation="soap.platform.faultTypes.xsd"/>
+    <complexType name="SoapFault">
+        <sequence>
+            <element name="code" type="platformFaultTyp:FaultCodeType"/>
+            <element name="message" type="xsd:string"/>
+        </sequence>
+    </complexType>
+    <complexType name="InvalidCredentialsFault">
+        <complexContent>
+            <extension base="platformFaults:SoapFault"/>
+        </complexContent>
+    </complexType>
+    <element name="invalidCredentialsFault" type="platformFaults:InvalidCredentialsFault"/>
+</schema>
