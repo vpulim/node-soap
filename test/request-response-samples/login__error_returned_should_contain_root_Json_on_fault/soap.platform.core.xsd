@@ -43,6 +43,12 @@
         </sequence>
     </complexType>
     
+    <complexType name="BaseRef" abstract="true">
+        <sequence>
+            <element name="name" type="xsd:string" minOccurs="0"/>
+            <!-- record name -->
+        </sequence>
+    </complexType>
     <element name="baseRef" type="platformCore:BaseRef"/>
     <complexType name="RecordRef">
         <complexContent>
