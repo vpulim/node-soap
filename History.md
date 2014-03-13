@@ -1,5 +1,12 @@
+0.4.2 / 2014-03-13
+=================
+* Added the ability to inspect and clear soap headers.
+* Reducing test wsdl size.
+* No longer prefixing elements with a default namespace prefix i.e. xmlns.
+
 0.4.1 / 2014-03-04
 =================
+Note: an error occurred publishing this version to npm.  This version was tagged, so it can be referrenced via git.
  * package; increased minor version to 0.4.1
  * Adding an npmignore on test/
  * Tests are linted
