@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:platformCore="urn:core_2013_2.platform.webservices.netsuite.com" xmlns:platformCoreTyp="urn:types.core_2013_2.platform.webservices.netsuite.com" xmlns:platformFaultTyp="urn:types.faults_2013_2.platform.webservices.netsuite.com" targetNamespace="urn:core_2013_2.platform.webservices.netsuite.com" elementFormDefault="qualified" attributeFormDefault="unqualified">
+    <import namespace="urn:types.core_2013_2.platform.webservices.netsuite.com" schemaLocation="platform.coreTypes.xsd"/>
+    <import namespace="urn:types.faults_2013_2.platform.webservices.netsuite.com" schemaLocation="platform.faultTypes.xsd"/>
+
+	<!-- Status -->
+    <complexType name="StatusDetail">
+        <sequence>
+            <element name="code" type="platformFaultTyp:StatusDetailCodeType"/>
+            <element name="message" type="xsd:string" minOccurs="0"/>
+        </sequence>
+        <attribute name="type" type="platformFaultTyp:StatusDetailType" default="ERROR"/>
+    </complexType>
+    <complexType name="Status">
+        <sequence>
+            <element name="statusDetail" type="platformCore:StatusDetail" minOccurs="0" maxOccurs="unbounded"/>
+        </sequence>
+        <attribute name="isSuccess" type="xsd:boolean"/>
+    </complexType>
+    <element name="status" type="platformCore:Status"/>
+    
+    <complexType name="Record" abstract="true">
+        <sequence>
+            <element name="nullFieldList" type="platformCore:NullField" minOccurs="0" maxOccurs="1"/>
+        </sequence>
+    </complexType>
+    <element name="record" type="platformCore:Record"/>
+    <complexType name="NullField">
+        <sequence>
+            <element name="name" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+        </sequence>
+    </complexType>
+    
+    <complexType name="BaseRef" abstract="true">
+        <sequence>
+            <element name="name" type="xsd:string" minOccurs="0"/>
+            <!-- record name -->
+        </sequence>
+    </complexType>
+    <element name="baseRef" type="platformCore:BaseRef"/>
+    <complexType name="RecordRef">
+        <complexContent>
+            <extension base="platformCore:BaseRef">
+                <attribute name="internalId" type="xsd:string"/>
+                <attribute name="externalId" type="xsd:string"/>
+            </extension>
+        </complexContent>
+    </complexType>
+</schema>
