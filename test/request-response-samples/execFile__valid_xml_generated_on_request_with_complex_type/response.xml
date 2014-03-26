@@ -1,0 +1,10 @@
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tns="urn:RpcExample" xmlns:RpcExample="urn:RpcExample">
+    <soap:Header></soap:Header>
+    <soap:Body>
+        <tns:execFileResponse>
+            <result>
+                <base64EncodedStdOut>qw</base64EncodedStdOut>
+            </result>
+        </tns:execFileResponse>
+    </soap:Body>
+</soap:Envelope>
