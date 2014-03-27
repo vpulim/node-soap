@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns:tns="urn:platform_2013_2.webservices.netsuite.com" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:platformMsgs="urn:messages_2013_2.platform.webservices.netsuite.com" xmlns:platformFaults="urn:faults_2013_2.platform.webservices.netsuite.com" targetNamespace="urn:platform_2013_2.webservices.netsuite.com">
+    <types>
+        <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+            <xsd:import namespace="urn:core_2013_2.platform.webservices.netsuite.com" schemaLocation="soap.platform.core.xsd"/>
+            <xsd:import namespace="urn:faults_2013_2.platform.webservices.netsuite.com" schemaLocation="soap.platform.faults.xsd"/>            
+            <xsd:import namespace="urn:messages_2013_2.platform.webservices.netsuite.com" schemaLocation="soap.platform.messages.xsd"/>
+		</xsd:schema>
+    </types>
+    <message name="loginRequest">
+        <part name="parameters" element="platformMsgs:login"/>
+    </message>
+    <message name="loginResponse">
+        <part name="parameters" element="platformMsgs:loginResponse"/>
+    </message>
+        <message name="InvalidCredentialsFault">
+        <part name="fault" element="platformFaults:invalidCredentialsFault"/>
+    </message>
+    <portType name="NetSuitePortType">
+        <operation name="login">
+            <input name="loginRequest" message="tns:loginRequest"/>
+            <output name="loginResponse" message="tns:loginResponse"/>
+            <fault name="InvalidCredentialsFault" message="tns:InvalidCredentialsFault"/>
+        </operation>
+    </portType>
+	<binding name="NetSuiteBinding" type="tns:NetSuitePortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="login">
+            <soap:operation soapAction="login"/>
+            <input name="loginRequest">
+                <soap:body use="literal"/>
+            </input>
+            <output name="loginResponse">
+                <soap:body use="literal"/>
+            </output>
+            <fault name="InvalidCredentialsFault">
+                <soap:fault name="InvalidCredentialsFault" use="literal"/>
+            </fault>
+        </operation>
+    </binding>
+    <service name="NetSuiteService">
+        <port name="NetSuitePort" binding="tns:NetSuiteBinding">
+            <soap:address location="http://localhost:1509"/>
+        </port>
+    </service>
+</definitions>

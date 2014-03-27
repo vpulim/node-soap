@@ -48,23 +48,35 @@ module.exports = {
 };
 
 tests.forEach(function(test){
-  var name = path.basename(test);
+  var nameParts = path.basename(test).split('__');
+  var name = nameParts[1].replace(/_/g, ' ');
+  var methodName = nameParts[0];
   var wsdl = path.resolve(test, 'soap.wsdl');
   var requestJSON = require(path.resolve(test, 'request.json'));
   var requestXML = ""+fs.readFileSync(path.resolve(test, 'request.xml'));
-  var responseJSON = require(path.resolve(test, 'response.json'));
+  var responseJSON = null;
+  if (fs.existsSync(path.resolve(test, 'response.json'))) {
+    responseJSON = require(path.resolve(test, 'response.json'));
+  } else {
+    // assume testing error condition if response.json not found
+    responseJSON = require(path.resolve(test, 'error_response.json'));
+  }
   var responseXML = ""+fs.readFileSync(path.resolve(test, 'response.xml'));
 
-  generateTest(name, wsdl, requestXML, requestJSON, responseXML, responseJSON);
+  generateTest(name, methodName, wsdl, requestXML, requestJSON, responseXML, responseJSON);
 });
 
-function generateTest(name, wsdlPath, requestXML, requestJSON, responseXML, responseJSON){
+function generateTest(name, methodName, wsdlPath, requestXML, requestJSON, responseXML, responseJSON){
   suite[name] = function(done){
     requestContext.expectedRequest = requestXML;
     requestContext.responseToSend = responseXML;
     soap.createClient(wsdlPath, function(err, client){
-      client.Message(requestJSON, function(err, json, body){
-        assert.deepEqual(json, responseJSON);
+      client[methodName](requestJSON, function(err, json, body){
+        if (err) {
+          assert.deepEqual(err.root, responseJSON);
+        } else {
+          assert.deepEqual(json, responseJSON);
+        }
         assert.deepEqual(body, responseXML);
         done();
       });
