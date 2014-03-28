@@ -29,4 +29,15 @@ describe('SOAP Client', function() {
       done();
     });
   });
+
+  it('should issue async callback for cached wsdl', function(done) {
+    var called = false;
+    soap.createClient(__dirname+'/wsdl/default_namespace.wsdl', function(err, client) {
+      assert.ok(client);
+      assert.ok(!err);
+      called = true;
+      done();
+    });
+    assert(!called);
+  });
 });
