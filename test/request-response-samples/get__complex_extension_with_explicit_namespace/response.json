@@ -1,0 +1,31 @@
+{
+  "readResponse":{
+    "status":{
+      "attributes":{
+        "isSuccess":"true"
+      }
+    },"record":{
+      "attributes":{
+        "internalId":"42",
+        "externalId":"Alex Dniprovskyy",
+        "xsi:type":"listRel:Contact"
+      },
+      "customForm":{
+        "attributes":{
+          "internalId":"-40"
+        },
+        "name":"Standard Contact Form"
+      },
+      "entityId":"Allister Sullivan",
+      "company":{
+        "attributes":{
+          "internalId":"43"
+        },
+        "name":"Sullivan Distributors, Inc."
+      },
+      "salutation":"Mr.",
+      "firstName":"Allister",
+      "lastName":"Sullivan"
+    }
+  }
+}
