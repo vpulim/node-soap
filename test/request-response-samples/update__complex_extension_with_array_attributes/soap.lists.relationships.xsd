@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:listRel="urn:relationships_2013_2.lists.webservices.netsuite.com" xmlns:listRelTyp="urn:types.relationships_2013_2.lists.webservices.netsuite.com" xmlns:platformCoreTyp="urn:types.core_2013_2.platform.webservices.netsuite.com" xmlns:platformCore="urn:core_2013_2.platform.webservices.netsuite.com" xmlns:platformCommon="urn:common_2013_2.platform.webservices.netsuite.com" xmlns:platformCommonTyp="urn:types.common_2013_2.platform.webservices.netsuite.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:relationships_2013_2.lists.webservices.netsuite.com" elementFormDefault="qualified">
+    <import namespace="urn:core_2013_2.platform.webservices.netsuite.com" schemaLocation="platform.core.xsd"/>
+    <import namespace="urn:types.relationships_2013_2.lists.webservices.netsuite.com" schemaLocation="lists.relationshipTypes.xsd"/>
+    <xsd:import namespace="urn:common_2013_2.platform.webservices.netsuite.com" schemaLocation="platform.common.xsd"/>
+    <import namespace="urn:types.common_2013_2.platform.webservices.netsuite.com" schemaLocation="platform.commonTypes.xsd"/>
+    <!-- shared/start -->
+    <complexType name="Subscriptions">
+        <sequence>
+            <element name="subscribed" type="xsd:boolean" minOccurs="0"/>
+            <element name="subscription" type="platformCore:RecordRef" minOccurs="0"/>
+            <element name="lastModifiedDate" type="xsd:dateTime" minOccurs="0"/>
+        </sequence>
+        <attribute name="tempId" type="xsd:string"/>
+    </complexType>
+    <complexType name="SubscriptionsList">
+        <sequence>
+            <element name="subscriptions" type="listRel:Subscriptions" minOccurs="0" maxOccurs="unbounded"/>
+        </sequence>
+        <attribute name="replaceAll" type="xsd:boolean" default="true"/>
+    </complexType>
+    <!-- shared/end -->
+    <!-- contact/start -->
+    <element name="Contact" type="listRel:Contact"/>
+    <complexType name="Contact">
+        <complexContent>
+            <extension base="platformCore:Record">
+                <sequence>
+                    <element name="customForm" type="platformCore:RecordRef" minOccurs="0"/>
+                    <element name="entityId" type="xsd:string" minOccurs="0"/>
+                    <element name="contactSource" type="platformCore:RecordRef" minOccurs="0"/>
+                    <element name="company" type="platformCore:RecordRef" minOccurs="0"/>
+                    <element name="salutation" type="xsd:string" minOccurs="0"/>
+                    <element name="firstName" type="xsd:string" minOccurs="0"/>
+                    <element name="middleName" type="xsd:string" minOccurs="0"/>
+                    <element name="lastName" type="xsd:string" minOccurs="0"/>
+                    <element name="title" type="xsd:string" minOccurs="0"/>
+                    <element name="phone" type="xsd:string" minOccurs="0"/>
+                    <element name="fax" type="xsd:string" minOccurs="0"/>
+                    <element name="email" type="xsd:string" minOccurs="0"/>
+                    <element name="defaultAddress" type="xsd:string" minOccurs="0"/>
+                    <element name="isPrivate" type="xsd:boolean" minOccurs="0"/>
+                    <element name="isInactive" type="xsd:boolean" minOccurs="0"/>
+                    <element name="subsidiary" type="platformCore:RecordRef" minOccurs="0"/>
+                    <element name="phoneticName" type="xsd:string" minOccurs="0"/>
+                    <element name="altEmail" type="xsd:string" minOccurs="0"/>
+                    <element name="officePhone" type="xsd:string" minOccurs="0"/>
+                    <element name="homePhone" type="xsd:string" minOccurs="0"/>
+                    <element name="mobilePhone" type="xsd:string" minOccurs="0"/>
+                    <element name="supervisor" type="platformCore:RecordRef" minOccurs="0"/>
+                    <element name="supervisorPhone" type="xsd:string" minOccurs="0"/>
+                    <element name="assistant" type="platformCore:RecordRef" minOccurs="0"/>
+                    <element name="assistantPhone" type="xsd:string" minOccurs="0"/>
+                    <element name="comments" type="xsd:string" minOccurs="0"/>
+                    <element name="image" type="platformCore:RecordRef" minOccurs="0"/>
+                    <element name="billPay" type="xsd:boolean" minOccurs="0"/>
+                    <element name="dateCreated" type="xsd:dateTime" minOccurs="0"/>
+                    <element name="lastModifiedDate" type="xsd:dateTime" minOccurs="0"/>
+                    <element name="subscriptionsList" type="listRel:SubscriptionsList" minOccurs="0"/>                    
+                </sequence>
+                <!-- primary record internalId -->
+                <attribute name="internalId" type="xsd:string"/>
+                <attribute name="externalId" type="xsd:string"/>
+            </extension>
+        </complexContent>
+    </complexType>
+</schema>
