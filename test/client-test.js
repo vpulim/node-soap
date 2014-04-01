@@ -2,6 +2,7 @@
 
 var fs = require('fs'),
     soap = require('..'),
+    http = require('http'),
     assert = require('assert');
 
 describe('SOAP Client', function() {
@@ -40,4 +41,75 @@ describe('SOAP Client', function() {
     });
     assert(!called);
   });
+  
+  describe('Extra headers in request and last response', function() {
+    var server = null;
+    var hostname = '127.0.0.1';
+    var port = 15099;
+    var baseUrl = 'http://' + hostname + ":" + port;
+    
+    before(function(done) {
+      server = http.createServer(function (req, res) {
+        var status_value = (req.headers["test-header"] === 'test') ? 'pass' : 'fail';
+
+        res.setHeader('status', status_value);
+        res.statusCode = 200;
+        res.write(JSON.stringify({tempResponse: "temp"}), 'utf8');
+        res.end();
+      }).listen(port, hostname, done);
+    });
+
+    after(function(done) {
+      server.close();
+      server = null;
+      done();
+    });
+    
+    it('should have the correct extra header in the request', function(done) {
+      soap.createClient(__dirname+'/wsdl/default_namespace.wsdl', function(err, client) {
+        assert.ok(client);
+        assert.ok(!err);
+        
+        client.MyOperation({}, function(err, result) {
+          assert.ok(result);
+          assert.ok(client.lastResponseHeaders);
+          assert.equal(client.lastResponseHeaders.status, 'pass');
+          
+          done();
+        }, null, {"test-header": 'test'});
+      }, baseUrl);
+    });
+    
+    it('should have the wrong extra header in the request', function(done) {
+      soap.createClient(__dirname+'/wsdl/default_namespace.wsdl', function(err, client) {
+        assert.ok(client);
+        assert.ok(!err);
+        
+        client.MyOperation({}, function(err, result) {
+          assert.ok(result);
+          assert.ok(client.lastResponseHeaders);
+          assert.equal(client.lastResponseHeaders.status, 'fail');
+          
+          done();
+        }, null, {"test-header": 'testBad'});
+      }, baseUrl);
+    });
+    
+    it('should have lastResponse and lastResponseHeaders after the call', function(done) {
+      soap.createClient(__dirname+'/wsdl/default_namespace.wsdl', function(err, client) {
+        assert.ok(client);
+        assert.ok(!err);
+        
+        client.MyOperation({}, function(err, result) {
+          assert.ok(result);
+          assert.ok(client.lastResponse);
+          assert.ok(client.lastResponseHeaders);
+          
+          done();
+        }, null, {"test-header": 'test'});
+      }, baseUrl);
+    });
+
+  });
+  
 });
