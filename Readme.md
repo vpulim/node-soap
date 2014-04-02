@@ -139,7 +139,7 @@ An instance of Client is passed to the soap.createClient callback.  It is used t
       // result is a javascript object
   })
 ```
-### Client.*service*.*port*.*method*(args, callback, options) - call a *method* using a specific *service* and *port*
+### Client.*service*.*port*.*method*(args, callback[, options]) - call a *method* using a specific *service* and *port*
 
 ``` javascript
   client.MyService.MyPort.MyFunction({name: 'value'}, function(err, result) {
@@ -148,7 +148,7 @@ An instance of Client is passed to the soap.createClient callback.  It is used t
 ```
 #### Options (optional)
  - Accepts any option that the request module accepts, see [here.](https://github.com/mikeal/request)
- - For example, you could set a timeout on the request like this:
+ - For example, you could set a timeout of 5 seconds on the request like this:
 ``` javascript
   client.MyService.MyPort.MyFunction({name: 'value'}, function(err, result) {
       // result is a javascript object
