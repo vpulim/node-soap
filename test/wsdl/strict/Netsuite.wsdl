@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns:tns="urn:platform_2013_2.webservices.netsuite.com" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:platformMsgs="urn:messages_2013_2.platform.webservices.netsuite.com" xmlns:platformFaults="urn:faults_2013_2.platform.webservices.netsuite.com" targetNamespace="urn:platform_2013_2.webservices.netsuite.com">
+    <types>
+        <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+            <xsd:import namespace="urn:messages_2013_2.platform.webservices.netsuite.com" schemaLocation="NetSuitePlatform.messages.xsd"/>
+		</xsd:schema>
+    </types>
+    <message name="logoutRequest">
+        <part name="parameters" element="platformMsgs:logout"/>
+    </message>
+    <message name="logoutResponse">
+        <part name="parameters" element="platformMsgs:logoutResponse"/>
+    </message>
+    <portType name="NetSuitePortType">
+        <operation name="logout">
+            <input name="logoutRequest" message="tns:logoutRequest"/>
+            <output name="logoutResponse" message="tns:logoutResponse"/>
+        </operation>
+    </portType>
+	<binding name="NetSuiteBinding" type="tns:NetSuitePortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="logout">
+            <soap:operation soapAction="logout"/>
+            <input name="logoutRequest">
+                <soap:body use="literal"/>
+            </input>
+            <output name="logoutResponse">
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+    <service name="NetSuiteService">
+        <port name="NetSuitePort" binding="tns:NetSuiteBinding">
+            <soap:address location="https://webservices.netsuite.com/services/NetSuitePort_2013_2"/>
+        </port>
+    </service>
+</definitions>
