@@ -30,7 +30,19 @@ describe('SOAP Client', function() {
       done();
     });
   });
-
+  
+  it('should add soap headers', function (done) {
+        soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', function (err, client) {
+            assert.ok(client);
+            assert.ok(!client.getSoapHeaders());
+            var soapheader = {
+                "AuthId": "test"
+              };
+            client.addSoapHeader(soapheader);
+            assert.ok(client.getSoapHeaders()[0] === '<AuthId>test</AuthId>');
+            done();
+          });
+      });
   it('should issue async callback for cached wsdl', function(done) {
     var called = false;
     soap.createClient(__dirname+'/wsdl/default_namespace.wsdl', function(err, client) {
