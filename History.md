@@ -1,3 +1,13 @@
+0.4.3 / 2014-04-07
+=================
+* Refactored WS-security. small modifications to  pull #275
+* Updated readme to add documentation for passing options to a client request
+* Added null check for portType and methods[methodname].output
+* Fixed issue where requests that included compex types led to invalid request XML.
+* Support for attributes array elements and support for complex extensions with array elements.
+* Make sure callback is done asynchronously for a cached wsdl
+* Added WSDL inheritance support (#133).
+
 0.4.2 / 2014-03-13
 =================
 * Added the ability to inspect and clear soap headers.
