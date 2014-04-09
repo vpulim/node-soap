@@ -41,6 +41,14 @@ describe('SOAP Server', function() {
       test.soapServer = soap.listen(test.server, '/stockquote', test.service, test.wsdl);
       test.baseUrl =
         'http://' + test.server.address().address + ":" + test.server.address().port;
+
+      //windows return 0.0.0.0 as address and that is not 
+      //valid to use in a request
+      if (test.server.address().address === '0.0.0.0') {
+        test.baseUrl =
+          'http://127.0.0.1:' + test.server.address().port;
+      }
+
       done();
     });
   });
