@@ -1,0 +1,10 @@
+{
+    "GetNodesResult": {
+        "Name": "Parent",
+        "Children": {
+            "Node": [
+                {"Name":"Child1","Children":{}},
+                {"Name":"Child2","Children":{}}
+            ]}
+        }
+}
