@@ -45,7 +45,7 @@ Install with [npm](http://github.com/isaacs/npm):
                   };
               }
 
-              // This is how to define an asynchronous function.  
+              // This is how to define an asynchronous function.
               MyAsyncFunction: function(args, callback) {
                   // do some work
                   callback({
@@ -126,7 +126,36 @@ An instance of Client is passed to the soap.createClient callback.  It is used t
     }
 ```
 
-### Client.setSecurity(security) - use the specified security protocol (see WSSecurity below)
+### Client.setSecurity(security) - use the specified security protocol
+`node-soap` has several default security protocols.  You can easily add your own
+as well.  The interface is quite simple.  Each protocol defines 2 methods:
+* addOptions - a method that accepts an options arg that is eventually passed directly to `request`
+* toXML - a method that reurns a string of XML.
+
+By default there are 3 protocols:
+
+####BasicAuthSecurity
+
+``` javascript
+  client.setSecurity(new soap.BasicAuthSecurity('username', 'password'));
+```
+
+####ClientSSLSecurity
+_Note_: If you run into issues using this protocol, consider passing these options
+as default request options to the constructor:
+* rejectUnauthorized: false
+* strictSSL: false
+* secureOptions: constants.SSL_OP_NO_TLSv1_2//this is likely needed for node >= 10.0
+
+``` javascript
+  client.setSecurity(new soap.ClientSSLSecurity(
+    '/path/to/key'
+    , '/path/to/cert'
+    , {/*default request options*/}
+  ));
+```
+
+####WSSecurity
 
 ``` javascript
   client.setSecurity(new WSSecurity('username', 'password'))
@@ -154,7 +183,7 @@ An instance of Client is passed to the soap.createClient callback.  It is used t
       // result is a javascript object
   }, {timeout: 5000})
 ```
- 
+
 ### Client.*addSoapHeader*(soapHeader[, name, namespace, xmlns]) - add soapHeader to soap:Header node
 #### Options
 
