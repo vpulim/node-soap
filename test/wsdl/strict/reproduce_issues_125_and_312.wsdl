@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<wsdl:definitions name="KontoServiceImplService" targetNamespace="http://impl.service.soap.hbci.jameica.willuhn.de/"
+xmlns:ns1="http://service.soap.hbci.jameica.willuhn.de/" xmlns:ns2="http://schemas.xmlsoap.org/wsdl/soap/http"
+xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://impl.service.soap.hbci.jameica.willuhn.de/"
+xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <wsdl:import location="https://localhost:8080/soap/Konto?wsdl=KontoService.wsdl"
+    namespace="http://service.soap.hbci.jameica.willuhn.de/"></wsdl:import>
+    <wsdl:binding name="KontoServiceImplServiceSoapBinding"
+    type="ns1:KontoService">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"
+        />
+        <wsdl:operation name="findAll">
+            <soap:operation soapAction="" style="document" />
+            <wsdl:input name="findAll">
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output name="findAllResponse">
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="findById">
+            <soap:operation soapAction="" style="document" />
+            <wsdl:input name="findById">
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output name="findByIdResponse">
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="KontoServiceImplService">
+        <wsdl:port binding="tns:KontoServiceImplServiceSoapBinding" name="KontoPort">
+            <soap:address location="https://localhost:8080/soap/Konto" />
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
