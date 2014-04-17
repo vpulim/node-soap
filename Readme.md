@@ -1,8 +1,9 @@
+# Soap [![NPM version][npm-image]][npm-url] [![Downloads][downloads-image]][npm-url] [![Build Status][travis-image]][travis-url]
+> A SOAP client and server for node.js.
+
 This module lets you connect to web services using SOAP.  It also provides a server that allows you to run your own SOAP services.
 
-[![Build Status](https://travis-ci.org/vpulim/node-soap.png?branch=master)](https://travis-ci.org/vpulim/node-soap)
-
-Features:
+## Features:
 
 * Very simple API
 * Handles both RPC and Document schema types
@@ -204,3 +205,10 @@ WSSecurity implements WS-Security.  UsernameToken and PasswordText/PasswordDiges
   new WSSecurity(username, password, passwordType)
     //'PasswordDigest' or 'PasswordText' default is PasswordText
 ```
+
+[downloads-image]: http://img.shields.io/npm/dm/soap.svg
+[npm-url]: https://npmjs.org/package/soap
+[npm-image]: http://img.shields.io/npm/v/soap.svg
+
+[travis-url]: https://travis-ci.org/vpulim/node-soap
+[travis-image]: http://img.shields.io/travis/vpulim/node-soap.svg
