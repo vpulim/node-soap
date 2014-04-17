@@ -110,6 +110,28 @@ describe('SOAP Client', function() {
       }, baseUrl);
     });
   });
+
+  
+  it('should add soap headers', function (done) {
+        soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', function (err, client) {
+            assert.ok(client);
+            assert.ok(!client.getSoapHeaders());
+            var soapheader = {
+              "esnext": false,
+              "moz": true,
+              "boss": true,
+              "node": true,
+              "validthis": true,
+              "globals": {
+                "EventEmitter": true,
+                "Promise": true
+              }
+            };
+            client.addSoapHeader(soapheader);
+            assert.ok(client.getSoapHeaders()[0] === '<esnext>false</esnext><moz>true</moz><boss>true</boss><node>true</node><validthis>true</validthis><globals><EventEmitter>true</EventEmitter><Promise>true</Promise></globals>');
+            done();
+          });
+      });
   
   describe('Namespace number', function() {
     var server = null;
