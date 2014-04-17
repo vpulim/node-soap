@@ -1123,8 +1123,6 @@ WSDL.prototype.objectToXML = function(obj, name, namespace, xmlns, first, xmlnsA
             } else {
               value = self.objectToXML(child, name, namespace, xmlns, false, null, null, ancXmlns);
             }
-          } else {
-            value = self.objectToXML(child, name, namespace, xmlns, false, null, null, ancXmlns);
           }
         }
       }
