@@ -1,3 +1,12 @@
+0.4.4 / 2014-04-16
+=================
+* Added namespace prefixes to SOAP headers. #307
+* Provided more documentation around security protocols in the README. #321
+* Added lodash. #321
+* Added a default parameter to ClientSSLSecurity. #321
+* Fix to reset the generated namespace number. #308
+* Fixed maximum callstack errors on certain responses. #257
+
 0.4.3 / 2014-04-07
 =================
 * Refactored WS-security. small modifications to  pull #275
