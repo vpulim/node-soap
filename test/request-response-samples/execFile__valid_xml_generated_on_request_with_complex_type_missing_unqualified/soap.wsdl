@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns:tns="urn:RpcExample" xmlns:SOAP-ENV="http://www.w3.org/2003/05/soap-envelope" xmlns:SOAP-ENC="http://www.w3.org/2003/05/soap-encoding" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:RpcExample="urn:RpcExample" xmlns:SOAP="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:MIME="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:DIME="http://schemas.xmlsoap.org/ws/2002/04/dime/wsdl/" xmlns:WSDL="http://schemas.xmlsoap.org/wsdl/" xmlns="http://schemas.xmlsoap.org/wsdl/" name="urn:RpcExample" targetNamespace="urn:RpcExample">
 	<types>
-		<schema xmlns:SOAP-ENV="http://www.w3.org/2003/05/soap-envelope" xmlns:SOAP-ENC="http://www.w3.org/2003/05/soap-encoding" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:RpcExample="urn:RpcExample" xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:RpcExample" elementFormDefault="qualified" attributeFormDefault="unqualified">
+		<schema xmlns:SOAP-ENV="http://www.w3.org/2003/05/soap-envelope" xmlns:SOAP-ENC="http://www.w3.org/2003/05/soap-encoding" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:RpcExample="urn:RpcExample" xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:RpcExample" attributeFormDefault="unqualified">
 			<import namespace="http://www.w3.org/2003/05/soap-encoding"/>
 			<complexType name="execFileParams">
 				<sequence>
