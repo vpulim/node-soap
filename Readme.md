@@ -184,6 +184,7 @@ as default request options to the constructor:
       // result is a javascript object
   }, {timeout: 5000})
 ```
+ - forceEmptyName:true force to generate an empty xmlns="" for schema with elementFormDefault="unqualied". This could help for some server side WSDL validation when namespace is not qualified [here](http://www.coderanch.com/t/224529/Web-Services/java/Empty-Namespace-SOAP-Axis)
 
 ### Client.*addSoapHeader*(soapHeader[, name, namespace, xmlns]) - add soapHeader to soap:Header node
 #### Options
