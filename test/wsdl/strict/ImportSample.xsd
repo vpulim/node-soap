@@ -1,0 +1,24 @@
+<schema targetNamespace="urn:import-sample.definition" xmlns="http://www.w3.org/2001/XMLSchema">
+  <xsd:complexType name="location">
+    <xsd:sequence>
+      <xsd:element name="lat" type="xsd:decimal"/>
+      <xsd:element name="long" type="xsd:decimal"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="value">
+    <xsd:sequence>
+      <xsd:element name="beer" type="tns:beer"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="beer">
+    <xsd:sequence>
+      <xsd:element name="brewery" type="tns:brewery"/>
+      <xsd:element name="type" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="brewery">
+    <xsd:sequence>
+      <xsd:element name="name" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+</schema>
