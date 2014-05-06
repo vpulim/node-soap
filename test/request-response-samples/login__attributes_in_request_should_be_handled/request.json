@@ -4,7 +4,7 @@
     "password":"pwd",
     "account":"acc",
     "role": {
-      "attributes": {            
+      "$attributes": {            
         "internalId": "3",
         "externalId": "2"
       }

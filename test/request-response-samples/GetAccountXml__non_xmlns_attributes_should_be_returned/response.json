@@ -3,7 +3,7 @@
   "AccountXml": {
     "Foo": {
       "Foo": {
-        "attributes": {
+        "$attributes": {
           "PrivateLabelID": "1",
           "ResourceID": "034b7ea5-8a04-11e3-9710-0050569575d8",
           "IsPastDue": "False",
@@ -12,7 +12,7 @@
           "CurrentUnifiedProductID": "70761"
         },
         "Tree": {
-          "attributes": {
+          "$attributes": {
             "TreeID": "1091",
             "NodeID": "1091",
             "UnifiedProductID": "70761",
