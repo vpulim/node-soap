@@ -1,6 +1,6 @@
 {
   "record": {
-    "attributes": {
+    "$attributes": {
       "internalId": "42",
       "externalId": "Alex Dniprovskyy",
       "xsi_type": {
@@ -22,11 +22,11 @@
       "subscriptions": [
         {
           "subscribed": "true",
-          "attributes": {
+          "$attributes": {
             "tempId": "34"
           },
           "subscription": {
-            "attributes": {
+            "$attributes": {
               "internalId": "2",
               "xsi_type": {
                 "type": "RecordRef",
@@ -39,7 +39,7 @@
         {
           "subscribed": "true",
           "subscription": {
-            "attributes": {
+            "$attributes": {
               "internalId": "1",
               "xsi_type": {
                 "type": "RecordRef",

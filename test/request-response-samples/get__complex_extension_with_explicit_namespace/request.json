@@ -1,6 +1,6 @@
 {
   "baseRef":{
-    "attributes":{
+    "$attributes":{
       "type":"contact",
       "internalId":"42",
       "xsi_type":{

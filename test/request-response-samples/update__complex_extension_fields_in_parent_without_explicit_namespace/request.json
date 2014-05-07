@@ -1,6 +1,6 @@
 {
   "record":{
-    "attributes":{
+    "$attributes":{
       "internalId":"42",
       "externalId":"Alex Dniprovskyy",
       "xsi_type":{

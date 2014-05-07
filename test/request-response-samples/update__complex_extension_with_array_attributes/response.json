@@ -1,12 +1,12 @@
 {
   "writeResponse":{
     "status":{
-      "attributes":{
+      "$attributes":{
         "isSuccess":"true"
       }
     },
     "baseRef":{
-      "attributes":{
+      "$attributes":{
         "internalId":"42",
         "externalId":"Alex Dniprovskyy",
         "type":"contact",

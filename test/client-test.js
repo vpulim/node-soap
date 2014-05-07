@@ -158,7 +158,7 @@ describe('SOAP Client', function() {
         assert.ok(client);
         
         var data = {
-          attributes: {
+          $attributes: {
             xsi_type: {
               type: 'Ty',
               xmlns: 'xmlnsTy'
@@ -172,7 +172,7 @@ describe('SOAP Client', function() {
           assert.ok(client.lastMessage);
           assert.equal(client.lastMessage, message);
           
-          delete data.attributes.xsi_type.namespace;
+          delete data.$attributes.xsi_type.namespace;
           client.MyOperation(data, function(err, result) {
             assert.ok(client.lastRequest);
             assert.ok(client.lastMessage);
