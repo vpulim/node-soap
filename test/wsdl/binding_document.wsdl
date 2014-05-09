@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="myAPI">
+   <portType name="mySoapPort" />
+   <binding name="mySoapBinding" type="wsdlns:mySoapPort">
+      <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+   </binding>
+   <service name="myAPI">
+      <port name="mySoapPort" binding="wsdlns:mySoapBinding">
+         <soap:address location="http://test" />
+      </port>
+   </service>
+</definitions>
