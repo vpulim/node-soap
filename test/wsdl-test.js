@@ -36,6 +36,20 @@ wsdlNonStrictTests['should not parse connection error'] = function(done) {
   });
 };
 
+wsdlNonStrictTests['should catch parse error'] = function(done) {
+  soap.createClient(__dirname+'/wsdl/bad.txt', function(err) {
+    assert.notEqual(err, null);
+    done();
+  });
+};
+
+wsdlStrictTests['should catch parse error'] = function(done) {
+  soap.createClient(__dirname+'/wsdl/bad.txt', function(err) {
+    assert.notEqual(err, null);
+    done();
+  });
+};
+
 module.exports = {
   'WSDL Parser (strict)': wsdlStrictTests,
   'WSDL Parser (non-strict)': wsdlNonStrictTests
