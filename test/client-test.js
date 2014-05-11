@@ -41,6 +41,16 @@ describe('SOAP Client', function() {
     });
     assert(!called);
   });
+
+  it('should set binding style to "document" by default if not explicitly set in WSDL, per SOAP spec', function (done) {
+    soap.createClient(__dirname+'/wsdl/binding_document.wsdl', function(err, client) {
+      assert.ok(client);
+      assert.ok(!err);
+      
+      assert.ok(client.wsdl.definitions.bindings.mySoapBinding.style === 'document');
+      done();
+    });
+  });
   
   describe('Extra headers in request and last response', function() {
     var server = null;
