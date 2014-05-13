@@ -1,3 +1,10 @@
+0.4.5 / 2014-05-13
+=================
+* Fixed: Unspecified binding style defaults to 'document' (#346, #208)
+* Fixed: WSDL parse errors bubble up (#344)
+* Fixed: AssertionError: Invalid child type when WSDL contains imports (#322, #337)
+* Fixed: TargetNamespace not loaded when import in schema (#327, #325)
+
 0.4.4 / 2014-04-16
 =================
 * Added namespace prefixes to SOAP headers. #307
