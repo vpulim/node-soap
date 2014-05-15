@@ -20,7 +20,7 @@ Install with [npm](http://github.com/isaacs/npm):
 ```
 ## Module
 
-### soap.createClient(url, callback) - create a new SOAP client from a WSDL url. Also supports a local filesystem path.
+### soap.createClient(url[, options], callback) - create a new SOAP client from a WSDL url. Also supports a local filesystem path.
 
 ``` javascript
   var soap = require('soap');
@@ -32,6 +32,8 @@ Install with [npm](http://github.com/isaacs/npm):
       });
   });
 ```
+
+Within the options object you may provide an `endpoint` property in case you want to override the SOAP service's host specified in the `.wsdl` file.
 
 ### soap.listen(*server*, *path*, *services*, *wsdl*) - create a new SOAP server that listens on *path* and provides *services*.
 *wsdl* is an xml string that defines the service.
