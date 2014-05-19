@@ -211,4 +211,85 @@ describe('SOAP Client', function() {
       }, baseUrl);
     });
   });
+  describe('Namespaced Attributes', function() {
+    var server = null;
+    var hostname = '127.0.0.1';
+    var port = 15099;
+    var baseUrl = 'http://' + hostname + ":" + port;
+    
+    before(function(done) {
+      server = http.createServer(function (req, res) {
+        res.statusCode = 200;
+        res.write(JSON.stringify({tempResponse: "temp"}), 'utf8');
+        res.end();
+      }).listen(port, hostname, done);
+    });
+
+    after(function(done) {
+      server.close();
+      server = null;
+      done();
+    });
+    
+    it('should support options parameter', function (done) {
+      soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', {attributesNamespace: '$'}, function (err, client) {
+        assert.ok(client);
+        
+        var data = {
+          $attributes: {
+            xsi_type: {
+              type: 'Ty',
+              xmlns: 'xmlnsTy'
+            }
+          }
+        };
+        
+        var message = '<Request xsi:type="ns1:Ty" xmlns:ns1="xmlnsTy" xmlns="http://www.example.com/v1"></Request>';
+        client.MyOperation(data, function(err, result) {
+          assert.ok(client.lastRequest);
+          assert.ok(client.lastMessage);
+          assert.equal(client.lastMessage, message);
+          
+          delete data.$attributes.xsi_type.namespace;
+          client.MyOperation(data, function(err, result) {
+            assert.ok(client.lastRequest);
+            assert.ok(client.lastMessage);
+            assert.equal(client.lastMessage, message);
+
+            done();
+          });
+        });
+      }, baseUrl);
+    });
+    it('should support function setAttributesNamespace', function (done) {
+      soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', function (err, client) {
+        assert.ok(client);
+        client.setAttributesNamespace('$');
+        var data = {
+          $attributes: {
+            xsi_type: {
+              type: 'Ty',
+              xmlns: 'xmlnsTy'
+            }
+          }
+        };
+        
+        var message = '<Request xsi:type="ns1:Ty" xmlns:ns1="xmlnsTy" xmlns="http://www.example.com/v1"></Request>';
+        client.MyOperation(data, function(err, result) {
+          assert.ok(client.lastRequest);
+          assert.ok(client.lastMessage);
+          assert.equal(client.lastMessage, message);
+          
+          delete data.$attributes.xsi_type.namespace;
+          client.MyOperation(data, function(err, result) {
+            assert.ok(client.lastRequest);
+            assert.ok(client.lastMessage);
+            assert.equal(client.lastMessage, message);
+
+            done();
+          });
+        });
+      }, baseUrl);
+    });
+  });
 });

@@ -62,15 +62,21 @@ tests.forEach(function(test){
     responseJSON = require(path.resolve(test, 'error_response.json'));
   }
   var responseXML = ""+fs.readFileSync(path.resolve(test, 'response.xml'));
-
-  generateTest(name, methodName, wsdl, requestXML, requestJSON, responseXML, responseJSON);
+  fs.readFile(path.resolve(name, 'namespace_prefix'), function (err, file) {
+    var attributesNamespace = '';
+    if (file) {
+      attributesNamespace = file.trim();
+    }
+    generateTest(name, methodName, wsdl, requestXML, requestJSON, responseXML, responseJSON, attributesNamespace);
+  });
 });
 
-function generateTest(name, methodName, wsdlPath, requestXML, requestJSON, responseXML, responseJSON){
+function generateTest(name, methodName, wsdlPath, requestXML, requestJSON, responseXML, responseJSON, attributesNamespace){
   suite[name] = function(done){
     requestContext.expectedRequest = requestXML;
     requestContext.responseToSend = responseXML;
     soap.createClient(wsdlPath, function(err, client){
+      client.setAttributesNamespace(attributesNamespace);
       client[methodName](requestJSON, function(err, json, body){
         if (err) {
           assert.deepEqual(err.root, responseJSON);
