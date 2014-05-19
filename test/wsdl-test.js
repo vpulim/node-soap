@@ -29,6 +29,33 @@ fs.readdirSync(__dirname+'/wsdl').forEach(function(file) {
   };
 });
 
+wsdlNonStrictTests['should parse complex json object'] = function(done) {
+  soap.createClient(__dirname+'/wsdl/complexJson.wsdl', function(err, client) {
+    assert.ok(!err);
+    var args = {
+        "AdminOperation": {
+            "CreateUser": {
+                "User": {
+                    "Name": "name",
+                    "Password": "password"
+                  },
+                  "IgnoreDup":""
+                }
+              }
+            };
+
+    client.administrate(args, function(err, result) {
+      var lastMsg = client.lastRequest;
+      //console.log(lastMsg.indexOf("undefined") > -1);
+      //console.log(lastMsg);
+      assert.notEqual((lastMsg.indexOf("undefined") > -1), true);
+
+    });
+
+    done();
+  });
+};
+
 wsdlNonStrictTests['should not parse connection error'] = function(done) {
   soap.createClient(__dirname+'/wsdl/connection/econnrefused.wsdl', function(err, client) {
     assert.ok(/EADDRNOTAVAIL|ECONNREFUSED/.test(err), err);
