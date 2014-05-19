@@ -208,6 +208,49 @@ WSSecurity implements WS-Security.  UsernameToken and PasswordText/PasswordDiges
     //'PasswordDigest' or 'PasswordText' default is PasswordText
 ```
 
+## Handling XML Attributes.
+
+You can achieve attributes like:
+``` xml
+<parentnode>
+  <childnode name="childsname">
+  </childnode>
+</parentnode>
+```
+By attaching an attributes object to a node.
+``` javascript
+{
+  parentnode: {
+    childnode: {
+      attributes: {
+        name: 'childsname'
+      }
+    }
+  }
+}
+```
+However, "attributes" may be a reserved key for some systems that actually want a node
+```xml
+<attributes>
+</attributes>
+```
+
+In this case you can configure the attributes key by passing in an options object to the createClient call like so.
+```javascript
+soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', {attributesKey: '$attributes'}, function (err, client) {
+  client.*method*({
+    parentnode: {
+      childnode: {
+        $attributes: {
+          name: 'childsname'
+        }
+      }
+    }
+  });
+});
+```
+
+
 [downloads-image]: http://img.shields.io/npm/dm/soap.svg
 [npm-url]: https://npmjs.org/package/soap
 [npm-image]: http://img.shields.io/npm/v/soap.svg

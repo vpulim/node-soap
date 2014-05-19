@@ -65,7 +65,8 @@ tests.forEach(function(test){
   var responseJSON = path.resolve(test, 'response.json');
   var responseJSONError = path.resolve(test, 'error_response.json');
   var responseXML = path.resolve(test, 'response.xml');
-
+  var attributesFile = path.resolve(test, 'attributes_key');
+  var attributesKey = 'attributes';
   //response JSON is optional
   if (fs.existsSync(responseJSON))responseJSON = require(responseJSON);
   else if(fs.existsSync(responseJSONError))responseJSON = require(responseJSONError);
@@ -82,15 +83,17 @@ tests.forEach(function(test){
   //responseJSON is required as node-soap will expect a request object anyway
   requestJSON = require(requestJSON);
 
-  generateTest(name, methodName, wsdl, requestXML, requestJSON, responseXML, responseJSON);
+  if (fs.existsSync(attributesFile)) attributesKey = fs.readFileSync(attributesFile, 'ascii').trim();
+
+  generateTest(name, methodName, wsdl, requestXML, requestJSON, responseXML, responseJSON, attributesKey);
 });
 
-function generateTest(name, methodName, wsdlPath, requestXML, requestJSON, responseXML, responseJSON){
+function generateTest(name, methodName, wsdlPath, requestXML, requestJSON, responseXML, responseJSON, attributesKey){
   suite[name] = function(done){
     if(requestXML)requestContext.expectedRequest = requestXML;
     if(responseXML)requestContext.responseToSend = responseXML;
     requestContext.doneHandler = done;
-    soap.createClient(wsdlPath, function(err, client){
+    soap.createClient(wsdlPath, {attributesKey: attributesKey }, function(err, client){
       client[methodName](requestJSON, function(err, json, body){
         if(requestJSON){
           if (err) {
