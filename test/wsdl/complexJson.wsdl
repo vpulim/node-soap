@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<definitions name="MyAPI" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:typens="http://schemas.My.com/My11" xmlns:wsdlns="http://schemas.My.com/My11/wsdl" targetNamespace="http://schemas.My.com/My11/wsdl">
+		<types>
+			<xsd:schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:enc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" targetNamespace="http://schemas.My.com/My11" elementFormDefault="qualified">
+				
+				<xsd:complexType name="Administrate">
+					<xsd:sequence>
+						<xsd:element name="AdminOperation" type="typens:AdminOperation" maxOccurs="unbounded" minOccurs="0"/>
+					</xsd:sequence>
+				</xsd:complexType>
+				<xsd:element name="Administrate" type="typens:Administrate"/>
+				<xsd:complexType name="AdministrateResponse"/>
+				<xsd:element name="AdministrateResponse" type="typens:AdministrateResponse"/>
+				<xsd:complexType name="AdminOperation">
+					<xsd:sequence>
+						<xsd:choice>
+							<xsd:element name="CreateUser" type="typens:CreateUser" minOccurs="0"/>
+						</xsd:choice>
+					</xsd:sequence>
+				</xsd:complexType>
+				<xsd:complexType name="CreateUser">
+					<xsd:sequence>
+						<xsd:element name="User" type="typens:User"/>
+						<xsd:element name="IgnoreDup" type="xsd:boolean" minOccurs="0"/>
+					</xsd:sequence>
+				</xsd:complexType>
+				<xsd:complexType name="User">
+					<xsd:all>
+						<xsd:element name="Id" type="xsd:string" minOccurs="0"/>
+						<xsd:element name="Name" type="xsd:string" minOccurs="0"/>
+						<xsd:element name="Password" type="xsd:string" minOccurs="0"/>
+					</xsd:all>
+				</xsd:complexType>
+			</xsd:schema>
+		</types>
+		<message name="Administrate">
+			<part name="Request" element="typens:Administrate"/>
+		</message>
+		<message name="AdministrateResponse">
+			<part name="Response" element="typens:AdministrateResponse"/>
+		</message>
+		<portType name="MySoapPort">
+			<operation name="administrate">
+				<input message="wsdlns:Administrate"/>
+				<output message="wsdlns:AdministrateResponse"/>
+			</operation>
+		</portType>
+		<binding name="MySoapBinding" type="wsdlns:MySoapPort">
+			<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+			<operation name="administrate">
+				<soap:operation soapAction=""/>
+				<input>
+					<soap:body use="literal" parts="Request"/>
+				</input>
+				<output>
+					<soap:body use="literal" parts="Response"/>
+				</output>
+			</operation>
+		</binding>
+		<service name="MyAPI">
+			<port name="MySoapPort" binding="wsdlns:MySoapBinding">
+				<soap:address location="http://vmcip2:8000"/>
+			</port>
+			<port name="MySoapSSLPort" binding="wsdlns:MySoapBinding">
+				<soap:address location="https://vmcip2:8001"/>
+			</port>
+		</service>
+	</definitions>
