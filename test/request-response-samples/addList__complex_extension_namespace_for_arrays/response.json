@@ -1,0 +1,34 @@
+{
+  "writeResponseList":{
+     "writeResponse":[
+        {
+           "status":{
+              "attributes":{
+                 "isSuccess":"true"
+              }
+           },
+           "baseRef":{
+              "attributes":{
+                 "xsi:type":"platformCore:RecordRef",
+                 "type":"contact",
+                 "internalId":"7080"
+              }
+           }
+        },
+        {
+           "status":{
+              "attributes":{
+                 "isSuccess":"true"
+              }
+           },
+           "baseRef":{
+              "attributes":{
+                 "xsi:type":"platformCore:RecordRef",
+                 "type":"contact",
+                 "internalId":"7081"
+              }
+           }
+        }
+     ]
+  }
+}
