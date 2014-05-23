@@ -18,13 +18,15 @@ var requestContext = {
   //set these two within each test
   expectedRequest:null,
   responseToSend:null,
+  doneHandler:null,
   requestHandler:function(req, res){
     var chunks = [];
-    if(!requestContext.expectedRequest)return res.end(requestContext.responseToSend);
     req.on('data', function(chunk){
       chunks.push(chunk);
     });
     req.on('end', function(){
+      if(!requestContext.expectedRequest)return res.end(requestContext.responseToSend);
+      if(!requestContext.responseToSend)return requestContext.doneHandler();
       assert.equal(chunks.join(''), requestContext.expectedRequest);
       res.end(requestContext.responseToSend);
       requestContext.expectedRequest = null;
@@ -41,6 +43,11 @@ module.exports = {
       port = server.address().port;
       done();
     });
+  },
+  beforeEach:function(){
+    requestContext.expectedRequest = null;
+    requestContext.responseToSend = null;
+    requestContext.doneHandler = null;
   },
   after:function(){
     server.close();
@@ -68,11 +75,12 @@ tests.forEach(function(test){
   if(fs.existsSync(requestXML))requestXML = ""+fs.readFileSync(requestXML);
   else requestXML = null;
 
+  //responseXML is optional
+  if(fs.existsSync(responseXML))responseXML = ""+fs.readFileSync(responseXML);
+  else responseXML = null;
+
   //responseJSON is required as node-soap will expect a request object anyway
   requestJSON = require(requestJSON);
-
-  //responseXML is required, as node-soap needs something to handle.
-  responseXML = ""+fs.readFileSync(responseXML);
 
   generateTest(name, methodName, wsdl, requestXML, requestJSON, responseXML, responseJSON);
 });
@@ -80,7 +88,8 @@ tests.forEach(function(test){
 function generateTest(name, methodName, wsdlPath, requestXML, requestJSON, responseXML, responseJSON){
   suite[name] = function(done){
     if(requestXML)requestContext.expectedRequest = requestXML;
-    requestContext.responseToSend = responseXML;
+    if(responseXML)requestContext.responseToSend = responseXML;
+    requestContext.doneHandler = done;
     soap.createClient(wsdlPath, function(err, client){
       client[methodName](requestJSON, function(err, json, body){
         if(requestJSON){
