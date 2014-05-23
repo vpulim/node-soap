@@ -20,6 +20,7 @@ var requestContext = {
   responseToSend:null,
   requestHandler:function(req, res){
     var chunks = [];
+    if(!requestContext.expectedRequest)return res.end(requestContext.responseToSend);
     req.on('data', function(chunk){
       chunks.push(chunk);
     });
@@ -52,32 +53,46 @@ tests.forEach(function(test){
   var name = nameParts[1].replace(/_/g, ' ');
   var methodName = nameParts[0];
   var wsdl = path.resolve(test, 'soap.wsdl');
-  var requestJSON = require(path.resolve(test, 'request.json'));
-  var requestXML = ""+fs.readFileSync(path.resolve(test, 'request.xml'));
-  var responseJSON = null;
-  if (fs.existsSync(path.resolve(test, 'response.json'))) {
-    responseJSON = require(path.resolve(test, 'response.json'));
-  } else {
-    // assume testing error condition if response.json not found
-    responseJSON = require(path.resolve(test, 'error_response.json'));
-  }
-  var responseXML = ""+fs.readFileSync(path.resolve(test, 'response.xml'));
+  var requestJSON = path.resolve(test, 'request.json');
+  var requestXML = path.resolve(test, 'request.xml');
+  var responseJSON = path.resolve(test, 'response.json');
+  var responseJSONError = path.resolve(test, 'error_response.json');
+  var responseXML = path.resolve(test, 'response.xml');
+
+  //response JSON is optional
+  if (fs.existsSync(responseJSON))responseJSON = require(responseJSON);
+  else if(fs.existsSync(responseJSONError))responseJSON = require(responseJSONError);
+  else responseJSON = null;
+
+  //requestXML is optional
+  if(fs.existsSync(requestXML))requestXML = ""+fs.readFileSync(requestXML);
+  else requestXML = null;
+
+  //responseJSON is required as node-soap will expect a request object anyway
+  requestJSON = require(requestJSON);
+
+  //responseXML is required, as node-soap needs something to handle.
+  responseXML = ""+fs.readFileSync(responseXML);
 
   generateTest(name, methodName, wsdl, requestXML, requestJSON, responseXML, responseJSON);
 });
 
 function generateTest(name, methodName, wsdlPath, requestXML, requestJSON, responseXML, responseJSON){
   suite[name] = function(done){
-    requestContext.expectedRequest = requestXML;
+    if(requestXML)requestContext.expectedRequest = requestXML;
     requestContext.responseToSend = responseXML;
     soap.createClient(wsdlPath, function(err, client){
       client[methodName](requestJSON, function(err, json, body){
-        if (err) {
-          assert.deepEqual(err.root, responseJSON);
-        } else {
-          assert.deepEqual(json, responseJSON);
+        if(requestJSON){
+          if (err) {
+            assert.deepEqual(err.root, responseJSON);
+          } else {
+            assert.deepEqual(json, responseJSON);
+          }
         }
-        assert.deepEqual(body, responseXML);
+        if(responseXML) {
+          assert.deepEqual(body, responseXML);
+        }
         done();
       });
     }, 'http://localhost:'+port+'/Message/Message.dll?Handler=Default');
