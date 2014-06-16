@@ -1,4 +1,8 @@
-0.5.0 / 2014-06-16
+0.4.7 / 2014-06-16
+=================
+* Allow request elements to have both content and attributes.
+
+0.4.6 / 2014-06-16
 =================
 * Fix for the `elementFormDefault` functionality.
 * Fix determining the namespace for complex elements.
