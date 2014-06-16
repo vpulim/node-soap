@@ -1,3 +1,19 @@
+0.5.0 / 2014-06-16
+=================
+* Fix for the `elementFormDefault` functionality.
+* Fix determining the namespace for complex elements.
+* Add support for the `elementFormDefault` schema attribute.
+* Fixing duplicate code which had gotten introduced because of a merge.
+* Added the ability to specify elements in a $value attribute for complex types.
+* Allowing the property name "attributes" to be configurable.
+* Fix for andling object arrays.
+* Fix for WSDL and Schema interaction.
+* Allowing response.xml to be optional in tests.
+* Allowing request.xml and response.json to be optional for tests.
+* Fix for adding an undefined XML namespace.
+* Added some documentation on options object when calling createClient.
+* Fix for namespaces in headers not being added appropriately.
+
 0.4.5 / 2014-05-13
 =================
 * Fixed: Unspecified binding style defaults to 'document' (#346, #208)
@@ -10,7 +26,7 @@
 * Added namespace prefixes to SOAP headers. #307
 * Provided more documentation around security protocols in the README. #321
 * Added lodash. #321
-* Added a default parameter to ClientSSLSecurity. #321
+* Added a deefault parameter to ClientSSLSecurity. #321
 * Fix to reset the generated namespace number. #308
 * Fixed maximum callstack errors on certain responses. #257
 
