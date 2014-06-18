@@ -1,0 +1,20 @@
+--MIMEBoundary_2af39b87d6c9f2ba6d1c13d73db88d0bfdf9414786fcc315
+Content-Type: application/xop+xml; charset=UTF-8; type="text/xml"
+Content-Transfer-Encoding: binary
+Content-ID: <0.3af39b87d6c9f2ba6d1c13d73db88d0bfdf9414786fcc315@apache.org>
+
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tns="http://www.Dummy.com" xmlns:n="http://www.Dummy.com/Name/Types">
+    <soap:Header></soap:Header>
+    <soap:Body>
+       <n:DummyResponse>
+           <n:DummyResult>
+               <c:DummyList xmlns:c="http://www.Dummy.com/Common/Types">
+                   <c:DummyElement language="en-US">
+                    Dummy Element Entry
+                   </c:DummyElement>
+               </c:DummyList>
+           </n:DummyResult>
+       </n:DummyResponse>
+    </soap:Body>
+</soap:Envelope>
+--MIMEBoundary_2af39b87d6c9f2ba6d1c13d73db88d0bfdf9414786fcc315--
