@@ -1,0 +1,53 @@
+{
+  "sessionResponse":{
+    "status":{
+      "attributes":{
+        "isSuccess":"true"
+       }
+    },
+    "userId":{
+      "attributes":{
+        "internalId":"1645"
+       },
+       "name":"SCPlus Dev"
+    },
+    "wsRoleList":{
+      "wsRole": [
+      {
+        "role":{
+          "attributes":{
+            "internalId":"3"
+           },
+           "name":"Administrator"
+         },
+         "isDefault":false,
+         "isInactive":false,
+         "isLoggedInRole":false,
+         "changedBy": {
+           "when": {
+            "timestamp": 3472394626
+           },
+           "by": "John Doe"
+         }
+      },
+      {
+        "role":{
+          "attributes":{
+            "internalId":"4"
+           },
+           "name":"User"
+         },
+         "isDefault":false,
+         "isInactive":false,
+         "isLoggedInRole":false,
+         "priority": "10",
+         "changedBy": {
+           "when": {
+            "time": "2014-06-20T02:04:12.000Z"
+           },
+           "by": "John Doe"
+         }
+      }      
+    ]}
+  }
+}
