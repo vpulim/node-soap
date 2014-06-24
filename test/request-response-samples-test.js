@@ -99,7 +99,8 @@ function generateTest(name, methodName, wsdlPath, requestXML, requestJSON, respo
           if (err) {
             assert.deepEqual(err.root, responseJSON);
           } else {
-            assert.deepEqual(json, responseJSON);
+            // assert.deepEqual(json, responseJSON);
+            assert.equal(JSON.stringify(json), JSON.stringify(responseJSON));
           }
         }
         if(responseXML) {

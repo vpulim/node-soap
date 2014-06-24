@@ -12,17 +12,17 @@
        "name":"SCPlus Dev"
     },
     "wsRoleList":{
-      "wsRole":{
+      "wsRole":[{
         "role":{
           "attributes":{
             "internalId":"3"
            },
            "name":"Administrator"
          },
-         "isDefault":"false",
-         "isInactive":"false",
-         "isLoggedInRole":"true"
+         "isDefault":false,
+         "isInactive":false,
+         "isLoggedInRole":true
+      }]
       }
     }
   }
-}
