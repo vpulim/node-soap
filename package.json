@@ -20,9 +20,8 @@
     "lib": "./lib"
   },
   "scripts": {
-    "mocha": "mocha test/*-test.js test/security/*.js",
-    "jshint": "jshint index.js lib test",
-    "test": "npm run-script jshint && npm run-script mocha"
+    "pretest": "jshint index.js lib test",
+    "test": "mocha test/*-test.js test/security/*.js"
   },
   "keywords": [
     "soap"
@@ -35,7 +34,7 @@
   ],
   "devDependencies": {
     "mocha": "~1.17.0",
-    "jshint": "~2.4.2",
+    "jshint": "2.3.0",
     "glob": "~3.2.8",
     "should": "~3.3.0"
   }
