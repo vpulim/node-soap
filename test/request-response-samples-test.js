@@ -108,9 +108,6 @@ function generateTest(name, methodName, wsdlPath, requestXML, requestJSON, respo
             assert.equal(JSON.stringify(json), JSON.stringify(responseJSON));
           }
         }
-        if(responseXML && !options.extractEnvelope) {
-          assert.deepEqual(body, responseXML);
-        }
         done();
       }, options);
     }, 'http://localhost:'+port+'/Message/Message.dll?Handler=Default');
