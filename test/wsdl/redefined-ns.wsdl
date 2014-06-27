@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:tns="http://foo.schemas/Foo" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" name="FooService" targetNamespace="http://foo.schemas/Foo">
+  <wsdl:types>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://foo.schemas/Foo">
+      <xsd:element name="Verify">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" name="VerificationRequest" nillable="true" type="tns:VerifyRequestMessage"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="VerifyRequestMessage">
+        <xsd:sequence>
+          <xsd:element name="VerificationData" nillable="true" type="tns:VerificationData"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="VerifyRequestMessage" nillable="true" type="tns:VerifyRequestMessage"/>
+      <xsd:complexType name="VerificationData">
+        <xsd:sequence>
+          <xsd:element name="Name" nillable="true" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="VerificationData" nillable="true" type="tns:VerificationData"/>
+      <xsd:element name="VerifyResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" name="VerifyResult" nillable="true" type="tns:VerificationResponse"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="VerificationResponse">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="Status" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="VerificationResponse" nillable="true" type="tns:VerificationResponse"/>
+      <xsd:complexType name="FooException">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="Message" nillable="true" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="FooException" nillable="true" type="tns:FooException"/>
+    </xsd:schema>
+    <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://schemas.microsoft.com/2003/10/Serialization/" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://schemas.microsoft.com/2003/10/Serialization/">
+      <xs:element name="string" nillable="true" type="xs:string"/>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="FooServiceContract_Verify_InputMessage">
+    <wsdl:part name="parameters" element="tns:Verify"/>
+  </wsdl:message>
+  <wsdl:message name="FooServiceContract_Verify_OutputMessage">
+    <wsdl:part name="parameters" element="tns:VerifyResponse"/>
+  </wsdl:message>
+  <wsdl:message name="FooServiceContract_Verify_FooExceptionFault_FaultMessage">
+    <wsdl:part name="detail" element="tns:FooException"/>
+  </wsdl:message>
+  <wsdl:portType name="FooServiceContract">
+    <wsdl:operation name="Verify">
+      <wsdl:input wsaw:Action="http://foo.schemas/Foo/FooServiceContract/Verify" message="tns:FooServiceContract_Verify_InputMessage"/>
+      <wsdl:output wsaw:Action="http://foo.schemas/Foo/FooServiceContract/VerifyResponse" message="tns:FooServiceContract_Verify_OutputMessage"/>
+      <wsdl:fault wsaw:Action="http://foo.schemas/Foo/FooException" name="FooExceptionFault" message="tns:FooServiceContract_Verify_FooExceptionFault_FaultMessage"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="Foo_v3" type="tns:FooServiceContract">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="Verify">
+      <soap:operation soapAction="http://foo.schemas/Foo/FooServiceContract/Verify" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="FooExceptionFault">
+        <soap:fault name="FooExceptionFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="FooService">
+    <wsdl:port name="Foo_v3" binding="tns:Foo_v3">
+      <soap:address location="https://foo.com/foo/service.svc"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
