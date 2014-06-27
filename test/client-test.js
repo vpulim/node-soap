@@ -211,4 +211,35 @@ describe('SOAP Client', function() {
       }, baseUrl);
     });
   });
+
+  describe('Handle non-success http status codes', function() {
+    var server = null;
+    var hostname = '127.0.0.1';
+    var port = 15099;
+    var baseUrl = 'http://' + hostname + ":" + port;
+
+    before(function(done) {
+      server = http.createServer(function (req, res) {
+        res.statusCode = 401;
+        res.write(JSON.stringify({tempResponse: "temp"}), 'utf8');
+        res.end();
+      }).listen(port, hostname, done);
+    });
+
+    after(function(done) {
+      server.close();
+      server = null;
+      done();
+    });
+
+    it('should return an error', function (done) {
+      soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', function (err, client) {
+        client.MyOperation({}, function(err, result) {
+          assert.ok(err);
+          assert.ok(err.message.indexOf('Invalid response: 401') === 0);
+          done();
+        });
+      }, baseUrl);
+    });
+  });
 });
