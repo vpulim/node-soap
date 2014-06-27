@@ -66,6 +66,7 @@ tests.forEach(function(test){
   var responseJSONError = path.resolve(test, 'error_response.json');
   var responseXML = path.resolve(test, 'response.xml');
   var attributesFile = path.resolve(test, 'attributes_key');
+  var options = path.resolve(test, 'options.json');
   var attributesKey = 'attributes';
   //response JSON is optional
   if (fs.existsSync(responseJSON))responseJSON = require(responseJSON);
@@ -83,12 +84,16 @@ tests.forEach(function(test){
   //responseJSON is required as node-soap will expect a request object anyway
   requestJSON = require(requestJSON);
 
+  //options is optional
+  if (fs.existsSync(options))options = require(options);
+  else options = {};
+
   if (fs.existsSync(attributesFile)) attributesKey = fs.readFileSync(attributesFile, 'ascii').trim();
 
-  generateTest(name, methodName, wsdl, requestXML, requestJSON, responseXML, responseJSON, attributesKey);
+  generateTest(name, methodName, wsdl, requestXML, requestJSON, responseXML, responseJSON, attributesKey, options);
 });
 
-function generateTest(name, methodName, wsdlPath, requestXML, requestJSON, responseXML, responseJSON, attributesKey){
+function generateTest(name, methodName, wsdlPath, requestXML, requestJSON, responseXML, responseJSON, attributesKey, options){
   suite[name] = function(done){
     if(requestXML)requestContext.expectedRequest = requestXML;
     if(responseXML)requestContext.responseToSend = responseXML;
@@ -103,11 +108,8 @@ function generateTest(name, methodName, wsdlPath, requestXML, requestJSON, respo
             assert.equal(JSON.stringify(json), JSON.stringify(responseJSON));
           }
         }
-        if(responseXML) {
-          assert.deepEqual(body, responseXML);
-        }
         done();
-      });
+      }, options);
     }, 'http://localhost:'+port+'/Message/Message.dll?Handler=Default');
   };
 }
