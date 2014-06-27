@@ -161,7 +161,7 @@ as default request options to the constructor:
 ####WSSecurity
 
 ``` javascript
-  client.setSecurity(new WSSecurity('username', 'password'))
+  client.setSecurity(new soap.WSSecurity('username', 'password'))
 ```
 
 ### Client.*method*(args, callback) - call *method* on the SOAP service.
