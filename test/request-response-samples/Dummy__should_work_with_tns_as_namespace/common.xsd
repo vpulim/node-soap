@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:tns="http://www.Dummy.com/Common/Types" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.Dummy.com/Common/Types" elementFormDefault="qualified" attributeFormDefault="unqualified">
+    <xs:complexType name="DummyResult">
+        <xs:sequence>
+            <xs:element name="DummyList" type="tns:DummyList" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute name="code" type="xs:string" use="optional"/>
+    </xs:complexType>
+    <xs:complexType name="Dummy">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="language" type="xs:language" use="optional"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="DummyList">
+        <xs:sequence>
+            <xs:element name="DummyElement" type="tns:Dummy" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="DummyFilter">
+        <xs:sequence>
+            <xs:element name="DummyIntFilter" type="xs:string" minOccurs="0"/>
+            <xs:element name="DummyStringFilter" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
+

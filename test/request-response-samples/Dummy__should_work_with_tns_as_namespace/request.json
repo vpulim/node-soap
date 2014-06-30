@@ -1,0 +1,11 @@
+{
+  "DummyField1": "Humpty",
+  "DummyFilter": {
+    "DummyFilterString": "Dumpty"
+  },
+  "DummyAccount": {
+    "DummyName": "Dummy",
+    "DummyPassword": "1234"
+  }
+
+}
