@@ -250,6 +250,38 @@ soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', {attributesKey: '$
 });
 ```
 
+## Handling "ignored" namespaces
+If an Element in a `schema` definition depends on an Element which is present in the same namespace, normally the `tns:`
+namespace prefix is used to identify this Element. This is not much of a problem as long as you have just one `schema` defined
+(inline or in a separate file). If there are more `schema` files, the `tns:` in the generated `soap` file resolved mostly to the parent `wsdl` file,
+ which was obviously wrong.
+ 
+ `node-soap` now handles namespace prefixes which shouldn't be resolved (because it's not necessary) as so called `ignoredNamespaces`
+ which default to an Array of 3 Strings (`['tns', 'targetNamespace', 'typedNamespace']`).
+ 
+ If this is not sufficient for your purpose you can easily add more namespace prefixes to this Array, or override it in its entirety
+ by passing an `ignoredNamespaces` object within the `options` you pass in `soap.createClient()` method.
+  
+ A simple `ignoredNamespaces` object, which only adds certain namespaces could look like this:
+ ```
+ var options = {
+   ignoredNamespaces: {
+     namespaces: ['namespaceToIgnore', 'someOtherNamespace']
+   }
+ }
+ ```
+ This would extend the `ignoredNamespaces` of the `WSDL` processor to `['tns', 'targetNamespace', 'typedNamespace', 'namespaceToIgnore', 'someOtherNamespace']`.
+ 
+ If you want to override the default ignored namespaces you would simply pass the following `ignoredNamespaces` object within the `options`:
+ ```
+ var options = {
+     ignoredNamespaces: {
+       namespaces: ['namespaceToIgnore', 'someOtherNamespace'],
+       override: true
+     }
+   }
+ ```
+ This would override the default `ignoredNamespaces` of the `WSDL` processor to `['namespaceToIgnore', 'someOtherNamespace']`. (This shouldn't be necessary, anyways).
 
 [downloads-image]: http://img.shields.io/npm/dm/soap.svg
 [npm-url]: https://npmjs.org/package/soap

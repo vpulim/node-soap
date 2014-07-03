@@ -1,0 +1,4 @@
+{
+  "namespaces": ["someIgnoredNamespace"],
+  "override": false
+}
