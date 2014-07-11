@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema" name="IewsServerservice" targetNamespace="urn:webservice-electrasoft-ru" xmlns:tns="urn:webservice-electrasoft-ru"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:ns1="http://www.borland.com/namespaces/Types"
+             xmlns:ns2="urn:webservice-electrasoft-ru:types-ewsServerIntf">
+    <types>
+        <xs:schema targetNamespace="http://www.borland.com/namespaces/Types" xmlns="http://www.borland.com/namespaces/Types">
+            <xs:complexType name="TWideStringDynArray">
+                <xs:complexContent>
+                    <xs:restriction base="soapenc:Array">
+                        <xs:sequence/>
+                        <xs:attribute ref="soapenc:arrayType" n1:arrayType="xs:string[]" xmlns:n1="http://schemas.xmlsoap.org/wsdl/"/>
+                    </xs:restriction>
+                </xs:complexContent>
+            </xs:complexType>
+            <xs:complexType name="TIntegerDynArray">
+                <xs:complexContent>
+                    <xs:restriction base="soapenc:Array">
+                        <xs:sequence/>
+                        <xs:attribute ref="soapenc:arrayType" n1:arrayType="xs:int[]" xmlns:n1="http://schemas.xmlsoap.org/wsdl/"/>
+                    </xs:restriction>
+                </xs:complexContent>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema targetNamespace="urn:webservice-electrasoft-ru:types-ewsServerIntf" xmlns="urn:webservice-electrasoft-ru:types-ewsServerIntf">
+            <xs:simpleType name="TewsLoginResult">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="lrSuccess"/>
+                    <xs:enumeration value="lrMustChangePassword"/>
+                    <xs:enumeration value="lrRestrictedAccess"/>
+                    <xs:enumeration value="lrInternetAccessDenied"/>
+                    <xs:enumeration value="lrAccessDenied"/>
+                    <xs:enumeration value="lrUserAccountClosed"/>
+                    <xs:enumeration value="lrClientServerTimeDiff"/>
+                    <xs:enumeration value="lrInvalidConnection"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType name="TewsInternalMessageReadUnreadType">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="imrtRead"/>
+                    <xs:enumeration value="imrtUnead"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:schema>
+    </types>
+    <message name="Login1Request">
+        <part name="ConnectionID" type="xs:string"/>
+        <part name="UserAlias" type="xs:string"/>
+        <part name="Password" type="xs:string"/>
+        <part name="Language" type="xs:string"/>
+        <part name="ProfileID" type="xs:string"/>
+        <part name="ContextXML" type="xs:string"/>
+        <part name="Timeout" type="xs:unsignedInt"/>
+    </message>
+    <message name="Login1Response">
+        <part name="SessionID" type="xs:string"/>
+        <part name="return" type="ns2:TewsLoginResult"/>
+    </message>
+    <portType name="IewsServer">
+        <operation name="Login">
+            <input message="tns:Login1Request"/>
+            <output message="tns:Login1Response"/>
+        </operation>
+    </portType>
+    <binding name="IewsServerbinding" type="tns:IewsServer">
+        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="Login">
+            <soap:operation soapAction="urn:webservice-electrasoft-ru:types-ewsServerIntf-IewsServer#Login" style="rpc"/>
+            <input message="tns:Login1Request">
+                <soap:body use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:webservice-electrasoft-ru:types-ewsServerIntf-IewsServer"/>
+            </input>
+            <output message="tns:Login1Response">
+                <soap:body use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:webservice-electrasoft-ru:types-ewsServerIntf-IewsServer"/>
+            </output>
+        </operation>
+    </binding>
+    <service name="IewsServerservice">
+        <port name="IewsServerPort" binding="tns:IewsServerbinding">
+            <soap:address location="http://extgate.alean.ru:8082/webservice/ewebsvc.dll/soap/IewsServer"/>
+        </port>
+    </service>
+</definitions>
