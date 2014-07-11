@@ -1,3 +1,15 @@
+0.5.0 / 2014-07-11
+=================
+* Enhancement: Allowing namespace prefixes to be ignored via config.
+* Enhancement: wsdl should handle more types
+* Fix: Handle defined messages ending with "Response", "Out", or "Output"
+* Fix: Adding default attributesKey to server and allowing the property to be configurable fixing issue #406
+* Fix: Remove extra characters before and after soap envelope
+* Fix: Allow operations to not have definitions
+* Fix: Ignore unknown elements
+* Fix: Keep ns from top-level
+* Fix: Check status code of invocation response
+
 0.4.7 / 2014-06-16
 =================
 * Allow request elements to have both content and attributes.
