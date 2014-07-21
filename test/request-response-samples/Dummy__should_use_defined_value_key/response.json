@@ -5,7 +5,7 @@
         "attributes": {
           "language": "en-US"
         },
-        "theValue": "Dummy Element Entry"
+        "$value": "Dummy Element Entry"
       }
     }
   }
