@@ -65,9 +65,10 @@ tests.forEach(function(test){
   var responseJSON = path.resolve(test, 'response.json');
   var responseJSONError = path.resolve(test, 'error_response.json');
   var responseXML = path.resolve(test, 'response.xml');
-  var attributesFile = path.resolve(test, 'attributes_key');
   var options = path.resolve(test, 'options.json');
-  var attributesKey = 'attributes';
+  var wsdlOptionsFile = path.resolve(test, 'wsdl_options.json');
+  var wsdlOptions = {};
+
   //response JSON is optional
   if (fs.existsSync(responseJSON))responseJSON = require(responseJSON);
   else if(fs.existsSync(responseJSONError))responseJSON = require(responseJSONError);
@@ -88,17 +89,19 @@ tests.forEach(function(test){
   if (fs.existsSync(options))options = require(options);
   else options = {};
 
-  if (fs.existsSync(attributesFile)) attributesKey = fs.readFileSync(attributesFile, 'ascii').trim();
+  //wsdlOptions is optional
+  if(fs.existsSync(wsdlOptionsFile)) wsdlOptions = require(wsdlOptionsFile);
+  else wsdlOptions = {};
 
-  generateTest(name, methodName, wsdl, requestXML, requestJSON, responseXML, responseJSON, attributesKey, options);
+  generateTest(name, methodName, wsdl, requestXML, requestJSON, responseXML, responseJSON, wsdlOptions, options);
 });
 
-function generateTest(name, methodName, wsdlPath, requestXML, requestJSON, responseXML, responseJSON, attributesKey, options){
+function generateTest(name, methodName, wsdlPath, requestXML, requestJSON, responseXML, responseJSON, wsdlOptions, options){
   suite[name] = function(done){
     if(requestXML)requestContext.expectedRequest = requestXML;
     if(responseXML)requestContext.responseToSend = responseXML;
     requestContext.doneHandler = done;
-    soap.createClient(wsdlPath, {attributesKey: attributesKey }, function(err, client){
+    soap.createClient(wsdlPath, wsdlOptions, function(err, client){
       client[methodName](requestJSON, function(err, json, body){
         if(requestJSON){
           if (err) {

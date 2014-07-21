@@ -208,8 +208,35 @@ WSSecurity implements WS-Security.  UsernameToken and PasswordText/PasswordDiges
     //'PasswordDigest' or 'PasswordText' default is PasswordText
 ```
 
-## Handling XML Attributes.
+## Handling XML Attributes and Value (wsdlOptions).
+Sometimes it is necessary to override the default behaviour of `node-soap` in order to deal with the special requirements
+of your code base or a third library you use. Therefore you can use the `wsdlOptions` Object, which is passed in the
+`#createClient()` method and could have any (or all) of the following contents:
+```javascript
+var wsdlOptions = {
+  attributesKey: 'theAttrs',
+  valueKey: 'theVal'
+}
+```
+If nothing (or an empty Object `{}`) is passed to the `#createClient()` method, the `node-soap` defaults (`attributesKey: 'attributes'`
+ and `valueKey: '$value'`) are used.
 
+###Overriding the `value` key
+By default, `node-soap` uses `$value` as key for any parsed XML value which may interfere with your other code as it
+could be some reserved word, or the `$` in general cannot be used for a key to start with.
+
+You can define your own `valueKey` by passing it in the `wsdl_options` to the createClient call like so:
+```javascript
+var wsdlOptions = {
+  valueKey: 'theVal'
+};
+
+soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', wsdlOptions, function (err, client) {
+  // your code
+});
+```
+
+###Overriding the `attributes` key
 You can achieve attributes like:
 ``` xml
 <parentnode>
@@ -235,9 +262,13 @@ However, "attributes" may be a reserved key for some systems that actually want 
 </attributes>
 ```
 
-In this case you can configure the attributes key by passing in an options object to the createClient call like so.
+In this case you can configure the attributes key in the `wsdlOptions` like so.
 ```javascript
-soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', {attributesKey: '$attributes'}, function (err, client) {
+var wsdlOptions = {
+  attributesKey: '$attributes'
+};
+
+soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', wsdlOptions, function (err, client) {
   client.*method*({
     parentnode: {
       childnode: {
