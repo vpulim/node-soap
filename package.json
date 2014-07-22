@@ -7,9 +7,10 @@
   },
   "author": "Vinay Pulim <v@pulim.com>",
   "dependencies": {
-    "sax": ">=0.6",
+    "lodash": "~2.4.1",
     "request": ">=2.9.0",
-    "lodash": "~2.4.1"
+    "sax": ">=0.6",
+    "strip-bom": "~0.3.1"
   },
   "repository": {
     "type": "git",
