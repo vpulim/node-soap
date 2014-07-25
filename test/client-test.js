@@ -242,4 +242,40 @@ describe('SOAP Client', function() {
       }, baseUrl);
     });
   });
+
+  describe('Handle Soap 1.2 Fault response', function() {
+    var server = null;
+    var hostname = '127.0.0.1';
+    var port = 15099;
+    var baseUrl = 'http://' + hostname + ":" + port;
+    var faultXml =
+      '<S:Envelope xmlns:S="http://www.w3.org/2003/05/soap-envelope"><S:Body><S:Fault>'
+      + '<S:Code><S:Value>S:Receiver</S:Value></S:Code>'
+      + '<S:Reason><S:Text xml:lang="en">No can do</S:Text></S:Reason>'
+      + '<S:Detail><Random><Stuff>You lose.</Stuff></Random></S:Detail>'
+      + '</S:Fault></S:Body></S:Envelope>';
+
+    before(function(done) {
+      server = http.createServer(function (req, res) {
+        res.write(faultXml, 'utf8');
+        res.end();
+      }).listen(port, hostname, done);
+    });
+
+    after(function(done) {
+      server.close();
+      server = null;
+      done();
+    });
+
+    it('should throw a useful error', function (done) {
+      soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', function (err, client) {
+        client.MyOperation({}, function(err, result) {
+          assert.ok(err);
+          assert.ok(err.message.indexOf('S:Receiver: No can do:') === 0);
+          done();
+        });
+      }, baseUrl);
+    });
+  });
 });
