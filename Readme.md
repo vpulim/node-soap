@@ -314,6 +314,12 @@ namespace prefix is used to identify this Element. This is not much of a problem
  ```
  This would override the default `ignoredNamespaces` of the `WSDL` processor to `['namespaceToIgnore', 'someOtherNamespace']`. (This shouldn't be necessary, anyways).
 
+## Contributors
+
+ * Author: [Vinay Pulim](https://github.com/vpulim)
+ * Lead Maintainer: [Joe Spencer](https://github.com/jsdevel)
+ * [All Contributors](https://github.com/vpulim/node-soap/graphs/contributors)
+
 [downloads-image]: http://img.shields.io/npm/dm/soap.svg
 [npm-url]: https://npmjs.org/package/soap
 [npm-image]: http://img.shields.io/npm/v/soap.svg
