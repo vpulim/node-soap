@@ -1,3 +1,11 @@
+0.5.1 / 2014-07-11
+=================
+* Enhancement: Add "defaults" parameter to BasicAuthSecurity's constructor
+* Enhancement:  Added possibility to set a custom `valueKey` for the parsed values from XML SOAP Response
+* Fix:  don't append port 80 to Host if not needed
+* Fix:  Remove possible existing BOM characters from XML String before passing it to `WSDL#_fromXML()` and parsing it.
+* Fix:  Handling nil attributes in response xml
+
 0.5.0 / 2014-07-11
 =================
 * Enhancement: Allowing namespace prefixes to be ignored via config.
