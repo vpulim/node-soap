@@ -1,0 +1,11 @@
+{
+  "DummyField1": {
+    "$value":  "Humpty",
+    "attributes": {
+      "language": "en-US"
+    }
+  },
+  "DummyFilter": {
+    "DummyFilterString": "Dumpty"
+  }
+}
