@@ -19,7 +19,29 @@ test.service = {
         }
       }
     }
-  }
+  },
+  StockQuoteQueryParameter1Service: {
+    StockQuotePort: {
+      GetLastTradePrice: function(args) {
+        if (args.tickerSymbol === 'trigger error') {
+          throw new Error('triggered server error');
+        } else {
+          return { price: 13.37 };
+        }
+      }
+    }
+  },
+  StockQuoteQueryParameter2Service: {
+    StockQuotePort: {
+      GetLastTradePrice: function(args) {
+        if (args.tickerSymbol === 'trigger error') {
+          throw new Error('triggered server error');
+        } else {
+          return { price: 73.53 };
+        }
+      }
+    }
+  },
 };
 
 describe('SOAP Server', function() {
@@ -103,6 +125,28 @@ describe('SOAP Server', function() {
       client.GetLastTradePrice({ tickerSymbol: 'AAPL'}, function(err, result) {
         assert.ok(!err);
         assert.equal(19.56, parseFloat(result.price));
+        done();
+      });
+    });
+  });
+
+  it('should return correct results', function(done) {
+    soap.createClient(test.baseUrl + '/stockquote?wsdl?service=StockQuoteQueryParameter1Service', function(err, client) {
+      assert.ok(!err);
+      client.GetLastTradePrice({ tickerSymbol: 'AAPL'}, function(err, result) {
+        assert.ok(!err);
+        assert.equal(13.37, parseFloat(result.price));
+        done();
+      });
+    });
+  });
+
+  it('should return correct results', function(done) {
+    soap.createClient(test.baseUrl + '/stockquote?wsdl?service=StockQuoteQueryParameter2Service', function(err, client) {
+      assert.ok(!err);
+      client.GetLastTradePrice({ tickerSymbol: 'AAPL'}, function(err, result) {
+        assert.ok(!err);
+        assert.equal(73.53, parseFloat(result.price));
         done();
       });
     });

@@ -60,4 +60,16 @@
         </wsdl:port>
     </wsdl:service>
 
+    <wsdl:service name="StockQuoteQueryParameter1Service">
+        <wsdl:port name="StockQuotePort" binding="tns:StockQuoteSoapBinding">
+           <soap:address location="http://localhost:15099/stockquote?service=StockQuoteQueryParameter1Service"/>
+        </wsdl:port>
+    </wsdl:service>
+
+    <wsdl:service name="StockQuoteQueryParameter2Service">
+        <wsdl:port name="StockQuotePort" binding="tns:StockQuoteSoapBinding">
+           <soap:address location="http://localhost:15099/stockquote?service=StockQuoteQueryParameter2Service"/>
+        </wsdl:port>
+    </wsdl:service>
+
 </wsdl:definitions>
