@@ -262,7 +262,8 @@ describe('SOAP Client', function() {
       soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', function (err, client) {
         client.MyOperation({}, function(err, result) {
           assert.ok(err);
-          assert.ok(err.message.indexOf('Invalid response: 401') === 0);
+          assert.ok(err.response);
+          assert.ok(err.body);
           done();
         });
       }, baseUrl);
