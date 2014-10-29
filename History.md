@@ -1,3 +1,15 @@
+0.6.0 / 2014-10-29
+=================
+* Enhancement: Adding bearer security type Exporting security type for usage.
+* Enhancement: The qualified elementFormQualified must be respected only when the current element is not a global element. The namespace attribute is only needed if it's not included in the xmlns.
+* Fix: Remove automatic port appending to "Host" header.
+* Fix: Avoid creating soap:Header container when there are no children.
+* Fix: Allowing a 'null' argument for WSDL methods that take no arguments.
+* Fix: Wrong initialization of xmlns array when handling rpc stype wsdl.
+* Fix: Fault handling.  err should be used less frequently now.
+* Fix: Added checking if there is input and output for operations under bindings section.
+* Fix: XSD conflict with same namespace.
+
 0.5.1 / 2014-07-11
 =================
 * Enhancement: Add "defaults" parameter to BasicAuthSecurity's constructor
