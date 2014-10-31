@@ -214,18 +214,18 @@ WSSecurity implements WS-Security.  UsernameToken and PasswordText/PasswordDiges
     //'PasswordDigest' or 'PasswordText' default is PasswordText
 ```
 
-## Handling XML Attributes and Value (wsdlOptions).
+## Handling XML Attributes, Value and XML (wsdlOptions).
 Sometimes it is necessary to override the default behaviour of `node-soap` in order to deal with the special requirements
 of your code base or a third library you use. Therefore you can use the `wsdlOptions` Object, which is passed in the
 `#createClient()` method and could have any (or all) of the following contents:
 ```javascript
 var wsdlOptions = {
   attributesKey: 'theAttrs',
-  valueKey: 'theVal'
+  valueKey: 'theVal',
+  xmlKey: 'theXml'
 }
 ```
-If nothing (or an empty Object `{}`) is passed to the `#createClient()` method, the `node-soap` defaults (`attributesKey: 'attributes'`
- and `valueKey: '$value'`) are used.
+If nothing (or an empty Object `{}`) is passed to the `#createClient()` method, the `node-soap` defaults (`attributesKey: 'attributes'`, `valueKey: '$value'` and `xmlKey: '$xml'`) are used.
 
 ###Overriding the `value` key
 By default, `node-soap` uses `$value` as key for any parsed XML value which may interfere with your other code as it
@@ -235,6 +235,36 @@ You can define your own `valueKey` by passing it in the `wsdl_options` to the cr
 ```javascript
 var wsdlOptions = {
   valueKey: 'theVal'
+};
+
+soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', wsdlOptions, function (err, client) {
+  // your code
+});
+```
+
+###Overriding the `xml` key
+As `valueKey`, `node-soap` uses `$xml` as key. The xml key is used to pass XML Object without adding namespace or parsing the string.
+
+Example : 
+
+```javascript
+dom = {
+     $xml: '<parentnode type="type"><childnode></childnode></parentnode>'
+};
+```
+
+```xml
+<tns:dom>
+    <parentnode type="type">
+          <childnode></childnode>
+    </parentnode>
+</tns:dom>
+``` 
+
+You can define your own `xmlKey` by passing it in the `wsdl_options` to the createClient call like so:
+```javascript
+var wsdlOptions = {
+  xmlKey: 'theXml'
 };
 
 soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', wsdlOptions, function (err, client) {
