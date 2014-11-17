@@ -120,6 +120,7 @@
 		</schema>
 	</types>
 	<message name="pullFileRequest">
+        <documentation>This is doc</documentation>
 		<part name="params" type="RpcExample:pullFileParams"/>
 	</message>
 	<message name="pullFileResponse">
