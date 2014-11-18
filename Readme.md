@@ -184,7 +184,7 @@ as default request options to the constructor:
       // result is a javascript object
   })
 ```
-+#### Options (optional)
+#### Options (optional)
  - Accepts any option that the request module accepts, see [here.](https://github.com/mikeal/request)
  - For example, you could set a timeout of 5 seconds on the request like this:
 ``` javascript
@@ -245,7 +245,7 @@ soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', wsdlOptions, funct
 ###Overriding the `xml` key
 As `valueKey`, `node-soap` uses `$xml` as key. The xml key is used to pass XML Object without adding namespace or parsing the string.
 
-Example : 
+Example :
 
 ```javascript
 dom = {
@@ -259,7 +259,7 @@ dom = {
           <childnode></childnode>
     </parentnode>
 </tns:dom>
-``` 
+```
 
 You can define your own `xmlKey` by passing it in the `wsdl_options` to the createClient call like so:
 ```javascript
