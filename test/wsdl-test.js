@@ -44,8 +44,16 @@ wsdlNonStrictTests['should catch parse error'] = function(done) {
 };
 
 wsdlStrictTests['should catch parse error'] = function(done) {
-  soap.createClient(__dirname+'/wsdl/bad.txt', function(err) {
+  soap.createClient(__dirname+'/wsdl/bad.txt', {strict: true}, function(err) {
     assert.notEqual(err, null);
+    done();
+  });
+};
+
+wsdlStrictTests['should parse external wsdl'] = function(done) {
+  soap.createClient(__dirname+'/wsdl/wsdlImport/main.wsdl', {strict: true}, function(err, client){
+    assert.ok(!err);
+    assert.equal(typeof client.getLatestVersion, 'function');
     done();
   });
 };
