@@ -1,3 +1,28 @@
+0.6.1 / 2014-12-20
+==================
+* [ENHANCEMENT] Allow logging of received `XML` prior to parsing and processing it, which allows better debugging of incoming`XML`. (#524)
+
+* [ENHANCEMENT] Add support for importing external `wsdl`. (#523)
+
+* [FIX] Use correct namespaces for elements which consist of an array. (#522)
+
+* [FIX] Use correct namespaces for elements which have a different base namespace. (#521)
+
+* [FIX] Don't throw an `Error` when `typeElement` is undefined in `ExtensionElement#description` method. (#515)
+
+* [FIX] Only supply `nonce` when a password digest is used to avoid `schema` validation errors. (#496)
+
+* [FIX] Allow `wsdl:documentation` element under `wsdl:message`. (#508)
+
+* [FIX] Use correct namespaces in sequences with imported elements. (#502)
+
+* [FIX] Ignore default `tns` and disabled default `tns` specification in first element of the body. (#506)
+
+* [ENHANCEMENT] Define `$xml` to pass plain `XML` object. (#485)
+The `$xml` key is used to pass an `XML` Object to the request without adding a namespace or parsing the string.
+
+* [FIX] Updated '#extend' method to avoid overriding properties and ensure the 'inheritance' of `<xsd:extension base=...>` usage. (#493)
+
 0.6.0 / 2014-10-29
 =================
 * Enhancement: Adding bearer security type Exporting security type for usage.
