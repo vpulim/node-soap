@@ -1,5 +1,6 @@
 {
-  "name": "soap",
+  "name": "ifit-soap",
+  "private": true,
   "version": "0.2.6",
   "description": "A minimal node SOAP client",
   "engines": {
