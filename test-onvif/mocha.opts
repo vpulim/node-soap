@@ -1,0 +1,4 @@
+-R spec
+-u exports
+-r should
+--timeout 10000

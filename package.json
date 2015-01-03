@@ -8,6 +8,7 @@
   "author": "Vinay Pulim <v@pulim.com>",
   "dependencies": {
     "lodash": "~2.4.1",
+    "node-uuid": "^1.4.2",
     "request": ">=2.9.0",
     "sax": ">=0.6",
     "strip-bom": "~0.3.1"
