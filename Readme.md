@@ -330,5 +330,5 @@ namespace prefix is used to identify this Element. This is not much of a problem
 [npm-url]: https://npmjs.org/package/soap
 [npm-image]: http://img.shields.io/npm/v/soap.svg
 
-[travis-url]: https://travis-ci.org/vpulim/node-soap
+[travis-url]: https://travis-ci.org/sguilly/node-soap.svg
 [travis-image]: http://img.shields.io/travis/vpulim/node-soap.svg
