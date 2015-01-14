@@ -72,6 +72,7 @@ tests.forEach(function(test){
   var requestJSON = path.resolve(test, 'request.json');
   var requestXML = path.resolve(test, 'request.xml');
   var responseJSON = path.resolve(test, 'response.json');
+  var responseSoapHeaderJSON = path.resolve(test, 'responseSoapHeader.json');
   var responseJSONError = path.resolve(test, 'error_response.json');
   var responseXML = path.resolve(test, 'response.xml');
   var options = path.resolve(test, 'options.json');
@@ -90,6 +91,10 @@ tests.forEach(function(test){
   if (fs.existsSync(responseJSON))responseJSON = require(responseJSON);
   else if(fs.existsSync(responseJSONError))responseJSON = require(responseJSONError);
   else responseJSON = null;
+
+  //responseSoapHeaderJSON is optional
+  if (fs.existsSync(responseSoapHeaderJSON))responseSoapHeaderJSON = require(responseSoapHeaderJSON);
+  else responseSoapHeaderJSON = null;
 
   //requestXML is optional
   if(fs.existsSync(requestXML))requestXML = ""+fs.readFileSync(requestXML);
@@ -110,10 +115,10 @@ tests.forEach(function(test){
   if(fs.existsSync(wsdlOptionsFile)) wsdlOptions = require(wsdlOptionsFile);
   else wsdlOptions = {};
 
-  generateTest(name, methodName, wsdl, headerJSON, securityJSON, requestXML, requestJSON, responseXML, responseJSON, wsdlOptions, options);
+  generateTest(name, methodName, wsdl, headerJSON, securityJSON, requestXML, requestJSON, responseXML, responseJSON, responseSoapHeaderJSON, wsdlOptions, options);
 });
 
-function generateTest(name, methodName, wsdlPath, headerJSON, securityJSON, requestXML, requestJSON, responseXML, responseJSON, wsdlOptions, options){
+function generateTest(name, methodName, wsdlPath, headerJSON, securityJSON, requestXML, requestJSON, responseXML, responseJSON, responseSoapHeaderJSON, wsdlOptions, options){
   suite[name] = function(done){
     if(requestXML)requestContext.expectedRequest = requestXML;
     if(responseXML)requestContext.responseToSend = responseXML;
@@ -127,13 +132,16 @@ function generateTest(name, methodName, wsdlPath, headerJSON, securityJSON, requ
       if (securityJSON && securityJSON.type === 'ws') {
         client.setSecurity(new WSSecurity(securityJSON.username, securityJSON.password));
       }
-      client[methodName](requestJSON, function(err, json, body){
+      client[methodName](requestJSON, function(err, json, body, soapHeader){
         if(requestJSON){
           if (err) {
             assert.deepEqual(err.root, responseJSON);
           } else {
             // assert.deepEqual(json, responseJSON);
             assert.equal(JSON.stringify(json), JSON.stringify(responseJSON));
+            if(responseSoapHeaderJSON){
+              assert.equal(JSON.stringify(soapHeader), JSON.stringify(responseSoapHeaderJSON));
+            }
           }
         }
         done();

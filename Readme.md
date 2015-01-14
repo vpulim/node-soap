@@ -173,8 +173,10 @@ as default request options to the constructor:
 ### Client.*method*(args, callback) - call *method* on the SOAP service.
 
 ``` javascript
-  client.MyFunction({name: 'value'}, function(err, result) {
+  client.MyFunction({name: 'value'}, function(err, result, raw, soapHeader) {
       // result is a javascript object
+      // raw is the raw response
+      // soapHeader is the response soap header as a javascript object
   })
 ```
 ### Client.*service*.*port*.*method*(args, callback[, options]) - call a *method* using a specific *service* and *port*
