@@ -121,7 +121,12 @@ function generateTest(name, methodName, wsdlPath, headerJSON, securityJSON, requ
     soap.createClient(wsdlPath, wsdlOptions, function(err, client){
       if (headerJSON) {
         for (var headerKey in headerJSON) {
-          client.addSoapHeader(headerJSON[headerKey], headerKey);
+          var json = headerJSON[headerKey];
+          var ns = json.$ns;
+          var xmlns = json.$xmlns;
+          delete json.$ns;
+          delete json.$xmlns;
+          client.addSoapHeader(json, headerKey, ns, xmlns);
         }
       }
       if (securityJSON && securityJSON.type === 'ws') {
