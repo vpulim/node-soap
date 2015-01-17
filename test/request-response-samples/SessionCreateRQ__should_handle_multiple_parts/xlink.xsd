@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" targetNamespace="http://www.w3.org/1999/xlink" elementFormDefault="qualified" attributeFormDefault="qualified">	<xsd:attribute name="type">		<xsd:simpleType>			<xsd:restriction base="xsd:NMTOKEN">				<xsd:enumeration value="simple"/>				<xsd:enumeration value="extended"/>				<xsd:enumeration value="locator"/>				<xsd:enumeration value="arc"/>				<xsd:enumeration value="resource"/>				<xsd:enumeration value="title"/>				<xsd:enumeration value="none"/>			</xsd:restriction>		</xsd:simpleType>	</xsd:attribute>	<xsd:attribute name="href" type="xsd:anyURI">
+	</xsd:attribute>	<xsd:attribute name="role" type="xsd:anyURI">
+	</xsd:attribute>	<xsd:attribute name="arcrole" type="xsd:anyURI">
+	</xsd:attribute>	<xsd:attribute name="title" type="xsd:string">
+	</xsd:attribute>	<xsd:attribute name="label" type="xsd:NMTOKEN">
+	</xsd:attribute>	<xsd:attribute name="show">		<xsd:simpleType>			<xsd:restriction base="xsd:NMTOKEN">				<xsd:enumeration value="new"/>				<xsd:enumeration value="replace"/>				<xsd:enumeration value="embed"/>				<xsd:enumeration value="other"/>				<xsd:enumeration value="none"/>			</xsd:restriction>		</xsd:simpleType>	</xsd:attribute></xsd:schema>

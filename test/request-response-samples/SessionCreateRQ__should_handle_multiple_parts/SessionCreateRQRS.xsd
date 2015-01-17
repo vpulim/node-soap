@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://www.opentravel.org/OTA/2002/11" xmlns:tns="http://www.opentravel.org/OTA/2002/11" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<include schemaLocation="SessionCreateRQ.xsd"/>
+	<include schemaLocation="SessionCreateRS.xsd"/>
+</schema>

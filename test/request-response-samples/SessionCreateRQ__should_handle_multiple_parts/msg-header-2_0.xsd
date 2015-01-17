@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Some parsers may require explicit declaration of 'xmlns:xml="http://www.w3.org/XML/1998/namespace"'. 
+     In that case, a copy of this schema augmented with the above declaration should be cached and used
+     for the purpose of schema validation on ebXML messages. -->
+<schema xmlns:tns="http://www.ebxml.org/namespaces/messageHeader" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.ebxml.org/namespaces/messageHeader" elementFormDefault="qualified" attributeFormDefault="qualified" version="2.0c">
+	<import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="xmldsig-core-schema.xsd"/>
+	<import namespace="http://www.w3.org/1999/xlink" schemaLocation="xlink.xsd"/>
+	<import namespace="http://schemas.xmlsoap.org/soap/envelope/" schemaLocation="envelope.xsd"/>
+	<import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="xml.xsd"/>
+	<!-- MANIFEST, for use in soap:Body element -->
+	<element name="Manifest">
+		<complexType>
+			<sequence>
+				<element ref="tns:Reference" maxOccurs="unbounded"/>
+				<any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+			</sequence>
+			<attributeGroup ref="tns:bodyExtension.grp"/>
+		</complexType>
+	</element>
+	<element name="Reference">
+		<complexType>
+			<sequence>
+				<element ref="tns:Schema" minOccurs="0" maxOccurs="unbounded"/>
+				<element ref="tns:Description" minOccurs="0" maxOccurs="unbounded"/>
+				<any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+			</sequence>
+			<attribute ref="tns:id"/>
+			<attribute ref="xlink:type" fixed="simple"/>
+			<attribute ref="xlink:href" use="required"/>
+			<attribute ref="xlink:role"/>
+			<anyAttribute namespace="##other" processContents="lax"/>
+		</complexType>
+	</element>
+	<element name="Schema">
+		<complexType>
+			<attribute name="location" type="anyURI" use="required"/>
+			<attribute name="version" type="tns:non-empty-string"/>
+		</complexType>
+	</element>
+	<!-- MESSAGEHEADER, for use in soap:Header element -->
+	<element name="MessageHeader">
+		<complexType>
+			<sequence>
+				<element ref="tns:From"/>
+				<element ref="tns:To"/>
+				<element ref="tns:CPAId"/>
+				<element ref="tns:ConversationId"/>
+				<element ref="tns:Service"/>
+				<element ref="tns:Action"/>
+				<element ref="tns:MessageData"/>
+				<element ref="tns:DuplicateElimination" minOccurs="0"/>
+				<element ref="tns:Description" minOccurs="0" maxOccurs="unbounded"/>
+				<any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+			</sequence>
+			<attributeGroup ref="tns:headerExtension.grp"/>
+		</complexType>
+	</element>
+	<element name="CPAId" type="tns:non-empty-string"/>
+	<element name="ConversationId" type="tns:non-empty-string"/>
+	<element name="Service">
+		<complexType>
+			<simpleContent>
+				<extension base="string">
+					<attribute name="type" type="tns:non-empty-string"/>
+				</extension>
+			</simpleContent>
+		</complexType>
+	</element>
+	<element name="Action" type="tns:non-empty-string"/>
+	<element name="MessageData">
+		<complexType>
+			<sequence>
+				<element ref="tns:MessageId"/>
+				<element ref="tns:Timestamp"/>
+				<element ref="tns:RefToMessageId" minOccurs="0"/>
+				<element ref="tns:TimeToLive" minOccurs="0"/>
+				<element ref="tns:Timeout" minOccurs="0"/>
+			</sequence>
+		</complexType>
+	</element>
+	<element name="MessageId" type="tns:non-empty-string"/>
+	<element name="Timeout" type="nonNegativeInteger"/>
+	<element name="TimeToLive" type="dateTime"/>
+	<element name="DuplicateElimination" type="anyType"/>
+	<!-- SYNC REPLY, for use in soap:Header element -->
+	<element name="SyncReply">
+		<complexType>
+			<sequence>
+				<any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+			</sequence>
+			<attributeGroup ref="tns:headerExtension.grp"/>
+			<attribute ref="soap:actor" use="required"/>
+		</complexType>
+	</element>
+	<!-- MESSAGE ORDER, for use in soap:Header element -->
+	<element name="MessageOrder">
+		<complexType>
+			<sequence>
+				<element ref="tns:SequenceNumber"/>
+				<any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+			</sequence>
+			<attributeGroup ref="tns:headerExtension.grp"/>
+		</complexType>
+	</element>
+	<element name="SequenceNumber" type="tns:sequenceNumber.type"/>
+	<!-- ACK REQUESTED, for use in soap:Header element -->
+	<element name="AckRequested">
+		<complexType>
+			<sequence>
+				<any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+			</sequence>
+			<attributeGroup ref="tns:headerExtension.grp"/>
+			<attribute ref="soap:actor"/>
+			<attribute name="signed" type="boolean" use="required"/>
+		</complexType>
+	</element>
+	<!-- ACKNOWLEDGMENT, for use in soap:Header element -->
+	<element name="Acknowledgment">
+		<complexType>
+			<sequence>
+				<element ref="tns:Timestamp"/>
+				<element ref="tns:RefToMessageId"/>
+				<element ref="tns:From" minOccurs="0"/>
+				<element ref="tns:Reference" minOccurs="0" maxOccurs="unbounded"/>
+				<any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+			</sequence>
+			<attributeGroup ref="tns:headerExtension.grp"/>
+			<attribute ref="soap:actor"/>
+		</complexType>
+	</element>
+	<!-- ERROR LIST, for use in soap:Header element -->
+	<element name="ErrorList">
+		<complexType>
+			<sequence>
+				<element ref="tns:Error" maxOccurs="unbounded"/>
+				<any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+			</sequence>
+			<attributeGroup ref="tns:headerExtension.grp"/>
+			<attribute name="highestSeverity" type="tns:severity.type" use="required"/>
+		</complexType>
+	</element>
+	<element name="Error">
+		<complexType>
+			<sequence>
+				<element ref="tns:Description" minOccurs="0"/>
+				<any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+			</sequence>
+			<attribute ref="tns:id"/>
+			<attribute name="codeContext" type="anyURI" default="urn:oasis:names:tc:ebxml-msg:service:errors"/>
+			<attribute name="errorCode" type="tns:non-empty-string" use="required"/>
+			<attribute name="severity" type="tns:severity.type" use="required"/>
+			<attribute name="location" type="tns:non-empty-string"/>
+			<anyAttribute namespace="##other" processContents="lax"/>
+		</complexType>
+	</element>
+	<!-- STATUS RESPONSE, for use in soap:Body element -->
+	<element name="StatusResponse">
+		<complexType>
+			<sequence>
+				<element ref="tns:RefToMessageId"/>
+				<element ref="tns:Timestamp" minOccurs="0"/>
+				<any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+			</sequence>
+			<attributeGroup ref="tns:bodyExtension.grp"/>
+			<attribute name="messageStatus" type="tns:messageStatus.type" use="required"/>
+		</complexType>
+	</element>
+	<!-- STATUS REQUEST, for use in soap:Body element -->
+	<element name="StatusRequest">
+		<complexType>
+			<sequence>
+				<element ref="tns:RefToMessageId"/>
+				<any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+			</sequence>
+			<attributeGroup ref="tns:bodyExtension.grp"/>
+		</complexType>
+	</element>
+	<!-- COMMON TYPES -->
+	<complexType name="sequenceNumber.type">
+		<simpleContent>
+			<extension base="nonNegativeInteger">
+				<attribute name="status" type="tns:status.type" default="Continue"/>
+			</extension>
+		</simpleContent>
+	</complexType>
+	<simpleType name="status.type">
+		<restriction base="NMTOKEN">
+			<enumeration value="Reset"/>
+			<enumeration value="Continue"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="messageStatus.type">
+		<restriction base="NMTOKEN">
+			<enumeration value="UnAuthorized"/>
+			<enumeration value="NotRecognized"/>
+			<enumeration value="Received"/>
+			<enumeration value="Processed"/>
+			<enumeration value="Forwarded"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="non-empty-string">
+		<restriction base="string">
+			<minLength value="1"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="severity.type">
+		<restriction base="NMTOKEN">
+			<enumeration value="Warning"/>
+			<enumeration value="Error"/>
+		</restriction>
+	</simpleType>
+	<!-- COMMON ATTRIBUTES and ATTRIBUTE GROUPS -->
+	<attribute name="id" type="ID"/>
+	<attribute name="version" type="tns:non-empty-string"/>
+	<attributeGroup name="headerExtension.grp">
+		<attribute ref="tns:id"/>
+		<attribute ref="tns:version" use="required"/>
+		<anyAttribute namespace="##other" processContents="lax"/>
+		<!--attribute ref="soap:mustUnderstand" use="optional"/-->
+	</attributeGroup>
+	<attributeGroup name="bodyExtension.grp">
+		<attribute ref="tns:id"/>
+		<attribute ref="tns:version" use="required"/>
+		<anyAttribute namespace="##other" processContents="lax"/>
+	</attributeGroup>
+	<!-- COMMON ELEMENTS -->
+	<element name="PartyId">
+		<complexType>
+			<simpleContent>
+				<extension base="string">
+					<attribute name="type" type="tns:non-empty-string"/>
+				</extension>
+			</simpleContent>
+		</complexType>
+	</element>
+	<element name="To">
+		<complexType>
+			<sequence>
+				<element ref="tns:PartyId" maxOccurs="unbounded"/>
+				<element name="Role" type="tns:non-empty-string" minOccurs="0"/>
+			</sequence>
+		</complexType>
+	</element>
+	<element name="From">
+		<complexType>
+			<sequence>
+				<element ref="tns:PartyId" maxOccurs="unbounded"/>
+				<element name="Role" type="tns:non-empty-string" minOccurs="0"/>
+			</sequence>
+		</complexType>
+	</element>
+	<element name="Description">
+		<complexType>
+			<simpleContent>
+				<extension base="string">
+					<attribute ref="xml:lang" use="required"/>
+				</extension>
+			</simpleContent>
+		</complexType>
+	</element>
+	<element name="RefToMessageId" type="tns:non-empty-string"/>
+	<element name="Timestamp" type="string"/>
+</schema>
