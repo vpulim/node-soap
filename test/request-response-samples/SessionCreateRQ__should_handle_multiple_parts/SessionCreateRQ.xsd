@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://www.opentravel.org/OTA/2002/11" xmlns="http://www.opentravel.org/OTA/2002/11" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xs:element name="SessionCreateRQ">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="POS">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Source">
+								<xs:complexType>
+									<xs:attribute name="PseudoCityCode" type="xs:string" use="required"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="returnContextID" type="xs:boolean"/>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

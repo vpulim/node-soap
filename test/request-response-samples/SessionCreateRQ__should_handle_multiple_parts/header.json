@@ -1,0 +1,38 @@
+{
+  "header": {
+    "$ns": "eb",
+    "$xmlns": "http://www.ebxml.org/namespaces/messageHeader",
+    "MessageHeader": {
+      "ConversationId": "elia@mytravelershaven.com",
+      "From": {
+        "PartyId": {
+          "$value": "hotelengine.com",
+          "attributes": {
+            "type": "urn:x12.org:IO5:01"
+          }
+        }
+      },
+      "To": {
+        "PartyId": {
+          "$value": "webservices.sabre.com",
+          "attributes": {
+            "type": "urn:x12.org:IO5:01"
+          }
+        }
+      },
+      "CPAId": "P40G",
+      "Service": {
+        "$value": "Session",
+        "attributes": {
+          "type": "sabreXML"
+        }
+      },
+      "Action": "SessionCreateRQ",
+      "MessageData": {
+         "MessageId": "mid:20150117-013924@hotelengine.com",
+         "RefToMessageId": "",
+         "Timestamp": "2015-01-17T01:39:24-08:00"
+      }
+    }
+  }
+}
