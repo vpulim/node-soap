@@ -207,6 +207,15 @@ as default request options to the constructor:
 
 ### Client.*lastRequest* - the property that contains last full soap request for client logging
 
+### Client Events
+Client instances emit the following events:
+
+* request - Emitted before a request is sent. The event handler receives the 
+entire Soap request (Envelope) including headers.
+* message - Emitted before a request is sent. The event handler receives the 
+Soap body contents. Useful if you don't want to log /store Soap headers.
+
+
 ## WSSecurity
 
 WSSecurity implements WS-Security.  UsernameToken and PasswordText/PasswordDigest is supported. An instance of WSSecurity is passed to Client.setSecurity.
