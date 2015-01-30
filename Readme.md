@@ -46,7 +46,7 @@ Within the options object you may provide an `endpoint` property in case you wan
                   return {
                       name: args.name
                   };
-              }
+              },
 
               // This is how to define an asynchronous function.
               MyAsyncFunction: function(args, callback) {
@@ -54,6 +54,13 @@ Within the options object you may provide an `endpoint` property in case you wan
                   callback({
                       name: args.name
                   })
+              },
+
+              // This is how to receive incoming headers
+              HeadersAwareFunction: function(args, cb, headers) {
+                  return {
+                      name: headers.Token
+                  };
               }
           }
       }
