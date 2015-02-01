@@ -16,6 +16,16 @@ test.service = {
           return { price: soapHeader.SomeToken };
         if (args.tickerSymbol === 'trigger error') {
           throw new Error('triggered server error');
+        } else if (args.tickerSymbol === 'SOAP Fault') {
+          throw {
+            Fault: {
+              Code: {
+                Value: "soap:Sender",
+                Subcode: { value: "rpc:BadArguments" }
+              },
+              Reason: { Text: "Processing Error" }
+            }
+          };
         } else {
           return { price: 19.56 };
         }
@@ -129,6 +139,19 @@ describe('SOAP Server', function() {
         assert.ok(err);
         assert.strictEqual(err.response, response);
         assert.strictEqual(err.body, body);
+        done();
+      });
+    });
+  });
+
+  it('should return SOAP Fault body', function(done) {
+    soap.createClient(test.baseUrl + '/stockquote?wsdl', function(err, client) {
+      assert.ok(!err);
+      client.GetLastTradePrice({ tickerSymbol: 'SOAP Fault' }, function(err, response, body) {
+        assert.ok(err);
+        var fault = err.root.Envelope.Body.Fault;
+        assert.equal(fault.Code.Value, "soap:Sender");
+        assert.equal(fault.Reason.Text, "Processing Error");
         done();
       });
     });

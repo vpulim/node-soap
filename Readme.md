@@ -87,6 +87,23 @@ along with data.
   };
 ```
 
+### SOAP Fault
+
+A service method can reply with a SOAP Fault to a client by `throw`ing an
+object with a `Fault` property.
+
+``` javascript
+  throw {
+    Fault: {
+      Code: {
+        Value: "soap:Sender",
+        Subcode: { value: "rpc:BadArguments" }
+      },
+      Reason: { Text: "Processing Error" }
+    }
+  };
+```
+
 ### server security example using PasswordDigest
 
 If server.authenticate is not defined no authentation will take place.
