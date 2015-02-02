@@ -1,7 +1,7 @@
 {
-  "name": "soap",
+  "name": "soap-ntlm",
   "version": "0.6.1",
-  "description": "A minimal node SOAP client",
+  "description": "A minimal node SOAP client with ntlm authentication",
   "engines": {
     "node": ">=0.8.0"
   },
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/milewise/node-soap.git"
+    "url": "https://github.com/piotr-gawlowski/node-soap.git"
   },
   "main": "./index.js",
   "directories": {

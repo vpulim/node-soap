@@ -16,7 +16,7 @@ This module lets you connect to web services using SOAP.  It also provides a ser
 Install with [npm](http://github.com/isaacs/npm):
 
 ```
-  npm install soap
+  npm install soap-ntlm
 ```
 ## Module
 
@@ -27,6 +27,9 @@ Install with [npm](http://github.com/isaacs/npm):
   var url = 'http://example.com/wsdl?wsdl';
   var args = {name: 'value'};
   soap.createClient(url, function(err, client) {
+
+      client.setSecurity(new soap.NtlmSecurity('email', 'password'));
+
       client.MyFunction(args, function(err, result) {
           console.log(result);
       });
