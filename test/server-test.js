@@ -11,7 +11,9 @@ test.server = null;
 test.service = {
   StockQuoteService: {
     StockQuotePort: {
-      GetLastTradePrice: function(args) {
+      GetLastTradePrice: function(args, cb, soapHeader) {
+        if (soapHeader)
+          return { price: soapHeader.SomeToken };
         if (args.tickerSymbol === 'trigger error') {
           throw new Error('triggered server error');
         } else {
@@ -103,6 +105,18 @@ describe('SOAP Server', function() {
       client.GetLastTradePrice({ tickerSymbol: 'AAPL'}, function(err, result) {
         assert.ok(!err);
         assert.equal(19.56, parseFloat(result.price));
+        done();
+      });
+    });
+  });
+
+  it('should handle headers in request', function(done) {
+    soap.createClient(test.baseUrl + '/stockquote?wsdl', function(err, client) {
+      assert.ok(!err);
+      client.addSoapHeader('<SomeToken>123.45</SomeToken>');
+      client.GetLastTradePrice({ tickerSymbol: 'AAPL'}, function(err, result) {
+        assert.ok(!err);
+        assert.equal(123.45, parseFloat(result.price));
         done();
       });
     });
