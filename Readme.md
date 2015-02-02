@@ -23,17 +23,50 @@ Install with [npm](http://github.com/isaacs/npm):
 ### soap.createClient(url[, options], callback) - create a new SOAP client from a WSDL url. Also supports a local filesystem path.
 
 ``` javascript
-  var soap = require('soap');
-  var url = 'http://example.com/wsdl?wsdl';
-  var args = {name: 'value'};
-  soap.createClient(url, function(err, client) {
+  var soap = require('soap-ntlm');
+var fs = require('fs');
+var httpntlm = require('httpntlm');
 
-      client.setSecurity(new soap.NtlmSecurity('email', 'password'));
+var url = 'https://domain.com/sites/STS20141125160011/_vti_bin/TaxonomyClientService.asmx?wsdl';
 
-      client.MyFunction(args, function(err, result) {
-          console.log(result);
-      });
-  });
+
+var username = 'username';
+var password = 'pass';
+
+httpntlm.get({
+    url: url,
+    password: password,
+    username: username
+}, function(err, wsdl){
+
+    fs.writeFile('taxonomy.wsdl', wsdl.body, function(){
+        soap.createClient(__dirname+'/taxonomy.wsdl', function(err, client) {
+            if(err){
+                console.log(err);
+                return;
+            }
+
+            client.setSecurity(new soap.NtlmSecurity(username, password));
+
+
+            //works like autocomplete input
+            client.GetTermsByLabel({
+                label: 'Work', //find labels that contains word 'work' - case insensitive
+                lcid: 1033, //language = 'en_us'
+                matchOption: 'StartsWith',
+                resultCollectionSize: 5, // looks like server don't care - always sends 20 element
+                addIfNotFound: false
+            }, function(err, res){
+                //parseString(res.GetTermsByLabelResult, function(err, obj){
+                //   console.log(obj);
+                //});
+
+            });
+
+        });
+    });
+});
+
 ```
 
 Within the options object you may provide an `endpoint` property in case you want to override the SOAP service's host specified in the `.wsdl` file.
