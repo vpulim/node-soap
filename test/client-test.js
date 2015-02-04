@@ -293,4 +293,55 @@ describe('SOAP Client', function() {
       }, baseUrl);
     });
   });
+
+  describe('Client Events', function () {
+    var server = null;
+    var hostname = '127.0.0.1';
+    var port = 15099;
+    var baseUrl = 'http://' + hostname + ":" + port;
+
+    before(function(done) {
+      server = http.createServer(function (req, res) {
+        res.statusCode = 200;
+        res.write(JSON.stringify({tempResponse: "temp"}), 'utf8');
+        res.end();
+      }).listen(port, hostname, done);
+    });
+
+    after(function(done) {
+      server.close();
+      server = null;
+      done();
+    });
+
+
+    it('Should emit the "message" event with Soap Body string', function (done) {
+      soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', function (err, client) {
+        client.on('message', function (xml) {
+          // Should contain only message body
+          assert.equal(typeof xml, 'string');
+          assert.equal(xml.indexOf('soap:Envelope'), -1);
+        });
+
+        client.MyOperation({}, function() {
+          done();
+        });
+      }, baseUrl);
+    });
+
+    it('Should emit the "request" event with entire XML message', function (done) {
+      soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', function (err, client) {
+        client.on('request', function (xml) {
+          // Should contain entire soap message
+          assert.equal(typeof xml, 'string');
+          assert.notEqual(xml.indexOf('soap:Envelope'), -1);
+        });
+
+        client.MyOperation({}, function() {
+          done();
+        });
+      }, baseUrl);
+    });
+
+  });
 });
