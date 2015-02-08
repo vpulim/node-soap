@@ -292,6 +292,17 @@ describe('SOAP Client', function() {
         });
       }, baseUrl);
     });
+
+    it('should emit a \'soapError\' event', function (done) {
+      soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', function (err, client) {
+        client.on('soapError', function(err) {
+          assert.ok(err);
+        });
+        client.MyOperation({}, function(err, result) {
+          done();
+        });
+      }, baseUrl);
+    });
   });
 
   describe('Client Events', function () {
@@ -303,8 +314,7 @@ describe('SOAP Client', function() {
     before(function(done) {
       server = http.createServer(function (req, res) {
         res.statusCode = 200;
-        res.write(JSON.stringify({tempResponse: "temp"}), 'utf8');
-        res.end();
+        fs.createReadStream(__dirname + '/soap-failure.xml').pipe(res);
       }).listen(port, hostname, done);
     });
 
@@ -338,6 +348,17 @@ describe('SOAP Client', function() {
         });
 
         client.MyOperation({}, function() {
+          done();
+        });
+      }, baseUrl);
+    });
+
+    it('should emit a \'soapError\' event', function (done) {
+      soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', function (err, client) {
+        client.on('soapError', function(err) {
+          assert.ok(err.root.Envelope.Body.Fault);
+        });
+        client.MyOperation({}, function(err, result) {
           done();
         });
       }, baseUrl);
