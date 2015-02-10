@@ -1,3 +1,21 @@
+0.7.0 / 2015-02-10
+=================
+* [ENHANCEMENT] (Server) Server emits a `headers` event to globally handle SOAP Headers. (#564 )
+
+* [ENHANCEMENT] (Server) A service method can send back a SOAP Fault response to a client by throwing an object that contains a `Fault` property. (#563)
+
+* [FIX] Don't throw an Error if an `element` is not defined. (#562)
+
+* [ENHANCEMENT] Added more primitive types (`['positiveInteger', 'nonPositiveInteger', 'negativeInteger', 'nonNegativeInteger']`). (#560)
+
+* [FIX] (Client) Respect empty SOAP actions in operations. (#554)
+
+* [ENHANCEMENT] (Client) The client now emits `message`,  `request` and `soapError` events. (#547, #559)
+
+* [ENHANCEMENT] (Server) The server is now aware of the SOAP header(s) from incoming request. (#551)
+
+* [ENHANCEMENT] (Client) Until now, only the SOAP Body was returned from the invoked client method. With this PR also the SOAP Header(s) will be returned. (#539)
+
 0.6.1 / 2014-12-20
 ==================
 * [ENHANCEMENT] Allow logging of received `XML` prior to parsing and processing it, which allows better debugging of incoming`XML`. (#524)
