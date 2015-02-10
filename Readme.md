@@ -87,6 +87,54 @@ along with data.
   };
 ```
 
+### SOAP Fault
+
+A service method can reply with a SOAP Fault to a client by `throw`ing an
+object with a `Fault` property.
+
+``` javascript
+  throw {
+    Fault: {
+      Code: {
+        Value: "soap:Sender",
+        Subcode: { value: "rpc:BadArguments" }
+      },
+      Reason: { Text: "Processing Error" }
+    }
+  };
+```
+
+### SOAP Headers
+
+A service method can look at the SOAP headers by providing a 3rd arguments.
+
+``` javascript
+  {
+      HeadersAwareFunction: function(args, cb, headers) {
+          return {
+              name: headers.Token
+          };
+      }
+  }
+```
+
+It is also possible to subscribe to the 'headers' event.
+The event is triggered before the service method is called, and only when the
+SOAP Headers are not empty.
+
+``` javascript
+  server = soap.listen(...)
+  server.on('headers', function(headers, methodName) {
+    // It is possible to change the value of the headers
+    // before they are handed to the service method.
+    // It is also possible to throw a SOAP Fault
+  });
+```
+
+First parameter is the Headers object;
+second parameter is the name of the SOAP method that will called
+(in case you need to handle the headers differently based on the method).
+
 ### server security example using PasswordDigest
 
 If server.authenticate is not defined no authentation will take place.
