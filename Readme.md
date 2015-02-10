@@ -221,6 +221,8 @@ Client instances emit the following events:
 entire Soap request (Envelope) including headers.
 * message - Emitted before a request is sent. The event handler receives the 
 Soap body contents. Useful if you don't want to log /store Soap headers.
+* soapError - Emitted when an erroneous response is received.
+  Useful if you want to globally log errors.
 
 
 ## WSSecurity
