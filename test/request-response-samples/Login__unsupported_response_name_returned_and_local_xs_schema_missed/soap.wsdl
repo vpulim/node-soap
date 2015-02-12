@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema" name="IewsServerservice" targetNamespace="urn:webservice-electrasoft-ru" xmlns:tns="urn:webservice-electrasoft-ru"
-             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:ns1="http://www.borland.com/namespaces/Types"
+             xmlns:SOAP-ENV="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:ns1="http://www.borland.com/namespaces/Types"
              xmlns:ns2="urn:webservice-electrasoft-ru:types-ewsServerIntf">
     <types>
         <xs:schema targetNamespace="http://www.borland.com/namespaces/Types" xmlns="http://www.borland.com/namespaces/Types">
@@ -62,20 +62,20 @@
         </operation>
     </portType>
     <binding name="IewsServerbinding" type="tns:IewsServer">
-        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <SOAP-ENV:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
         <operation name="Login">
-            <soap:operation soapAction="urn:webservice-electrasoft-ru:types-ewsServerIntf-IewsServer#Login" style="rpc"/>
+            <SOAP-ENV:operation soapAction="urn:webservice-electrasoft-ru:types-ewsServerIntf-IewsServer#Login" style="rpc"/>
             <input message="tns:Login1Request">
-                <soap:body use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:webservice-electrasoft-ru:types-ewsServerIntf-IewsServer"/>
+                <SOAP-ENV:body use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:webservice-electrasoft-ru:types-ewsServerIntf-IewsServer"/>
             </input>
             <output message="tns:Login1Response">
-                <soap:body use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:webservice-electrasoft-ru:types-ewsServerIntf-IewsServer"/>
+                <SOAP-ENV:body use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:webservice-electrasoft-ru:types-ewsServerIntf-IewsServer"/>
             </output>
         </operation>
     </binding>
     <service name="IewsServerservice">
         <port name="IewsServerPort" binding="tns:IewsServerbinding">
-            <soap:address location="http://extgate.alean.ru:8082/webservice/ewebsvc.dll/soap/IewsServer"/>
+            <SOAP-ENV:address location="http://extgate.alean.ru:8082/webservice/ewebsvc.dll/soap/IewsServer"/>
         </port>
     </service>
 </definitions>

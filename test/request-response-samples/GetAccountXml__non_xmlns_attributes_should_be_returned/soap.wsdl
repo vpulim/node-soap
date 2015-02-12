@@ -4,7 +4,7 @@
   xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
   xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
   xmlns:tns="#Foo"
-  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+  xmlns:SOAP-ENV="http://schemas.xmlsoap.org/wsdl/soap/"
   xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/"
   xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
   xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
@@ -52,14 +52,14 @@
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="ServiceSoap" type="tns:ServiceSoap">
-    <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+    <SOAP-ENV:binding transport="http://schemas.xmlsoap.org/soap/http"/>
     <wsdl:operation name="GetAccountXml">
-      <soap:operation soapAction="#Foo/GetAccountXml" style="document"/>
+      <SOAP-ENV:operation soapAction="#Foo/GetAccountXml" style="document"/>
       <wsdl:input>
-        <soap:body use="literal"/>
+        <SOAP-ENV:body use="literal"/>
       </wsdl:input>
       <wsdl:output>
-        <soap:body use="literal"/>
+        <SOAP-ENV:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
   </wsdl:binding>
@@ -77,7 +77,7 @@
   </wsdl:binding>
   <wsdl:service name="Service">
     <wsdl:port name="ServiceSoap" binding="tns:ServiceSoap">
-      <soap:address location="http://localhost:1509"/>
+      <SOAP-ENV:address location="http://localhost:1509"/>
     </wsdl:port>
     <wsdl:port name="ServiceSoap12" binding="tns:ServiceSoap12">
       <soap12:address location="http://localhost:1509"/>

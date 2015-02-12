@@ -3,7 +3,7 @@
     xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" 
     xmlns:ns1="urn:Magento" 
     xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
-    xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" 
+    xmlns:SOAP-ENV-ENC="http://schemas.xmlsoap.org/soap/encoding/" 
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
     <SOAP-ENV:Body>
         <ns1:multiCallResponse>

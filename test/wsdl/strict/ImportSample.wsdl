@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="urn:import-sample" xmlns:tds="urn:import-defintion" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:soap-enc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" name="beer_mate" targetNamespace="urn:import-sample">
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="urn:import-sample" xmlns:tds="urn:import-defintion" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:SOAP-ENV-enc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" name="beer_mate" targetNamespace="urn:import-sample">
 
   <import namespace="urn:import-defintion" location="ImportSample.xsd"/>
 
@@ -10,20 +10,20 @@
     </operation>
   </portType>
   <binding name="beer_mate_binding" type="tns:beer_mate_port">
-    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <SOAP-ENV:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
     <operation name="beerpByLocation">
-      <soap:operation soapAction="beerpByLocation"/>
+      <SOAP-ENV:operation soapAction="beerpByLocation"/>
       <input>
-        <soap:body use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:import-sample"/>
+        <SOAP-ENV:body use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:import-sample"/>
       </input>
       <output>
-        <soap:body use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:import-sample"/>
+        <SOAP-ENV:body use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:import-sample"/>
       </output>
     </operation>
   </binding>
   <service name="service">
     <port name="beer_mate_port" binding="tns:beer_mate_binding">
-      <soap:address location="http://localhost:3000/beer_mate/action"/>
+      <SOAP-ENV:address location="http://localhost:3000/beer_mate/action"/>
     </port>
   </service>
   <message name="beerpByLocation">

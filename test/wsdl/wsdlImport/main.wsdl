@@ -1,22 +1,22 @@
-<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions name="UserRemoteServiceImplService" targetNamespace="http://base.example.com" xmlns:ns1="http://example.com/" xmlns:ns2="http://cxf.apache.org/bindings/xformat" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://base.example.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions name="UserRemoteServiceImplService" targetNamespace="http://base.example.com" xmlns:ns1="http://example.com/" xmlns:ns2="http://cxf.apache.org/bindings/xformat" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://base.example.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <wsdl:import location="sub.wsdl" namespace="http://example.com/">
     </wsdl:import>
   <wsdl:binding name="UserRemoteServiceImplServiceSoapBinding" type="ns1:IUserRemoteService">
-    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+    <SOAP-ENV:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
     <wsdl:operation name="getLatestVersion">
-      <soap:operation soapAction="" style="document" />
+      <SOAP-ENV:operation soapAction="" style="document" />
       <wsdl:input name="getLatestVersion">
-        <soap:body use="literal" />
+        <SOAP-ENV:body use="literal" />
       </wsdl:input>
       <wsdl:output name="getLatestVersionResponse">
-        <soap:body use="literal" />
+        <SOAP-ENV:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
     
   </wsdl:binding>
   <wsdl:service name="UserRemoteServiceImplService">
     <wsdl:port binding="tns:UserRemoteServiceImplServiceSoapBinding" name="UserRemoteServiceImplPort">
-      <soap:address location="http://example.com/ws/UserRemoteService" />
+      <SOAP-ENV:address location="http://example.com/ws/UserRemoteService" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

@@ -1,1 +1,1 @@
-<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" ><soap:Header></soap:Header><soap:Body><soap:AdministrateResponse xmlns="http://www.example.com/v1"></soap:AdministrateResponse></soap:Body></soap:Envelope>
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" ><SOAP-ENV:Header></SOAP-ENV:Header><SOAP-ENV:Body><SOAP-ENV:AdministrateResponse xmlns="http://www.example.com/v1"></SOAP-ENV:AdministrateResponse></SOAP-ENV:Body></SOAP-ENV:Envelope>

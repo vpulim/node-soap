@@ -20,7 +20,7 @@ test.service = {
           throw {
             Fault: {
               Code: {
-                Value: "soap:Sender",
+                Value: "SOAP-ENV:Sender",
                 Subcode: { value: "rpc:BadArguments" }
               },
               Reason: { Text: "Processing Error" }
@@ -179,7 +179,7 @@ describe('SOAP Server', function() {
       client.GetLastTradePrice({ tickerSymbol: 'SOAP Fault' }, function(err, response, body) {
         assert.ok(err);
         var fault = err.root.Envelope.Body.Fault;
-        assert.equal(fault.Code.Value, "soap:Sender");
+        assert.equal(fault.Code.Value, "SOAP-ENV:Sender");
         assert.equal(fault.Reason.Text, "Processing Error");
         done();
       });
@@ -191,7 +191,7 @@ describe('SOAP Server', function() {
       throw {
         Fault: {
           Code: {
-            Value: "soap:Sender",
+            Value: "SOAP-ENV:Sender",
             Subcode: { value: "rpc:BadArguments" }
           },
           Reason: { Text: "Processing Error" }

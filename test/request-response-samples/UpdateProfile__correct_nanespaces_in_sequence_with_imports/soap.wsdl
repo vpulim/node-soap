@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/wsdl/soap/"
                   xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.bigdatacollect.or"
                   xmlns:c="http://www.bigdatacollect.or/Common/Types"
                   xmlns:n="http://www.bigdatacollect.or/Name/Types"
@@ -24,20 +24,20 @@
         </wsdl:operation>
     </wsdl:portType>
     <wsdl:binding name="NameBinding" type="tns:NamePortType">
-        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <SOAP-ENV:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
         <wsdl:operation name="UpdateProfile">
-            <soap:operation soapAction="http://www.bigdatacollect.or#UpdateProfile" style="document"/>
+            <SOAP-ENV:operation soapAction="http://www.bigdatacollect.or#UpdateProfile" style="document"/>
             <wsdl:input>
-                <soap:body use="literal"/>
+                <SOAP-ENV:body use="literal"/>
             </wsdl:input>
             <wsdl:output>
-                <soap:body use="literal"/>
+                <SOAP-ENV:body use="literal"/>
             </wsdl:output>
         </wsdl:operation>
     </wsdl:binding>
     <wsdl:service name="AdvancedHTNGGSSService">
         <wsdl:port name="NamePortType" binding="tns:NameBinding">
-            <soap:address location="http://www.bigdatacollect.or/"/>
+            <SOAP-ENV:address location="http://www.bigdatacollect.or/"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="myAPI">
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="myAPI">
    <portType name="mySoapPort" />
    <binding name="mySoapBinding" type="wsdlns:mySoapPort">
-      <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+      <SOAP-ENV:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
    </binding>
    <service name="myAPI">
       <port name="mySoapPort" binding="wsdlns:mySoapBinding">
-         <soap:address location="http://test" />
+         <SOAP-ENV:address location="http://test" />
       </port>
       <port name="mySoapSSLPort" binding="wsdlns:mySoapBinding">
-         <soap:address location="https://test" />
+         <SOAP-ENV:address location="https://test" />
       </port>
    </service>
 </definitions>

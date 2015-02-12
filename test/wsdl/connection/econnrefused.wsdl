@@ -4,7 +4,7 @@
              targetNamespace="http://example.com/stockquote.wsdl"
              xmlns:tns="http://example.com/stockquote.wsdl"
              xmlns:xsd1="http://example.com/stockquote.xsd"
-             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:SOAP-ENV="http://schemas.xmlsoap.org/wsdl/soap/"
              xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
 
     <types>
@@ -51,21 +51,21 @@
     </wsdl:portType>
 
     <wsdl:binding name="StockQuoteSoapBinding" type="tns:StockQuotePortType">
-        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <SOAP-ENV:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
         <wsdl:operation name="GetLastTradePrice">
-           <soap:operation soapAction="http://example.com/GetLastTradePrice"/>
+           <SOAP-ENV:operation soapAction="http://example.com/GetLastTradePrice"/>
            <wsdl:input>
-               <soap:body use="literal"/>
+               <SOAP-ENV:body use="literal"/>
            </wsdl:input>
            <wsdl:output>
-               <soap:body use="literal"/>
+               <SOAP-ENV:body use="literal"/>
            </wsdl:output>
         </wsdl:operation>
     </wsdl:binding>
 
     <wsdl:service name="StockQuoteService">
         <wsdl:port name="StockQuotePort" binding="tns:StockQuoteSoapBinding">
-           <soap:address location="http://localhost:15099/stockquote"/>
+           <SOAP-ENV:address location="http://localhost:15099/stockquote"/>
         </wsdl:port>
     </wsdl:service>
 
