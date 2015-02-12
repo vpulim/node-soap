@@ -1,6 +1,6 @@
-<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tns="http://www.Dummy.com" xmlns:n="http://www.Dummy.com/Name/Types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <soap:Header></soap:Header>
-    <soap:Body>
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tns="http://www.Dummy.com" xmlns:n="http://www.Dummy.com/Name/Types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <SOAP-ENV:Header></SOAP-ENV:Header>
+    <SOAP-ENV:Body>
        <n:DummyResponse>
            <n:DummyResult>
                <c:DummyList xmlns:c="http://www.Dummy.com/Common/Types">
@@ -10,5 +10,5 @@
                </c:DummyList>
            </n:DummyResult>
        </n:DummyResponse>
-    </soap:Body>
-</soap:Envelope>
+    </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>

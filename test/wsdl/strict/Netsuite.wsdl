@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions xmlns:tns="urn:platform_2013_2.webservices.netsuite.com" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:platformMsgs="urn:messages_2013_2.platform.webservices.netsuite.com" xmlns:platformFaults="urn:faults_2013_2.platform.webservices.netsuite.com" targetNamespace="urn:platform_2013_2.webservices.netsuite.com">
+<definitions xmlns:tns="urn:platform_2013_2.webservices.netsuite.com" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/wsdl/soap/" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:platformMsgs="urn:messages_2013_2.platform.webservices.netsuite.com" xmlns:platformFaults="urn:faults_2013_2.platform.webservices.netsuite.com" targetNamespace="urn:platform_2013_2.webservices.netsuite.com">
     <types>
         <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
             <xsd:import namespace="urn:messages_2013_2.platform.webservices.netsuite.com" schemaLocation="NetSuitePlatform.messages.xsd"/>
@@ -18,20 +18,20 @@
         </operation>
     </portType>
 	<binding name="NetSuiteBinding" type="tns:NetSuitePortType">
-        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <SOAP-ENV:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
         <operation name="logout">
-            <soap:operation soapAction="logout"/>
+            <SOAP-ENV:operation soapAction="logout"/>
             <input name="logoutRequest">
-                <soap:body use="literal"/>
+                <SOAP-ENV:body use="literal"/>
             </input>
             <output name="logoutResponse">
-                <soap:body use="literal"/>
+                <SOAP-ENV:body use="literal"/>
             </output>
         </operation>
     </binding>
     <service name="NetSuiteService">
         <port name="NetSuitePort" binding="tns:NetSuiteBinding">
-            <soap:address location="https://webservices.netsuite.com/services/NetSuitePort_2013_2"/>
+            <SOAP-ENV:address location="https://webservices.netsuite.com/services/NetSuitePort_2013_2"/>
         </port>
     </service>
 </definitions>

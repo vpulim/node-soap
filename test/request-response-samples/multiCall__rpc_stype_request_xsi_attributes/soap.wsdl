@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:typens="urn:Magento" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Magento" targetNamespace="urn:Magento">
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:typens="urn:Magento" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Magento" targetNamespace="urn:Magento">
    <types>
       <schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:Magento">
           <complexType name="FixedArray">
@@ -27,20 +27,20 @@
       </operation>
    </portType>
    <binding name="Mage_Api_Model_Server_HandlerBinding" type="typens:Mage_Api_Model_Server_HandlerPortType">
-      <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http" />
+      <SOAP-ENV:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http" />
        <operation name="multiCall">
-         <soap:operation soapAction="urn:Mage_Api_Model_Server_HandlerAction" />
+         <SOAP-ENV:operation soapAction="urn:Mage_Api_Model_Server_HandlerAction" />
          <input>
-            <soap:body namespace="urn:Magento" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            <SOAP-ENV:body namespace="urn:Magento" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
          </input>
          <output>
-            <soap:body namespace="urn:Magento" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            <SOAP-ENV:body namespace="urn:Magento" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
          </output>
       </operation>
    </binding>
    <service name="MagentoService">
       <port name="Mage_Api_Model_Server_HandlerPort" binding="typens:Mage_Api_Model_Server_HandlerBinding">
-         <soap:address location="http://localhost/index.php/api/index/index/" />
+         <SOAP-ENV:address location="http://localhost/index.php/api/index/index/" />
       </port>
    </service>
 </definitions>

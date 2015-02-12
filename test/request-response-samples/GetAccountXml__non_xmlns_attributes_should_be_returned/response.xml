@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<soap:Envelope
-  xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+<SOAP-ENV:Envelope
+  xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
 >
-  <soap:Body>
+  <SOAP-ENV:Body>
     <GetAccountXmlResponse xmlns="#Foo">
       <ResultCode>0</ResultCode>
       <AccountXml>
@@ -30,5 +30,5 @@
         </Foo>
       </AccountXml>
     </GetAccountXmlResponse>
-  </soap:Body>
-</soap:Envelope>
+  </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>

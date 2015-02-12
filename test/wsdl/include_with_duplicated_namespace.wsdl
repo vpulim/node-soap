@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
-xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+xmlns:SOAP-ENV="http://schemas.xmlsoap.org/wsdl/soap/"
 xmlns:xs="http://www.w3.org/2001/XMLSchema"
 xmlns:tns="http://www.Dummy.com"  xmlns:n="http://www.Dummy.com/Name/Types"  xmlns:ns="http://schemas.xmlsoap.org/soap/encoding/" targetNamespace="http://www.Dummy.com">
   <wsdl:types>
@@ -23,29 +23,29 @@ xmlns:tns="http://www.Dummy.com"  xmlns:n="http://www.Dummy.com/Name/Types"  xml
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="DummyBinding" type="tns:DummyPortType">
-    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <SOAP-ENV:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
     <wsdl:operation name="Dummy">
-      <soap:operation soapAction="http://www.Dummy.com#Dummy" style="document"/>
+      <SOAP-ENV:operation soapAction="http://www.Dummy.com#Dummy" style="document"/>
       <wsdl:input>
-        <soap:body use="literal"/>
+        <SOAP-ENV:body use="literal"/>
       </wsdl:input>
       <wsdl:output>
-        <soap:body use="literal"/>
+        <SOAP-ENV:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="DummySave">
-      <soap:operation soapAction="http://www.Dummy.com#DummySave" style="document"/>
+      <SOAP-ENV:operation soapAction="http://www.Dummy.com#DummySave" style="document"/>
       <wsdl:input>
-        <soap:body use="literal"/>
+        <SOAP-ENV:body use="literal"/>
       </wsdl:input>
       <wsdl:output>
-        <soap:body use="literal"/>
+        <SOAP-ENV:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
   </wsdl:binding>
   <wsdl:service name="DummyService">
     <wsdl:port name="DummyPortType" binding="tns:DummyBinding">
-      <soap:address location="http://www.Dummy.com/"/>
+      <SOAP-ENV:address location="http://www.Dummy.com/"/>
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

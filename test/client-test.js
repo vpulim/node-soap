@@ -330,7 +330,7 @@ describe('SOAP Client', function() {
         client.on('message', function (xml) {
           // Should contain only message body
           assert.equal(typeof xml, 'string');
-          assert.equal(xml.indexOf('soap:Envelope'), -1);
+          assert.equal(xml.indexOf('SOAP-ENV:Envelope'), -1);
         });
 
         client.MyOperation({}, function() {
@@ -344,7 +344,7 @@ describe('SOAP Client', function() {
         client.on('request', function (xml) {
           // Should contain entire soap message
           assert.equal(typeof xml, 'string');
-          assert.notEqual(xml.indexOf('soap:Envelope'), -1);
+          assert.notEqual(xml.indexOf('SOAP-ENV:Envelope'), -1);
         });
 
         client.MyOperation({}, function() {

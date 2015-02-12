@@ -96,7 +96,7 @@ object with a `Fault` property.
   throw {
     Fault: {
       Code: {
-        Value: "soap:Sender",
+        Value: "SOAP-ENV:Sender",
         Subcode: { value: "rpc:BadArguments" }
       },
       Reason: { Text: "Processing Error" }
@@ -250,7 +250,7 @@ as default request options to the constructor:
   }, {timeout: 5000})
 ```
 
-### Client.*addSoapHeader*(soapHeader[, name, namespace, xmlns]) - add soapHeader to soap:Header node
+### Client.*addSoapHeader*(soapHeader[, name, namespace, xmlns]) - add soapHeader to SOAP-ENV:Header node
 #### Options
 
  - `soapHeader`     Object({rootName: {name: "value"}}) or strict xml-string

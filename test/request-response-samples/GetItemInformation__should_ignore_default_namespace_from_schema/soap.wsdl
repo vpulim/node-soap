@@ -9,7 +9,7 @@
   xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" 
   xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" 
   xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" 
-  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+  xmlns:SOAP-ENV="http://schemas.xmlsoap.org/wsdl/soap/" 
   xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
   xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
   xmlns:tns="SAMPLE"
@@ -113,20 +113,20 @@
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="BasicHttpBinding_ISampleService" type="tns:ISampleService">
-    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <SOAP-ENV:binding transport="http://schemas.xmlsoap.org/soap/http" />
     <wsdl:operation name="GetItemInformation">
-      <soap:operation soapAction="SAMPLE/ISampleService/GetItemInformation" style="document" />
+      <SOAP-ENV:operation soapAction="SAMPLE/ISampleService/GetItemInformation" style="document" />
       <wsdl:input>
-        <soap:body use="literal" />
+        <SOAP-ENV:body use="literal" />
       </wsdl:input>
       <wsdl:output>
-        <soap:body use="literal" />
+        <SOAP-ENV:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
   </wsdl:binding>
   <wsdl:service name="SampleService">
     <wsdl:port name="BasicHttpBinding_SampleService" binding="tns:BasicHttpBinding_ISampleService">
-      <soap:address location="http://example.com/v1/" />
+      <SOAP-ENV:address location="http://example.com/v1/" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

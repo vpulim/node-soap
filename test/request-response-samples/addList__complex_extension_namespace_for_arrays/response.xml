@@ -1,4 +1,4 @@
-<soapenv:Envelope xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+<soapenv:Envelope xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
     <soapenv:Header>
         <platformMsgs:documentInfo xmlns:platformMsgs="urn:messages_2013_2.platform.webservices.netsuite.com">
             <platformMsgs:nsId>WEBSERVICES_TSTDRV1081821_052320147072010331947189232_5a90eb</platformMsgs:nsId>

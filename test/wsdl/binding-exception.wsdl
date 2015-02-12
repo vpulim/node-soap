@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/wsdl/soap/">
     <wsdl:types>
         <schema xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
             <element name="LoginUserRequest">
@@ -59,32 +59,32 @@
         </wsdl:operation>
     </wsdl:portType>
     <wsdl:binding name="wsdlt1Soap11" type="tns:wsdlt1">
-        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+        <SOAP-ENV:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
         <wsdl:operation name="WsServerException">
-            <soap:operation soapAction="" />
+            <SOAP-ENV:operation soapAction="" />
             <wsdl:fault name="WsServerExceptionFault">
-                <soap:fault name="WsServerExceptionFault" use="literal" />
+                <SOAP-ENV:fault name="WsServerExceptionFault" use="literal" />
             </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="LoginUser">
-            <soap:operation soapAction="" />
+            <SOAP-ENV:operation soapAction="" />
             <wsdl:input name="LoginUserRequest">
-                <soap:body use="literal" />
+                <SOAP-ENV:body use="literal" />
             </wsdl:input>
             <wsdl:output name="LoginUserResponse">
-                <soap:body use="literal" />
+                <SOAP-ENV:body use="literal" />
             </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="WsClientException">
-            <soap:operation soapAction="" />
+            <SOAP-ENV:operation soapAction="" />
             <wsdl:fault name="WsClientExceptionFault">
-                <soap:fault name="WsClientExceptionFault" use="literal" />
+                <SOAP-ENV:fault name="WsClientExceptionFault" use="literal" />
             </wsdl:fault>
         </wsdl:operation>
     </wsdl:binding>
     <wsdl:service name="wsdlt1Service">
         <wsdl:port binding="tns:wsdlt1Soap11" name="wsdlt1Soap11">
-            <soap:address location="http://test" />
+            <SOAP-ENV:address location="http://test" />
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

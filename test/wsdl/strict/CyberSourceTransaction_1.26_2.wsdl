@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" name="CyberSourceTransactionWS" targetNamespace="urn:schemas-cybersource-com:transaction-data:TransactionProcessor" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="urn:schemas-cybersource-com:transaction-data:TransactionProcessor" xmlns:data="urn:schemas-cybersource-com:transaction-data-1.26">
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" name="CyberSourceTransactionWS" targetNamespace="urn:schemas-cybersource-com:transaction-data:TransactionProcessor" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="urn:schemas-cybersource-com:transaction-data:TransactionProcessor" xmlns:data="urn:schemas-cybersource-com:transaction-data-1.26">
    <wsdl:types>
       <xsd:schema targetNamespace="urn:schemas-cybersource-com:transaction-data-1.26">
          <xsd:import schemaLocation="CyberSourceTransaction_1.26.xsd"/>
@@ -18,21 +18,21 @@
       </wsdl:operation>
    </wsdl:portType>
    <wsdl:binding name="ITransactionProcessor" type="tns:ITransactionProcessor">
-      <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+      <SOAP-ENV:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
       <wsdl:operation name="runTransaction">
-         <soap:operation soapAction="runTransaction" style="document"/>
+         <SOAP-ENV:operation soapAction="runTransaction" style="document"/>
          <wsdl:input name="inputMessageIn">
-            <soap:body use="literal" namespace="urn:schemas-cybersource-com:transaction-data-1.26"/>
+            <SOAP-ENV:body use="literal" namespace="urn:schemas-cybersource-com:transaction-data-1.26"/>
          </wsdl:input>
          <wsdl:output name="outputMessageOut">
-            <soap:body use="literal" namespace="urn:schemas-cybersource-com:transaction-data-1.26"/>
+            <SOAP-ENV:body use="literal" namespace="urn:schemas-cybersource-com:transaction-data-1.26"/>
          </wsdl:output>
       </wsdl:operation>
    </wsdl:binding>
    <wsdl:service name="TransactionProcessor">
       <wsdl:documentation>CyberSource Web Service</wsdl:documentation>
       <wsdl:port name="portXML" binding="tns:ITransactionProcessor">
-         <soap:address location="https://ics2wstest.ic3.com/commerce/1.x/transactionProcessor"/>
+         <SOAP-ENV:address location="https://ics2wstest.ic3.com/commerce/1.x/transactionProcessor"/>
       </wsdl:port>
    </wsdl:service>
 </wsdl:definitions>

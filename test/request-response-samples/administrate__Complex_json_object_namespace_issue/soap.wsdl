@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<definitions name="MyAPI" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:typens="http://schemas.My.com/My11" xmlns:wsdlns="http://schemas.My.com/My11/wsdl" targetNamespace="http://schemas.My.com/My11/wsdl">
+<definitions name="MyAPI" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:typens="http://schemas.My.com/My11" xmlns:wsdlns="http://schemas.My.com/My11/wsdl" targetNamespace="http://schemas.My.com/My11/wsdl">
 		<types>
 			<xsd:schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:enc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" targetNamespace="http://schemas.My.com/My11" elementFormDefault="qualified">
 				
@@ -46,23 +46,23 @@
 			</operation>
 		</portType>
 		<binding name="MySoapBinding" type="wsdlns:MySoapPort">
-			<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+			<SOAP-ENV:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
 			<operation name="administrate">
-				<soap:operation soapAction=""/>
+				<SOAP-ENV:operation soapAction=""/>
 				<input>
-					<soap:body use="literal" parts="Request"/>
+					<SOAP-ENV:body use="literal" parts="Request"/>
 				</input>
 				<output>
-					<soap:body use="literal" parts="Response"/>
+					<SOAP-ENV:body use="literal" parts="Response"/>
 				</output>
 			</operation>
 		</binding>
 		<service name="MyAPI">
 			<port name="MySoapPort" binding="wsdlns:MySoapBinding">
-				<soap:address location="http://vmcip2:8000"/>
+				<SOAP-ENV:address location="http://vmcip2:8000"/>
 			</port>
 			<port name="MySoapSSLPort" binding="wsdlns:MySoapBinding">
-				<soap:address location="https://vmcip2:8001"/>
+				<SOAP-ENV:address location="https://vmcip2:8001"/>
 			</port>
 		</service>
 	</definitions>
