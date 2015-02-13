@@ -56,7 +56,7 @@ describe('SOAP Server', function() {
 
       //windows return 0.0.0.0 as address and that is not 
       //valid to use in a request
-      if (test.server.address().address === '0.0.0.0') {
+      if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
         test.baseUrl =
           'http://127.0.0.1:' + test.server.address().port;
       }

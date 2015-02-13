@@ -15,7 +15,7 @@
 
     <wsdl:types>
        <xsd:schema>
-         <xsd:import namespace="http://example.com/stockquote.xsd" schemaLocation="http://localhost:0"></xsd:import>
+         <xsd:import namespace="http://example.com/stockquote.xsd" schemaLocation="http://localhost:1"></xsd:import>
        </xsd:schema>
        <xsd:schema targetNamespace="http://example.com/stockquote.xsd" xmlns:xsd="http://www.w3.org/2000/10/XMLSchema">
            <xsd:element name="TradePriceRequest">
