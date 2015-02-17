@@ -43,6 +43,11 @@ describe('SOAP Client(SSL)', function() {
       test.soapServer = soap.listen(test.server, '/stockquote', test.service, test.wsdl);
       test.baseUrl =
         'https://' + test.server.address().address + ':' + test.server.address().port;
+      
+      if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
+        test.baseUrl =
+          'https://127.0.0.1:' + test.server.address().port;
+      }
       done();
     });
   });
