@@ -1,3 +1,9 @@
+0.8.0 / 2015-02-17
+=================
+* [ENHANCEMENT] `node-soap` is now also compatible (and tested) with `node v0.12.0` and `io.js` too. (#571)
+
+* [FIX] Adds support for attributes in the `SOAP Body` Element (fixes #386). (#574)
+
 0.7.0 / 2015-02-10
 =================
 * [ENHANCEMENT] Server emits a `headers` event to globally handle SOAP Headers. (#564 )
