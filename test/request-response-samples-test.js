@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var assert = require('assert');
 var fs   = require('fs');
@@ -10,7 +10,6 @@ var soap = require('../');
 var WSSecurity = require('../lib/security/WSSecurity');
 var server;
 var port;
-var endpoint;
 var tests = glob.sync('./request-response-samples/*', {cwd:__dirname})
   .map(function(node){return path.resolve(__dirname, node);})
   .filter(function(node){return fs.statSync(node).isDirectory();});
@@ -92,11 +91,11 @@ tests.forEach(function(test){
   else responseJSON = null;
 
   //requestXML is optional
-  if(fs.existsSync(requestXML))requestXML = ""+fs.readFileSync(requestXML);
+  if(fs.existsSync(requestXML))requestXML = ''+fs.readFileSync(requestXML);
   else requestXML = null;
 
   //responseXML is optional
-  if(fs.existsSync(responseXML))responseXML = ""+fs.readFileSync(responseXML);
+  if(fs.existsSync(responseXML))responseXML = ''+fs.readFileSync(responseXML);
   else responseXML = null;
 
   //requestJSON is required as node-soap will expect a request object anyway
