@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="MyService" targetNamespace="http://www.example.com/v1" xmlns="http://www.example.com/v1" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://www.example.com/v1" xmlns="http://www.example.com/v1">
+		<xs:element name="Request">
+		</xs:element>
+    </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="InputMessage">
+    <wsdl:part name="parameter" element="Request">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="OutputMessage">
+    <wsdl:part name="parameter" element="Response">
+    </wsdl:part>
+  </wsdl:message>
+
+  <wsdl:portType name="MyServicePortType">
+    <wsdl:operation name="MyOperation">
+      <wsdl:input message="InputMessage">
+    </wsdl:input>
+      <wsdl:output message="OutputMessage">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+
+  <wsdl:binding name="MyServiceBinding" type="MyServicePortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="MyOperation">
+      <soap:operation soapAction="MyOperation"/>
+      <wsdl:input>
+        <soap:body use="literal" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+
+  <wsdl:service name="MyService">
+    <wsdl:port name="MyServicePort" binding="MyServiceBinding">
+      <soap:address location="http://www.example.com/v1"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
