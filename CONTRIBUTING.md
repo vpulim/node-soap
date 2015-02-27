@@ -11,11 +11,16 @@ Because SOAP Web Services can differ amongst implementations, there is high risk
 * Please be descriptive in your issue titles  I.E. "Error occurs when calling client.foo on WSDL without import element."
 
 ##Submitting a Pull Request
-* Pull Requests must be rebased to the latest version of master and squashed to a single commit i.e. `git checkout master;git pull upstream master;git checkout feature-branch;git rebase -i master`
-* Pull Requests must have accompanying tests (either Unit or Request/Response Sample tests are welcome). Your chances of getting the PR merged are very low if you don't provide any tests.
+* Pull Requests **must be rebased to the latest version of master and _squashed to a single commit_** i.e. `git checkout master;git pull upstream master;git checkout feature-branch;git rebase -i master`
+* Pull Requests **must have accompanying tests** (either Unit or Request/Response Sample tests are welcome). Your chances of getting the PR merged are very low if you don't provide any tests.
 * Pull Requests must have passing travis builds.
 * Pull Requests must be able to merge automatically from github.
-* Please do not close a pull request due to a request to rebase.  Git is a powerful VCS and deserves your time in learning how to rebase properly.  Pull Requests are updated automatically on github when you force push to your branch after rebasing.
+* Please **do not close a pull request due to a request to rebase**.  Git is a powerful VCS and deserves your time in learning how to rebase properly.  Pull Requests are updated automatically on github when you force push to your branch after rebasing. 
+
+Very useful articles/help on this topic: 
+  - [GitHub Help - About Git rebase](https://help.github.com/articles/about-git-rebase/) 
+  - [GitHub Help - Using Git rebase](https://help.github.com/articles/using-git-rebase/)
+
 * Please use descriptive commit messages.  Commit messages are used during the creation of history and release notes.  You'll make the job of maintaners much easier by doing this.
 
 ##Making Changes
