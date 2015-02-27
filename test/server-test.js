@@ -132,6 +132,18 @@ describe('SOAP Server', function() {
     });
   });
 
+  it('should return security timestamp in response', function(done) {
+    soap.createClient(test.baseUrl + '/stockquote?wsdl', function(err, client) {
+      assert.ok(!err);
+      client.addSoapHeader('<Security><Timestamp><Created>2015-02-23T12:00:00.000Z</Created><Expires>2015-02-23T12:05:00.000Z</Expires></Timestamp></Security>');
+      client.GetLastTradePrice({ tickerSymbol: 'AAPL'}, function(err, result, raw, soapHeader) {
+        assert.ok(!err);
+        assert.ok(soapHeader && soapHeader.Security && soapHeader.Security.Timestamp);
+        done();
+      });
+    });
+  });
+
   it('should emit \'headers\' event', function(done) {
     test.soapServer.on('headers', function headersManager(headers, methodName) {
       assert.equal(methodName, 'GetLastTradePrice');
