@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var fs = require('fs'),
     soap = require('..'),
@@ -56,15 +56,15 @@ describe('SOAP Client', function() {
     var server = null;
     var hostname = '127.0.0.1';
     var port = 15099;
-    var baseUrl = 'http://' + hostname + ":" + port;
+    var baseUrl = 'http://' + hostname + ':' + port;
 
     before(function(done) {
       server = http.createServer(function (req, res) {
-        var status_value = (req.headers["test-header"] === 'test') ? 'pass' : 'fail';
+        var status_value = (req.headers['test-header'] === 'test') ? 'pass' : 'fail';
 
         res.setHeader('status', status_value);
         res.statusCode = 200;
-        res.write(JSON.stringify({tempResponse: "temp"}), 'utf8');
+        res.write(JSON.stringify({tempResponse: 'temp'}), 'utf8');
         res.end();
       }).listen(port, hostname, done);
     });
@@ -84,7 +84,7 @@ describe('SOAP Client', function() {
           assert.notEqual(client.lastRequestHeaders.Host.indexOf(':' + port), -1);
 
           done();
-        }, null, {"test-header": 'test'});
+        }, null, {'test-header': 'test'});
       }, baseUrl);
     });
 
@@ -97,7 +97,7 @@ describe('SOAP Client', function() {
           assert.equal(client.lastRequestHeaders.Host.indexOf(':80'), -1);
 
           done();
-        }, null, {"test-header": 'test'});
+        }, null, {'test-header': 'test'});
       }, 'http://127.0.0.1');
     });
 
@@ -109,7 +109,7 @@ describe('SOAP Client', function() {
         client.MyOperation({}, function() {
           assert.equal(client.lastRequestHeaders.Host.indexOf(':443'), -1);
           done();
-        }, null, {"test-header": 'test'});
+        }, null, {'test-header': 'test'});
       }, 'https://127.0.0.1');
     });
 
@@ -121,7 +121,7 @@ describe('SOAP Client', function() {
         client.MyOperation({}, function() {
           assert.ok(client.lastRequestHeaders.Host.indexOf(':443') > -1);
           done();
-        }, null, {"test-header": 'test'});
+        }, null, {'test-header': 'test'});
       }, 'https://127.0.0.1:443');
     });
 
@@ -136,7 +136,7 @@ describe('SOAP Client', function() {
           assert.equal(client.lastResponseHeaders.status, 'pass');
 
           done();
-        }, null, {"test-header": 'test'});
+        }, null, {'test-header': 'test'});
       }, baseUrl);
     });
 
@@ -151,7 +151,7 @@ describe('SOAP Client', function() {
           assert.equal(client.lastResponseHeaders.status, 'fail');
 
           done();
-        }, null, {"test-header": 'testBad'});
+        }, null, {'test-header': 'testBad'});
       }, baseUrl);
     });
 
@@ -166,7 +166,7 @@ describe('SOAP Client', function() {
           assert.ok(client.lastResponseHeaders);
 
           done();
-        }, null, {"test-header": 'test'});
+        }, null, {'test-header': 'test'});
       }, baseUrl);
     });
   });
@@ -176,14 +176,14 @@ describe('SOAP Client', function() {
         assert.ok(client);
         assert.ok(!client.getSoapHeaders());
         var soapheader = {
-          "esnext": false,
-          "moz": true,
-          "boss": true,
-          "node": true,
-          "validthis": true,
-          "globals": {
-            "EventEmitter": true,
-            "Promise": true
+          'esnext': false,
+          'moz': true,
+          'boss': true,
+          'node': true,
+          'validthis': true,
+          'globals': {
+            'EventEmitter': true,
+            'Promise': true
           }
         };
 
@@ -214,12 +214,12 @@ describe('SOAP Client', function() {
     var server = null;
     var hostname = '127.0.0.1';
     var port = 15099;
-    var baseUrl = 'http://' + hostname + ":" + port;
+    var baseUrl = 'http://' + hostname + ':' + port;
 
     before(function(done) {
       server = http.createServer(function (req, res) {
         res.statusCode = 200;
-        res.write(JSON.stringify({tempResponse: "temp"}), 'utf8');
+        res.write(JSON.stringify({tempResponse: 'temp'}), 'utf8');
         res.end();
       }).listen(port, hostname, done);
     });
@@ -262,16 +262,66 @@ describe('SOAP Client', function() {
     });
   });
 
+  describe('Follow even non-standard redirects', function() {
+    var server1 = null;
+    var server2 = null;
+    var server3 = null;
+    var hostname = '127.0.0.1';
+    var port = 15099;
+    var baseUrl = 'http://' + hostname + ':' + port;
+
+    before(function(done) {
+      server1 = http.createServer(function (req, res) {
+        res.statusCode = 301;
+        res.setHeader('Location', 'http://' + hostname + ':' + (port+1));
+        res.end();
+      }).listen(port, hostname, function() {
+        server2 = http.createServer(function (req, res) {
+          res.statusCode = 302;
+          res.setHeader('Location', 'http://' + hostname + ':' + (port+2));
+          res.end();
+        }).listen((port+1), hostname, function() {
+          server3 = http.createServer(function (req, res) {
+            res.statusCode = 401;
+            res.write(JSON.stringify({tempResponse: 'temp'}), 'utf8');
+            res.end();
+          }).listen((port+2), hostname, done);
+        });
+      });
+    });
+
+    after(function(done) {
+      server1.close();
+      server2.close();
+      server3.close();
+      server1 = null;
+      server2 = null;
+      server3 = null;
+      done();
+    });
+
+    it('should return an error', function (done) {
+      soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', function (err, client) {
+        client.MyOperation({}, function(err, result) {
+          assert.ok(err);
+          assert.ok(err.response);
+          assert.equal(err.body, '{"tempResponse":"temp"}');
+          done();
+        });
+      }, baseUrl);
+    });
+  });
+
   describe('Handle non-success http status codes', function() {
     var server = null;
     var hostname = '127.0.0.1';
     var port = 15099;
-    var baseUrl = 'http://' + hostname + ":" + port;
+    var baseUrl = 'http://' + hostname + ':' + port;
 
     before(function(done) {
       server = http.createServer(function (req, res) {
         res.statusCode = 401;
-        res.write(JSON.stringify({tempResponse: "temp"}), 'utf8');
+        res.write(JSON.stringify({tempResponse: 'temp'}), 'utf8');
         res.end();
       }).listen(port, hostname, done);
     });
