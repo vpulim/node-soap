@@ -1,5 +1,8 @@
 'use strict';
 
+var fs = require('fs'),
+    join = require('path').join;
+
 describe('ClientSSLSecurity', function() {
   var ClientSSLSecurity = require('../../').ClientSSLSecurity;
   var cert = __filename;
@@ -11,15 +14,52 @@ describe('ClientSSLSecurity', function() {
 
   describe('defaultOption param', function() {
     it('is accepted as the third param', function() {
-      new ClientSSLSecurity(key, cert, {});
+      new ClientSSLSecurity(null, null, {});
     });
 
     it('is used in addOptions', function() {
       var options = {};
       var defaultOptions = { foo: 5 };
-      var instance = new ClientSSLSecurity(key, cert, defaultOptions);
+      var instance = new ClientSSLSecurity(null, null, defaultOptions);
       instance.addOptions(options);
       options.should.have.property("foo", 5);
     });
+  });
+
+  it('should throw if invalid cert or key is given', function () {
+    var instanceCert = null,
+        instanceKey = null;
+
+    try {
+      instanceCert = new ClientSSLSecurity(null, cert);
+    } catch (e) {
+      //should happen!
+      instanceCert = false;
+    }
+
+    try {
+      instanceKey = new ClientSSLSecurity(key, null);
+    } catch (e) {
+      //should happen!
+      instanceKey = false;
+    }
+
+    if (instanceCert !== false) {
+      throw new Error('accepted wrong cert');
+    }
+
+    if (instanceKey !== false) {
+      throw new Error('accepted wrong key');
+    }
+  });
+
+  it('should accept a Buffer as argument for the key or cert', function () {
+    var certBuffer = fs.readFileSync(join(__dirname, '..', 'certs', 'agent2-cert.pem')),
+      keyBuffer = fs.readFileSync(join(__dirname, '..', 'certs', 'agent2-key.pem')),
+      instance;
+
+    instance = new ClientSSLSecurity(keyBuffer, certBuffer);
+    instance.should.have.property("cert", certBuffer);
+    instance.should.have.property("key", keyBuffer);
   });
 });
