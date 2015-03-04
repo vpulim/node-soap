@@ -26,9 +26,10 @@ describe('ClientSSLSecurity', function() {
     });
   });
 
-  it('should throw if invalid cert or key is given', function () {
+  it('should throw if invalid (ca or client) cert or key is given', function () {
     var instanceCert = null,
-        instanceKey = null;
+      instanceKey = null,
+      instanceCA = null;
 
     try {
       instanceCert = new ClientSSLSecurity(null, cert);
@@ -44,12 +45,23 @@ describe('ClientSSLSecurity', function() {
       instanceKey = false;
     }
 
+    try {
+      instanceCA = new ClientSSLSecurity(null, null, cert);
+    } catch (e) {
+      //should happen!
+      instanceCA = false;
+    }
+
     if (instanceCert !== false) {
       throw new Error('accepted wrong cert');
     }
 
     if (instanceKey !== false) {
       throw new Error('accepted wrong key');
+    }
+
+    if (instanceCA !== false) {
+      throw new Error('accepted wrong CA cert');
     }
   });
 
@@ -58,7 +70,8 @@ describe('ClientSSLSecurity', function() {
       keyBuffer = fs.readFileSync(join(__dirname, '..', 'certs', 'agent2-key.pem')),
       instance;
 
-    instance = new ClientSSLSecurity(keyBuffer, certBuffer);
+    instance = new ClientSSLSecurity(keyBuffer, certBuffer, certBuffer);
+    instance.should.have.property("ca", certBuffer);
     instance.should.have.property("cert", certBuffer);
     instance.should.have.property("key", keyBuffer);
   });
