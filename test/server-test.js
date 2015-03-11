@@ -144,6 +144,17 @@ describe('SOAP Server', function() {
     });
   });
 
+  it('should emit \'request\' event', function(done) {
+    test.soapServer.on('request', function requestManager(request, methodName) {
+      assert.equal(methodName, 'GetLastTradePrice');
+      done();
+    });
+    soap.createClient(test.baseUrl + '/stockquote?wsdl', function(err, client) {
+      assert.ok(!err);
+      client.GetLastTradePrice({ tickerSymbol: 'AAPL'}, function() {});
+    });
+  });
+
   it('should emit \'headers\' event', function(done) {
     test.soapServer.on('headers', function headersManager(headers, methodName) {
       assert.equal(methodName, 'GetLastTradePrice');
