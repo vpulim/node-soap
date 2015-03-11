@@ -87,6 +87,18 @@ along with data.
   };
 ```
 
+### Server Events
+
+Server instances emit the following events:
+
+* request - Emitted for every received messages.
+  The signature of the callback is `function(request, methodName)`.
+* headers - Emitted when the SOAP Headers are not empty.
+  The signature of the callback is `function(headers, methodName)`.
+
+The sequence order of the calls is `request`, `headers` and then the dedicated
+service method.
+
 ### SOAP Fault
 
 A service method can reply with a SOAP Fault to a client by `throw`ing an
