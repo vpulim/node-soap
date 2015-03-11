@@ -23,6 +23,14 @@
                   </xsd:all>
               </xsd:complexType>
            </xsd:element>
+           <xsd:element name="TradePriceSubmit">
+               <xsd:complexType>
+                   <xsd:all>
+                       <xsd:element name="tickerSymbol" type="string"/>
+                       <xsd:element name="price" type="float"/>
+                   </xsd:all>
+               </xsd:complexType>
+           </xsd:element>
        </xsd:schema>
     </wsdl:types>
 
@@ -34,10 +42,17 @@
         <wsdl:part name="body" element="xsd1:TradePrice"/>
     </wsdl:message>
 
+    <wsdl:message name="SetTradePriceInput">
+        <wsdl:part name="body" element="xsd1:TradePriceSubmit"/>
+    </wsdl:message>
+
     <wsdl:portType name="StockQuotePortType">
         <wsdl:operation name="GetLastTradePrice">
            <wsdl:input message="tns:GetLastTradePriceInput"/>
            <wsdl:output message="tns:GetLastTradePriceOutput"/>
+        </wsdl:operation>
+        <wsdl:operation name="SetTradePrice">
+            <wsdl:input message="tns:SetTradePriceInput"/>
         </wsdl:operation>
     </wsdl:portType>
 
@@ -51,6 +66,12 @@
            <wsdl:output>
                <soap:body use="literal"/>
            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="SetTradePrice">
+            <soap:operation soapAction="http://example.com/SetTradePrice"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
         </wsdl:operation>
     </wsdl:binding>
 

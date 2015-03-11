@@ -29,6 +29,9 @@ test.service = {
         } else {
           return { price: 19.56 };
         }
+      },
+
+      SetTradePrice: function(args, cb, soapHeader) {
       }
     }
   }
@@ -249,6 +252,17 @@ describe('SOAP Server', function() {
       client.addBodyAttribute(attributes);
       client.GetLastTradePrice({ tickerSymbol: 'AAPL' }, function(err, response, body) {
         assert.ok(!err);
+        done();
+      });
+    });
+  });
+
+  it('should handle one-way operations', function(done) {
+    soap.createClient(test.baseUrl + '/stockquote?wsdl', function(err, client) {
+      assert.ok(!err);
+      client.SetTradePrice({ tickerSymbol: 'GOOG', price: 575.33 }, function(err, result) {
+        assert.ok(!err);
+        assert.equal(result,null);
         done();
       });
     });
