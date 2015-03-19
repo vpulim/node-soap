@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:n="http://www.bigdatacollect.or/Name/Types"
-           xmlns:tns="http://www.bigdatacollect.or/Common/Types" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+<xs:schema xmlns:tns="http://www.bigdatacollect.or/Common/Types" xmlns:xs="http://www.w3.org/2001/XMLSchema"
            targetNamespace="http://www.bigdatacollect.or/Common/Types" elementFormDefault="qualified"
            attributeFormDefault="unqualified">
-    <xs:import namespace="http://www.bigdatacollect.or/Name/Types" schemaLocation="Name.xsd"/>
     <xs:complexType name="Address">
         <xs:sequence>
             <xs:element name="AddressLine" type="xs:string" minOccurs="0"/>
