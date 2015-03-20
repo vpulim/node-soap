@@ -1,3 +1,72 @@
+0.8.0 / 2015-02-17
+=================
+* [ENHANCEMENT] `node-soap` is now also compatible (and tested) with `node v0.12.0` and `io.js` too. (#571)
+
+* [FIX] Adds support for attributes in the `SOAP Body` Element (fixes #386). (#574)
+
+0.7.0 / 2015-02-10
+=================
+* [ENHANCEMENT] Server emits a `headers` event to globally handle SOAP Headers. (#564 )
+
+* [ENHANCEMENT] A service method can send back a SOAP Fault response to a client by throwing an object that contains a `Fault` property. (#563)
+
+* [FIX] Don't throw an Error if an `element` is not defined. (#562)
+
+* [ENHANCEMENT] Added more primitive types (`['positiveInteger', 'nonPositiveInteger', 'negativeInteger', 'nonNegativeInteger']`). (#560)
+
+* [FIX] Respect empty SOAP actions in operations. (#554)
+
+* [ENHANCEMENT] The client now emits `message`,  `request` and `soapError` events. (#547, #559)
+
+* [ENHANCEMENT] The server is now aware of the SOAP header(s) from incoming request. (#551)
+
+* [ENHANCEMENT] Until now, only the SOAP Body was returned from the invoked client method. With this PR also the SOAP Header(s) will be returned. (#539)
+
+0.6.1 / 2014-12-20
+==================
+* [ENHANCEMENT] Allow logging of received `XML` prior to parsing and processing it, which allows better debugging of incoming`XML`. (#524)
+
+* [ENHANCEMENT] Add support for importing external `wsdl`. (#523)
+
+* [FIX] Use correct namespaces for elements which consist of an array. (#522)
+
+* [FIX] Use correct namespaces for elements which have a different base namespace. (#521)
+
+* [FIX] Don't throw an `Error` when `typeElement` is undefined in `ExtensionElement#description` method. (#515)
+
+* [FIX] Only supply `nonce` when a password digest is used to avoid `schema` validation errors. (#496)
+
+* [FIX] Allow `wsdl:documentation` element under `wsdl:message`. (#508)
+
+* [FIX] Use correct namespaces in sequences with imported elements. (#502)
+
+* [FIX] Ignore default `tns` and disabled default `tns` specification in first element of the body. (#506)
+
+* [ENHANCEMENT] Define `$xml` to pass plain `XML` object. (#485)
+The `$xml` key is used to pass an `XML` Object to the request without adding a namespace or parsing the string.
+
+* [FIX] Updated '#extend' method to avoid overriding properties and ensure the 'inheritance' of `<xsd:extension base=...>` usage. (#493)
+
+0.6.0 / 2014-10-29
+=================
+* Enhancement: Adding bearer security type Exporting security type for usage.
+* Enhancement: The qualified elementFormQualified must be respected only when the current element is not a global element. The namespace attribute is only needed if it's not included in the xmlns.
+* Fix: Remove automatic port appending to "Host" header.
+* Fix: Avoid creating soap:Header container when there are no children.
+* Fix: Allowing a 'null' argument for WSDL methods that take no arguments.
+* Fix: Wrong initialization of xmlns array when handling rpc stype wsdl.
+* Fix: Fault handling.  err should be used less frequently now.
+* Fix: Added checking if there is input and output for operations under bindings section.
+* Fix: XSD conflict with same namespace.
+
+0.5.1 / 2014-07-11
+=================
+* Enhancement: Add "defaults" parameter to BasicAuthSecurity's constructor
+* Enhancement:  Added possibility to set a custom `valueKey` for the parsed values from XML SOAP Response
+* Fix:  don't append port 80 to Host if not needed
+* Fix:  Remove possible existing BOM characters from XML String before passing it to `WSDL#_fromXML()` and parsing it.
+* Fix:  Handling nil attributes in response xml
+
 0.5.0 / 2014-07-11
 =================
 * Enhancement: Allowing namespace prefixes to be ignored via config.

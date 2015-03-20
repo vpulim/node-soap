@@ -1,6 +1,6 @@
 {
   "name": "soap",
-  "version": "0.5.0",
+  "version": "0.8.0",
   "description": "A minimal node SOAP client",
   "engines": {
     "node": ">=0.8.0"
@@ -37,6 +37,7 @@
     "mocha": "~1.17.0",
     "jshint": "2.3.0",
     "glob": "~3.2.8",
-    "should": "~3.3.0"
+    "should": "~3.3.0",
+    "timekeeper": "~0.0.4"
   }
 }

@@ -46,7 +46,7 @@ Within the options object you may provide an `endpoint` property in case you wan
                   return {
                       name: args.name
                   };
-              }
+              },
 
               // This is how to define an asynchronous function.
               MyAsyncFunction: function(args, callback) {
@@ -54,6 +54,13 @@ Within the options object you may provide an `endpoint` property in case you wan
                   callback({
                       name: args.name
                   })
+              },
+
+              // This is how to receive incoming headers
+              HeadersAwareFunction: function(args, cb, headers) {
+                  return {
+                      name: headers.Token
+                  };
               }
           }
       }
@@ -79,6 +86,66 @@ along with data.
     // type is 'received' or 'replied'
   };
 ```
+
+### Server Events
+
+Server instances emit the following events:
+
+* request - Emitted for every received messages.
+  The signature of the callback is `function(request, methodName)`.
+* headers - Emitted when the SOAP Headers are not empty.
+  The signature of the callback is `function(headers, methodName)`.
+
+The sequence order of the calls is `request`, `headers` and then the dedicated
+service method.
+
+### SOAP Fault
+
+A service method can reply with a SOAP Fault to a client by `throw`ing an
+object with a `Fault` property.
+
+``` javascript
+  throw {
+    Fault: {
+      Code: {
+        Value: "soap:Sender",
+        Subcode: { value: "rpc:BadArguments" }
+      },
+      Reason: { Text: "Processing Error" }
+    }
+  };
+```
+
+### SOAP Headers
+
+A service method can look at the SOAP headers by providing a 3rd arguments.
+
+``` javascript
+  {
+      HeadersAwareFunction: function(args, cb, headers) {
+          return {
+              name: headers.Token
+          };
+      }
+  }
+```
+
+It is also possible to subscribe to the 'headers' event.
+The event is triggered before the service method is called, and only when the
+SOAP Headers are not empty.
+
+``` javascript
+  server = soap.listen(...)
+  server.on('headers', function(headers, methodName) {
+    // It is possible to change the value of the headers
+    // before they are handed to the service method.
+    // It is also possible to throw a SOAP Fault
+  });
+```
+
+First parameter is the Headers object;
+second parameter is the name of the SOAP method that will called
+(in case you need to handle the headers differently based on the method).
 
 ### server security example using PasswordDigest
 
@@ -164,11 +231,19 @@ as default request options to the constructor:
   client.setSecurity(new soap.WSSecurity('username', 'password'))
 ```
 
+####BearerSecurity
+
+``` javascript
+  client.setSecurity(new soap.BearerSecurity('token'));
+```
+
 ### Client.*method*(args, callback) - call *method* on the SOAP service.
 
 ``` javascript
-  client.MyFunction({name: 'value'}, function(err, result) {
+  client.MyFunction({name: 'value'}, function(err, result, raw, soapHeader) {
       // result is a javascript object
+      // raw is the raw response
+      // soapHeader is the response soap header as a javascript object
   })
 ```
 ### Client.*service*.*port*.*method*(args, callback[, options]) - call a *method* using a specific *service* and *port*
@@ -178,7 +253,7 @@ as default request options to the constructor:
       // result is a javascript object
   })
 ```
-+#### Options (optional)
+#### Options (optional)
  - Accepts any option that the request module accepts, see [here.](https://github.com/mikeal/request)
  - For example, you could set a timeout of 5 seconds on the request like this:
 ``` javascript
@@ -199,6 +274,17 @@ as default request options to the constructor:
 
 ### Client.*lastRequest* - the property that contains last full soap request for client logging
 
+### Client Events
+Client instances emit the following events:
+
+* request - Emitted before a request is sent. The event handler receives the 
+entire Soap request (Envelope) including headers.
+* message - Emitted before a request is sent. The event handler receives the 
+Soap body contents. Useful if you don't want to log /store Soap headers.
+* soapError - Emitted when an erroneous response is received.
+  Useful if you want to globally log errors.
+
+
 ## WSSecurity
 
 WSSecurity implements WS-Security.  UsernameToken and PasswordText/PasswordDigest is supported. An instance of WSSecurity is passed to Client.setSecurity.
@@ -208,18 +294,18 @@ WSSecurity implements WS-Security.  UsernameToken and PasswordText/PasswordDiges
     //'PasswordDigest' or 'PasswordText' default is PasswordText
 ```
 
-## Handling XML Attributes and Value (wsdlOptions).
+## Handling XML Attributes, Value and XML (wsdlOptions).
 Sometimes it is necessary to override the default behaviour of `node-soap` in order to deal with the special requirements
 of your code base or a third library you use. Therefore you can use the `wsdlOptions` Object, which is passed in the
 `#createClient()` method and could have any (or all) of the following contents:
 ```javascript
 var wsdlOptions = {
   attributesKey: 'theAttrs',
-  valueKey: 'theVal'
+  valueKey: 'theVal',
+  xmlKey: 'theXml'
 }
 ```
-If nothing (or an empty Object `{}`) is passed to the `#createClient()` method, the `node-soap` defaults (`attributesKey: 'attributes'`
- and `valueKey: '$value'`) are used.
+If nothing (or an empty Object `{}`) is passed to the `#createClient()` method, the `node-soap` defaults (`attributesKey: 'attributes'`, `valueKey: '$value'` and `xmlKey: '$xml'`) are used.
 
 ###Overriding the `value` key
 By default, `node-soap` uses `$value` as key for any parsed XML value which may interfere with your other code as it
@@ -229,6 +315,36 @@ You can define your own `valueKey` by passing it in the `wsdl_options` to the cr
 ```javascript
 var wsdlOptions = {
   valueKey: 'theVal'
+};
+
+soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', wsdlOptions, function (err, client) {
+  // your code
+});
+```
+
+###Overriding the `xml` key
+As `valueKey`, `node-soap` uses `$xml` as key. The xml key is used to pass XML Object without adding namespace or parsing the string.
+
+Example :
+
+```javascript
+dom = {
+     $xml: '<parentnode type="type"><childnode></childnode></parentnode>'
+};
+```
+
+```xml
+<tns:dom>
+    <parentnode type="type">
+          <childnode></childnode>
+    </parentnode>
+</tns:dom>
+```
+
+You can define your own `xmlKey` by passing it in the `wsdl_options` to the createClient call like so:
+```javascript
+var wsdlOptions = {
+  xmlKey: 'theXml'
 };
 
 soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', wsdlOptions, function (err, client) {
@@ -286,13 +402,13 @@ If an Element in a `schema` definition depends on an Element which is present in
 namespace prefix is used to identify this Element. This is not much of a problem as long as you have just one `schema` defined
 (inline or in a separate file). If there are more `schema` files, the `tns:` in the generated `soap` file resolved mostly to the parent `wsdl` file,
  which was obviously wrong.
- 
+
  `node-soap` now handles namespace prefixes which shouldn't be resolved (because it's not necessary) as so called `ignoredNamespaces`
  which default to an Array of 3 Strings (`['tns', 'targetNamespace', 'typedNamespace']`).
- 
+
  If this is not sufficient for your purpose you can easily add more namespace prefixes to this Array, or override it in its entirety
  by passing an `ignoredNamespaces` object within the `options` you pass in `soap.createClient()` method.
-  
+
  A simple `ignoredNamespaces` object, which only adds certain namespaces could look like this:
  ```
  var options = {
@@ -302,7 +418,7 @@ namespace prefix is used to identify this Element. This is not much of a problem
  }
  ```
  This would extend the `ignoredNamespaces` of the `WSDL` processor to `['tns', 'targetNamespace', 'typedNamespace', 'namespaceToIgnore', 'someOtherNamespace']`.
- 
+
  If you want to override the default ignored namespaces you would simply pass the following `ignoredNamespaces` object within the `options`:
  ```
  var options = {

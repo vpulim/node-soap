@@ -1,0 +1,44 @@
+{
+  "Profile": {
+    "IDs": {
+      "UniqueID": [
+        {
+          "attributes": {
+            "source": "TESTSOURCE"
+          },
+          "$value": 100
+        }
+      ]
+    },
+    "Addresses": {
+      "NameAddress": [
+        {
+          "AddressLine": "Another Address"
+        },
+        {
+          "AddressLine": "My Address"
+        }
+      ]
+    },
+    "Phones": {
+      "NamePhone": [
+        {
+          "attributes": {
+            "primary": true
+          },
+          "PhoneData": {
+            "PhoneNumber": "123"
+          }
+        },
+        {
+          "attributes": {
+            "primary": false
+          },
+          "PhoneData": {
+            "PhoneNumber": "456"
+          }
+        }
+      ]
+    }
+  }
+}

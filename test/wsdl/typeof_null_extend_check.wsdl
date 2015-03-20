@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<definitions name="QAS" targetNamespace="http://www.qas.com/web-2010-12" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:qas="http://www.qas.com/web-2010-12">
+    <types>
+        <xs:schema elementFormDefault="qualified" targetNamespace="http://www.qas.com/web-2010-12" xmlns="http://www.w3.org/2001/XMLSchema">
+            <xs:element name="QASearch">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="Country" type="qas:ISOType" />
+                        <xs:element name="Engine" type="qas:EngineType" />
+                        <xs:element name="QAConfig" type="qas:QAConfigType" minOccurs="0" />
+                        <xs:element name="Search" type="xs:string" />
+                        <xs:element name="FormattedLayout" type="xs:string" minOccurs="0" />
+                        <xs:element name="Locator" type="qas:QALocator" minOccurs="0" />
+                        <xs:element name="UserIdentifier" type="xs:string" minOccurs="0" />
+                        <xs:element name="UserReference" type="xs:string" minOccurs="0" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:simpleType name="ISOType">
+                <xs:restriction base="xs:string">
+                    <xs:pattern value="[A-Za-z][A-Za-z][A-Za-z]" />
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:complexType name="EngineType">
+                <xs:simpleContent>
+                    <xs:extension base="qas:EngineEnumType">
+                        <xs:attribute name="Intensity" type="qas:EngineIntensityType" />
+                        <xs:attribute name="PromptSet" type="qas:PromptSetType" />
+                        <xs:attribute name="Threshold" type="qas:ThresholdType" />
+                        <xs:attribute name="Timeout" type="qas:TimeoutType" />
+                    </xs:extension>
+                </xs:simpleContent>
+            </xs:complexType>
+            <xs:simpleType name="EngineEnumType">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="Tracer" />
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType name="ThresholdType">
+                <xs:restriction base="xs:positiveInteger">
+                    <xs:minInclusive value="5" />
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType name="EngineIntensityType">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="Exact" />
+                    <xs:enumeration value="Close" />
+                    <xs:enumeration value="Extensive" />
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType name="TimeoutType">
+                <xs:restriction base="xs:nonNegativeInteger">
+                    <xs:minInclusive value="0" />
+                    <xs:maxInclusive value="600000" />
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType name="PromptSetType">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="Default" />
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:element name="QASearchResult">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="QAPicklist" type="qas:QAPicklistType" minOccurs="0" />
+                        <xs:element name="QAAddress" type="qas:QAAddressType" minOccurs="0" />
+                    </xs:sequence>
+                    <xs:attribute name="VerifyLevel" type="qas:VerifyLevelType" default="None" />
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </types>
+
+    <message name="Search">
+        <part name="body" element="qas:QASearch" />
+    </message>
+
+    <message name="SearchResult">
+        <part name="body" element="qas:QASearchResult" />
+    </message>
+
+    <message name="Fault">
+        <part name="body" element="qas:QAFault" />
+    </message>
+
+    <portType name="QAPortType">
+        <operation name="DoSearch">
+            <input message="qas:Search" />
+            <output message="qas:SearchResult" />
+            <fault name="fault" message="qas:Fault" />
+        </operation>
+
+    </portType>
+
+    <binding name="QASoapBinding" type="qas:QAPortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+
+        <operation name="DoSearch">
+            <soap:operation soapAction="http://www.qas.com/web-2010-12/DoSearch" />
+            <input>
+                <soap:body use="literal" />
+            </input>
+            <output>
+                <soap:body use="literal" />
+            </output>
+            <fault name="fault" >
+                <soap:fault name="fault" use="literal" />
+            </fault>
+        </operation>
+    </binding>
+    <service name="ProWeb">
+        <port binding="qas:QASoapBinding" name="QAPortType">
+            <soap:address location="http://localhost:2022/" />
+        </port>
+    </service>
+</definitions>
+

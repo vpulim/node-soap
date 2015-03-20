@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:c="http://www.bigdatacollect.or/Common/Types" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns="http://www.bigdatacollect.or/Name/Types"
+           targetNamespace="http://www.bigdatacollect.or/Name/Types" elementFormDefault="qualified"
+           attributeFormDefault="unqualified">
+    <xs:import namespace="http://www.bigdatacollect.or/Common/Types" schemaLocation="Common.xsd"/>
+    <xs:element name="Profile"/>
+    <xs:complexType name="NamePhone">
+        <xs:complexContent>
+            <xs:extension base="c:Phone">
+                <xs:sequence>
+                    <xs:element name="IDs" type="c:UniqueIDList" minOccurs="0"/>
+                </xs:sequence>
+                <xs:attribute name="primary" type="xs:boolean"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="NamePhoneList">
+        <xs:annotation>
+            <xs:documentation>Collection of NamePhone</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="NamePhone" type="tns:NamePhone" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Profile">
+        <xs:sequence>
+            <xs:element name="IDs" type="c:UniqueIDList" minOccurs="0"/>
+            <xs:element name="Phones" type="tns:NamePhoneList" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="UpdateProfileRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Profile" type="tns:Profile"/>
+                <xs:element name="ResortId" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="UpdateProfileResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Result" type="c:ResultStatus"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

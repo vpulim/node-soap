@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+    <wsdl:types>
+        <schema xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+            <element name="LoginUserRequest">
+                <complexType>
+                    <sequence>
+                        <element maxOccurs="1" minOccurs="1" name="ID" type="wsdlt:ID" />
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="LoginUserResponse">
+                <complexType>
+                    <sequence>
+                        <element maxOccurs="1" minOccurs="0" name="name" type="string"></element>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="WsClientExceptionFault">
+                <complexType>
+                    <sequence>
+                        <element maxOccurs="1" minOccurs="0" name="faultString" type="string" />
+                        <element maxOccurs="1" minOccurs="0" name="faultCode" type="int" />
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="WsServerExceptionFault">
+                <complexType>
+                    <sequence>
+                        <element maxOccurs="1" minOccurs="0" name="faultString" type="string" />
+                        <element maxOccurs="1" minOccurs="0" name="faultCode" type="int" />
+                    </sequence>
+                </complexType>
+            </element>
+        </schema>
+    </wsdl:types>
+    <wsdl:message name="WsServerExceptionFault">
+        <wsdl:part element="tns:WsServerExceptionFault" name="WsServerExceptionFault"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="LoginUserResponse">
+        <wsdl:part element="tns:LoginUserResponse" name="LoginUserResponse"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="WsClientExceptionFault">
+        <wsdl:part element="tns:WsClientExceptionFault" name="WsClientExceptionFault"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="LoginUserRequest">
+        <wsdl:part element="tns:LoginUserRequest" name="LoginUserRequest"></wsdl:part>
+    </wsdl:message>
+    <wsdl:portType name="wsdlt1">
+        <wsdl:operation name="WsServerException">
+            <wsdl:fault message="tns:WsServerExceptionFault" name="WsServerExceptionFault"></wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="LoginUser">
+            <wsdl:input message="tns:LoginUserRequest" name="LoginUserRequest"></wsdl:input>
+            <wsdl:output message="tns:LoginUserResponse" name="LoginUserResponse"></wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="WsClientException">
+            <wsdl:fault message="tns:WsClientExceptionFault" name="WsClientExceptionFault"></wsdl:fault>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="wsdlt1Soap11" type="tns:wsdlt1">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+        <wsdl:operation name="WsServerException">
+            <soap:operation soapAction="" />
+            <wsdl:fault name="WsServerExceptionFault">
+                <soap:fault name="WsServerExceptionFault" use="literal" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="LoginUser">
+            <soap:operation soapAction="" />
+            <wsdl:input name="LoginUserRequest">
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output name="LoginUserResponse">
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="WsClientException">
+            <soap:operation soapAction="" />
+            <wsdl:fault name="WsClientExceptionFault">
+                <soap:fault name="WsClientExceptionFault" use="literal" />
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="wsdlt1Service">
+        <wsdl:port binding="tns:wsdlt1Soap11" name="wsdlt1Soap11">
+            <soap:address location="http://test" />
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
