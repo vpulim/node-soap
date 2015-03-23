@@ -10,7 +10,8 @@
     "lodash": "~2.4.1",
     "request": ">=2.9.0",
     "sax": ">=0.6",
-    "strip-bom": "~0.3.1"
+    "strip-bom": "~0.3.1",
+    "debug": "~0.7.4"
   },
   "repository": {
     "type": "git",

@@ -169,6 +169,20 @@ describe('SOAP Client', function() {
         }, null, {'test-header': 'test'});
       }, baseUrl);
     });
+
+    it('should not return error in the call and return the json in body', function(done) {
+      soap.createClient(__dirname+'/wsdl/json_response.wsdl', function(err, client) {
+        assert.ok(client);
+        assert.ok(!err);
+
+        client.MyOperation({}, function(err, result, body) {
+          assert.ok(result);
+          assert.ok(!err);
+          assert.ok(body);
+          done();
+        }, null, {"test-header": 'test'});
+      }, baseUrl);
+    });
   });
 
   it('should add soap headers', function (done) {
