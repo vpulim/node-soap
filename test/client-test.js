@@ -391,13 +391,16 @@ describe('SOAP Client', function() {
 
     it('Should emit the "message" event with Soap Body string', function (done) {
       soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', function (err, client) {
+        var didEmitEvent = false;
         client.on('message', function (xml) {
+          didEmitEvent = true;
           // Should contain only message body
           assert.equal(typeof xml, 'string');
           assert.equal(xml.indexOf('soap:Envelope'), -1);
         });
 
         client.MyOperation({}, function() {
+          assert.ok(didEmitEvent);
           done();
         });
       }, baseUrl);
@@ -405,13 +408,33 @@ describe('SOAP Client', function() {
 
     it('Should emit the "request" event with entire XML message', function (done) {
       soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', function (err, client) {
+        var didEmitEvent = false;
         client.on('request', function (xml) {
+          didEmitEvent = true;
           // Should contain entire soap message
           assert.equal(typeof xml, 'string');
           assert.notEqual(xml.indexOf('soap:Envelope'), -1);
         });
 
         client.MyOperation({}, function() {
+          assert.ok(didEmitEvent);
+          done();
+        });
+      }, baseUrl);
+    });
+
+    it('Should emit the "response" event with Soap Body string', function (done) {
+      soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', function (err, client) {
+        var didEmitEvent = false;
+        client.on('response', function (xml) {
+          didEmitEvent = true;
+          // Should contain entire soap message
+          assert.equal(typeof xml, 'string');
+          assert.equal(xml.indexOf('soap:Envelope'), -1);
+        });
+
+        client.MyOperation({}, function() {
+          assert.ok(didEmitEvent);
           done();
         });
       }, baseUrl);
@@ -419,10 +442,13 @@ describe('SOAP Client', function() {
 
     it('should emit a \'soapError\' event', function (done) {
       soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', function (err, client) {
+        var didEmitEvent = false;
         client.on('soapError', function(err) {
+          didEmitEvent = true;
           assert.ok(err.root.Envelope.Body.Fault);
         });
         client.MyOperation({}, function(err, result) {
+          assert.ok(didEmitEvent);
           done();
         });
       }, baseUrl);
