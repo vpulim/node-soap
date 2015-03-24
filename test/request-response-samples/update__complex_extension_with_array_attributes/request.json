@@ -8,14 +8,14 @@
         "xmlns": "urn:relationships_2013_2.lists.webservices.netsuite.com"
       }
     },
+    "firstName": "Allister",
+    "lastName": "Sullivan",
     "nullFieldList": {
       "name": [
         "officephone",
         "mobilephone"
       ]
     },
-    "firstName": "Allister",
-    "lastName": "Sullivan",
     "phone": "800-555-2819",
     "subscriptionsList": {
       "replaceAll": false,
