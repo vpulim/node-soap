@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:listRelTyp="urn:types.relationships_2011_1.lists.webservices.netsuite.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:types.relationships_2011_1.lists.webservices.netsuite.com" elementFormDefault="qualified">
+    <!-- EntityType constants/start -->
+    <simpleType name="EntityType">
+        <restriction base="xsd:string">
+            <enumeration value="_company"/>
+            <enumeration value="_contact"/>
+            <enumeration value="_customer"/>
+            <enumeration value="_employee"/>
+            <enumeration value="_group"/>
+            <enumeration value="_internal"/>
+            <enumeration value="_job"/>
+            <enumeration value="_otherName"/>
+            <enumeration value="_partner"/>
+            <enumeration value="_vendor"/>
+        </restriction>
+    </simpleType>
+    <!-- EntityType constants/end -->
+    <!-- CustomerStatusStage constants/start -->
+    <simpleType name="CustomerStatusStage">
+        <restriction base="xsd:string">
+            <enumeration value="_customer"/>
+            <enumeration value="_lead"/>
+            <enumeration value="_prospect"/>
+        </restriction>
+    </simpleType>
+    <!-- CustomerStatusStage constants/end -->
+    <!-- ContactType constants/start -->
+    <simpleType name="ContactType">
+        <restriction base="xsd:string">
+            <enumeration value="_customer"/>
+            <enumeration value="_employee"/>
+            <enumeration value="_otherName"/>
+            <enumeration value="_partner"/>
+            <enumeration value="_vendor"/>
+        </restriction>
+    </simpleType>
+    <!-- ContactType constants/end -->
+    <!-- CustomerStage constants/start -->
+    <simpleType name="CustomerStage">
+        <restriction base="xsd:string">
+            <enumeration value="_customer"/>
+            <enumeration value="_lead"/>
+            <enumeration value="_prospect"/>
+        </restriction>
+    </simpleType>
+    <!-- CustomerStage constants/end -->
+    <!-- CustomerCreditHoldOverride constants/start -->
+    <simpleType name="CustomerCreditHoldOverride">
+        <restriction base="xsd:string">
+            <enumeration value="_auto"/>
+            <enumeration value="_on"/>
+            <enumeration value="_off"/>
+        </restriction>
+    </simpleType>
+    <!-- CustomerCustomerCreditHoldOverride constants/end -->
+    <!-- CustomerMonthlyClosing constants/start -->
+    <simpleType name="CustomerMonthlyClosing">
+        <restriction base="xsd:string">
+            <enumeration value="_one"/>
+            <enumeration value="_five"/>
+            <enumeration value="_ten"/>
+            <enumeration value="_fifteen"/>
+            <enumeration value="_twenty"/>
+            <enumeration value="_twentyFive"/>
+            <enumeration value="_endOfTheMonth"/>
+        </restriction>
+    </simpleType>
+    <!-- CustomerMonthlyClosing constants/end -->
+    <!-- EmailPreference constants/start -->
+    <simpleType name="EmailPreference">
+        <restriction base="xsd:string">
+            <enumeration value="_default"/>
+            <enumeration value="_hTML"/>
+            <enumeration value="_pDF"/>
+        </restriction>
+    </simpleType>
+    <!-- EmailPreference constants/end -->
+    <!-- EntityGroupType constants/start -->
+    <simpleType name="EntityGroupType">
+        <restriction base="xsd:string">
+            <enumeration value="_contact"/>
+            <enumeration value="_customer"/>
+            <enumeration value="_employee"/>
+            <enumeration value="_partner"/>
+            <enumeration value="_vendor"/>
+        </restriction>
+    </simpleType>
+    <!-- EntityGroupType constants/end -->
+    <simpleType name="EntityGroupDailyTime">
+        <restriction base="xsd:string">
+            <enumeration value="_1200am"/>
+            <enumeration value="_1230am"/>
+            <enumeration value="_100am"/>
+            <enumeration value="_130am"/>
+            <enumeration value="_200am"/>
+            <enumeration value="_230am"/>
+            <enumeration value="_300am"/>
+            <enumeration value="_330am"/>
+            <enumeration value="_400am"/>
+            <enumeration value="_430am"/>
+            <enumeration value="_500am"/>
+            <enumeration value="_530am"/>
+            <enumeration value="_600am"/>
+            <enumeration value="_630am"/>
+            <enumeration value="_700am"/>
+            <enumeration value="_730am"/>
+            <enumeration value="_800am"/>
+            <enumeration value="_830am"/>
+            <enumeration value="_900am"/>
+            <enumeration value="_930am"/>
+            <enumeration value="_1000am"/>
+            <enumeration value="_1030am"/>
+            <enumeration value="_1100am"/>
+            <enumeration value="_1130am"/>
+            <enumeration value="_noon"/>
+            <enumeration value="_1230pm"/>
+            <enumeration value="_100pm"/>
+            <enumeration value="_130pm"/>
+            <enumeration value="_200pm"/>
+            <enumeration value="_230pm"/>
+            <enumeration value="_300pm"/>
+            <enumeration value="_330pm"/>
+            <enumeration value="_400pm"/>
+            <enumeration value="_430pm"/>
+            <enumeration value="_500pm"/>
+            <enumeration value="_530pm"/>
+            <enumeration value="_600pm"/>
+            <enumeration value="_630pm"/>
+            <enumeration value="_700pm"/>
+            <enumeration value="_730pm"/>
+            <enumeration value="_800pm"/>
+            <enumeration value="_830pm"/>
+            <enumeration value="_900pm"/>
+            <enumeration value="_930pm"/>
+            <enumeration value="_1000pm"/>
+            <enumeration value="_1030pm"/>
+            <enumeration value="_1100pm"/>
+            <enumeration value="_1130pm"/>
+        </restriction>
+    </simpleType>
+    <simpleType name="EntityGroupDefView">
+        <restriction base="xsd:string">
+            <enumeration value="_daily"/>
+            <enumeration value="_weekly"/>
+            <enumeration value="_monthly"/>
+        </restriction>
+    </simpleType>
+    <simpleType name="EntityGroupPeriodSize">
+        <restriction base="xsd:string">
+            <enumeration value="_10minutes"/>
+            <enumeration value="_15minutes"/>
+            <enumeration value="_20minutes"/>
+            <enumeration value="_30minutes"/>
+            <enumeration value="_oneHour"/>
+        </restriction>
+    </simpleType>
+    <simpleType name="TaxFractionUnit">
+        <restriction base="xsd:string">
+            <enumeration value="_001andBelow"/>
+            <enumeration value="_01andBelow"/>
+            <enumeration value="_100andBelow"/>
+            <enumeration value="_10andBelow"/>
+            <enumeration value="_1andBelow"/>
+        </restriction>
+    </simpleType>
+    <simpleType name="TaxRounding">
+        <restriction base="xsd:string">
+            <enumeration value="_roundDown"/>
+            <enumeration value="_roundOff"/>
+            <enumeration value="_roundUp"/>
+        </restriction>
+    </simpleType>
+    <simpleType name="JobBillingType">
+        <restriction base="xsd:string">
+            <enumeration value="_none"/>
+            <enumeration value="_fixedBidInterval"/>
+            <enumeration value="_fixedBidMilestone"/>
+            <enumeration value="_timeAndMaterials"/>
+        </restriction>
+    </simpleType>
+    <simpleType name="PartnerOtherRelationships">
+        <restriction base="xsd:string">
+            <enumeration value="_customer"/>
+            <enumeration value="_otherName"/>
+            <enumeration value="_vendor"/>
+        </restriction>
+    </simpleType>
+    <simpleType name="CustomerOtherRelationships">
+        <restriction base="xsd:string">
+            <enumeration value="_otherName"/>
+            <enumeration value="_partner"/>
+            <enumeration value="_vendor"/>
+        </restriction>
+    </simpleType>
+    <simpleType name="VendorOtherRelationships">
+        <restriction base="xsd:string">
+            <enumeration value="_customer"/>
+            <enumeration value="_otherName"/>
+            <enumeration value="_partner"/>
+        </restriction>
+    </simpleType>
+</schema>

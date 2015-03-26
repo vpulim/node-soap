@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:listRel="urn:relationships_2013_2.lists.webservices.netsuite.com" xmlns:listRelTyp="urn:types.relationships_2013_2.lists.webservices.netsuite.com" xmlns:platformCoreTyp="urn:types.core_2013_2.platform.webservices.netsuite.com" xmlns:platformCore="urn:core_2013_2.platform.webservices.netsuite.com" xmlns:platformCommon="urn:common_2013_2.platform.webservices.netsuite.com" xmlns:platformCommonTyp="urn:types.common_2013_2.platform.webservices.netsuite.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:relationships_2013_2.lists.webservices.netsuite.com" elementFormDefault="qualified">
-    <import namespace="urn:core_2013_2.platform.webservices.netsuite.com" schemaLocation="platform.core.xsd"/>
-    <import namespace="urn:types.relationships_2013_2.lists.webservices.netsuite.com" schemaLocation="lists.relationshipTypes.xsd"/>
-    <xsd:import namespace="urn:common_2013_2.platform.webservices.netsuite.com" schemaLocation="platform.common.xsd"/>
-    <import namespace="urn:types.common_2013_2.platform.webservices.netsuite.com" schemaLocation="platform.commonTypes.xsd"/>
+    <import namespace="urn:core_2013_2.platform.webservices.netsuite.com" schemaLocation="../../platform/platform.core.xsd"/>
+    <import namespace="urn:types.relationships_2013_2.lists.webservices.netsuite.com" schemaLocation="../../platform/lists.relationshipTypes.xsd"/>
+    <xsd:import namespace="urn:common_2013_2.platform.webservices.netsuite.com" schemaLocation="../../platform/platform.common.xsd"/>
+    <import namespace="urn:types.common_2013_2.platform.webservices.netsuite.com" schemaLocation="../../platform/platform.commonTypes.xsd"/>
     <!-- shared/start -->
     <complexType name="Subscriptions">
         <sequence>

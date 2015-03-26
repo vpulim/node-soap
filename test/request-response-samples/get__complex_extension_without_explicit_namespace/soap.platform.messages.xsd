@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:platformMsgs="urn:messages_2013_2.platform.webservices.netsuite.com" xmlns:platformFaultTyp="urn:types.faults_2013_2.platform.webservices.netsuite.com" xmlns:platformCore="urn:core_2013_2.platform.webservices.netsuite.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:messages_2013_2.platform.webservices.netsuite.com" elementFormDefault="qualified" attributeFormDefault="unqualified">
-    <import namespace="urn:core_2013_2.platform.webservices.netsuite.com" schemaLocation="platform.core.xsd"/>
-    <import namespace="urn:types.faults_2013_2.platform.webservices.netsuite.com" schemaLocation="platform.faultTypes.xsd"/>
+    <import namespace="urn:core_2013_2.platform.webservices.netsuite.com" schemaLocation="../../platform/platform.core.xsd"/>
+    <import namespace="urn:types.faults_2013_2.platform.webservices.netsuite.com" schemaLocation="../../platform/platform.faultTypes.xsd"/>
 
     <complexType name="ReadResponse">
         <sequence>
