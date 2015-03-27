@@ -6,6 +6,16 @@ var fs = require('fs'),
     request = require('request'),
     http = require('http');
 
+var fault = {
+  Fault: {
+    Code: {
+      Value: "soap:Sender",
+      Subcode: { value: "rpc:BadArguments" }
+    },
+    Reason: { Text: "Processing Error" }
+  }
+};
+ 
 var test = {};
 test.server = null;
 test.service = {
@@ -17,15 +27,11 @@ test.service = {
         if (args.tickerSymbol === 'trigger error') {
           throw new Error('triggered server error');
         } else if (args.tickerSymbol === 'SOAP Fault') {
-          throw {
-            Fault: {
-              Code: {
-                Value: "soap:Sender",
-                Subcode: { value: "rpc:BadArguments" }
-              },
-              Reason: { Text: "Processing Error" }
-            }
-          };
+          throw fault;
+        } else if (args.tickerSymbol === 'SOAP Fault Async') {
+          setTimeout(function() {
+            cb(null, fault);
+          }, 0);
         } else {
           return { price: 19.56 };
         }
@@ -212,17 +218,22 @@ describe('SOAP Server', function() {
     });
   });
 
-  it('should return SOAP Fault thrown from \'headers\' event handler', function(done) {
+  it('should return SOAP Fault body from async call', function(done) {
+    soap.createClient(test.baseUrl + '/stockquote?wsdl', function(err, client) {
+      assert.ok(!err);
+      client.GetLastTradePrice({ tickerSymbol: 'SOAP Fault Async' }, function(err, response, body) {
+        assert.ok(err);
+        var fault = err.root.Envelope.Body.Fault;
+        assert.equal(fault.Code.Value, "soap:Sender");
+        assert.equal(fault.Reason.Text, "Processing Error");
+        done();
+      });
+    });
+  });
+
+ it('should return SOAP Fault thrown from \'headers\' event handler', function(done) {
     test.soapServer.on('headers', function headersManager() {
-      throw {
-        Fault: {
-          Code: {
-            Value: "soap:Sender",
-            Subcode: { value: "rpc:BadArguments" }
-          },
-          Reason: { Text: "Processing Error" }
-        }
-      };
+      throw fault;
     });
     soap.createClient(test.baseUrl + '/stockquote?wsdl', function(err, client) {
       client.addSoapHeader('<SomeToken>0.0</SomeToken>');
