@@ -116,6 +116,24 @@ object with a `Fault` property.
   };
 ```
 
+You can also reply with a SOAP Fault from asynchronous by passing object with a `Fault` 
+property to callback.
+
+``` javascript
+  MyAsyncFunction: function(args, callback) {
+    // do some work
+    callback(null, {
+      Fault: {
+        Code: {
+          Value: "soap:Sender",
+          Subcode: { value: "rpc:BadArguments" }
+        },
+        Reason: { Text: "Processing Error" }
+      }
+    });
+  },
+```
+
 ### SOAP Headers
 
 A service method can look at the SOAP headers by providing a 3rd arguments.
