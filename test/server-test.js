@@ -28,9 +28,15 @@ test.service = {
           throw new Error('triggered server error');
         } else if (args.tickerSymbol === 'SOAP Fault') {
           throw fault;
+        } else if (args.tickerSymbol === 'SOAP Fault 500') {
+          cb(null, fault, 500);
         } else if (args.tickerSymbol === 'SOAP Fault Async') {
           setTimeout(function() {
             cb(null, fault);
+          }, 0);
+        } else if (args.tickerSymbol === 'SOAP Fault Async 500') {
+          setTimeout(function() {
+            cb(null, fault, 500);
           }, 0);
         } else {
           return { price: 19.56 };
@@ -210,6 +216,21 @@ describe('SOAP Server', function() {
       assert.ok(!err);
       client.GetLastTradePrice({ tickerSymbol: 'SOAP Fault' }, function(err, response, body) {
         assert.ok(err);
+        assert.equal(err.response.statusCode, 200);
+        var fault = err.root.Envelope.Body.Fault;
+        assert.equal(fault.Code.Value, "soap:Sender");
+        assert.equal(fault.Reason.Text, "Processing Error");
+        done();
+      });
+    });
+  });
+
+  it('should return SOAP Fault body with 500 statusCode', function(done) {
+    soap.createClient(test.baseUrl + '/stockquote?wsdl', function(err, client) {
+      assert.ok(!err);
+      client.GetLastTradePrice({ tickerSymbol: 'SOAP Fault 500' }, function(err, response, body) {
+        assert.ok(err);
+        assert.equal(err.response.statusCode, 500);
         var fault = err.root.Envelope.Body.Fault;
         assert.equal(fault.Code.Value, "soap:Sender");
         assert.equal(fault.Reason.Text, "Processing Error");
@@ -223,6 +244,21 @@ describe('SOAP Server', function() {
       assert.ok(!err);
       client.GetLastTradePrice({ tickerSymbol: 'SOAP Fault Async' }, function(err, response, body) {
         assert.ok(err);
+        assert.equal(err.response.statusCode, 200);
+        var fault = err.root.Envelope.Body.Fault;
+        assert.equal(fault.Code.Value, "soap:Sender");
+        assert.equal(fault.Reason.Text, "Processing Error");
+        done();
+      });
+    });
+  });
+
+  it('should return SOAP Fault body from async call with 500 statusCode', function(done) {
+    soap.createClient(test.baseUrl + '/stockquote?wsdl', function(err, client) {
+      assert.ok(!err);
+      client.GetLastTradePrice({ tickerSymbol: 'SOAP Fault Async 500' }, function(err, response, body) {
+        assert.ok(err);
+        assert.equal(err.response.statusCode, 500);
         var fault = err.root.Envelope.Body.Fault;
         assert.equal(fault.Code.Value, "soap:Sender");
         assert.equal(fault.Reason.Text, "Processing Error");

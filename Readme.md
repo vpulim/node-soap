@@ -116,8 +116,9 @@ object with a `Fault` property.
   };
 ```
 
-You can also reply with a SOAP Fault from asynchronous by passing object with a `Fault` 
-property to callback.
+You can also reply with a SOAP Fault from asynchronous function by passing 
+object with a `Fault` property to callback. Optionally, you can specify third argument 
+to callback with HTTP Status Code you want to send.
 
 ``` javascript
   MyAsyncFunction: function(args, callback) {
@@ -130,7 +131,7 @@ property to callback.
         },
         Reason: { Text: "Processing Error" }
       }
-    });
+    }, 500);
   },
 ```
 
