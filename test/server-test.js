@@ -231,7 +231,7 @@ describe('SOAP Server', function() {
     });
   });
 
- it('should return SOAP Fault thrown from \'headers\' event handler', function(done) {
+  it('should return SOAP Fault thrown from \'headers\' event handler', function(done) {
     test.soapServer.on('headers', function headersManager() {
       throw fault;
     });
