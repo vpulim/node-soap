@@ -369,6 +369,38 @@ describe('SOAP Client', function() {
     });
   });
 
+  describe('Handle HTML answer from non-SOAP server', function() {
+    var server = null;
+    var hostname = '127.0.0.1';
+    var port = 15099;
+    var baseUrl = 'http://' + hostname + ':' + port;
+
+    before(function(done) {
+      server = http.createServer(function (req, res) {
+        res.statusCode = 200;
+        res.write('<html><body></body></html>', 'utf8');
+        res.end();
+      }).listen(port, hostname, done);
+    });
+
+    after(function(done) {
+      server.close();
+      server = null;
+      done();
+    });
+
+    it('should return an error', function (done) {
+      soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', function (err, client) {
+        client.MyOperation({}, function(err, result) {
+          assert.ok(err);
+          assert.ok(err.response);
+          assert.ok(err.body);
+          done();
+        });
+      }, baseUrl);
+    });
+  });
+
   describe('Client Events', function () {
     var server = null;
     var hostname = '127.0.0.1';
