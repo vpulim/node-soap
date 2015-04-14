@@ -58,6 +58,19 @@ wsdlStrictTests['should parse external wsdl'] = function(done) {
   });
 };
 
+wsdlStrictTests['should get the parent namespace when parent namespace is empty string'] = function(done) {
+  soap.createClient(__dirname+'/wsdl/marketo.wsdl', {strict: true}, function(err, client){
+    assert.ok(!err);
+    client.getLeadChanges({
+        batchSize: 1,
+        startPosition: {activityCreatedAt: '2014-04-14T22:03:48.587Z'},
+        activityNameFilter: {stringItem: ['Send Email']}
+      }, function() {
+        done();
+      });
+  });
+};
+
 module.exports = {
   'WSDL Parser (strict)': wsdlStrictTests,
   'WSDL Parser (non-strict)': wsdlNonStrictTests
