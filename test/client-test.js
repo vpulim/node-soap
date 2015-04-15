@@ -16,7 +16,7 @@ describe('SOAP Client', function() {
   it('should add and clear soap headers', function(done) {
     soap.createClient(__dirname+'/wsdl/default_namespace.wsdl', function(err, client) {
       assert.ok(client);
-      assert.ok(!client.getSoapHeaders());
+      assert.ok(!client.getSoapHeaders().length);
 
       client.addSoapHeader('header1');
       client.addSoapHeader('header2');
@@ -26,7 +26,7 @@ describe('SOAP Client', function() {
       assert.ok(client.getSoapHeaders()[1] === 'header2');
 
       client.clearSoapHeaders();
-      assert.ok(!client.getSoapHeaders());
+      assert.ok(!client.getSoapHeaders().length);
       done();
     });
   });
@@ -188,7 +188,7 @@ describe('SOAP Client', function() {
   it('should add soap headers', function (done) {
     soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', function (err, client) {
         assert.ok(client);
-        assert.ok(!client.getSoapHeaders());
+        assert.ok(!client.getSoapHeaders().length);
         var soapheader = {
           'esnext': false,
           'moz': true,
@@ -211,7 +211,7 @@ describe('SOAP Client', function() {
   it('should add soap headers with a namespace', function(done) {
     soap.createClient(__dirname+'/wsdl/default_namespace.wsdl', function(err, client) {
       assert.ok(client);
-      assert.ok(!client.getSoapHeaders());
+      assert.ok(!client.getSoapHeaders().length);
 
       client.addSoapHeader({header1: 'content'}, null, null, 'http://example.com');
 
@@ -219,7 +219,7 @@ describe('SOAP Client', function() {
       assert.ok(client.getSoapHeaders()[0] === '<header1 xmlns="http://example.com">content</header1>');
 
       client.clearSoapHeaders();
-      assert.ok(!client.getSoapHeaders());
+      assert.ok(!client.getSoapHeaders().length);
       done();
     });
   });
