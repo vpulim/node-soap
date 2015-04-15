@@ -7,11 +7,13 @@
   },
   "author": "Vinay Pulim <v@pulim.com>",
   "dependencies": {
+    "debug": "~0.7.4",
     "lodash": "~2.4.1",
     "request": ">=2.9.0",
     "sax": ">=0.6",
     "strip-bom": "~0.3.1",
-    "debug": "~0.7.4"
+    "ursa": "^0.8.4",
+    "xml-crypto": "^0.3.26"
   },
   "repository": {
     "type": "git",
