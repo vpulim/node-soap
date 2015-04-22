@@ -79,6 +79,13 @@ describe('SOAP Client', function() {
     });
   });
 
+  it('should save per instance options', function () {
+    var options = { test: true };
+    soap.createClient(__dirname+'/wsdl/binding_document.wsdl', options, function (err, client) {
+      assert.deepEqual(client.options, options);
+    });
+  });
+
   describe('Headers in request and last response', function() {
     var server = null;
     var hostname = '127.0.0.1';
