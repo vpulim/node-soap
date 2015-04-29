@@ -31,6 +31,7 @@
                    </xsd:all>
                </xsd:complexType>
            </xsd:element>
+           <xsd:element name="valid" type="boolean"/>
        </xsd:schema>
     </wsdl:types>
 
@@ -46,6 +47,14 @@
         <wsdl:part name="body" element="xsd1:TradePriceSubmit"/>
     </wsdl:message>
 
+    <wsdl:message name="IsValidPriceInput">
+        <wsdl:part name="body" element="xsd1:TradePrice"/>
+    </wsdl:message>
+
+    <wsdl:message name="IsValidPriceOutput">
+        <wsdl:part name="body" element="xsd1:valid"/>
+    </wsdl:message>
+
     <wsdl:portType name="StockQuotePortType">
         <wsdl:operation name="GetLastTradePrice">
            <wsdl:input message="tns:GetLastTradePriceInput"/>
@@ -53,6 +62,10 @@
         </wsdl:operation>
         <wsdl:operation name="SetTradePrice">
             <wsdl:input message="tns:SetTradePriceInput"/>
+        </wsdl:operation>
+        <wsdl:operation name="IsValidPrice">
+            <wsdl:input message="tns:IsValidPriceInput"/>
+            <wsdl:output message="tns:IsValidPriceOutput"/>
         </wsdl:operation>
     </wsdl:portType>
 
@@ -69,6 +82,12 @@
         </wsdl:operation>
         <wsdl:operation name="SetTradePrice">
             <soap:operation soapAction="http://example.com/SetTradePrice"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="IsValidPrice">
+            <soap:operation soapAction="http://example.com/IsValidPrice"/>
             <wsdl:input>
                 <soap:body use="literal"/>
             </wsdl:input>
