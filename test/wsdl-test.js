@@ -53,6 +53,8 @@ wsdlStrictTests['should catch parse error'] = function(done) {
 wsdlStrictTests['should parse external wsdl'] = function(done) {
   soap.createClient(__dirname+'/wsdl/wsdlImport/main.wsdl', {strict: true}, function(err, client){
     assert.ok(!err);
+    assert.deepEqual(Object.keys(client.wsdl.definitions.schemas),
+      ['http://example.com/', 'http://schemas.microsoft.com/2003/10/Serialization/Arrays']);
     assert.equal(typeof client.getLatestVersion, 'function');
     done();
   });

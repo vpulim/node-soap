@@ -1,6 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?><wsdl:definitions name="IUserRemoteService" targetNamespace="http://example.com/" xmlns:ns1="http://example.com/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <wsdl:types>
 <xs:schema elementFormDefault="unqualified" targetNamespace="http://example.com/" version="1.0" xmlns:tns="http://example.com/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="./xsd.xsd" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
 
 <xs:element name="getLatestVersion" type="tns:getLatestVersion" />
 <xs:element name="getLatestVersionResponse" type="tns:getLatestVersionResponse" />
