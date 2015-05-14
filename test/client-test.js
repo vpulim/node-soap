@@ -261,12 +261,14 @@ describe('SOAP Client', function() {
         client.MyOperation(data, function(err, result) {
           assert.ok(client.lastRequest);
           assert.ok(client.lastMessage);
+          assert.ok(client.lastEndpoint);
           assert.equal(client.lastMessage, message);
 
           delete data.attributes.xsi_type.namespace;
           client.MyOperation(data, function(err, result) {
             assert.ok(client.lastRequest);
             assert.ok(client.lastMessage);
+            assert.ok(client.lastEndpoint);
             assert.equal(client.lastMessage, message);
 
             done();
