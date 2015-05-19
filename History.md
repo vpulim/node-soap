@@ -1,20 +1,20 @@
 0.9.0 / 2015-05-18
 =================
-[FIX] Fix to allow request options and headers to persist for all includes. Fix to properly handle when an import/include starts with a schema element.
-[FIX] Do not end request for keep-alive connections
-[ENHANCEMENT] Added Client 'response' event
-[FIX] If response is json, then error should not be thrown. Fix issue #580
-[FIX] Sub-namespace should be correct regardless of order of enumeration i.e. should not be overriden by other prop's namespace
-[DOC] Added a section about Server Events to README.md
-[ENHANCEMENT] Added Server 'request' event
-[ENHANCEMENT] Add support for One-Way Operations
-[FIX] `lib/wsdl.js` util function `extend()` doesn't throw an Error when handling elements that are not objects.
-[ENHANCEMENT] ClientSSLSecurity now accepts a `ca`-certificate.
-[ENHANCEMENT] ClientSSLSecurity should be able to take a Buffer as `key` and `cert` parameter. Additionally the certificates are checked whether they are correct or not (starting with `-----BEGIN`).
-[ENHANCEMENT] Add support for sending NULL values
-[ENHANCEMENT] Follow 302 redirects, don't mix quotes
-[DOC] Update CONTRIBUTING.md
-[FIX] Respond with security timestamp if request had one
+* [FIX] Fix to allow request options and headers to persist for all includes. Fix to properly handle when an import/include starts with a schema element. (#608)
+* [FIX] Do not end request for keep-alive connections (#600)
+* [ENHANCEMENT] Added Client 'response' event (#610)
+* [FIX] If response is json, then error should not be thrown. Fix issue #580 (#581)
+* [FIX] Sub-namespace should be correct regardless of order of enumeration i.e. should not be overriden by other prop's namespace (#607)
+* [DOC] Added a section about Server Events to README.md (#596)
+* [ENHANCEMENT] Added Server 'request' event (#595)
+* [ENHANCEMENT] Add support for One-Way Operations (#590)
+* [FIX] `lib/wsdl.js` util function `extend()` doesn't throw an Error when handling elements that are not objects. (#589)
+* [ENHANCEMENT] ClientSSLSecurity now accepts a `ca`-certificate. (#588)
+* [ENHANCEMENT] ClientSSLSecurity should be able to take a Buffer as `key` and `cert` parameter. Additionally the certificates are checked whether they are correct or not (starting with `-----BEGIN`). (#586)
+* [ENHANCEMENT] Add support for sending NULL values (#578)
+* [ENHANCEMENT] Follow 302 redirects, don't mix quotes (#577)
+* [DOC] Update CONTRIBUTING.md
+* [FIX] Respond with security timestamp if request had one (#579)
 
 
 0.8.0 / 2015-02-17
