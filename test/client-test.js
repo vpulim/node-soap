@@ -16,7 +16,7 @@ describe('SOAP Client', function() {
   it('should add and clear soap headers', function(done) {
     soap.createClient(__dirname+'/wsdl/default_namespace.wsdl', function(err, client) {
       assert.ok(client);
-      assert.ok(!client.getSoapHeaders());
+      assert.ok(!client.getSoapHeaders().length);
 
       client.addSoapHeader('header1');
       client.addSoapHeader('header2');
@@ -26,7 +26,7 @@ describe('SOAP Client', function() {
       assert.ok(client.getSoapHeaders()[1] === 'header2');
 
       client.clearSoapHeaders();
-      assert.ok(!client.getSoapHeaders());
+      assert.ok(!client.getSoapHeaders().length);
       done();
     });
   });
@@ -188,7 +188,7 @@ describe('SOAP Client', function() {
   it('should add soap headers', function (done) {
     soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', function (err, client) {
         assert.ok(client);
-        assert.ok(!client.getSoapHeaders());
+        assert.ok(!client.getSoapHeaders().length);
         var soapheader = {
           'esnext': false,
           'moz': true,
@@ -211,7 +211,7 @@ describe('SOAP Client', function() {
   it('should add soap headers with a namespace', function(done) {
     soap.createClient(__dirname+'/wsdl/default_namespace.wsdl', function(err, client) {
       assert.ok(client);
-      assert.ok(!client.getSoapHeaders());
+      assert.ok(!client.getSoapHeaders().length);
 
       client.addSoapHeader({header1: 'content'}, null, null, 'http://example.com');
 
@@ -219,11 +219,73 @@ describe('SOAP Client', function() {
       assert.ok(client.getSoapHeaders()[0] === '<header1 xmlns="http://example.com">content</header1>');
 
       client.clearSoapHeaders();
-      assert.ok(!client.getSoapHeaders());
+      assert.ok(!client.getSoapHeaders().length);
       done();
     });
   });
+  describe('security as an array',function(done){
+    var soapClient;
+    before(function(done){
+      soap.createClient(__dirname+'/wsdl/default_namespace.wsdl', function(err, client) {
+        soapClient=client;
 
+        done();
+      });
+    })
+    it('security should be  an array',function(){
+      Array.isArray( soapClient.security).should.be.equal(true)
+    })
+    it('security should contain the security methods passed',function(){
+      var sec={
+        toXML:function(){
+          return '<sexuredHeader></securedHeader>'
+        }
+      }
+
+      soapClient.setSecurity(sec);
+
+      soapClient.security.length.should.equal(1);
+      soapClient.security[0].should.be.equal(sec)
+    })
+
+    it('security should set some content',function(){
+      var sec={
+        toXml:function(){
+          return '<securedHeader></securedHeader>'
+        }
+      }
+      var sec1={
+        toXml:function(){
+          return '<securedHeader1></securedHeader1>'
+        },
+        addOptions:function(options){
+          options.ssl=true;
+          options.ftp=false;
+          return options;
+        }
+      }
+      var sec2={
+        addOptions:function(options){
+          options.ftp=true;
+          options.ssh=true;
+          return options;
+        },
+        addHeaders:function(headers){
+          headers.something='out of text'
+          return headers;
+        }
+      }
+
+      soapClient.setSecurity(sec,sec1,sec2);
+      soapClient.security.length.should.equal(3);
+      soapClient.securityXML.should.equal('<securedHeader></securedHeader><securedHeader1></securedHeader1>');
+      soapClient.securityHeaders.should.have.ownProperty('something');
+      soapClient.securityOptions.should.have.ownProperty('ftp');
+      soapClient.securityOptions.ftp.should.equal(true);
+
+    })
+
+  })
   describe('Namespace number', function() {
     var server = null;
     var hostname = '127.0.0.1';
@@ -487,4 +549,5 @@ describe('SOAP Client', function() {
     });
 
   });
+
 });
