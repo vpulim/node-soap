@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Salesforce.com Metadata API version 33.0
+
+Copyright 2006-2015 Salesforce.com, inc. All Rights Reserved
+-->
+<definitions targetNamespace="http://soap.sforce.com/2006/04/metadata" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://soap.sforce.com/2006/04/metadata">
+ <types>
+  <xsd:schema elementFormDefault="qualified" targetNamespace="http://soap.sforce.com/2006/04/metadata">
+   <xsd:element name="readMetadata">
+    <xsd:complexType>
+     <xsd:sequence>
+      <xsd:element name="type" type="xsd:string"/>
+      <xsd:element name="fullNames" minOccurs="0" maxOccurs="unbounded" type="xsd:string"/>
+     </xsd:sequence>
+    </xsd:complexType>
+   </xsd:element>
+   <xsd:element name="readMetadataResponse">
+    <xsd:complexType>
+     <xsd:sequence>
+      <xsd:element name="result" type="tns:ReadResult"/>
+     </xsd:sequence>
+    </xsd:complexType>
+   </xsd:element>
+   <xsd:complexType name="Metadata">
+    <xsd:sequence>
+     <xsd:element name="fullName" minOccurs="0" type="xsd:string"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="ReadResult">
+    <xsd:sequence>
+     <xsd:element name="records" minOccurs="0" maxOccurs="unbounded" type="tns:Metadata"/>
+    </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="CustomObject">
+    <xsd:complexContent>
+     <xsd:extension base="tns:Metadata">
+      <xsd:sequence>
+       <xsd:element name="businessProcesses" minOccurs="0" maxOccurs="unbounded" type="tns:BusinessProcess"/>
+       <xsd:element name="enableFeeds" minOccurs="0" type="xsd:boolean"/>
+       <xsd:element name="enableHistory" minOccurs="0" type="xsd:boolean"/>
+      </xsd:sequence>
+     </xsd:extension>
+    </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="BusinessProcess">
+    <xsd:complexContent>
+     <xsd:extension base="tns:Metadata">
+      <xsd:sequence>
+       <xsd:element name="description" minOccurs="0" type="xsd:string"/>
+       <xsd:element name="isActive" minOccurs="0" type="xsd:boolean"/>
+       <xsd:element name="values" minOccurs="0" maxOccurs="unbounded" type="tns:PicklistValue"/>
+      </xsd:sequence>
+     </xsd:extension>
+    </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:simpleType name="ForecastCategories">
+    <xsd:restriction base="xsd:string">
+     <xsd:enumeration value="Omitted"/>
+     <xsd:enumeration value="Pipeline"/>
+     <xsd:enumeration value="BestCase"/>
+     <xsd:enumeration value="Forecast"/>
+     <xsd:enumeration value="Closed"/>
+    </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:complexType name="PicklistValue">
+    <xsd:complexContent>
+     <xsd:extension base="tns:Metadata">
+      <xsd:sequence>
+       <xsd:element name="allowEmail" minOccurs="0" type="xsd:boolean"/>
+       <xsd:element name="closed" minOccurs="0" type="xsd:boolean"/>
+       <xsd:element name="color" minOccurs="0" type="xsd:string"/>
+       <xsd:element name="controllingFieldValues" minOccurs="0" maxOccurs="unbounded" type="xsd:string"/>
+       <xsd:element name="converted" minOccurs="0" type="xsd:boolean"/>
+       <xsd:element name="cssExposed" minOccurs="0" type="xsd:boolean"/>
+       <xsd:element name="default" type="xsd:boolean"/>
+       <xsd:element name="description" minOccurs="0" type="xsd:string"/>
+       <xsd:element name="forecastCategory" minOccurs="0" type="tns:ForecastCategories"/>
+       <xsd:element name="highPriority" minOccurs="0" type="xsd:boolean"/>
+       <xsd:element name="probability" minOccurs="0" type="xsd:int"/>
+       <xsd:element name="reverseRole" minOccurs="0" type="xsd:string"/>
+       <xsd:element name="reviewed" minOccurs="0" type="xsd:boolean"/>
+       <xsd:element name="won" minOccurs="0" type="xsd:boolean"/>
+      </xsd:sequence>
+     </xsd:extension>
+    </xsd:complexContent>
+   </xsd:complexType>
+  </xsd:schema>
+ </types>
+ <message name="readMetadataResponse">
+  <part element="tns:readMetadataResponse" name="parameters"/>
+ </message>
+ <message name="Header">
+  <part name="CallOptions" element="tns:CallOptions"/>
+  <part name="DebuggingHeader" element="tns:DebuggingHeader"/>
+  <part name="DebuggingInfo" element="tns:DebuggingInfo"/>
+  <part name="SessionHeader" element="tns:SessionHeader"/>
+ </message>
+ <message name="readMetadataRequest">
+  <part element="tns:readMetadata" name="parameters"/>
+ </message>
+ <portType name="MetadataPortType">
+  <operation name="readMetadata">
+   <documentation>Reads metadata entries synchronously.</documentation>
+   <input message="tns:readMetadataRequest"/>
+   <output message="tns:readMetadataResponse"/>
+  </operation>
+ </portType>
+ <binding name="MetadataBinding" type="tns:MetadataPortType">
+  <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+  <operation name="readMetadata">
+   <soap:operation soapAction=""/>
+   <input>
+    <soap:header use="literal" part="SessionHeader" message="tns:Header"/>
+    <soap:header use="literal" part="CallOptions" message="tns:Header"/>
+    <soap:body use="literal" parts="parameters"/>
+   </input>
+   <output>
+    <soap:body use="literal"/>
+   </output>
+  </operation>
+ </binding>
+ <service name="MetadataService">
+  <documentation>Manage your Salesforce.com metadata</documentation>
+  <port binding="tns:MetadataBinding" name="Metadata">
+   <soap:address location="https://na24.salesforce.com/services/Soap/m/33.0"/>
+  </port>
+ </service>
+</definitions>
