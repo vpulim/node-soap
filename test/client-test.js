@@ -42,6 +42,33 @@ describe('SOAP Client', function() {
     assert(!called);
   });
 
+  it('should allow customization of httpClient', function(done) {
+    var myHttpClient =  {
+      request: function() {}
+    };
+    soap.createClient(__dirname + '/wsdl/default_namespace.wsdl',
+      {httpClient: myHttpClient},
+      function(err, client) {
+        assert.ok(client);
+        assert.ok(!err);
+        assert.equal(client.httpClient, myHttpClient);
+        done();
+      });
+  });
+
+  it('should allow customization of request for http client', function(done) {
+    var myRequest = function() {
+    };
+    soap.createClient(__dirname + '/wsdl/default_namespace.wsdl',
+      {request: myRequest},
+      function(err, client) {
+        assert.ok(client);
+        assert.ok(!err);
+        assert.equal(client.httpClient._request, myRequest);
+        done();
+      });
+  });
+
   it('should set binding style to "document" by default if not explicitly set in WSDL, per SOAP spec', function (done) {
     soap.createClient(__dirname+'/wsdl/binding_document.wsdl', function(err, client) {
       assert.ok(client);
