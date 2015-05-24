@@ -28,12 +28,7 @@
   "keywords": [
     "soap"
   ],
-  "licenses": [
-    {
-      "type": "MIT License",
-      "url": "http://www.opensource.org/licenses/mit-license.php"
-    }
-  ],
+  "license": "MIT",
   "devDependencies": {
     "mocha": "~1.17.0",
     "jshint": "2.3.0",
