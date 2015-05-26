@@ -6,6 +6,16 @@ var fs = require('fs'),
     request = require('request'),
     http = require('http');
 
+var fault = {
+  Fault: {
+    Code: {
+      Value: "soap:Sender",
+      Subcode: { value: "rpc:BadArguments" }
+    },
+    Reason: { Text: "Processing Error" }
+  }
+};
+ 
 var test = {};
 test.server = null;
 test.service = {
@@ -17,15 +27,17 @@ test.service = {
         if (args.tickerSymbol === 'trigger error') {
           throw new Error('triggered server error');
         } else if (args.tickerSymbol === 'SOAP Fault') {
-          throw {
-            Fault: {
-              Code: {
-                Value: "soap:Sender",
-                Subcode: { value: "rpc:BadArguments" }
-              },
-              Reason: { Text: "Processing Error" }
-            }
-          };
+          throw fault;
+        } else if (args.tickerSymbol === 'SOAP Fault 500') {
+          cb(null, fault, 500);
+        } else if (args.tickerSymbol === 'SOAP Fault Async') {
+          setTimeout(function() {
+            cb(null, fault);
+          }, 0);
+        } else if (args.tickerSymbol === 'SOAP Fault Async 500') {
+          setTimeout(function() {
+            cb(null, fault, 500);
+          }, 0);
         } else {
           return { price: 19.56 };
         }
@@ -150,11 +162,13 @@ describe('SOAP Server', function() {
   it('should emit \'request\' event', function(done) {
     test.soapServer.on('request', function requestManager(request, methodName) {
       assert.equal(methodName, 'GetLastTradePrice');
-      done();
     });
     soap.createClient(test.baseUrl + '/stockquote?wsdl', function(err, client) {
       assert.ok(!err);
-      client.GetLastTradePrice({ tickerSymbol: 'AAPL'}, function() {});
+      client.GetLastTradePrice({ tickerSymbol: 'AAPL'}, function() {
+        assert.ok(!err);
+        done();
+      });
     });
   });
 
@@ -204,6 +218,49 @@ describe('SOAP Server', function() {
       assert.ok(!err);
       client.GetLastTradePrice({ tickerSymbol: 'SOAP Fault' }, function(err, response, body) {
         assert.ok(err);
+        assert.equal(err.response.statusCode, 200);
+        var fault = err.root.Envelope.Body.Fault;
+        assert.equal(fault.Code.Value, "soap:Sender");
+        assert.equal(fault.Reason.Text, "Processing Error");
+        done();
+      });
+    });
+  });
+
+  it('should return SOAP Fault body with 500 statusCode', function(done) {
+    soap.createClient(test.baseUrl + '/stockquote?wsdl', function(err, client) {
+      assert.ok(!err);
+      client.GetLastTradePrice({ tickerSymbol: 'SOAP Fault 500' }, function(err, response, body) {
+        assert.ok(err);
+        assert.equal(err.response.statusCode, 500);
+        var fault = err.root.Envelope.Body.Fault;
+        assert.equal(fault.Code.Value, "soap:Sender");
+        assert.equal(fault.Reason.Text, "Processing Error");
+        done();
+      });
+    });
+  });
+
+  it('should return SOAP Fault body from async call', function(done) {
+    soap.createClient(test.baseUrl + '/stockquote?wsdl', function(err, client) {
+      assert.ok(!err);
+      client.GetLastTradePrice({ tickerSymbol: 'SOAP Fault Async' }, function(err, response, body) {
+        assert.ok(err);
+        assert.equal(err.response.statusCode, 200);
+        var fault = err.root.Envelope.Body.Fault;
+        assert.equal(fault.Code.Value, "soap:Sender");
+        assert.equal(fault.Reason.Text, "Processing Error");
+        done();
+      });
+    });
+  });
+
+  it('should return SOAP Fault body from async call with 500 statusCode', function(done) {
+    soap.createClient(test.baseUrl + '/stockquote?wsdl', function(err, client) {
+      assert.ok(!err);
+      client.GetLastTradePrice({ tickerSymbol: 'SOAP Fault Async 500' }, function(err, response, body) {
+        assert.ok(err);
+        assert.equal(err.response.statusCode, 500);
         var fault = err.root.Envelope.Body.Fault;
         assert.equal(fault.Code.Value, "soap:Sender");
         assert.equal(fault.Reason.Text, "Processing Error");
@@ -214,15 +271,7 @@ describe('SOAP Server', function() {
 
   it('should return SOAP Fault thrown from \'headers\' event handler', function(done) {
     test.soapServer.on('headers', function headersManager() {
-      throw {
-        Fault: {
-          Code: {
-            Value: "soap:Sender",
-            Subcode: { value: "rpc:BadArguments" }
-          },
-          Reason: { Text: "Processing Error" }
-        }
-      };
+      throw fault;
     });
     soap.createClient(test.baseUrl + '/stockquote?wsdl', function(err, client) {
       client.addSoapHeader('<SomeToken>0.0</SomeToken>');
