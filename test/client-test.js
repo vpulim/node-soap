@@ -521,4 +521,76 @@ describe('SOAP Client', function() {
     });
 
   });
+
+  describe('xmlTransform', function () {
+    var server = null;
+    var hostname = '127.0.0.1';
+    var port = 15099;
+    var baseUrl = 'http://' + hostname + ":" + port;
+
+    before(function(done) {
+      server = http.createServer(function (req, res) {
+        res.statusCode = 200;
+        fs.createReadStream(__dirname + '/soap-failure.xml').pipe(res);
+      }).listen(port, hostname, done);
+    });
+
+    after(function(done) {
+      server.close();
+      server = null;
+      done();
+    });
+
+    it('Should be executed if defined', function (done) {
+      var xmlTransformHasBeenCalled = false;
+      function _xmlTransformationCallback(xml) {
+        xmlTransformHasBeenCalled = true;
+        return xml;
+      }
+
+      soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', { xmlTransform: _xmlTransformationCallback }, function (err, client) {
+        var didEmitEvent = false;
+        client.on('request', function (xml) {
+          didEmitEvent = true;
+          assert.ok(xmlTransformHasBeenCalled);
+        });
+
+        client.MyOperation({}, function() {
+          assert.ok(didEmitEvent);
+          done();
+        });
+      }, baseUrl);
+    });
+
+    it('Should error if xmlTransform callback returns undefined', function (done) {
+      function _xmlTransformationCallback(xml) {
+        // do not return to trigger error
+      }
+
+      soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', { xmlTransform: _xmlTransformationCallback }, function (err, client) {
+
+        client.MyOperation({}, function(err) {
+          assert.ok(err);
+          assert.deepEqual(err, new Error('xmlTransform returned undefined, please return the transformed XML'));
+          done();
+        });
+      }, baseUrl);
+    });
+
+    it('Should error if xmlTransform callback returns a non-string value', function (done) {
+      function _xmlTransformationCallback(xml) {
+        return 1;
+      }
+
+      soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', { xmlTransform: _xmlTransformationCallback }, function (err, client) {
+
+        client.MyOperation({}, function(err) {
+          assert.ok(err);
+          assert.deepEqual(err, new Error('xmlTransform returned a non-string value, please return the transformed XML'));
+          done();
+        });
+      }, baseUrl);
+    });
+
+  });
 });
