@@ -1,19 +1,51 @@
+0.9.1 / 2015-05-30
+=================
+* [FIX] Received empty Strings are now returned as empty String rather than an empty Object. (#637)
+
+* [FIX] Get current namespace when parent namespace is an empty String. Fixes #533. (#661)
+
+* [DOC] Update README.md with  documentation for #660 introduced customization of `httpClient` and `request` libs in `client.options`. (#664)
+
+* [FIX] Take configured "ignored namespaces" into account when processing `objectToXml()`. Fixes #537. (#662)
+
+* [LIC] Update license attribute to follow the new [npm conventions](https://docs.npmjs.com/files/package.json#license). (#663)
+
+* [ENHANCEMENT] Add ability to customize `http` client / `request` lib on client creation. (#660)
+
+* [FIX] Support `xsi:type` Schema on Element. Fixes #606. (#639)
+
+* [FIX] Make parsing of recursive Elements in `wsdl` work. (#658)
+
 0.9.0 / 2015-05-18
 =================
 * [FIX] Fix to allow request options and headers to persist for all includes. Fix to properly handle when an import/include starts with a schema element. (#608)
+
 * [FIX] Do not end request for keep-alive connections (#600)
+
 * [ENHANCEMENT] Added Client 'response' event (#610)
+
 * [FIX] If response is json, then error should not be thrown. Fix issue #580 (#581)
+
 * [FIX] Sub-namespace should be correct regardless of order of enumeration i.e. should not be overriden by other prop's namespace (#607)
+
 * [DOC] Added a section about Server Events to README.md (#596)
+
 * [ENHANCEMENT] Added Server 'request' event (#595)
+
 * [ENHANCEMENT] Add support for One-Way Operations (#590)
+
 * [FIX] `lib/wsdl.js` util function `extend()` doesn't throw an Error when handling elements that are not objects. (#589)
+
 * [ENHANCEMENT] ClientSSLSecurity now accepts a `ca`-certificate. (#588)
+
 * [ENHANCEMENT] ClientSSLSecurity should be able to take a Buffer as `key` and `cert` parameter. Additionally the certificates are checked whether they are correct or not (starting with `-----BEGIN`). (#586)
+
 * [ENHANCEMENT] Add support for sending NULL values (#578)
+
 * [ENHANCEMENT] Follow 302 redirects, don't mix quotes (#577)
+
 * [DOC] Update CONTRIBUTING.md
+
 * [FIX] Respond with security timestamp if request had one (#579)
 
 
