@@ -1,6 +1,6 @@
 {
   "name": "busbud-soap",
-  "version": "0.4.2-exp.1",
+  "version": "0.4.2-busbud",
   "description": "A minimal node SOAP client",
   "engines": {
     "node": ">=0.8.0"
