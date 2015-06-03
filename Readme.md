@@ -40,6 +40,9 @@ The `options` argument allows you to customize the client with the following pro
 - endpoint: to override the SOAP service's host specified in the `.wsdl` file.
 - request: to override the [request](https://github.com/request/request) module.
 - httpClient: to provide your own http client that implements `request(rurl, data, callback, exheaders, exoptions)`.
+- xmlTransform: to perform custom editing of the request XML **before** is sent to the server. You can specify a function that implements`function (xml)`. This function will be executed just before the request XML is sent to the server and let you perform arbitrary modification to the XML string ( using string modification functions like RegExp or similar ).  
+`xml` argument is the XML request _string_.  
+The xmlTransform function specified **must** returns the transformed XML string.
 
 ### soap.listen(*server*, *path*, *services*, *wsdl*) - create a new SOAP server that listens on *path* and provides *services*.
 *wsdl* is an xml string that defines the service.
