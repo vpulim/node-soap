@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   <soapenv:Body>
+      <RetrieveServiceContentResponse xmlns="urn:vim25">
+         <returnval>
+            <rootFolder type="Folder">ha-folder-root</rootFolder>
+            <propertyCollector type="PropertyCollector">ha-property-collector</propertyCollector>
+            <viewManager type="ViewManager">ViewManager</viewManager>
+            <about>
+               <name>VMware ESXi</name>
+               <fullName>VMware ESXi 5.5.0 build-2456374</fullName>
+               <vendor>VMware, Inc.</vendor>
+               <version>5.5.0</version>
+               <build>2456374</build>
+               <localeVersion>INTL</localeVersion>
+               <localeBuild>000</localeBuild>
+               <osType>vmnix-x86</osType>
+               <productLineId>embeddedEsx</productLineId>
+               <apiType>HostAgent</apiType>
+               <apiVersion>5.5</apiVersion>
+               <licenseProductName>VMware ESX Server</licenseProductName>
+               <licenseProductVersion>5.0</licenseProductVersion>
+            </about>
+            <setting type="OptionManager">HostAgentSettings</setting>
+            <userDirectory type="UserDirectory">ha-user-directory</userDirectory>
+            <sessionManager type="SessionManager">ha-sessionmgr</sessionManager>
+            <authorizationManager type="AuthorizationManager">ha-authmgr</authorizationManager>
+            <serviceManager type="ServiceManager">ha-servicemanager</serviceManager>
+            <perfManager type="PerformanceManager">ha-perfmgr</perfManager>
+            <eventManager type="EventManager">ha-eventmgr</eventManager>
+            <taskManager type="TaskManager">ha-taskmgr</taskManager>
+            <accountManager type="HostLocalAccountManager">ha-localacctmgr</accountManager>
+            <diagnosticManager type="DiagnosticManager">ha-diagnosticmgr</diagnosticManager>
+            <licenseManager type="LicenseManager">ha-license-manager</licenseManager>
+            <searchIndex type="SearchIndex">ha-searchindex</searchIndex>
+            <fileManager type="FileManager">ha-nfc-file-manager</fileManager>
+            <datastoreNamespaceManager type="DatastoreNamespaceManager">ha-datastore-namespace-manager</datastoreNamespaceManager>
+            <virtualDiskManager type="VirtualDiskManager">ha-vdiskmanager</virtualDiskManager>
+            <ovfManager type="OvfManager">ha-ovf-manager</ovfManager>
+            <dvSwitchManager type="DistributedVirtualSwitchManager">ha-dvsmanager</dvSwitchManager>
+            <localizationManager type="LocalizationManager">ha-l10n-manager</localizationManager>
+            <storageResourceManager type="StorageResourceManager">ha-storage-resource-manager</storageResourceManager>
+            <guestOperationsManager type="GuestOperationsManager">ha-guest-operations-manager</guestOperationsManager>
+         </returnval>
+      </RetrieveServiceContentResponse>
+   </soapenv:Body>
+</soapenv:Envelope>
