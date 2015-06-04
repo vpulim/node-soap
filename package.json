@@ -23,7 +23,7 @@
   },
   "scripts": {
     "pretest": "jshint index.js lib test",
-    "test": "mocha --timeout 5000 test/*-test.js test/security/*.js"
+    "test": "mocha test/*-test.js test/security/*.js"
   },
   "keywords": [
     "soap"
