@@ -516,4 +516,34 @@ describe('SOAP Client', function() {
     });
 
   });
+
+  it('should return error in the call when Fault was returned', function(done) {
+    var server = null;
+    var hostname = '127.0.0.1';
+    var port = 15099;
+    var baseUrl = 'http://' + hostname + ':' + port;
+
+    server = http.createServer(function (req, res) {
+      res.statusCode = 200;
+      res.write("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?><SOAP-ENV:Envelope SOAP-ENV:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"\n  xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\"\n  xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"\n  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n  xmlns:SOAP-ENC=\"http://schemas.xmlsoap.org/soap/encoding/\">\n<SOAP-ENV:Body><SOAP-ENV:Fault><faultcode xsi:type=\"xsd:string\">Test</faultcode><faultactor xsi:type=\"xsd:string\"></faultactor><faultstring xsi:type=\"xsd:string\">test error</faultstring><detail xsi:type=\"xsd:string\">test detail</detail></SOAP-ENV:Fault></SOAP-ENV:Body></SOAP-ENV:Envelope>");
+      res.end();
+    }).listen(port, hostname, function() {
+      soap.createClient(__dirname+'/wsdl/json_response.wsdl', function(err, client) {
+        assert.ok(client);
+        assert.ok(!err);
+
+        client.MyOperation({}, function(err, result, body) {
+          server.close();
+          server = null;
+          assert.ok(err);
+          assert.strictEqual(err.message, 'Test: test error: test detail');
+          assert.ok(result);
+          assert.ok(body);
+          done();
+        });
+      }, baseUrl);
+    });
+
+  });
+
 });
