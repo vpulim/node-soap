@@ -18,7 +18,7 @@ test.service = {
           throw new Error('triggered server error');
         } else if (args.tickerSymbol === 'Async') {
           return cb({ price: 19.56 });
-        } else if (args.tickerSymbol === 'SOAP Fault') {
+        } else if (args.tickerSymbol === 'SOAP Fault v1.2') {
           throw {
             Fault: {
               Code: {
@@ -26,6 +26,13 @@ test.service = {
                 Subcode: { value: "rpc:BadArguments" }
               },
               Reason: { Text: "Processing Error" }
+            }
+          };
+        } else if (args.tickerSymbol === 'SOAP Fault v1.1') {
+          throw {
+            Fault: {
+              faultcode: "soap:Client.BadArguments",
+              faultstring: "Error while processing arguments"
             }
           };
         } else {
@@ -259,14 +266,37 @@ describe('SOAP Server', function() {
     });
   });
 
-  it('should return SOAP Fault body', function(done) {
+  it('should return SOAP Fault body for SOAP 1.2', function(done) {
     soap.createClient(test.baseUrl + '/stockquote?wsdl', function(err, client) {
       assert.ok(!err);
-      client.GetLastTradePrice({ tickerSymbol: 'SOAP Fault' }, function(err, response, body) {
+      client.GetLastTradePrice({ tickerSymbol: 'SOAP Fault v1.2' }, function(err, response, body) {
         assert.ok(err);
         var fault = err.root.Envelope.Body.Fault;
         assert.equal(fault.Code.Value, "soap:Sender");
         assert.equal(fault.Reason.Text, "Processing Error");
+        // Verify namespace on elements set according to fault spec 1.2
+        assert.ok(body.match(/<soap:Code>.*<\/soap:Code>/g),
+          "Body should contain Code-element with namespace");
+        assert.ok(body.match(/<soap:Reason>.*<\/soap:Reason>/g),
+          "Body should contain Reason-element with namespace");
+        done();
+      });
+    });
+  });
+
+  it('should return SOAP Fault body for SOAP 1.1', function(done) {
+    soap.createClient(test.baseUrl + '/stockquote?wsdl', function(err, client) {
+      assert.ok(!err);
+      client.GetLastTradePrice({ tickerSymbol: 'SOAP Fault v1.1' }, function(err, response, body) {
+        assert.ok(err);
+        var fault = err.root.Envelope.Body.Fault;
+        assert.equal(fault.faultcode, "soap:Client.BadArguments");
+        assert.equal(fault.faultstring, "Error while processing arguments");
+        // Verify namespace on elements set according to fault spec 1.1
+        assert.ok(body.match(/<faultcode>.*<\/faultcode>/g),
+          "Body should contain faultcode-element without namespace");
+        assert.ok(body.match(/<faultstring>.*<\/faultstring>/g),
+          "Body should contain faultstring-element without namespace");
         done();
       });
     });
