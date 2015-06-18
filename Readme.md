@@ -16,7 +16,7 @@ This module lets you connect to web services using SOAP.  It also provides a ser
 Install with [npm](http://github.com/isaacs/npm):
 
 ```
-  npm install soap
+  npm install soap-reqpath
 ```
 ## Module
 
