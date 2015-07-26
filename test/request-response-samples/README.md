@@ -18,3 +18,6 @@ Follow this process to add samples:
   * `response.json` - This is the expected JSON from parsing the response XML
   * `error_response.json` - This is the expected JSON root attached to the error object when a fault occurs  
   * `soap.wsdl` - This is the WSDL that defines the operation and messages
+  
+3. Optional:
+  * `wsdl_data.json` - This is the options to create the request, follow the instructions at: "https://github.com/vpulim/node-soap"
