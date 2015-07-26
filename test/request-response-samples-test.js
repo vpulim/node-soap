@@ -119,7 +119,7 @@ function generateTest(name, methodName, wsdlPath, headerJSON, securityJSON, requ
           }
         }
         done();
-      }, options);
+      });
     }, 'http://localhost:'+port+'/Message/Message.dll?Handler=Default');
   };
 }
