@@ -33,6 +33,53 @@ Install with [npm](http://github.com/isaacs/npm):
   });
 ```
 
+Sample result:
+
+``` javascript
+{
+    "statusCode": 200,
+    "body": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"><soap:Body></soap:Body></soap:Envelope>",
+    "headers": {
+        "date": "Tue, 28 Jul 2015 11:57:12 GMT",
+        "server": "Apache-Coyote/1.1",
+        "x-powered-by": "Servlet/3.0; JBossAS-6",
+        "access-control-allow-origin": "*",
+        "content-type": "text/xml;charset=UTF-8",
+        "content-length": "485",
+        "vary": "Accept-Encoding",
+        "connection": "close"
+    },
+    "request": {
+        "uri": {
+            "protocol": "https:",
+            "slashes": true,
+            "auth": null,
+            "host": "www.service.tld",
+            "port": 443,
+            "hostname": "www.service.tld",
+            "hash": null,
+            "search": null,
+            "query": null,
+            "pathname": "/ws/Service",
+            "path": "/ws/Service",
+            "href": "https://www.service.tld/ws/Service"
+        },
+        "method": "POST",
+        "headers": {
+            "User-Agent": "node-soap/0.8.0",
+            "Accept": "text/html,application/xhtml+xml,application/xml,text/xml;q=0.9,*/*;q=0.8",
+            "Accept-Encoding": "none",
+            "Accept-Charset": "utf-8",
+            "Connection": "close",
+            "Host": "www.service.tld",
+            "Content-Length": 0,
+            "Content-Type": "text/xml; charset=utf-8",
+            "SOAPAction": "\"\""
+        }
+    }
+}
+```
+
 #### Options
 
 The `options` argument allows you to customize the client with the following properties:
