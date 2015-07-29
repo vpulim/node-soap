@@ -1,6 +1,6 @@
 {
   "name": "soap-passwordtext",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A freezed node-soap v0.9.1 with PR #691 accepted. This package is for personal proposes only.",
   "engines": {
     "node": ">=0.8.0"
