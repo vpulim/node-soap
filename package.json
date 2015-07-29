@@ -1,11 +1,11 @@
 {
-  "name": "soap",
-  "version": "0.9.1",
-  "description": "A minimal node SOAP client",
+  "name": "soap-passwordtext",
+  "version": "0.0.1",
+  "description": "A freezed node-soap v0.9.1 with PR #691 accepted. This package is for personal proposes only.",
   "engines": {
     "node": ">=0.8.0"
   },
-  "author": "Vinay Pulim <v@pulim.com>",
+  "author": "J. Félix Ontañón <felixonta@gmail.com>",
   "dependencies": {
     "debug": "~0.7.4",
     "lodash": "~2.4.1",
@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/milewise/node-soap.git"
+    "url": "https://github.com/fontanon/node-soap.git"
   },
   "main": "./index.js",
   "directories": {
