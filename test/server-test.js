@@ -16,6 +16,8 @@ test.service = {
           return { price: soapHeader.SomeToken };
         if (args.tickerSymbol === 'trigger error') {
           throw new Error('triggered server error');
+        } else if (args.tickerSymbol === 'Async') {
+          return cb({ price: 19.56 });
         } else if (args.tickerSymbol === 'SOAP Fault') {
           throw {
             Fault: {
@@ -32,6 +34,30 @@ test.service = {
       },
 
       SetTradePrice: function(args, cb, soapHeader) {
+      },
+
+      IsValidPrice: function(args, cb, soapHeader) {
+        var validationError = {
+          Fault: {
+            Code: {
+              Value: "soap:Sender",
+              Subcode: { value: "rpc:BadArguments" }
+            },
+            Reason: { Text: "Processing Error" }
+          }
+        };
+
+        var isValidPrice = function() {
+          var price = args.price;
+          if(isNaN(price) || (price === ' '))
+            return cb(validationError);
+
+          price = parseInt(price, 10);
+          var validPrice = (price > 0 && price < Math.pow(10, 5));
+          return cb(null, { valid: validPrice });
+        };
+
+        setTimeout(isValidPrice, 10);
       }
     }
   }
@@ -57,7 +83,7 @@ describe('SOAP Server', function() {
       test.baseUrl =
         'http://' + test.server.address().address + ":" + test.server.address().port;
 
-      //windows return 0.0.0.0 as address and that is not 
+      //windows return 0.0.0.0 as address and that is not
       //valid to use in a request
       if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
         test.baseUrl =
@@ -118,6 +144,40 @@ describe('SOAP Server', function() {
       client.GetLastTradePrice({ tickerSymbol: 'AAPL'}, function(err, result) {
         assert.ok(!err);
         assert.equal(19.56, parseFloat(result.price));
+        done();
+      });
+    });
+  });
+
+  it('should return correct async results (single argument callback style)', function(done) {
+    soap.createClient(test.baseUrl + '/stockquote?wsdl', function(err, client) {
+      assert.ok(!err);
+      client.GetLastTradePrice({ tickerSymbol: 'Async'}, function(err, result) {
+        assert.ok(!err);
+        assert.equal(19.56, parseFloat(result.price));
+        done();
+      });
+    });
+  });
+
+
+  it('should return correct async results (double argument callback style)', function(done) {
+    soap.createClient(test.baseUrl + '/stockquote?wsdl', function(err, client) {
+      assert.ok(!err);
+      client.IsValidPrice({ price: 50000 }, function(err, result) {
+        assert.ok(!err);
+        assert.equal(true, !!(result.valid));
+        done();
+      });
+    });
+  });
+
+  it('should return correct async errors', function(done) {
+    soap.createClient(test.baseUrl + '/stockquote?wsdl', function(err, client) {
+      assert.ok(!err);
+      client.IsValidPrice({ price: "invalid_price"}, function(err, result) {
+        assert.ok(err);
+        assert.ok(err.root.Envelope.Body.Fault);
         done();
       });
     });

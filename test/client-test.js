@@ -42,6 +42,33 @@ describe('SOAP Client', function() {
     assert(!called);
   });
 
+  it('should allow customization of httpClient', function(done) {
+    var myHttpClient =  {
+      request: function() {}
+    };
+    soap.createClient(__dirname + '/wsdl/default_namespace.wsdl',
+      {httpClient: myHttpClient},
+      function(err, client) {
+        assert.ok(client);
+        assert.ok(!err);
+        assert.equal(client.httpClient, myHttpClient);
+        done();
+      });
+  });
+
+  it('should allow customization of request for http client', function(done) {
+    var myRequest = function() {
+    };
+    soap.createClient(__dirname + '/wsdl/default_namespace.wsdl',
+      {request: myRequest},
+      function(err, client) {
+        assert.ok(client);
+        assert.ok(!err);
+        assert.equal(client.httpClient._request, myRequest);
+        done();
+      });
+  });
+
   it('should set binding style to "document" by default if not explicitly set in WSDL, per SOAP spec', function (done) {
     soap.createClient(__dirname+'/wsdl/binding_document.wsdl', function(err, client) {
       assert.ok(client);
@@ -261,12 +288,14 @@ describe('SOAP Client', function() {
         client.MyOperation(data, function(err, result) {
           assert.ok(client.lastRequest);
           assert.ok(client.lastMessage);
+          assert.ok(client.lastEndpoint);
           assert.equal(client.lastMessage, message);
 
           delete data.attributes.xsi_type.namespace;
           client.MyOperation(data, function(err, result) {
             assert.ok(client.lastRequest);
             assert.ok(client.lastMessage);
+            assert.ok(client.lastEndpoint);
             assert.equal(client.lastMessage, message);
 
             done();
@@ -363,6 +392,38 @@ describe('SOAP Client', function() {
           assert.ok(err);
         });
         client.MyOperation({}, function(err, result) {
+          done();
+        });
+      }, baseUrl);
+    });
+  });
+
+  describe('Handle HTML answer from non-SOAP server', function() {
+    var server = null;
+    var hostname = '127.0.0.1';
+    var port = 15099;
+    var baseUrl = 'http://' + hostname + ':' + port;
+
+    before(function(done) {
+      server = http.createServer(function (req, res) {
+        res.statusCode = 200;
+        res.write('<html><body></body></html>', 'utf8');
+        res.end();
+      }).listen(port, hostname, done);
+    });
+
+    after(function(done) {
+      server.close();
+      server = null;
+      done();
+    });
+
+    it('should return an error', function (done) {
+      soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', function (err, client) {
+        client.MyOperation({}, function(err, result) {
+          assert.ok(err);
+          assert.ok(err.response);
+          assert.ok(err.body);
           done();
         });
       }, baseUrl);

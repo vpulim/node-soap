@@ -53,8 +53,23 @@ wsdlStrictTests['should catch parse error'] = function(done) {
 wsdlStrictTests['should parse external wsdl'] = function(done) {
   soap.createClient(__dirname+'/wsdl/wsdlImport/main.wsdl', {strict: true}, function(err, client){
     assert.ok(!err);
+    assert.deepEqual(Object.keys(client.wsdl.definitions.schemas),
+      ['http://example.com/', 'http://schemas.microsoft.com/2003/10/Serialization/Arrays']);
     assert.equal(typeof client.getLatestVersion, 'function');
     done();
+  });
+};
+
+wsdlStrictTests['should get the parent namespace when parent namespace is empty string'] = function(done) {
+  soap.createClient(__dirname+'/wsdl/marketo.wsdl', {strict: true}, function(err, client){
+    assert.ok(!err);
+    client.getLeadChanges({
+        batchSize: 1,
+        startPosition: {activityCreatedAt: '2014-04-14T22:03:48.587Z'},
+        activityNameFilter: {stringItem: ['Send Email']}
+      }, function() {
+        done();
+      });
   });
 };
 

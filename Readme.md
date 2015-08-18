@@ -33,7 +33,13 @@ Install with [npm](http://github.com/isaacs/npm):
   });
 ```
 
-Within the options object you may provide an `endpoint` property in case you want to override the SOAP service's host specified in the `.wsdl` file.
+#### Options
+
+The `options` argument allows you to customize the client with the following properties:
+
+- endpoint: to override the SOAP service's host specified in the `.wsdl` file.
+- request: to override the [request](https://github.com/request/request) module.
+- httpClient: to provide your own http client that implements `request(rurl, data, callback, exheaders, exoptions)`.
 
 ### soap.listen(*server*, *path*, *services*, *wsdl*) - create a new SOAP server that listens on *path* and provides *services*.
 *wsdl* is an xml string that defines the service.

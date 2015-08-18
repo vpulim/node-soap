@@ -9,7 +9,7 @@
 
     <types>
       <xsd:schema>
-        <xsd:import namespace="http://web.strongkeylite.strongauth.com/" schemaLocation="https://sa.dev.recurly.net:443/strongkeyliteWAR/EncryptionService?xsd=1"></xsd:import>
+        <xsd:import namespace="http://web.strongkeylite.strongauth.com/" schemaLocation="http://localhost:1?xsd=1"></xsd:import>
       </xsd:schema>
     </types>
 
