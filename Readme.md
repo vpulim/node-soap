@@ -81,9 +81,9 @@ The `options` argument allows you to customize the client with the following pro
   soap.listen(server, '/wsdl', myService, xml);
 ```
 
-### server logging
+### Server Logging
 
-If the log method is defined it will be called with 'received' and 'replied'
+If the `log` method is defined it will be called with 'received' and 'replied'
 along with data.
 
 ``` javascript
@@ -153,9 +153,9 @@ First parameter is the Headers object;
 second parameter is the name of the SOAP method that will called
 (in case you need to handle the headers differently based on the method).
 
-### server security example using PasswordDigest
+### Server security example using PasswordDigest
 
-If server.authenticate is not defined no authentation will take place.
+If `server.authenticate` is not defined then no authentication will take place.
 
 ``` javascript
   server = soap.listen(...)
@@ -167,10 +167,10 @@ If server.authenticate is not defined no authentation will take place.
   };
 ```
 
-### server connection authorization
+### Server connection authorization
 
-This is called prior to soap service method
-If the method is defined and returns false the incoming connection is
+The `server.authorizeConnection` method is called prior to the soap service method.
+If the method is defined and returns `false` then the incoming connection is
 terminated.
 
 ``` javascript
@@ -183,7 +183,7 @@ terminated.
 
 ## Client
 
-An instance of Client is passed to the soap.createClient callback.  It is used to execute methods on the soap service.
+An instance of `Client` is passed to the `soap.createClient` callback.  It is used to execute methods on the soap service.
 
 ### Client.describe() - description of services, ports and methods as a JavaScript object
 
@@ -205,8 +205,8 @@ An instance of Client is passed to the soap.createClient callback.  It is used t
 ### Client.setSecurity(security) - use the specified security protocol
 `node-soap` has several default security protocols.  You can easily add your own
 as well.  The interface is quite simple.  Each protocol defines 2 methods:
-* addOptions - a method that accepts an options arg that is eventually passed directly to `request`
-* toXML - a method that reurns a string of XML.
+* `addOptions` - a method that accepts an options arg that is eventually passed directly to `request`
+* `toXML` - a method that returns a string of XML.
 
 By default there are 3 protocols:
 
@@ -219,9 +219,9 @@ By default there are 3 protocols:
 ####ClientSSLSecurity
 _Note_: If you run into issues using this protocol, consider passing these options
 as default request options to the constructor:
-* rejectUnauthorized: false
-* strictSSL: false
-* secureOptions: constants.SSL_OP_NO_TLSv1_2//this is likely needed for node >= 10.0
+* `rejectUnauthorized: false`
+* `strictSSL: false`
+* `secureOptions: constants.SSL_OP_NO_TLSv1_2` (this is likely needed for node >= 10.0)
 
 ``` javascript
   client.setSecurity(new soap.ClientSSLSecurity(
