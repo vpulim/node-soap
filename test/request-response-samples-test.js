@@ -23,7 +23,8 @@ var requestContext = {
   requestHandler:function(req, res){
     var chunks = [];
     req.on('data', function(chunk){
-      chunks.push(chunk);
+      // ignore eol on sample files.
+      chunks.push(chunk.toString().replace(/\r?\n$/m, ''));
     });
     req.on('end', function(){
       if(!requestContext.expectedRequest)return res.end(requestContext.responseToSend);

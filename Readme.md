@@ -259,6 +259,16 @@ as default request options to the constructor:
       // result is a javascript object
   })
 ```
+###Overriding the namespace prefix
+`node-soap` is still working out some kinks regarding namespaces.  If you find that an element is given the wrong namespace prefix in the request body, you can add the prefix to it's name in the containing object.  I.E.:
+
+```javascript
+  client.MyService.MyPort.MyFunction({'ns1:name': 'value'}, function(err, result) {
+      // request body sent with `<ns1:name`, regardless of what the namespace should have been.
+  }, {timeout: 5000})
+```
+
+
 #### Options (optional)
  - Accepts any option that the request module accepts, see [here.](https://github.com/mikeal/request)
  - For example, you could set a timeout of 5 seconds on the request like this:
@@ -283,9 +293,9 @@ as default request options to the constructor:
 ### Client Events
 Client instances emit the following events:
 
-* request - Emitted before a request is sent. The event handler receives the 
+* request - Emitted before a request is sent. The event handler receives the
 entire Soap request (Envelope) including headers.
-* message - Emitted before a request is sent. The event handler receives the 
+* message - Emitted before a request is sent. The event handler receives the
 Soap body contents. Useful if you don't want to log /store Soap headers.
 * soapError - Emitted when an erroneous response is received.
   Useful if you want to globally log errors.
