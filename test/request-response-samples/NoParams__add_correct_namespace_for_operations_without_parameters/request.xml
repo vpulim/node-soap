@@ -1,0 +1,1 @@
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xmlns:wsdlns="http://tempuri.org/no-params/wsdl/" xmlns:typens="http://tempuri.org/no-params/type/" xmlns:stk="http://schemas.microsoft.com/soap-toolkit/wsdl-extension"><soap:Body><wsdlns:NoParams></wsdlns:NoParams></soap:Body></soap:Envelope>
