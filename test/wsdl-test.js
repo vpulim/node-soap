@@ -73,6 +73,22 @@ wsdlStrictTests['should get the parent namespace when parent namespace is empty 
   });
 };
 
+wsdlStrictTests['should handle element ref'] = function(done) {
+  var expectedMsg = '<ns1:fooRq xmlns:ns1="http://example.com/bar/xsd"' +
+    ' xmlns="http://example.com/bar/xsd"><bar1:paymentRq' +
+    ' xmlns:bar1="http://example.com/bar1/xsd">' +
+    '<bar1:bankSvcRq xmlns:bar1="http://example.com/bar1/xsd">' +
+    '<bar1:requestUID>001</bar1:requestUID></bar1:bankSvcRq>' +
+    '</bar1:paymentRq></ns1:fooRq>';
+  soap.createClient(__dirname + '/wsdl/elementref/foo.wsdl', {strict: true}, function(err, client) {
+    assert.ok(!err);
+    client.fooOp({paymentRq: {bankSvcRq: {requestUID: '001'}}}, function(err, result) {
+      assert.equal(client.lastMessage, expectedMsg);
+      done();
+    });
+  });
+};
+
 module.exports = {
   'WSDL Parser (strict)': wsdlStrictTests,
   'WSDL Parser (non-strict)': wsdlNonStrictTests
