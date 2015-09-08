@@ -1,3 +1,6 @@
+This is a freezed node-soap v0.9.1 with PR #691 accepted. This package is for personal proposes only.
+See [PR #691](https://github.com/vpulim/node-soap/pull/691) at node-soap's github for more details.
+
 # Soap [![NPM version][npm-image]][npm-url] [![Downloads][downloads-image]][npm-url] [![Build Status][travis-image]][travis-url]
 > A SOAP client and server for node.js.
 
