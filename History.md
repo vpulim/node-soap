@@ -1,3 +1,14 @@
+0.9.2 / 2015-09-08
+=================
+* [ENHANCEMENT] Add support for xsd element ref. (#700)
+* [MAINTENANCE] Moving travis build to containers.
+* [MAINTENANCE] Add request sample for an operation without any parameters. (#703)
+* [DOC] update spelling and formatting to clarify several sections of Readme. (#708)
+* [ENHANCEMENT] Add the correct namespace alias for operations without parameters by simply removing the special case where input.parts is empty. If special logic is wanted for this case, it should be contained in objectToRpcXML in any case. (#703)
+* [FIX] Fix a typo in WSDL#findChildParameterObject. (#686)
+* [FIX] Fixed SOAP Fault errors not being raised as errors. (#676)
+* [FIX] Use diffrent namespace styles for soap fault 1.1 and 1.2. (#674)
+
 0.9.1 / 2015-05-30
 =================
 * [FIX] Received empty Strings are now returned as empty String rather than an empty Object. (#637)
@@ -100,39 +111,39 @@ The `$xml` key is used to pass an `XML` Object to the request without adding a n
 
 0.6.0 / 2014-10-29
 =================
-* Enhancement: Adding bearer security type Exporting security type for usage.
-* Enhancement: The qualified elementFormQualified must be respected only when the current element is not a global element. The namespace attribute is only needed if it's not included in the xmlns.
-* Fix: Remove automatic port appending to "Host" header.
-* Fix: Avoid creating soap:Header container when there are no children.
-* Fix: Allowing a 'null' argument for WSDL methods that take no arguments.
-* Fix: Wrong initialization of xmlns array when handling rpc stype wsdl.
-* Fix: Fault handling.  err should be used less frequently now.
-* Fix: Added checking if there is input and output for operations under bindings section.
-* Fix: XSD conflict with same namespace.
+* [ENHANCEMENT] Adding bearer security type Exporting security type for usage.
+* [ENHANCEMENT] The qualified elementFormQualified must be respected only when the current element is not a global element. The namespace attribute is only needed if it's not included in the xmlns.
+* [FIX] Remove automatic port appending to "Host" header.
+* [FIX] Avoid creating soap:Header container when there are no children.
+* [FIX] Allowing a 'null' argument for WSDL methods that take no arguments.
+* [FIX] Wrong initialization of xmlns array when handling rpc stype wsdl.
+* [FIX] Fault handling.  err should be used less frequently now.
+* [FIX] Added checking if there is input and output for operations under bindings section.
+* [FIX] XSD conflict with same namespace.
 
 0.5.1 / 2014-07-11
 =================
-* Enhancement: Add "defaults" parameter to BasicAuthSecurity's constructor
-* Enhancement:  Added possibility to set a custom `valueKey` for the parsed values from XML SOAP Response
-* Fix:  don't append port 80 to Host if not needed
-* Fix:  Remove possible existing BOM characters from XML String before passing it to `WSDL#_fromXML()` and parsing it.
-* Fix:  Handling nil attributes in response xml
+* [ENHANCEMENT] Add "defaults" parameter to BasicAuthSecurity's constructor
+* [ENHANCEMENT]  Added possibility to set a custom `valueKey` for the parsed values from XML SOAP Response
+* [FIX]  don't append port 80 to Host if not needed
+* [FIX]  Remove possible existing BOM characters from XML String before passing it to `WSDL#_fromXML()` and parsing it.
+* [FIX]  Handling nil attributes in response xml
 
 0.5.0 / 2014-07-11
 =================
-* Enhancement: Allowing namespace prefixes to be ignored via config.
-* Enhancement: wsdl should handle more types
-* Fix: Handle defined messages ending with "Response", "Out", or "Output"
-* Fix: Adding default attributesKey to server and allowing the property to be configurable fixing issue #406
-* Fix: Remove extra characters before and after soap envelope
-* Fix: Allow operations to not have definitions
-* Fix: Ignore unknown elements
-* Fix: Keep ns from top-level
-* Fix: Check status code of invocation response
+* [ENHANCEMENT] Allowing namespace prefixes to be ignored via config.
+* [ENHANCEMENT] wsdl should handle more types
+* [FIX] Handle defined messages ending with "Response", "Out", or "Output"
+* [FIX] Adding default attributesKey to server and allowing the property to be configurable fixing issue #406
+* [FIX] Remove extra characters before and after soap envelope
+* [FIX] Allow operations to not have definitions
+* [FIX] Ignore unknown elements
+* [FIX] Keep ns from top-level
+* [FIX] Check status code of invocation response
 
 0.4.7 / 2014-06-16
 =================
-* Allow request elements to have both content and attributes.
+* [ENHANCEMENT] Allow request elements to have both content and attributes.
 
 0.4.6 / 2014-06-16
 =================
