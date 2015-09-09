@@ -1,3 +1,8 @@
+0.9.3 / 2015-09-08
+=================
+* [ENHANCEMENT] Allow namespace overriding for elements. (#709)
+* [MAINTENANCE] Disable travis emails.
+
 0.9.2 / 2015-09-08
 =================
 * [ENHANCEMENT] Add support for xsd element ref. (#700)
