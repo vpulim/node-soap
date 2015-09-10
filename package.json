@@ -35,6 +35,9 @@
     "jshint": "2.3.0",
     "glob": "~3.2.8",
     "should": "~3.3.0",
-    "timekeeper": "~0.0.4"
+    "timekeeper": "~0.0.4",
+    "duplexer": "~0.1.1",
+    "readable-stream": "~2.0.2",
+    "semver": "~5.0.3"
   }
 }
