@@ -50,14 +50,16 @@ test.service = {
               Value: "soap:Sender",
               Subcode: { value: "rpc:BadArguments" }
             },
-            Reason: { Text: "Processing Error" }
+            Reason: { Text: "Processing Error" },
+            statusCode: 500
           }
         };
 
         var isValidPrice = function() {
           var price = args.price;
-          if(isNaN(price) || (price === ' '))
+          if(isNaN(price) || (price === ' ')) {
             return cb(validationError);
+          }
 
           price = parseInt(price, 10);
           var validPrice = (price > 0 && price < Math.pow(10, 5));
@@ -185,6 +187,7 @@ describe('SOAP Server', function() {
       client.IsValidPrice({ price: "invalid_price"}, function(err, result) {
         assert.ok(err);
         assert.ok(err.root.Envelope.Body.Fault);
+        assert.equal(err.response.statusCode, 500);
         done();
       });
     });
@@ -279,6 +282,7 @@ describe('SOAP Server', function() {
           "Body should contain Code-element with namespace");
         assert.ok(body.match(/<soap:Reason>.*<\/soap:Reason>/g),
           "Body should contain Reason-element with namespace");
+        assert.equal(err.response.statusCode, 200);
         done();
       });
     });
