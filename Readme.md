@@ -122,6 +122,21 @@ object with a `Fault` property.
   };
 ```
 
+To change the HTTP statusCode of the response include it on the fault.  The statusCode property will not be put on the xml message.
+
+``` javascript
+  throw {
+    Fault: {
+      Code: {
+        Value: "soap:Sender",
+        Subcode: { value: "rpc:BadArguments" }
+      },
+      Reason: { Text: "Processing Error" },
+      statusCode: 500
+    }
+  };
+```
+
 ### SOAP Headers
 
 A service method can look at the SOAP headers by providing a 3rd arguments.
