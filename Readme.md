@@ -464,6 +464,33 @@ namespace prefix is used to identify this Element. This is not much of a problem
  ```
  This would override the default `ignoredNamespaces` of the `WSDL` processor to `['namespaceToIgnore', 'someOtherNamespace']`. (This shouldn't be necessary, anyways).
 
+ If you want to override the default ignored namespaces you would simply pass the following `ignoredNamespaces` object within the `options`:
+ ```
+ var options = {
+     ignoredNamespaces: {
+       namespaces: ['namespaceToIgnore', 'someOtherNamespace'],
+       override: true
+     }
+   }
+ ```
+ This would override the default `ignoredNamespaces` of the `WSDL` processor to `['namespaceToIgnore', 'someOtherNamespace']`. (This shouldn't be necessary, anyways).
+ 
+## Handling "ignoreBaseNameSpaces" attribute
+If an Element in a `schema` definition depends has a basenamespace defined but the request does not need that value, for example you have a "sentJob" with basenamespace "v20"
+but the request need only: <sendJob> set in the tree structure, you need to set the ignoreBaseNameSpaces to true. This is set because in a lot of workaround the wsdl structure is not correctly
+set or the webservice bring errors.
+
+By default the attribute is set to true.
+An example to use:
+
+A simple `ignoredNamespaces` object, which only adds certain namespaces could look like this:
+```
+var options = {
+ignoredNamespaces: true
+}
+```
+ 
+ 
 ## Contributors
 
  * Author: [Vinay Pulim](https://github.com/vpulim)
