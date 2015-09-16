@@ -324,8 +324,9 @@ errors).
 WSSecurity implements WS-Security.  UsernameToken and PasswordText/PasswordDigest is supported. An instance of WSSecurity is passed to Client.setSecurity.
 
 ``` javascript
-  new WSSecurity(username, password, passwordType)
+  new WSSecurity(username, password, passwordType, nonce)
     //'PasswordDigest' or 'PasswordText' default is PasswordText
+	// nonce can be set to 'true' to ensure a nonce value is passed with the request.
 ```
 
 ## Handling XML Attributes, Value and XML (wsdlOptions).
