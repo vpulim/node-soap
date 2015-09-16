@@ -303,6 +303,55 @@ describe('SOAP Client', function() {
         });
       }, baseUrl);
     });
+
+    it('should be able to set my own namespaces in the request', function (done) {
+      soap.createClient(__dirname + '/wsdl/extended_element.wsdl', function (err, client) {
+        assert.ok(client);
+        client.wsdl.definitions.xmlns.sec="http://www.owasp.com/service/1";
+        client.wsdl.xmlnsInEnvelope = client.wsdl._xmlnsMap();
+        var data = {
+          'sec:username':'very secure',
+          'sec:password':'password'
+        };
+
+        var message = '<ExtendedDummyRequest><sec:username>very secure</sec:username><sec:password>password</sec:password></ExtendedDummyRequest>';
+
+        client.on('message',function(xml){
+          xml.should.equal(message)
+          done();
+        })
+        client.Dummy(data, function(err, result) {},
+          {
+            skipNS:true
+          }
+        );
+      }, baseUrl);
+    });
+
+    it('should be able to set my own method name', function (done) {
+      soap.createClient(__dirname + '/wsdl/extended_element.wsdl', function (err, client) {
+        assert.ok(client);
+        client.wsdl.definitions.xmlns.sec="http://www.owasp.com/service/1";
+        client.wsdl.xmlnsInEnvelope = client.wsdl._xmlnsMap();
+        var data = {
+          'sec0:username':'very secure',
+          'sec:password':'password'
+        };
+
+        var message = '<sec0:ExtendedDummyRequest><sec0:username>very secure</sec0:username><sec:password>password</sec:password></sec0:ExtendedDummyRequest>';
+
+        client.on('message',function(xml){
+          xml.should.equal(message)
+          done();
+        })
+        client.Dummy(data, function(err, result) {},
+          {
+            skipNS:true,
+            name:'sec0:ExtendedDummyRequest'
+          }
+        );
+      }, baseUrl);
+    });
   });
 
   describe('Follow even non-standard redirects', function() {
