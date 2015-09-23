@@ -494,7 +494,9 @@ ignoredNamespaces: true
 ## Contributors
 
  * Author: [Vinay Pulim](https://github.com/vpulim)
- * Lead Maintainer: [Joe Spencer](https://github.com/jsdevel)
+ * Maintainers: 
+   - [Joe Spencer](https://github.com/jsdevel)
+   - [Heinz Romirer](https://github.com/herom)
  * [All Contributors](https://github.com/vpulim/node-soap/graphs/contributors)
 
 [downloads-image]: http://img.shields.io/npm/dm/soap.svg
