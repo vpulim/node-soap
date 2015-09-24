@@ -12,6 +12,7 @@
                              maxOccurs="unbounded">
                 </xsd:element>
             </xsd:sequence>
+            <xsd:attribute name="id" type="xsd:ID"/>
         </xsd:complexType>
     </xsd:element>
     <xsd:element name="fooRs">
@@ -21,6 +22,7 @@
                              maxOccurs="unbounded">
                 </xsd:element>
             </xsd:sequence>
+            <xsd:attribute name="id" type="xsd:ID"/>
         </xsd:complexType>
     </xsd:element>
 </xsd:schema>
