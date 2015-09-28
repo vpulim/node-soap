@@ -1,13 +1,13 @@
 0.9.4 / 2015-09-28
 =================
-[MAINTENANCE] Adding node v4.0 to .travis.yml. (#729)
-[MAINTENANCE] Increasing mocha test timeout to 10 seconds. (#732)
-[FIX] Resolve element references when other types are referenced. (#725)
-[DOC] Update Readme.md
-[ENHANCEMENT] New Ignorebasenamespaces option. (#716)
-[ENHANCEMENT] Add optional statusCode on soap fault. (#715)
-[FIX] Fix for wsdl retrieval using soap.createClient with special options.httpClient. Before this, the specified client was not used when fetching the wsdl file. This fix will force the wsdl to use the specified httpClient. (#714)
-[FIX] Allow WSDL to be loaded from HTTPS sites. (#694)
+* [MAINTENANCE] Adding node v4.0 to .travis.yml. (#729)
+* [MAINTENANCE] Increasing mocha test timeout to 10 seconds. (#732)
+* [FIX] Resolve element references when other types are referenced. (#725)
+* [DOC] Update Readme.md
+* [ENHANCEMENT] New Ignorebasenamespaces option. (#716)
+* [ENHANCEMENT] Add optional statusCode on soap fault. (#715)
+* [FIX] Fix for wsdl retrieval using soap.createClient with special options.httpClient. Before this, the specified client was not used when fetching the wsdl file. This fix will force the wsdl to use the specified httpClient. (#714)
+* [FIX] Allow WSDL to be loaded from HTTPS sites. (#694)
 
 0.9.3 / 2015-09-08
 =================
