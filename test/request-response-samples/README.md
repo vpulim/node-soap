@@ -18,3 +18,4 @@ Follow this process to add samples:
   * `response.json` - This is the expected JSON from parsing the response XML
   * `error_response.json` - This is the expected JSON root attached to the error object when a fault occurs  
   * `soap.wsdl` - This is the WSDL that defines the operation and messages
+  * `wsdl_options.wsdl` - This is the wsdl options to create request. (ignorenamespacers, ignoredbasednamespaces).

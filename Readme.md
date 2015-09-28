@@ -81,9 +81,9 @@ The `options` argument allows you to customize the client with the following pro
   soap.listen(server, '/wsdl', myService, xml);
 ```
 
-### server logging
+### Server Logging
 
-If the log method is defined it will be called with 'received' and 'replied'
+If the `log` method is defined it will be called with 'received' and 'replied'
 along with data.
 
 ``` javascript
@@ -122,6 +122,21 @@ object with a `Fault` property.
   };
 ```
 
+To change the HTTP statusCode of the response include it on the fault.  The statusCode property will not be put on the xml message.
+
+``` javascript
+  throw {
+    Fault: {
+      Code: {
+        Value: "soap:Sender",
+        Subcode: { value: "rpc:BadArguments" }
+      },
+      Reason: { Text: "Processing Error" },
+      statusCode: 500
+    }
+  };
+```
+
 ### SOAP Headers
 
 A service method can look at the SOAP headers by providing a 3rd arguments.
@@ -153,9 +168,9 @@ First parameter is the Headers object;
 second parameter is the name of the SOAP method that will called
 (in case you need to handle the headers differently based on the method).
 
-### server security example using PasswordDigest
+### Server security example using PasswordDigest
 
-If server.authenticate is not defined no authentation will take place.
+If `server.authenticate` is not defined then no authentication will take place.
 
 ``` javascript
   server = soap.listen(...)
@@ -167,10 +182,10 @@ If server.authenticate is not defined no authentation will take place.
   };
 ```
 
-### server connection authorization
+### Server connection authorization
 
-This is called prior to soap service method
-If the method is defined and returns false the incoming connection is
+The `server.authorizeConnection` method is called prior to the soap service method.
+If the method is defined and returns `false` then the incoming connection is
 terminated.
 
 ``` javascript
@@ -183,7 +198,7 @@ terminated.
 
 ## Client
 
-An instance of Client is passed to the soap.createClient callback.  It is used to execute methods on the soap service.
+An instance of `Client` is passed to the `soap.createClient` callback.  It is used to execute methods on the soap service.
 
 ### Client.describe() - description of services, ports and methods as a JavaScript object
 
@@ -205,8 +220,8 @@ An instance of Client is passed to the soap.createClient callback.  It is used t
 ### Client.setSecurity(security) - use the specified security protocol
 `node-soap` has several default security protocols.  You can easily add your own
 as well.  The interface is quite simple.  Each protocol defines 2 methods:
-* addOptions - a method that accepts an options arg that is eventually passed directly to `request`
-* toXML - a method that reurns a string of XML.
+* `addOptions` - a method that accepts an options arg that is eventually passed directly to `request`
+* `toXML` - a method that returns a string of XML.
 
 By default there are 3 protocols:
 
@@ -219,9 +234,9 @@ By default there are 3 protocols:
 ####ClientSSLSecurity
 _Note_: If you run into issues using this protocol, consider passing these options
 as default request options to the constructor:
-* rejectUnauthorized: false
-* strictSSL: false
-* secureOptions: constants.SSL_OP_NO_TLSv1_2//this is likely needed for node >= 10.0
+* `rejectUnauthorized: false`
+* `strictSSL: false`
+* `secureOptions: constants.SSL_OP_NO_TLSv1_2` (this is likely needed for node >= 10.0)
 
 ``` javascript
   client.setSecurity(new soap.ClientSSLSecurity(
@@ -259,6 +274,16 @@ as default request options to the constructor:
       // result is a javascript object
   })
 ```
+###Overriding the namespace prefix
+`node-soap` is still working out some kinks regarding namespaces.  If you find that an element is given the wrong namespace prefix in the request body, you can add the prefix to it's name in the containing object.  I.E.:
+
+```javascript
+  client.MyService.MyPort.MyFunction({'ns1:name': 'value'}, function(err, result) {
+      // request body sent with `<ns1:name`, regardless of what the namespace should have been.
+  }, {timeout: 5000})
+```
+
+
 #### Options (optional)
  - Accepts any option that the request module accepts, see [here.](https://github.com/mikeal/request)
  - For example, you could set a timeout of 5 seconds on the request like this:
@@ -283,9 +308,9 @@ as default request options to the constructor:
 ### Client Events
 Client instances emit the following events:
 
-* request - Emitted before a request is sent. The event handler receives the 
+* request - Emitted before a request is sent. The event handler receives the
 entire Soap request (Envelope) including headers.
-* message - Emitted before a request is sent. The event handler receives the 
+* message - Emitted before a request is sent. The event handler receives the
 Soap body contents. Useful if you don't want to log /store Soap headers.
 * soapError - Emitted when an erroneous response is received.
   Useful if you want to globally log errors.
@@ -439,10 +464,39 @@ namespace prefix is used to identify this Element. This is not much of a problem
  ```
  This would override the default `ignoredNamespaces` of the `WSDL` processor to `['namespaceToIgnore', 'someOtherNamespace']`. (This shouldn't be necessary, anyways).
 
+ If you want to override the default ignored namespaces you would simply pass the following `ignoredNamespaces` object within the `options`:
+ ```
+ var options = {
+     ignoredNamespaces: {
+       namespaces: ['namespaceToIgnore', 'someOtherNamespace'],
+       override: true
+     }
+   }
+ ```
+ This would override the default `ignoredNamespaces` of the `WSDL` processor to `['namespaceToIgnore', 'someOtherNamespace']`. (This shouldn't be necessary, anyways).
+ 
+## Handling "ignoreBaseNameSpaces" attribute
+If an Element in a `schema` definition depends has a basenamespace defined but the request does not need that value, for example you have a "sentJob" with basenamespace "v20"
+but the request need only: <sendJob> set in the tree structure, you need to set the ignoreBaseNameSpaces to true. This is set because in a lot of workaround the wsdl structure is not correctly
+set or the webservice bring errors.
+
+By default the attribute is set to true.
+An example to use:
+
+A simple `ignoredNamespaces` object, which only adds certain namespaces could look like this:
+```
+var options = {
+ignoredNamespaces: true
+}
+```
+ 
+ 
 ## Contributors
 
  * Author: [Vinay Pulim](https://github.com/vpulim)
- * Lead Maintainer: [Joe Spencer](https://github.com/jsdevel)
+ * Maintainers: 
+   - [Joe Spencer](https://github.com/jsdevel)
+   - [Heinz Romirer](https://github.com/herom)
  * [All Contributors](https://github.com/vpulim/node-soap/graphs/contributors)
 
 [downloads-image]: http://img.shields.io/npm/dm/soap.svg

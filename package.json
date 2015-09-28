@@ -1,17 +1,18 @@
 {
   "name": "soap",
-  "version": "0.9.1",
+  "version": "0.9.3",
   "description": "A minimal node SOAP client",
   "engines": {
     "node": ">=0.8.0"
   },
   "author": "Vinay Pulim <v@pulim.com>",
   "dependencies": {
+    "debug": "~0.7.4",
     "lodash": "~2.4.1",
     "request": ">=2.9.0",
     "sax": ">=0.6",
-    "strip-bom": "~0.3.1",
-    "debug": "~0.7.4"
+    "selectn": "^0.9.6",
+    "strip-bom": "~0.3.1"
   },
   "repository": {
     "type": "git",
@@ -23,7 +24,7 @@
   },
   "scripts": {
     "pretest": "jshint index.js lib test",
-    "test": "mocha test/*-test.js test/security/*.js"
+    "test": "mocha --timeout 10000 test/*-test.js test/security/*.js"
   },
   "keywords": [
     "soap"
@@ -34,6 +35,9 @@
     "jshint": "2.3.0",
     "glob": "~3.2.8",
     "should": "~3.3.0",
-    "timekeeper": "~0.0.4"
+    "timekeeper": "~0.0.4",
+    "duplexer": "~0.1.1",
+    "readable-stream": "~2.0.2",
+    "semver": "~5.0.3"
   }
 }
