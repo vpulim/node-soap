@@ -1,4 +1,6 @@
 # Soap [![NPM version][npm-image]][npm-url] [![Downloads][downloads-image]][npm-url] [![Build Status][travis-image]][travis-url]
+
+[![Join the chat at https://gitter.im/vpulim/node-soap](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/vpulim/node-soap?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 > A SOAP client and server for node.js.
 
 This module lets you connect to web services using SOAP.  It also provides a server that allows you to run your own SOAP services.
