@@ -1,3 +1,26 @@
+0.10.3 / 2015-10-23
+=================
+* [ENHANCEMENT] Adding createErroringStub to soap-stub. (#765)
+* [ENHANCEMENT] `forceSoap12Headers` option to add SOAP v1.2 request headers. (#755)
+
+0.10.2 / 2015-10-22
+=================
+* [ENHANCEMENT] Adding security to soap-stub. (#764)
+
+0.10.1 / 2015-10-22
+=================
+* [ENHANCEMENT] Adding soap-stub. (#763)
+
+0.10.0 / 2015-10-21
+=================
+* [FIX] xml namespace/element/type handling. (#756)
+
+0.9.5 / 2015-10-15
+=================
+* [FIX] Allow circular XSD files to be loaded. (#745)
+* [ENHANCEMENT] Timestamp is now optional. (#735)
+* [DOC] Formatting History.md 0.9.4 notes.
+
 0.9.4 / 2015-09-28
 =================
 * [MAINTENANCE] Adding node v4.0 to .travis.yml. (#729)

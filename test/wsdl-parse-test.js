@@ -14,4 +14,11 @@ describe(__filename, function () {
       done();
     });
   });
+
+  it('should parse recursive wsdls', function (done) {
+    open_wsdl(path.resolve(__dirname, 'wsdl/recursive/file.wsdl'), function (err, def) {
+      // If we get here then we succeeded 
+      done( err );
+    });
+  });
 });
