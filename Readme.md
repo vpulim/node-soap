@@ -324,8 +324,10 @@ errors).
 WSSecurity implements WS-Security.  UsernameToken and PasswordText/PasswordDigest is supported. An instance of WSSecurity is passed to Client.setSecurity.
 
 ``` javascript
-  new WSSecurity(username, password, passwordType)
-    //'PasswordDigest' or 'PasswordText' default is PasswordText
+  new WSSecurity(username, password, options)
+    //the 'options' object is optional and contains properties:
+    //passwordType: 'PasswordDigest' or 'PasswordText' default is PasswordText
+    //hasTimeStamp: true or false default is true
 ```
 
 ## Handling XML Attributes, Value and XML (wsdlOptions).

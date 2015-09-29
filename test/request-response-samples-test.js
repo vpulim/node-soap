@@ -105,7 +105,7 @@ function generateTest(name, methodName, wsdlPath, headerJSON, securityJSON, requ
         }
       }
       if (securityJSON && securityJSON.type === 'ws') {
-        client.setSecurity(new WSSecurity(securityJSON.username, securityJSON.password));
+        client.setSecurity(new WSSecurity(securityJSON.username, securityJSON.password, securityJSON.options));
       }
       client[methodName](requestJSON, function(err, json, body, soapHeader){
         if(requestJSON){
