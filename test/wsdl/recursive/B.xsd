@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema targetNamespace="http://www.Dummy.com/Name/Types"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.Dummy.com/Name/Types">
+  <xs:import namespace="http://www.Dummy.com/Common/Types" schemaLocation="A.xsd" />
+  
+  <xs:complexType name="ContactMedium2">
+    <xs:annotation>
+      <xs:documentation>Defines the method of contact to reach a party (in
+        their specified role) </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="validFor" type="types:DateTimeRange" minOccurs="0" maxOccurs="1" />
+      <xs:element name="preference" type="xs:integer" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Indicates that this contact medium is the
+            preferred (if multiple are present). Lower integer takes
+            precedence, "equals are equals" so the value does not need to be
+            unique.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Address" type="place:Address" minOccurs="0" maxOccurs="1" />
+      <xs:element name="Email" type="types:Email" minOccurs="0" maxOccurs="1" />
+      <xs:element name="Telephone" type="types:Telephone" minOccurs="0" maxOccurs="1" />
+    </xs:sequence>
+  </xs:complexType>
