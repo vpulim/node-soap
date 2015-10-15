@@ -1,3 +1,9 @@
+0.9.5 / 2015-10-15
+=================
+* [FIX] Allow circular XSD files to be loaded. (#745)
+* [ENHANCEMENT] Timestamp is now optional. (#735)
+* [DOC] Formatting History.md 0.9.4 notes.
+
 0.9.4 / 2015-09-28
 =================
 * [MAINTENANCE] Adding node v4.0 to .travis.yml. (#729)
