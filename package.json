@@ -23,7 +23,6 @@
     "lib": "./lib"
   },
   "scripts": {
-    "pretest": "jshint index.js lib test",
     "test": "mocha --timeout 10000 test/*-test.js test/security/*.js"
   },
   "keywords": [
