@@ -67,19 +67,6 @@ describe(__filename, function () {
     });
   });
 
-  it('should parse multiple xsd files with the same namespace using lodash defaults', function (done) {
-    wsdl.set_merge_method('lodash.merge');
-    open_wsdl(path.resolve(__dirname, 'wsdl/split-xsd/foo.wsdl'), function (err, def) {
-      var elementNames = _.keys(def.definitions.schemas['http://example.com/bar/xsd'].elements);
-
-      //will fail - is missing elements from bar1.xsd
-      assert.deepEqual(elementNames, ['fooRq', 'fooRs', 'paymentRq', 'paymentRs', 'requestUID']);
-
-      // If we get here then we succeeded
-      done( err );
-    });
-  });
-
   it('should parse multiple xsd files with the same namespace using merge.recursive', function (done) {
     wsdl.set_merge_method('merge');
     open_wsdl(path.resolve(__dirname, 'wsdl/split-xsd/foo.wsdl'), function (err, def) {
