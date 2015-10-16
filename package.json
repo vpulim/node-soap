@@ -9,6 +9,7 @@
   "dependencies": {
     "debug": "~0.7.4",
     "lodash": "~2.4.1",
+    "merge": "^1.2.0",
     "request": ">=2.9.0",
     "sax": ">=0.6",
     "selectn": "^0.9.6",
