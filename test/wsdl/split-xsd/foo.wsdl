@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="foo"
+                  targetNamespace="http://example.com/foo/wsdl"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:ns1="http://example.com/bar/xsd"
+                  xmlns:tns="http://example.com/foo/wsdl"
+                  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+    <wsdl:types>
+        <xsd:schema>
+            <xsd:import
+                    namespace="http://example.com/bar/xsd"
+                    schemaLocation="bar.xsd"/>
+        </xsd:schema>
+    </wsdl:types>
+    <wsdl:message name="fooRs">
+        <wsdl:part name="fooRs" element="ns1:fooRs">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="fooRq">
+        <wsdl:part name="fooRq" element="ns1:fooRq">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:portType name="foo_PortType">
+        <wsdl:operation name="fooOp">
+            <wsdl:input message="tns:fooRq">
+            </wsdl:input>
+            <wsdl:output message="tns:fooRs">
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="foo_Binding" type="tns:foo_PortType">
+        <soap:binding style="document"
+                      transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="fooOp">
+            <soap:operation soapAction="fooPayment"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="foo">
+        <wsdl:port name="payment_Port"
+                   binding="tns:foo_Binding">
+            <soap:address
+                    location="http://localhost:8888/mockfoo_Binding"/>
+        </wsdl:port>
+    </wsdl:service>
+    <xsd:attriute fixed="2.1.4" name="version"/>
+</wsdl:definitions>

@@ -1,0 +1,40 @@
+<xsd:schema targetNamespace="http://example.com/bar/xsd"
+            elementFormDefault="qualified" version="2.1.4"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:bar="http://example.com/bar/xsd">
+    <xsd:element name="paymentRq">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:sequence>
+                    <xsd:element name="bankSvcRq" minOccurs="0"
+                                 maxOccurs="unbounded">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element ref="bar:requestUID"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="Id" type="xsd:ID"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="paymentRs">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:sequence>
+                    <xsd:element name="bankSvcRs" minOccurs="0"
+                                 maxOccurs="unbounded">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element ref="bar:requestUID"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="Id" type="xsd:ID"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="requestUID" type="xsd:string"/>
+</xsd:schema>
