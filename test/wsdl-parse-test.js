@@ -29,7 +29,7 @@ describe(__filename, function () {
   });
 
   it('should parse multiple xsd files with the same namespace using lodash merge', function (done) {
-    wsdl.set_merge_method('lodash.default');
+    wsdl.set_merge_method('lodash.merge');
     open_wsdl(path.resolve(__dirname, 'wsdl/split-xsd/foo.wsdl'), function (err, def) {
       var elementNames = _.keys(def.definitions.schemas['http://example.com/bar/xsd'].elements);
 
@@ -42,7 +42,7 @@ describe(__filename, function () {
   });
 
   it('should parse multiple xsd files with the same namespace using lodash defaults', function (done) {
-    wsdl.set_merge_method('lodash.merge');
+    wsdl.set_merge_method('lodash.defaults');
     open_wsdl(path.resolve(__dirname, 'wsdl/split-xsd/foo.wsdl'), function (err, def) {
       var elementNames = _.keys(def.definitions.schemas['http://example.com/bar/xsd'].elements);
 
