@@ -210,6 +210,23 @@ describe('SOAP Client', function() {
         }, null, {"test-header": 'test'});
       }, baseUrl);
     });
+
+    it('should add proper headers for soap12', function(done) {
+      soap.createClient(__dirname+'/wsdl/default_namespace_soap12.wsdl', {forceSoap12Headers: true}, function(err, client) {
+        assert.ok(client);
+        assert.ok(!err);
+
+        client.MyOperation({}, function(err, result) {
+          assert.ok(result);
+          assert.ok(client.lastRequestHeaders);
+          assert.ok(client.lastRequest);
+          assert.equal(client.lastRequestHeaders['Content-Type'], 'application/soap+xml; charset=utf-8');
+          assert.notEqual(client.lastRequest.indexOf('xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\"'), -1);
+
+          done();
+        }, null, {'test-header': 'test'});
+      }, baseUrl);
+    });
   });
 
   it('should add soap headers', function (done) {

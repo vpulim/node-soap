@@ -40,6 +40,7 @@ The `options` argument allows you to customize the client with the following pro
 - endpoint: to override the SOAP service's host specified in the `.wsdl` file.
 - request: to override the [request](https://github.com/request/request) module.
 - httpClient: to provide your own http client that implements `request(rurl, data, callback, exheaders, exoptions)`.
+- forceSoap12Headers: to set proper headers for SOAP v1.2
 
 ### soap.listen(*server*, *path*, *services*, *wsdl*) - create a new SOAP server that listens on *path* and provides *services*.
 *wsdl* is an xml string that defines the service.
