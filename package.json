@@ -3,7 +3,7 @@
   "version": "0.13.0",
   "description": "A minimal node SOAP client",
   "engines": {
-    "node": ">=0.8.0"
+    "node": ">=0.10.0"
   },
   "author": "Vinay Pulim <v@pulim.com>",
   "dependencies": {
@@ -12,7 +12,11 @@
     "request": ">=2.9.0",
     "sax": ">=0.6",
     "selectn": "^0.9.6",
-    "strip-bom": "~0.3.1"
+    "strip-bom": "~0.3.1",
+    "ursa": "0.8.5 || >=0.9.3",
+    "node-uuid": "~1.4.3",
+    "ejs": "~2.3.4",
+    "xml-crypto": "~0.8.0"
   },
   "repository": {
     "type": "git",
