@@ -508,6 +508,27 @@ soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', wsdlOptions, funct
   });
 });
 ```
+### Specifying the exact namespace definition of the root element
+In rare cases, you may want to precisely control the namespace definition that is included in the root element.
+
+You can specify the namespace definitions by setting the overrideRootElement key in the `wsdlOptions` like so:
+```javascript
+var wsdlOptions = {
+  "overrideRootElement": {
+    "namespace": "xmlns:tns",
+    "xmlnsAttributes": [{
+      "name": "xmlns:ns2",
+      "value": "http://tempuri.org/"
+    }, {
+      "name": "xmlns:ns3",
+      "value": "http://sillypets.com/xsd"
+    }]
+  }
+};
+```
+
+To see it in practice, consider the sample files in: [test/request-response-samples/addPets__force_namespaces](https://github.com/vpulim/node-soap/tree/master/test/request-response-samples/addPets__force_namespaces)
+
 
 ## Handling "ignored" namespaces
 If an Element in a `schema` definition depends on an Element which is present in the same namespace, normally the `tns:`
