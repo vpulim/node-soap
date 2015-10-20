@@ -1,0 +1,70 @@
+<xsd:schema xmlns:xt="http://something.com/systems/2004/06/types" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://something.com/systems/2004/06/types" elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+	<xsd:simpleType name="Name_T">
+		<xsd:annotation>
+			<xsd:documentation>
+				Type used to represent any name attribute that is the  standard length of 30 characters
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="30"/>
+			<xsd:pattern value="(^\S.*\S$|^\S$)"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="FieldVal_T">
+		<xsd:annotation>
+			<xsd:documentation>Field value : maximum size is
+				7500 characters
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="7500"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="DateTime_T">
+		<xsd:annotation>
+			<xsd:documentation>
+				Type used to represent any Oracle date/time such as
+				last modified date in "MM/DD/YYYY HH:MM:SS" format.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="(0[1-9]|10|11|12)/(0[1-9]|[1-2][0-9]|3[0-1])/\d{4} (0\d{1}|1\d{1}|2[0-3]):[0-5][0-9]:[0-5][0-9]"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="WorkItemNumber_T">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="W\d{1,6}-\d{2}(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)\d{2}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="Value30_T">
+		<xsd:annotation>
+			<xsd:documentation>
+				Type used to represent any code attribute that is  the standard length of 30 characters.
+				Example, item type code, status code, items sub type code, etc.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="30"/>
+			<xsd:pattern value="(^\S.*\S$|^\S$)"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="PriorityLimit_T">
+		<xsd:annotation>
+			<xsd:documentation>
+				Type used to represent limit for priority points
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:int">
+			<xsd:maxInclusive value="999"/>
+			<xsd:minInclusive value="0"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+</xsd:schema>

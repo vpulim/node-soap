@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions
+        targetNamespace="http://something.com/systems/2004/06/"
+        xmlns:impl="http://something.com/systems/2004/06/"
+        xmlns:tns1="http://something.com/systems/2004/06/types"
+        xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/"
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <wsdl:types>
+        <schema elementFormDefault="qualified"
+                targetNamespace="http://something.com/systems/2004/06/"
+                xmlns="http://www.w3.org/2001/XMLSchema" xmlns:impl="http://something.com/systems/2004/06/"
+                xmlns:intf="http://something.com/systems/2004/06/"
+                xmlns:tns1="http://something.com/systems/2004/06/types"
+                xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <import namespace="http://something.com/systems/2004/06/types"
+                    schemaLocation="elements.xsd"/>
+            <element name="retrieveHistory">
+                <complexType>
+                    <sequence>
+                        <element name="workItemNumber" nillable="true" type="xsd:string"/>
+                        <element name="startRow" type="xsd:int"/>
+                        <element name="maxRows" type="xsd:int"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="retrieveHistoryResponse">
+                <complexType>
+                    <sequence>
+                        <element name="retrieveHistoryReturn" nillable="true"
+                                 type="tns1:HistoryEventList_T"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="create">
+                <complexType>
+                    <sequence>
+                        <element name="workItem" nillable="true" type="tns1:WorkItem_T" />
+                        <element name="evaluateRule" type="xsd:boolean" />
+                        <element name="note" nillable="true" type="tns1:Note_T" />
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="createResponse">
+                <complexType>
+                    <sequence>
+                        <element name="createReturn" nillable="true"
+                                 type="tns1:WorkItemStatus_T" />
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="retrieve">
+                <complexType>
+                    <sequence>
+                        <element name="workItemNumber" nillable="true" type="xsd:string"/>
+                        <element name="lockItem" type="xsd:boolean"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="retrieveResponse">
+                <complexType>
+                    <sequence>
+                        <element name="retrieveReturn" nillable="true" type="tns1:WorkItem_T"/>
+                    </sequence>
+                </complexType>
+            </element>
+        </schema>
+    </wsdl:types>
+
+    <wsdl:message name="retrieveHistoryRequest">
+
+        <wsdl:part element="impl:retrieveHistory" name="parameters"/>
+
+    </wsdl:message>
+
+    <wsdl:message name="retrieveHistoryResponse">
+
+        <wsdl:part element="impl:retrieveHistoryResponse" name="parameters"/>
+
+    </wsdl:message>
+
+    <wsdl:message name="createRequest">
+
+        <wsdl:part element="impl:create" name="parameters" />
+
+    </wsdl:message>
+
+    <wsdl:message name="createResponse">
+
+        <wsdl:part element="impl:createResponse" name="parameters" />
+
+    </wsdl:message>
+
+    <wsdl:message name="retrieveRequest">
+
+        <wsdl:part element="impl:retrieve" name="parameters"/>
+
+    </wsdl:message>
+
+    <wsdl:message name="retrieveResponse">
+
+        <wsdl:part element="impl:retrieveResponse" name="parameters"/>
+
+    </wsdl:message>
+
+
+    <wsdl:portType name="Generic">
+
+        <wsdl:operation name="retrieveHistory">
+
+            <wsdl:input message="impl:retrieveHistoryRequest" name="retrieveHistoryRequest"/>
+
+            <wsdl:output message="impl:retrieveHistoryResponse" name="retrieveHistoryResponse"/>
+
+        </wsdl:operation>
+
+        <wsdl:operation name="create">
+
+            <wsdl:input message="impl:createRequest" name="createRequest" />
+
+            <wsdl:output message="impl:createResponse" name="createResponse" />
+
+        </wsdl:operation>
+
+        <wsdl:operation name="retrieve">
+
+            <wsdl:input message="impl:retrieveRequest" name="retrieveRequest"/>
+
+            <wsdl:output message="impl:retrieveResponse" name="retrieveResponse"/>
+
+        </wsdl:operation>
+    </wsdl:portType>
+
+    <wsdl:binding name="GenericSoapBinding" type="impl:Generic">
+
+        <wsdlsoap:binding style="document"
+                          transport="http://schemas.xmlsoap.org/soap/http"/>
+
+        <wsdl:operation name="retrieveHistory">
+
+            <wsdlsoap:operation soapAction=""/>
+
+            <wsdl:input name="retrieveHistoryRequest">
+                <wsdlsoap:body use="literal"/>
+            </wsdl:input>
+
+            <wsdl:output name="retrieveHistoryResponse">
+
+                <wsdlsoap:body use="literal"/>
+
+                <wsdlsoap:header message="impl:AppServerMsg" part="AppServerHeader"
+                                 use="literal"/>
+
+            </wsdl:output>
+
+        </wsdl:operation>
+
+        <wsdl:operation name="create">
+
+            <wsdlsoap:operation soapAction="" />
+
+            <wsdl:input name="createRequest">
+
+                <wsdlsoap:body use="literal" />
+
+            </wsdl:input>
+
+            <wsdl:output name="createResponse">
+
+                <wsdlsoap:body use="literal" />
+
+                <wsdlsoap:header message="impl:AppServerMsg" part="AppServerHeader"
+                                 use="literal" />
+
+            </wsdl:output>
+
+        </wsdl:operation>
+
+        <wsdl:operation name="retrieve">
+
+            <wsdlsoap:operation soapAction=""/>
+
+            <wsdl:input name="retrieveRequest">
+
+                <wsdlsoap:body use="literal"/>
+
+            </wsdl:input>
+
+            <wsdl:output name="retrieveResponse">
+
+                <wsdlsoap:body use="literal"/>
+
+            </wsdl:output>
+
+        </wsdl:operation>
+
+    </wsdl:binding>
+
+    <wsdl:service name="GenericService">
+
+        <wsdl:port binding="impl:GenericSoapBinding" name="Generic">
+
+            <wsdlsoap:address location="http://something.com/soap/generic"/>
+
+        </wsdl:port>
+
+    </wsdl:service>
+
+</wsdl:definitions>

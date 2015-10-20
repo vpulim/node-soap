@@ -1,0 +1,16 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+                  xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <soapenv:Header>
+        <xt:AppServer xmlns:xt="http://xmlns.fmr.com/systems/dev/xtrac/2004/06/">server1</xt:AppServer>
+    </soapenv:Header>
+    <soapenv:Body>
+        <p347:createResponse xmlns:p347="http://xmlns.fmr.com/systems/dev/xtrac/2004/06/">
+            <p347:createReturn xmlns:p972="http://xmlns.fmr.com/systems/dev/xtrac/2004/06/types">
+                <p972:workItemNumber>W054195-20OCT15</p972:workItemNumber>
+                <p972:status>DFRONT</p972:status>
+                <p972:priorityPoint>0</p972:priorityPoint>
+            </p347:createReturn>
+        </p347:createResponse>
+    </soapenv:Body>
+</soapenv:Envelope>

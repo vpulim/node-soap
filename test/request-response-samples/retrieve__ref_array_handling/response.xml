@@ -1,0 +1,66 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+                  xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <soapenv:Header>
+        <xt:AppServer xmlns:xt="http://something.com/systems/2004/06/">server1</xt:AppServer>
+    </soapenv:Header>
+    <soapenv:Body>
+        <p347:retrieveResponse xmlns:p347="http://something.com/systems/2004/06/">
+            <p347:retrieveReturn xmlns:p972="http://something.com/systems/2004/06/types">
+                <p972:correspondenceCount>0</p972:correspondenceCount>
+                <p972:fields>
+                    <p972:field>
+                        <p972:fieldName>CommunicationType</p972:fieldName>
+                    </p972:field>
+                    <p972:field>
+                        <p972:fieldName>Priority</p972:fieldName>
+                        <p972:fieldVal>0</p972:fieldVal>
+                    </p972:field>
+                    <p972:field>
+                        <p972:fieldName>GlobalBoolean</p972:fieldName>
+                        <p972:fieldVal>TRUE</p972:fieldVal>
+                    </p972:field>
+                    <p972:field>
+                        <p972:fieldName>Amount</p972:fieldName>
+                        <p972:fieldVal>0</p972:fieldVal>
+                    </p972:field>
+                    <p972:field>
+                        <p972:fieldName>SubCause</p972:fieldName>
+                    </p972:field>
+                    <p972:field>
+                        <p972:fieldName>Cause</p972:fieldName>
+                    </p972:field>
+                    <p972:field>
+                        <p972:fieldName>Memo</p972:fieldName>
+                        <p972:fieldVal></p972:fieldVal>
+                    </p972:field>
+                    <p972:field>
+                        <p972:fieldName>Description</p972:fieldName>
+                    </p972:field>
+                    <p972:field>
+                        <p972:fieldName>FamilyId</p972:fieldName>
+                        <p972:fieldVal>W010201-25JUN15</p972:fieldVal>
+                    </p972:field>
+                </p972:fields>
+                <p972:parties>
+                    <p972:party>
+                        <p972:partyType>ORIG</p972:partyType>
+                        <p972:fields>
+                            <p972:field>
+                                <p972:fieldName>CustomerIdType</p972:fieldName>
+                            </p972:field>
+                            <p972:field>
+                                <p972:fieldName>AccountType</p972:fieldName>
+                                <p972:fieldVal>drth</p972:fieldVal>
+                            </p972:field>
+                        </p972:fields>
+                    </p972:party>
+                </p972:parties>
+                <p972:workItemState>
+                    <p972:lastEventDate>10/14/2015 05:59:36</p972:lastEventDate>
+                    <p972:locked>0</p972:locked>
+                </p972:workItemState>
+            </p347:retrieveReturn>
+        </p347:retrieveResponse>
+    </soapenv:Body>
+</soapenv:Envelope>
