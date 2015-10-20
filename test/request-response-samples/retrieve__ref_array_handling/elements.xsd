@@ -1,0 +1,88 @@
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xt="http://something.com/systems/2004/06/types" targetNamespace="http://something.com/systems/2004/06/types" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xsd:include schemaLocation="types.xsd"/>
+
+
+
+	<xsd:element name="fieldName" type="xt:Name_T"/>
+	<xsd:element name="fieldVal" type="xt:FieldVal_T"/>
+	<xsd:element name="field" type="xt:Field_T"/>
+	<xsd:element name="fields" type="xt:ArrayOfField_T"/>
+	<xsd:element name="party" type="xt:Party_T"/>
+	<xsd:element name="partyType" type="xt:Name_T"/>
+	<xsd:element name="parties" type="xt:ArrayOfParty_T"/>
+	<xsd:element name="correspondenceCount" type="xsd:int"/>
+	<xsd:element name="workItemState" type="xt:WorkItemState_T"/>
+	<xsd:element name="locked" type="xsd:boolean"/>
+	<xsd:element name="lastEventDate" type="xt:DateTime_T"/>
+
+	<xsd:complexType name="WorkItem_T">
+		<xsd:annotation>
+			<xsd:documentation>
+				This type represents an instance of a work item.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element ref="xt:correspondenceCount" minOccurs="0"/>
+			<xsd:element ref="xt:fields" minOccurs="0"/>
+			<xsd:element ref="xt:parties"/>
+			<xsd:element ref="xt:workItemState" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="Field_T">
+		<xsd:annotation>
+			<xsd:documentation>
+				Field with its label and associated value
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element ref="xt:fieldName"/>
+			<xsd:element ref="xt:fieldVal" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="ArrayOfField_T">
+		<xsd:annotation>
+			<xsd:documentation>
+				Container for work item fields or party fields.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element ref="xt:field" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="Party_T">
+		<xsd:annotation>
+			<xsd:documentation>
+				Work item party
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element ref="xt:partyType"/>
+			<xsd:element ref="xt:fields"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="ArrayOfParty_T">
+		<xsd:sequence>
+			<xsd:element ref="xt:party" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="WorkItemState_T">
+		<xsd:annotation>
+			<xsd:documentation>
+				WorkItem state is used to represent data associated
+				with a work item that captures the state of the item
+				in terms of work flow terms. This is distinct from
+				the data assocaited with the item itself (fields,
+				parties, etc.)
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element ref="xt:lastEventDate" minOccurs="0"/>
+			<xsd:element ref="xt:locked" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+</xsd:schema>

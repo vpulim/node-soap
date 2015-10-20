@@ -1,0 +1,63 @@
+{
+  "retrieveReturn": {
+    "correspondenceCount": 0,
+    "fields": {
+      "field": [
+        {
+          "fieldName": "CommunicationType"
+        },
+        {
+          "fieldName": "Priority",
+          "fieldVal": "0"
+        },
+        {
+          "fieldName": "GlobalBoolean",
+          "fieldVal": "TRUE"
+        },
+        {
+          "fieldName": "Amount",
+          "fieldVal": "0"
+        },
+        {
+          "fieldName": "SubCause"
+        },
+        {
+          "fieldName": "Cause"
+        },
+        {
+          "fieldName": "Memo",
+          "fieldVal": ""
+        },
+        {
+          "fieldName": "Description"
+        },
+        {
+          "fieldName": "FamilyId",
+          "fieldVal": "W010201-25JUN15"
+        }
+      ]
+    },
+    "parties": {
+      "party": [
+        {
+          "partyType": "ORIG",
+          "fields": {
+            "field": [
+              {
+                "fieldName": "CustomerIdType"
+              },
+              {
+                "fieldName": "AccountType",
+                "fieldVal": "drth"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "workItemState": {
+      "lastEventDate": "10/14/2015 05:59:36",
+      "locked": false
+    }
+  }
+}

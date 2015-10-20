@@ -1,0 +1,34 @@
+{
+  "workItem": {
+    "fields": {
+      "field": [
+        {
+          "fieldName": "GlobalBoolean",
+          "fieldVal": "TRUE"
+        }
+      ]
+    },
+    "itemType": "DSPLT1",
+    "parties": {
+      "party": [
+        {
+          "partyType": "ORIG",
+          "fields": {
+            "field": [
+              {
+                "fieldName": "AccountType",
+                "fieldVal": "drth"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "status": "DFRONT",
+    "statusType": "InProcess"
+  },
+  "evaluateRule": false,
+  "note": {
+    "memo": "test123"
+  }
+}
