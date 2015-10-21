@@ -1,3 +1,7 @@
+0.10.0 / 2015-10-21
+=================
+* [FIX] xml namespace/element/type handling. (#756)
+
 0.9.5 / 2015-10-15
 =================
 * [FIX] Allow circular XSD files to be loaded. (#745)
