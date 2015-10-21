@@ -258,7 +258,7 @@ as default request options to the constructor:
   client.setSecurity(new soap.BearerSecurity('token'));
 ```
 
-### Client.*method*(args, callback) - call *method* on the SOAP service.
+### Client.*method*(args, callback[, options]) - call *method* on the SOAP service.
 
 ``` javascript
   client.MyFunction({name: 'value'}, function(err, result, raw, soapHeader) {
@@ -273,6 +273,22 @@ as default request options to the constructor:
   client.MyService.MyPort.MyFunction({name: 'value'}, function(err, result) {
       // result is a javascript object
   })
+```
+### Client Certificate Validation
+To enable validation of server certificates and the use of self signed certificates on the servers, simply pass the certificates to the `request` package. In paticular the `request` package needs to receive an attribute 'ca' with an array of Base64 certificates. 
+The certificates need to be passed to the `request` package in two locations: `soap.createClient`, and `Client.method`. `soap.createClient` has parameter 'option', when it contains the attribute 'wsdl_options' it will pass value of the attribute to the `request` package. `client.method` has a parameter 'option', this object will be passed to the `request` package.
+
+```javascript
+  pems = ['-----BEGIN CERTIFICATE-----\n....\n-----END CERTIFICATE-----'];
+  server_certs = { ca: pems };
+  options = { wsdl_options: { ca: pems } };
+  soap.createClient(soap_wsdl, options, function(error, client) {
+    if(error)
+      return console.log(error)
+    client.MyFunction({name: 'value'}, function(err, result) {
+      console.log(result);
+    }, { ca: pems });
+
 ```
 ###Overriding the namespace prefix
 `node-soap` is still working out some kinks regarding namespaces.  If you find that an element is given the wrong namespace prefix in the request body, you can add the prefix to it's name in the containing object.  I.E.:
