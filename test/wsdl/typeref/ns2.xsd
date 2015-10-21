@@ -1,0 +1,16 @@
+<xsd:schema targetNamespace="http://example.org/ns2"
+            elementFormDefault="qualified"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+    <xsd:element name="rqUID" type="xsd:string"/>
+
+    <xsd:element name="backupItem" type="LineItemType"/>
+
+    <xsd:complexType name="LineItemType">
+        <xsd:sequence maxOccurs="1">
+            <xsd:element name="itemId" type="xsd:string"/>
+            <xsd:element name="qty" type="xsd:int" form="unqualified"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+</xsd:schema>

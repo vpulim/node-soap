@@ -1,0 +1,60 @@
+<xsd:schema targetNamespace="http://example.org/ns1"
+            elementFormDefault="qualified"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:ns1="http://example.org/ns1"
+            xmlns:ns2="http://example.org/ns2">
+
+    <xsd:import namespace="http://example.org/ns2"
+                schemaLocation="ns2.xsd"/>
+    <xsd:element name="orderRq">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="ns1:itemRq" minOccurs="0"
+                             maxOccurs="unbounded">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="orderRs">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="ns1:itemRs" minOccurs="0"
+                             maxOccurs="unbounded">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="itemRq">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="ecomRq" minOccurs="0"
+                             maxOccurs="unbounded">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element ref="ns2:rqUID"/>
+                        </xsd:sequence>
+                        <xsd:attribute name="id" type="xsd:ID"/>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="item" type="ns2:LineItemType"/>
+                <xsd:element ref="ns2:backupItem"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="itemRs">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="ecomRs" minOccurs="0"
+                             maxOccurs="unbounded">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element ref="ns2:rqUID"/>
+                        </xsd:sequence>
+                        <xsd:attribute name="id" type="xsd:ID"/>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>

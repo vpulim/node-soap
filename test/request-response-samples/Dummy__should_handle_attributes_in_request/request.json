@@ -6,6 +6,6 @@
     }
   },
   "DummyFilter": {
-    "DummyFilterString": "Dumpty"
+    "DummyStringFilter": "Dumpty"
   }
 }

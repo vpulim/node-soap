@@ -1,7 +1,7 @@
 {
   "DummyField1": "Humpty",
   "DummyFilter": {
-    "DummyFilterString": "Dumpty"
+    "DummyStringFilter": "Dumpty"
   },
   "DummyAccount": {
     "DummyName": "Dummy",
