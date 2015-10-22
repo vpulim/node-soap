@@ -1,3 +1,7 @@
+0.10.1 / 2015-10-22
+=================
+* [ENHANCEMENT] Adding soap-stub. (#763)
+
 0.10.0 / 2015-10-21
 =================
 * [FIX] xml namespace/element/type handling. (#756)
