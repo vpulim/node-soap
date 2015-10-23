@@ -1,3 +1,7 @@
+0.10.2 / 2015-10-22
+=================
+* [ENHANCEMENT] Adding security to soap-stub. (#764)
+
 0.10.1 / 2015-10-22
 =================
 * [ENHANCEMENT] Adding soap-stub. (#763)
