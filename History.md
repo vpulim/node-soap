@@ -1,3 +1,8 @@
+0.10.3 / 2015-10-23
+=================
+* [ENHANCEMENT] Adding createErroringStub to soap-stub. (#765)
+* [ENHANCEMENT] `forceSoap12Headers` option to add SOAP v1.2 request headers. (#755)
+
 0.10.2 / 2015-10-22
 =================
 * [ENHANCEMENT] Adding security to soap-stub. (#764)
