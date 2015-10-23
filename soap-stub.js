@@ -20,6 +20,7 @@ var clientStubs = {};
  */
 module.exports = {
   createClient: createClient,
+  createErroringStub: createErroringStub,
   createRespondingStub: createRespondingStub,
   errOnCreateClient: false,
   getStub: getStub,
@@ -59,8 +60,32 @@ function createClient(wsdlUrl, options, cb) {
 }
 
 /**
- * Returns a method that calls all callbacks given to the method it is attached to.
- * This allows you to trigger responses from your tests.
+ * Returns a method that calls all callbacks given to the method it is attached
+ * to with the given error.
+ *
+ * <pre>
+ * myClientStub.someMethod.errorOnCall = createErroringStub(error);
+ *
+ * // elsewhere
+ *
+ * myClientStub.someMethod.errorOnCall();
+ * </pre>
+ *
+ * @param {?} object anything
+ * @return {Function}
+ */
+function createErroringStub(err) {
+  return function() {
+    this.args.forEach(function(argSet) {
+      setTimeout(argSet[1].bind(null, err));
+    });
+    this.yields(err);
+  };
+}
+
+/**
+ * Returns a method that calls all callbacks given to the method it is attached
+ * to with the given response.
  *
  * <pre>
  * myClientStub.someMethod.respondWithError = createRespondingStub(errorResponse);
