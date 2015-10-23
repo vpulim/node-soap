@@ -24,7 +24,8 @@ module.exports = {
   errOnCreateClient: false,
   getStub: getStub,
   registerClient: registerClient,
-  reset: reset
+  reset: reset,
+  security: require('./lib/security')
 };
 
 /**
