@@ -1,4 +1,5 @@
-# Soap [![NPM version][npm-image]][npm-url] [![Downloads][downloads-image]][npm-url] [![Build Status][travis-image]][travis-url]
+# Soap [![NPM version][npm-image]][npm-url] [![Downloads][downloads-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Gitter chat][gitter-image]][gitter-url]
+
 > A SOAP client and server for node.js.
 
 This module lets you connect to web services using SOAP.  It also provides a server that allows you to run your own SOAP services.
@@ -18,6 +19,15 @@ Install with [npm](http://github.com/isaacs/npm):
 ```
   npm install soap
 ```
+
+## Where can I file an issue?
+
+We've disabled issues in the repository and are now solely reviewing pull requests.  The reasons why we disabled issues can be found here [#731](https://github.com/vpulim/node-soap/pull/731).
+
+If you're in need of support we encourage you to join us and other `node-soap` users on gitter:
+
+[![Gitter chat][gitter-image]][gitter-url]
+
 ## Module
 
 ### soap.createClient(url[, options], callback) - create a new SOAP client from a WSDL url. Also supports a local filesystem path.
@@ -558,3 +568,6 @@ describe('myService', function() {
 
 [travis-url]: https://travis-ci.org/vpulim/node-soap
 [travis-image]: http://img.shields.io/travis/vpulim/node-soap.svg
+
+[gitter-url]: https://gitter.im/vpulim/node-soap
+[gitter-image]: https://badges.gitter.im/vpulim/node-soap.png
