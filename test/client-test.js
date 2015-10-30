@@ -276,9 +276,6 @@ describe('SOAP Client', function() {
       client.addHttpHeader('foo', 'bar');
 
       assert.ok(client.getHttpHeaders());
-      console.log('http headers');
-      console.log(client.getHttpHeaders());
-      console.log(client.getHttpHeaders().foo);
       assert.equal(client.getHttpHeaders().foo, 'bar');
 
       client.clearHttpHeaders();
