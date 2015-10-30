@@ -267,6 +267,22 @@ describe('SOAP Client', function() {
       done();
     });
   });
+  
+  it('should add http headers', function(done) {
+    soap.createClient(__dirname+'/wsdl/default_namespace.wsdl', function(err, client) {
+      assert.ok(client);
+      assert.ok(!client.getHttpHeaders());
+
+      client.addHttpHeader('foo', 'bar');
+
+      assert.ok(client.getHttpHeaders());
+      assert.equal(client.getHttpHeaders().foo, 'bar');
+
+      client.clearHttpHeaders();
+      assert.equal(Object.keys(client.getHttpHeaders()).length, 0);
+      done();
+    });
+  });
 
   describe('Namespace number', function() {
     var server = null;
