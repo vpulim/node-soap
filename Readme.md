@@ -79,6 +79,14 @@ The `options` argument allows you to customize the client with the following pro
                       name: headers.Token
                   };
               }
+
+              // You can also inspect the original `req`
+              reallyDeatailedFunction: function(args, cb, headers, req) {
+                  console.log('SOAP `reallyDeatailedFunction` request from ' + req.connection.remoteAddress)
+                  return {
+                      name: headers.Token
+                  };
+              }
           }
       }
   }
