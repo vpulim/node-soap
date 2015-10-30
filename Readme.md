@@ -206,6 +206,23 @@ terminated.
   };
 ```
 
+### Server.*addSigner*(signer) - use the specified function to sign the response
+
+With a signer you can intercept the response envelope before it is sent to the client. 
+
+Your signer will be invoked prior to the response being sent.
+If you add more then one signer they will be invoked in series, being passed the previous envelope.
+
+``` javascript
+  server = soap.listen(...);
+  server.addSigner( function(envelope, options, callback) {
+    /* Sign the envelope */
+    callback(null, envelope);
+  });
+```
+
+As with the original service methods, if you throw or pass back a fault it will be returned
+as such. 
 
 ## Client
 
@@ -329,6 +346,19 @@ Soap body contents. Useful if you don't want to log /store Soap headers.
 the entire response body. This is emitted for all responses (both success and
 errors).
 
+### Client.*addSigner*(signer) - use the specified function to sign the request
+
+With a signer you can intercept the request envelope before it is sent to the server. 
+
+Your signer will be invoked prior to the request being sent.
+If you add more then one signer they will be invoked in series, being passed the previous envelope.
+
+``` javascript
+  client.addSigner( function(envelope, options, callback) {
+    /* Sign the envelope */
+    callback(null, envelope);
+  });
+```
 
 ## WSSecurity
 
