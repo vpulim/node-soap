@@ -4,7 +4,8 @@ var fs = require('fs'),
     soap = require('..'),
     assert = require('assert'),
     request = require('request'),
-    http = require('http');
+    http = require('http'),
+    lastReqAddress;
 
 var test = {};
 test.server = null;
@@ -43,7 +44,9 @@ test.service = {
       SetTradePrice: function(args, cb, soapHeader) {
       },
 
-      IsValidPrice: function(args, cb, soapHeader) {
+      IsValidPrice: function(args, cb, soapHeader, req) {
+        lastReqAddress = req.connection.remoteAddress;
+
         var validationError = {
           Fault: {
             Code: {
@@ -176,6 +179,18 @@ describe('SOAP Server', function() {
       client.IsValidPrice({ price: 50000 }, function(err, result) {
         assert.ok(!err);
         assert.equal(true, !!(result.valid));
+        done();
+      });
+    });
+  });
+
+  it('should pass the original req to async methods', function(done) {
+    soap.createClient(test.baseUrl + '/stockquote?wsdl', function(err, client) {
+      assert.ok(!err);
+      client.IsValidPrice({ price: 50000 }, function(err, result) {
+        // node V3.x+ reports addresses as IPV6
+        var addressParts = lastReqAddress.split(':');
+        addressParts[(addressParts.length - 1)].should.equal('127.0.0.1');
         done();
       });
     });
