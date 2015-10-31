@@ -1,3 +1,10 @@
+0.11.0 / 2015-10-31
+=================
+* [ENHANCEMENT] Now passing request to services in server.js. (#769)
+* [ENHANCEMENT] Adding the ability to add headers in client requests. (#770)
+* [MAINTENANCE] Adding gitter badge to README and disabling issues. (#731)
+* [FIX] Stop sending Object prototype methods as XML. (#699)
+
 0.10.3 / 2015-10-23
 =================
 * [ENHANCEMENT] Adding createErroringStub to soap-stub. (#765)
