@@ -1,4 +1,5 @@
-# Soap [![NPM version][npm-image]][npm-url] [![Downloads][downloads-image]][npm-url] [![Build Status][travis-image]][travis-url]
+# Soap [![NPM version][npm-image]][npm-url] [![Downloads][downloads-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Gitter chat][gitter-image]][gitter-url]
+
 > A SOAP client and server for node.js.
 
 This module lets you connect to web services using SOAP.  It also provides a server that allows you to run your own SOAP services.
@@ -18,6 +19,15 @@ Install with [npm](http://github.com/isaacs/npm):
 ```
   npm install soap
 ```
+
+## Where can I file an issue?
+
+We've disabled issues in the repository and are now solely reviewing pull requests.  The reasons why we disabled issues can be found here [#731](https://github.com/vpulim/node-soap/pull/731).
+
+If you're in need of support we encourage you to join us and other `node-soap` users on gitter:
+
+[![Gitter chat][gitter-image]][gitter-url]
+
 ## Module
 
 ### soap.createClient(url[, options], callback) - create a new SOAP client from a WSDL url. Also supports a local filesystem path.
@@ -40,6 +50,7 @@ The `options` argument allows you to customize the client with the following pro
 - endpoint: to override the SOAP service's host specified in the `.wsdl` file.
 - request: to override the [request](https://github.com/request/request) module.
 - httpClient: to provide your own http client that implements `request(rurl, data, callback, exheaders, exoptions)`.
+- forceSoap12Headers: to set proper headers for SOAP v1.2
 
 ### soap.listen(*server*, *path*, *services*, *wsdl*) - create a new SOAP server that listens on *path* and provides *services*.
 *wsdl* is an xml string that defines the service.
@@ -64,6 +75,14 @@ The `options` argument allows you to customize the client with the following pro
 
               // This is how to receive incoming headers
               HeadersAwareFunction: function(args, cb, headers) {
+                  return {
+                      name: headers.Token
+                  };
+              }
+
+              // You can also inspect the original `req`
+              reallyDeatailedFunction: function(args, cb, headers, req) {
+                  console.log('SOAP `reallyDeatailedFunction` request from ' + req.connection.remoteAddress)
                   return {
                       name: headers.Token
                   };
@@ -324,8 +343,10 @@ errors).
 WSSecurity implements WS-Security.  UsernameToken and PasswordText/PasswordDigest is supported. An instance of WSSecurity is passed to Client.setSecurity.
 
 ``` javascript
-  new WSSecurity(username, password, passwordType)
-    //'PasswordDigest' or 'PasswordText' default is PasswordText
+  new WSSecurity(username, password, options)
+    //the 'options' object is optional and contains properties:
+    //passwordType: 'PasswordDigest' or 'PasswordText' default is PasswordText
+    //hasTimeStamp: true or false default is true
 ```
 
 ## Handling XML Attributes, Value and XML (wsdlOptions).
@@ -489,6 +510,56 @@ var options = {
 ignoredNamespaces: true
 }
 ```
+
+## soap-stub
+
+Unit testing services that use soap clients can be very cumbersome.  In order to get
+around this you can use `soap-stub` in conjunction with `sinon` to stub soap with
+your clients.
+
+### Example
+
+```javascript
+// test-initialization-script.js
+var sinon = require('sinon');
+var soapStub = require('soap/soap-stub');
+
+var urlMyApplicationWillUseWithCreateClient = 'http://path-to-my-wsdl';
+var clientStub = {
+  SomeOperation: sinon.stub()
+};
+
+clientStub.SomeOperation.respondWithError = soapStub.createRespondingStub({..error json...});
+clientStub.SomeOperation.respondWithSuccess = soapStub.createRespondingStub({..success json...});
+
+soapStub.registerClient('my client alias', urlMyApplicationWillUseWithCreateClient, clientStub);
+
+// test.js
+var soapStub = require('soap/soap-stub');
+
+describe('myService', function() {
+  var clientStub;
+  var myService;
+
+  beforeEach(function() {
+    clientStub = soapStub.getStub('my client alias');
+    soapStub.reset();
+    myService.init(clientStub);
+  });
+
+  describe('failures', function() {
+    beforeEach(function() {
+      clientStub.SomeOperation.respondWithError();
+    });
+
+    it('should handle error responses', function() {
+      myService.somethingThatCallsSomeOperation(function(err, response) {
+        // handle the error response.
+      });
+    });
+  });
+});
+```
  
  
 ## Contributors
@@ -505,3 +576,6 @@ ignoredNamespaces: true
 
 [travis-url]: https://travis-ci.org/vpulim/node-soap
 [travis-image]: http://img.shields.io/travis/vpulim/node-soap.svg
+
+[gitter-url]: https://gitter.im/vpulim/node-soap
+[gitter-image]: https://badges.gitter.im/vpulim/node-soap.png

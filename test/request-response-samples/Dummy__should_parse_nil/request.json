@@ -1,6 +1,6 @@
 {
   "DummyField1": "Humpty",
   "DummyFilter": {
-    "DummyFilterString": null
+    "DummyStringFilter": null
   }
 }
