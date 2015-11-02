@@ -110,6 +110,7 @@ function generateTest(name, methodName, wsdlPath, headerJSON, securityJSON, requ
       client[methodName](requestJSON, function(err, json, body, soapHeader){
         if(requestJSON){
           if (err) {
+            assert.notEqual('undefined: undefined', err.message);
             assert.deepEqual(err.root, responseJSON);
           } else {
             // assert.deepEqual(json, responseJSON);
