@@ -290,6 +290,7 @@ describe('SOAP Server', function() {
       client.GetLastTradePrice({ tickerSymbol: 'SOAP Fault v1.2' }, function(err, response, body) {
         assert.ok(err);
         var fault = err.root.Envelope.Body.Fault;
+        assert.equal(err.message, fault.faultcode + ': ' + fault.faultstring);
         assert.equal(fault.Code.Value, "soap:Sender");
         assert.equal(fault.Reason.Text, "Processing Error");
         // Verify namespace on elements set according to fault spec 1.2
@@ -309,6 +310,7 @@ describe('SOAP Server', function() {
       client.GetLastTradePrice({ tickerSymbol: 'SOAP Fault v1.1' }, function(err, response, body) {
         assert.ok(err);
         var fault = err.root.Envelope.Body.Fault;
+        assert.equal(err.message, fault.faultcode + ': ' + fault.faultstring);
         assert.equal(fault.faultcode, "soap:Client.BadArguments");
         assert.equal(fault.faultstring, "Error while processing arguments");
         // Verify namespace on elements set according to fault spec 1.1
