@@ -31,13 +31,15 @@
   ],
   "license": "MIT",
   "devDependencies": {
-    "mocha": "~1.17.0",
-    "jshint": "2.3.0",
-    "glob": "~3.2.8",
-    "should": "~3.3.0",
-    "timekeeper": "~0.0.4",
+    "chance": "^0.8.0",
     "duplexer": "~0.1.1",
+    "glob": "~3.2.8",
+    "jshint": "2.3.0",
+    "mocha": "~1.17.0",
     "readable-stream": "~2.0.2",
-    "semver": "~5.0.3"
+    "semver": "~5.0.3",
+    "should": "~3.3.0",
+    "sinon": "^1.17.2",
+    "timekeeper": "~0.0.4"
   }
 }
