@@ -222,7 +222,7 @@ describe('SOAP Client', function() {
           assert.ok(client.lastRequest);
           assert.equal(client.lastRequestHeaders['Content-Type'], 'application/soap+xml; charset=utf-8');
           assert.notEqual(client.lastRequest.indexOf('xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\"'), -1);
-
+          assert( !client.lastRequestHeaders.SOAPAction );
           done();
         }, null, {'test-header': 'test'});
       }, baseUrl);
