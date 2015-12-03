@@ -267,7 +267,7 @@ describe('SOAP Client', function() {
       done();
     });
   });
-  
+
   it('should add http headers', function(done) {
     soap.createClient(__dirname+'/wsdl/default_namespace.wsdl', function(err, client) {
       assert.ok(client);
