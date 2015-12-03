@@ -131,6 +131,27 @@ describe('SOAP Server', function() {
     });
   });
 
+  it('should 500 on wrong message', function(done) {
+    request.post({
+        url: test.baseUrl + '/stockquote?wsdl',
+        body : '<soapenv:Envelope' +
+                    ' xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"' +
+                    ' xmlns:soap="http://service.applicationsnet.com/soap/">' +
+                '  <soapenv:Header/>' +
+                '  <soapenv:Body>' +
+                '    <soap:WrongTag/>' +
+                '  </soapenv:Body>' +
+                '</soapenv:Envelope>',
+        headers: {'Content-Type': 'text/xml'}
+      }, function(err, res, body) {
+        assert.ok(!err);
+        assert.equal(res.statusCode, 500);
+        assert.ok(body.length);
+        done();
+      }
+    );
+  });
+
   it('should server up WSDL', function(done) {
     request(test.baseUrl + '/stockquote?wsdl', function(err, res, body) {
       assert.ok(!err);
@@ -290,6 +311,7 @@ describe('SOAP Server', function() {
       client.GetLastTradePrice({ tickerSymbol: 'SOAP Fault v1.2' }, function(err, response, body) {
         assert.ok(err);
         var fault = err.root.Envelope.Body.Fault;
+        assert.equal(err.message, fault.faultcode + ': ' + fault.faultstring);
         assert.equal(fault.Code.Value, "soap:Sender");
         assert.equal(fault.Reason.Text, "Processing Error");
         // Verify namespace on elements set according to fault spec 1.2
@@ -309,6 +331,7 @@ describe('SOAP Server', function() {
       client.GetLastTradePrice({ tickerSymbol: 'SOAP Fault v1.1' }, function(err, response, body) {
         assert.ok(err);
         var fault = err.root.Envelope.Body.Fault;
+        assert.equal(err.message, fault.faultcode + ': ' + fault.faultstring);
         assert.equal(fault.faultcode, "soap:Client.BadArguments");
         assert.equal(fault.faultstring, "Error while processing arguments");
         // Verify namespace on elements set according to fault spec 1.1
