@@ -302,6 +302,13 @@ as default request options to the constructor:
   }, {timeout: 5000})
 ```
 
+- Remove namespace prefix of param
+
+```javascript
+  client.MyService.MyPort.MyFunction({':name': 'value'}, function(err, result) {
+      // request body sent with `<name`, regardless of what the namespace should have been.
+  }, {timeout: 5000})
+```
 
 #### Options (optional)
  - Accepts any option that the request module accepts, see [here.](https://github.com/mikeal/request)
