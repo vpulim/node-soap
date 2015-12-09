@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.bigdatacollect.or"
+                  xmlns:n="http://www.bigdatacollect.or/Name/Types"
+                  xmlns:ns="http://schemas.xmlsoap.org/soap/encoding/"
+                  targetNamespace="http://www.bigdatacollect.or">
+    <wsdl:types>
+        <xs:schema>
+            <xs:import namespace="http://www.bigdatacollect.or/Name/Types" schemaLocation="Name.xsd"/>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="SetResourceRequest">
+        <wsdl:part name="SetResourceRequest" element="n:SetResourceRequest"/>
+    </wsdl:message>
+    <wsdl:message name="SetResourceResponse">
+        <wsdl:part name="SetResourceResponse" element="n:SetResourceResponse"/>
+    </wsdl:message>
+    <wsdl:portType name="NamePortType">
+        <wsdl:operation name="SetResource">
+            <wsdl:input message="tns:SetResourceRequest"/>
+            <wsdl:output message="tns:SetResourceResponse"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="NameBinding" type="tns:NamePortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="SetResource">
+            <soap:operation soapAction="http://www.bigdatacollect.or#SetResource" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="CollectorService">
+        <wsdl:port name="NamePortType" binding="tns:NameBinding">
+            <soap:address location="http://www.bigdatacollect.or/"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
