@@ -1,3 +1,11 @@
+0.11.1 / 2015-12-15
+=================
+* [ENHANCEMENT] Adding ClientSSLSecurityPFX for use in requests (#768)
+* [FIX] Remove SOAPAction http header in SOAP 1.2, extra header was causing some servers to trip. (#775)
+* [FIX] When an error occur, send HTTP 500 status code. (#774)
+* [FIX] Fixed issue when an error was undefined: undefined. (#771)
+* [FIX] Add missing type attribute for PasswordText in WSSecurity and update related tests. (#754)
+
 0.11.0 / 2015-10-31
 =================
 * [ENHANCEMENT] Now passing request to services in server.js. (#769)
