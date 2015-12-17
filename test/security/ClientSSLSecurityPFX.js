@@ -40,7 +40,7 @@ describe('ClientSSLSecurityPFX', function() {
     }
   });
 
-  it('should be usable in a request', function (done) {
+  xit('should be usable in a request', function (done) {
     var https = require('https');
     var pfkBuffer = fs.readFileSync(join(__dirname, '..', 'certs', 'client-password.pfx')),
       instance;
