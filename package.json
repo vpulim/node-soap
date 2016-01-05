@@ -1,7 +1,7 @@
 {
   "name": "ifit-soap",
   "private": true,
-  "version": "0.2.6",
+  "version": "1.0.0",
   "description": "A minimal node SOAP client",
   "engines": {
     "node": ">=0.8.0"
@@ -28,7 +28,7 @@
     }
   ],
   "dependencies": {
-    "node-expat": ">=1.6.1",
+    "node-expat": "^2.3.12",
     "request": ">=2.9.0"
   }
 }
