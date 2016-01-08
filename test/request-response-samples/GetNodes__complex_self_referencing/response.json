@@ -3,8 +3,8 @@
         "Name": "Parent",
         "Children": {
             "Node": [
-                {"Name":"Child1","Children":{}},
-                {"Name":"Child2","Children":{}}
+                {"Name":"Child1","Children": null},
+                {"Name":"Child2","Children": null}
             ]}
         }
 }

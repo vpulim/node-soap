@@ -114,7 +114,7 @@ function generateTest(name, methodName, wsdlPath, headerJSON, securityJSON, requ
             assert.deepEqual(err.root, responseJSON);
           } else {
             // assert.deepEqual(json, responseJSON);
-            assert.equal(JSON.stringify(json), JSON.stringify(responseJSON));
+            assert.equal(JSON.stringify(typeof json === 'undefined' ? null : json), JSON.stringify(responseJSON));
             if(responseSoapHeaderJSON){
               assert.equal(JSON.stringify(soapHeader), JSON.stringify(responseSoapHeaderJSON));
             }
