@@ -1,3 +1,9 @@
+0.11.2 / 2016-01-08
+=================
+* [FIX] Return null instead of empty object. (#733, #707, #784)
+* [DOC] Adds commas and semicolons to listen(...) example. (#782)
+* [MAINTENANCE] Temporarily skiping test from #768.
+
 0.11.1 / 2015-12-15
 =================
 * [ENHANCEMENT] Adding ClientSSLSecurityPFX for use in requests (#768)
