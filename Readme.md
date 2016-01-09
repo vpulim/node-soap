@@ -1,4 +1,4 @@
-# Soap [![NPM version][npm-image]][npm-url] [![Downloads][downloads-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Gitter chat][gitter-image]][gitter-url]
+# Soap [![NPM version][npm-image]][npm-url] [![Downloads][downloads-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Coveralls Status][coveralls-image]][coveralls-url] [![Gitter chat][gitter-image]][gitter-url]
 
 > A SOAP client and server for node.js.
 
@@ -502,7 +502,7 @@ namespace prefix is used to identify this Element. This is not much of a problem
    }
  ```
  This would override the default `ignoredNamespaces` of the `WSDL` processor to `['namespaceToIgnore', 'someOtherNamespace']`. (This shouldn't be necessary, anyways).
- 
+
 ## Handling "ignoreBaseNameSpaces" attribute
 If an Element in a `schema` definition depends has a basenamespace defined but the request does not need that value, for example you have a "sentJob" with basenamespace "v20"
 but the request need only: <sendJob> set in the tree structure, you need to set the ignoreBaseNameSpaces to true. This is set because in a lot of workaround the wsdl structure is not correctly
@@ -567,12 +567,12 @@ describe('myService', function() {
   });
 });
 ```
- 
- 
+
+
 ## Contributors
 
  * Author: [Vinay Pulim](https://github.com/vpulim)
- * Maintainers: 
+ * Maintainers:
    - [Joe Spencer](https://github.com/jsdevel)
    - [Heinz Romirer](https://github.com/herom)
  * [All Contributors](https://github.com/vpulim/node-soap/graphs/contributors)
@@ -586,3 +586,6 @@ describe('myService', function() {
 
 [gitter-url]: https://gitter.im/vpulim/node-soap
 [gitter-image]: https://badges.gitter.im/vpulim/node-soap.png
+
+[coveralls-url]: https://coveralls.io/r/vpulim/node-soap
+[coveralls-image]: http://img.shields.io/coveralls/vpulim/node-soap/master.svg

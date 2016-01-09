@@ -24,6 +24,8 @@
   },
   "scripts": {
     "pretest": "jshint index.js lib test",
+    "cover": "istanbul cover _mocha -- --timeout 10000 test/*-test.js test/security/*.js",
+    "coveralls": "cat ./coverage/lcov.info | coveralls -v",
     "test": "mocha --timeout 10000 test/*-test.js test/security/*.js"
   },
   "keywords": [
@@ -31,13 +33,15 @@
   ],
   "license": "MIT",
   "devDependencies": {
-    "mocha": "~1.17.0",
-    "jshint": "2.3.0",
-    "glob": "~3.2.8",
-    "should": "~3.3.0",
-    "timekeeper": "~0.0.4",
+    "coveralls": "^2.11.6",
     "duplexer": "~0.1.1",
+    "glob": "~3.2.8",
+    "istanbul": "^0.4.1",
+    "jshint": "2.3.0",
+    "mocha": "~1.17.0",
     "readable-stream": "~2.0.2",
-    "semver": "~5.0.3"
+    "semver": "~5.0.3",
+    "should": "~3.3.0",
+    "timekeeper": "~0.0.4"
   }
 }

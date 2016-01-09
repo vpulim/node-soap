@@ -10,3 +10,6 @@ node_js:
   - iojs
 before_install:
   - npm install -g npm@~1.4.6
+script:
+  - npm run cover
+  - npm run coveralls
