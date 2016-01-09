@@ -1,3 +1,7 @@
+0.11.4 / 2016-01-09
+=================
+* [MAINTENANCE] Adding coverage to project.
+
 0.11.3 / 2016-01-09
 =================
 * [ENHANCEMENT] Overriding the namespace prefix with empty prefix. (#779)
