@@ -1,3 +1,10 @@
+0.11.3 / 2016-01-09
+=================
+* [ENHANCEMENT] Overriding the namespace prefix with empty prefix. (#779)
+* [FIX] Wrong namespace on elements when complexType has same name. (#781)
+* [FIX] Improved 'https' pattern matching for local files with name starting with 'http'. (#780)
+* [FIX] Handles SOAP result null output. (#778)
+
 0.11.2 / 2016-01-08
 =================
 * [FIX] Return null instead of empty object. (#733, #707, #784)
