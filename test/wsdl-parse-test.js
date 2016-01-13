@@ -17,8 +17,41 @@ describe(__filename, function () {
 
   it('should parse recursive wsdls', function (done) {
     open_wsdl(path.resolve(__dirname, 'wsdl/recursive/file.wsdl'), function (err, def) {
-      // If we get here then we succeeded 
+      // If we get here then we succeeded
       done( err );
+    });
+  });
+
+  it('should parse recursive wsdls keeping default options', function(done) {
+    open_wsdl(path.resolve(__dirname, 'wsdl/recursive/file.wsdl'), function (err, def) {
+      if (err) {
+        return done( err );
+      }
+
+      def._includesWsdl.forEach(function(currentWsdl) {
+        assert.deepEqual(def.options, currentWsdl.options);
+      });
+
+      done();
+    });
+  });
+
+  it('should parse recursive wsdls keeping provided options', function(done) {
+    open_wsdl(path.resolve(__dirname, 'wsdl/recursive/file.wsdl'), {
+      ignoredNamespaces: {
+        namespaces: ['targetNamespace', 'typedNamespace'],
+        override: true
+      }
+    } , function (err, def) {
+      if (err) {
+        return done( err );
+      }
+
+      def._includesWsdl.forEach(function(currentWsdl, index) {
+        assert.deepEqual(def.options, currentWsdl.options);
+      });
+
+      done();
     });
   });
 });
