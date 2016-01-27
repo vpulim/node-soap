@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://www.dummy.com/Types"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns="http://www.dummy.com/Types"
+           elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:simpleType name="IdType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="\d{5,15}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="NameType">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="255"/>
+        </xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Dummy">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="language" type="xs:language" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+    <xs:element name="DummyResult">
+		<xs:sequence>
+			<xs:element name="DummyElement" type="tns:Dummy" maxOccurs="unbounded"/>
+		</xs:sequence>
+    </xs:element>
+</xs:schema>
