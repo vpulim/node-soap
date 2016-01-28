@@ -1,0 +1,23 @@
+{
+  "userCredentials": {
+    "username": "beeblebrox",
+    "sessionid": "42"
+  },
+  "getAvailabilityRequest": {
+    "attributes": {
+      "currency": "EUR"
+    },
+    "departure": "HAM",
+    "destination": "FRA",
+    "flightDate": "2016-01-01",
+    "returnDate": "2016-02-01",
+    "paxCount": [
+      {
+        "attributes": {
+          "count": 1,
+          "paxType": "ADT"
+        }
+      }
+    ]
+  }
+}
