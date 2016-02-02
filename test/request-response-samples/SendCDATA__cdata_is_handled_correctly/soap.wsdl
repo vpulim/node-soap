@@ -10,18 +10,14 @@
     <wsdl:types>
        <xsd:schema targetNamespace="http://example.com/testservice.xsd" xmlns:xsd="http://www.w3.org/2000/10/XMLSchema">
            <xsd:element name="TestMessage">
-              <xsd:complexType>
-                  <xsd:all>
-                      <xsd:element name="message" type="string"/>
-                  </xsd:all>
-              </xsd:complexType>
+              <xsd:complexType/>
            </xsd:element>
            <xsd:element name="TestResponse">
-              <xsd:complexType>
-                  <xsd:all>
-                      <xsd:element name="response" type="string"/>
-                  </xsd:all>
-              </xsd:complexType>
+               <s:complexType>
+                      <s:sequence>
+                          <s:element maxOccurs="1" minOccurs="0" name="TestResult" type="s:string"/>
+                      </s:sequence>
+                  </s:complexType>
            </xsd:element>
        </xsd:schema>
     </wsdl:types>
@@ -35,7 +31,7 @@
     </wsdl:message>
 
     <wsdl:portType name="TestServicePortType">
-        <wsdl:operation name="GetTestMessage">
+        <wsdl:operation name="SendCDATA">
             <wsdl:input message="tns:GetTestMessageInput"/>
             <wsdl:output message="tns:GetTestMessageOutput"/>
         </wsdl:operation>
@@ -43,8 +39,8 @@
 
     <wsdl:binding name="TestServiceSoapBinding" type="tns:TestServicePortType">
         <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
-        <wsdl:operation name="GetTestMessage">
-            <soap:operation soapAction="http://example.com/GetTestMessage"/>
+        <wsdl:operation name="SendCDATA">
+            <soap:operation soapAction="http://example.com/SendCDATA"/>
             <wsdl:input>
                 <soap:body use="literal"/>
             </wsdl:input>
