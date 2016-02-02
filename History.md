@@ -1,3 +1,8 @@
+0.12.0 / 2016-02-02
+=================
+* [MAINTENANCE] updating lodash to 3.x.x
+* [FIX] Schema overwrite when include a xsd with <xsd:include> (#788)
+
 0.11.4 / 2016-01-09
 =================
 * [MAINTENANCE] Adding coverage to project.
