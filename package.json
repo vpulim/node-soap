@@ -1,6 +1,6 @@
 {
-  "name": "soap",
-  "version": "0.12.0",
+  "name": "soap-vfork",
+  "version": "0.0.1",
   "description": "A minimal node SOAP client",
   "engines": {
     "node": ">=0.8.0"
@@ -13,10 +13,6 @@
     "sax": ">=0.6",
     "selectn": "^0.9.6",
     "strip-bom": "~0.3.1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/milewise/node-soap.git"
   },
   "main": "./index.js",
   "directories": {
