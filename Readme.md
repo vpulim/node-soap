@@ -100,6 +100,26 @@ The `options` argument allows you to customize the client with the following pro
   soap.listen(server, '/wsdl', myService, xml);
 ```
 
+### Options
+You can pass in server and [WSDL Options](#handling-xml-attributes-value-and-xml-wsdloptions)
+using an options hash.
+
+``` javascript
+var xml = require('fs').readFileSync('myservice.wsdl', 'utf8');
+
+soap.listen(server, {
+    // Server options.
+    path: '/wsdl',
+    services: myService,
+    xml: xml,
+
+    // WSDL options.
+    attributesKey: 'theAttrs',
+    valueKey: 'theVal',
+    xmlKey: 'theXml'
+});
+```
+
 ### Server Logging
 
 If the `log` method is defined it will be called with 'received' and 'replied'
