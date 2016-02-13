@@ -1,1 +1,1 @@
-<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ><soap:Header>headerContent</soap:Header><soap:Body><Request xmlns="http://www.example.com/v1"></Request></soap:Body></soap:Envelope>
+<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ><soap:Header>headerContent</soap:Header><soap:Body><Request xmlns="http://www.example.com/v1"></Request></soap:Body></soap:Envelope>
