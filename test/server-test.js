@@ -116,6 +116,39 @@ describe('SOAP Server', function() {
   });
 
 
+  it('should add and clear response soap headers', function(done) {
+    assert.ok(!test.soapServer.getSoapHeaders());
+
+    var i1 = test.soapServer.addSoapHeader('about-to-change-1');
+    var i2 = test.soapServer.addSoapHeader('about-to-change-2');
+
+    assert.ok(i1 === 0);
+    assert.ok(i2 === 1);
+    assert.ok(test.soapServer.getSoapHeaders().length === 2);
+
+    test.soapServer.changeSoapHeader(0, 'header1');
+    test.soapServer.changeSoapHeader(1, 'header2');
+    assert.ok(test.soapServer.getSoapHeaders()[0] === 'header1');
+    assert.ok(test.soapServer.getSoapHeaders()[1] === 'header2');
+
+    test.soapServer.clearSoapHeaders();
+    assert.ok(!test.soapServer.getSoapHeaders());
+    done();
+  });
+
+  it('should return predefined headers in response', function(done) {
+    soap.createClient(test.baseUrl + '/stockquote?wsdl', function(err, client) {
+      assert.ok(!err);
+      test.soapServer.addSoapHeader('<header1>ONE</header1>');
+      test.soapServer.changeSoapHeader(1, { header2: 'TWO' });
+      client.GetLastTradePrice({ tickerSymbol: 'AAPL'}, function(err, result, raw, headers) {
+        assert.ok(!err);
+        assert.deepEqual(headers, { header1: 'ONE', header2: 'TWO' });
+        done();
+      });
+    });
+  });
+
   it('should be running', function(done) {
     request(test.baseUrl, function(err, res, body) {
       assert.ok(!err);
