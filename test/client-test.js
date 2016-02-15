@@ -18,10 +18,15 @@ describe('SOAP Client', function() {
       assert.ok(client);
       assert.ok(!client.getSoapHeaders());
 
-      client.addSoapHeader('header1');
-      client.addSoapHeader('header2');
+      var i1 = client.addSoapHeader('about-to-change-1');
+      var i2 = client.addSoapHeader('about-to-change-2');
 
+      assert.ok(i1 === 0);
+      assert.ok(i2 === 1);
       assert.ok(client.getSoapHeaders().length === 2);
+
+      client.changeSoapHeader(0, 'header1');
+      client.changeSoapHeader(1, 'header2');
       assert.ok(client.getSoapHeaders()[0] === 'header1');
       assert.ok(client.getSoapHeaders()[1] === 'header2');
 

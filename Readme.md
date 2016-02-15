@@ -176,7 +176,37 @@ To change the HTTP statusCode of the response include it on the fault.  The stat
   };
 ```
 
-### SOAP Headers
+### Server security example using PasswordDigest
+
+If `server.authenticate` is not defined then no authentication will take place.
+
+``` javascript
+  server = soap.listen(...)
+  server.authenticate = function(security) {
+    var created, nonce, password, user, token;
+    token = security.UsernameToken, user = token.Username,
+            password = token.Password, nonce = token.Nonce, created = token.Created;
+    return user === 'user' && password === soap.passwordDigest(nonce, created, 'password');
+  };
+```
+
+### Server connection authorization
+
+The `server.authorizeConnection` method is called prior to the soap service method.
+If the method is defined and returns `false` then the incoming connection is
+terminated.
+
+``` javascript
+  server = soap.listen(...)
+  server.authorizeConnection = function(req) {
+    return true; // or false
+  };
+```
+
+
+## SOAP Headers
+
+### Received SOAP Headers
 
 A service method can look at the SOAP headers by providing a 3rd arguments.
 
@@ -207,32 +237,32 @@ First parameter is the Headers object;
 second parameter is the name of the SOAP method that will called
 (in case you need to handle the headers differently based on the method).
 
-### Server security example using PasswordDigest
+### Outgoing SOAP Headers
 
-If `server.authenticate` is not defined then no authentication will take place.
+Both client & server can define SOAP headers that will be added to what they send.
+They provide the following methods to manage the headers.
 
-``` javascript
-  server = soap.listen(...)
-  server.authenticate = function(security) {
-    var created, nonce, password, user, token;
-    token = security.UsernameToken, user = token.Username,
-            password = token.Password, nonce = token.Nonce, created = token.Created;
-    return user === 'user' && password === soap.passwordDigest(nonce, created, 'password');
-  };
-```
 
-### Server connection authorization
+#### *addSoapHeader*(soapHeader[, name, namespace, xmlns]) - add soapHeader to soap:Header node
+##### Parameters
+ - `soapHeader`     Object({rootName: {name: "value"}}) or strict xml-string
 
-The `server.authorizeConnection` method is called prior to the soap service method.
-If the method is defined and returns `false` then the incoming connection is
-terminated.
+##### Returns
+The index where the header is inserted.
 
-``` javascript
-  server = soap.listen(...)
-  server.authorizeConnection = function(req) {
-    return true; // or false
-  };
-```
+##### Optional parameters when first arg is object :
+ - `name`           Unknown parameter (it could just a empty string)
+ - `namespace`      prefix of xml namespace
+ - `xmlns`          URI
+
+#### *changeSoapHeader*(index, soapHeader[, name, namespace, xmlns]) - change an already existing soapHeader
+##### Parameters
+ - `index`          index of the header to replace with provided new value
+ - `soapHeader`     Object({rootName: {name: "value"}}) or strict xml-string
+
+#### *getSoapHeaders*() - return all defined headers
+
+#### *clearSoapHeaders*() - remove all defined headers
 
 
 ## Client
@@ -338,16 +368,6 @@ as default request options to the constructor:
       // result is a javascript object
   }, {timeout: 5000})
 ```
-
-### Client.*addSoapHeader*(soapHeader[, name, namespace, xmlns]) - add soapHeader to soap:Header node
-#### Options
-
- - `soapHeader`     Object({rootName: {name: "value"}}) or strict xml-string
-
-##### Optional parameters when first arg is object :
- - `name`           Unknown parameter (it could just a empty string)
- - `namespace`      prefix of xml namespace
- - `xmlns`          URI
 
 ### Client.*lastRequest* - the property that contains last full soap request for client logging
 
