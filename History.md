@@ -1,3 +1,12 @@
+0.13.0 / 2016-02-16
+=================
+* [FIX] Maintain `ignoredNamespaces` option when processing WSDL includes (#796)
+* [ENHANCEMENT] SOAP Headers for server response & `changeSoapHeader()` method for client & server (#792) 
+* [ENHANCEMENT] Added XML declaration (version & encoding) to client requests (#797)
+* [DOC] Added example for `server.options` to README, fixed typos in CONTRIBUTING (#798)
+* [FIX] Keep `nsContext` stack consistent even on recursive calls (#799)
+* [FIX] Prevent NPE when processing an empty children array (#789)
+
 0.12.0 / 2016-02-02
 =================
 * [MAINTENANCE] updating lodash to 3.x.x
