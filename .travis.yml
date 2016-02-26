@@ -3,13 +3,20 @@ language: node_js
 notifications:
   email: false
 node_js:
-  - 0.8
   - 0.10
   - 0.12
   - 4.0
   - iojs
+env:
+  - CXX=g++-4.8
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-4.8
 before_install:
-  - npm install -g npm@~1.4.6
+  - npm -g install npm@latest
 script:
   - npm run cover
   - npm run coveralls

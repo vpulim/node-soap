@@ -321,6 +321,16 @@ as default request options to the constructor:
   client.setSecurity(new soap.WSSecurity('username', 'password'))
 ```
 
+####WSSecurity with X509 Certificate
+
+``` javascript
+  var privateKey = fs.readFileSync(privateKeyPath);
+  var publicKey = fs.readFileSync(publicKeyPath);
+  var password = ''; // optional password
+  var wsSecurity = new soap.WSSecurityCert(privateKey, publicKey, password, 'utf8');
+  client.setSecurity(wsSecurity);
+```
+
 ####BearerSecurity
 
 ``` javascript
