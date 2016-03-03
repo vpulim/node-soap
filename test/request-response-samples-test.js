@@ -6,6 +6,8 @@ var glob   = require('glob');
 var http = require('http');
 var path = require('path');
 var timekeeper = require('timekeeper');
+var jsdiff = require('diff');
+require('colors');
 var soap = require('../');
 var WSSecurity = require('../lib/security/WSSecurity');
 var server;
@@ -14,6 +16,14 @@ var tests = glob.sync('./request-response-samples/*', {cwd:__dirname})
   .map(function(node){return path.resolve(__dirname, node);})
   .filter(function(node){return fs.statSync(node).isDirectory();});
 var suite = {};
+
+function normalizeWhiteSpace(raw)
+{
+  var normalized = raw.replace(/\r\n|\r|\n/g, '');  // strip line endings
+  normalized = normalized.replace(/\s\s+/g, ' '); // convert whitespace to spaces
+  normalized = normalized.replace(/> </g, '><');  // get rid of spaces between elements
+  return normalized;
+}
 
 var requestContext = {
   //set these two within each test
@@ -29,7 +39,23 @@ var requestContext = {
     req.on('end', function(){
       if(!requestContext.expectedRequest)return res.end(requestContext.responseToSend);
       if(!requestContext.responseToSend)return requestContext.doneHandler();
-      assert.equal(chunks.join(''), requestContext.expectedRequest);
+
+      var actualRequest = normalizeWhiteSpace(chunks.join(''));
+      var expectedRequest = normalizeWhiteSpace(requestContext.expectedRequest);
+
+      if (actualRequest !== expectedRequest) {
+        var diff = jsdiff.diffChars(actualRequest, expectedRequest);
+        var comparison = '';
+        diff.forEach(function(part) {
+          var color = 'grey';
+          if (part.added) { color = 'green'; }
+          if (part.removed) { color = 'red'; }
+          comparison += part.value[color];
+        });
+        console.log(comparison);
+      }
+
+      assert.equal(actualRequest, expectedRequest);
       res.end(requestContext.responseToSend);
       requestContext.expectedRequest = null;
       requestContext.responseToSend = null;

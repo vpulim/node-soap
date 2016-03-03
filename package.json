@@ -37,7 +37,9 @@
   ],
   "license": "MIT",
   "devDependencies": {
+    "colors": "^1.1.2",
     "coveralls": "^2.11.6",
+    "diff": "^2.2.1",
     "duplexer": "~0.1.1",
     "glob": "~3.2.8",
     "istanbul": "^0.4.1",
