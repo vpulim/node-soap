@@ -381,6 +381,13 @@ as default request options to the constructor:
   }, {timeout: 5000})
 ```
 
+- You can measure the elapsed time on the request by passing the time option:
+``` javascript
+  client.MyService.MyPort.MyFunction({name: 'value'}, function(err, result) {
+      // client.lastElapsedTime - the elapsed time of the last request in milliseconds
+  }, {time: true})
+```
+
 ### Client.*lastRequest* - the property that contains last full soap request for client logging
 
 ### Client Events
