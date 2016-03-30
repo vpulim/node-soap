@@ -202,6 +202,22 @@ describe('SOAP Client', function() {
       }, baseUrl);
     });
 
+    it('should have lastElapsedTime after a call with the time option passed', function(done) {
+      soap.createClient(__dirname+'/wsdl/default_namespace.wsdl', function(err, client) {
+        assert.ok(client);
+        assert.ok(!err);
+
+        client.MyOperation({}, function(err, result) {
+          assert.ok(result);
+          assert.ok(client.lastResponse);
+          assert.ok(client.lastResponseHeaders);
+          assert.ok(client.lastElapsedTime);
+
+          done();
+        }, {time: true}, {'test-header': 'test'});
+      }, baseUrl);
+    });
+
     it('should not return error in the call and return the json in body', function(done) {
       soap.createClient(__dirname+'/wsdl/json_response.wsdl', function(err, client) {
         assert.ok(client);
