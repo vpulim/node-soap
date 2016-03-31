@@ -218,6 +218,21 @@ describe('SOAP Client', function() {
       }, baseUrl);
     });
 
+    it('should add http headers in method call options', function(done) {
+      soap.createClient(__dirname+'/wsdl/default_namespace.wsdl', function(err, client) {
+        assert.ok(client);
+        assert.ok(!err);
+
+        client.MyOperation({}, function(err, result) {
+          assert.ok(result);
+          assert.ok(client.lastRequestHeaders['test-header']);
+          assert.ok(client.lastRequestHeaders['options-test-header']);
+
+          done();
+        }, {headers: {'options-test-header': 'test'}}, {'test-header': 'test'});
+      }, baseUrl);
+    });
+
     it('should not return error in the call and return the json in body', function(done) {
       soap.createClient(__dirname+'/wsdl/json_response.wsdl', function(err, client) {
         assert.ok(client);
