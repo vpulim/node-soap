@@ -9,8 +9,8 @@
   "dependencies": {
     "debug": "~0.7.4",
     "lodash": "3.x.x",
+    "easysax": "^0.1.14",
     "request": ">=2.9.0",
-    "sax": ">=0.6",
     "selectn": "^0.9.6",
     "strip-bom": "~0.3.1",
     "ursa": "0.8.5 || >=0.9.3",
