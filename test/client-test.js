@@ -263,6 +263,73 @@ describe('SOAP Client', function() {
         }, null, {'test-header': 'test'});
       }, baseUrl);
     });
+
+    it('should allow calling the method with args, callback, options and extra headers', function(done) {
+      soap.createClient(__dirname+'/wsdl/json_response.wsdl', function(err, client) {
+        assert.ok(client);
+        assert.ok(!err);
+
+        client.MyOperation({}, function(err, result, body) {
+          assert.ok(!err);
+          assert.ok(result);
+          assert.ok(body.tempResponse === 'temp');
+          assert.ok(client.lastResponseHeaders.status === 'pass');
+          assert.ok(client.lastRequestHeaders['options-test-header'] === 'test');
+
+          done();
+        }, {headers: {'options-test-header': 'test'}}, {'test-header': 'test'});
+      }, baseUrl);
+    });
+
+    it('should allow calling the method with only a callback', function(done) {
+      soap.createClient(__dirname+'/wsdl/json_response.wsdl', function(err, client) {
+        assert.ok(client);
+        assert.ok(!err);
+
+        client.MyOperation(function(err, result, body) {
+          assert.ok(!err);
+          assert.ok(result);
+          assert.ok(body.tempResponse === 'temp');
+          assert.ok(client.lastResponseHeaders.status === 'fail');
+
+          done();
+        });
+      }, baseUrl);
+    });
+
+    it('should allow calling the method with args, options and callback last', function(done) {
+      soap.createClient(__dirname+'/wsdl/json_response.wsdl', function(err, client) {
+        assert.ok(client);
+        assert.ok(!err);
+
+        client.MyOperation({}, {headers: {'options-test-header': 'test'}}, function(err, result, body) {
+          assert.ok(!err);
+          assert.ok(result);
+          assert.ok(body.tempResponse === 'temp');
+          assert.ok(client.lastResponseHeaders.status === 'fail');
+          assert.ok(client.lastRequestHeaders['options-test-header'] === 'test');
+
+          done();
+        });
+      }, baseUrl);
+    });
+
+    it('should allow calling the method with args, options, extra headers and callback last', function(done) {
+      soap.createClient(__dirname+'/wsdl/json_response.wsdl', function(err, client) {
+        assert.ok(client);
+        assert.ok(!err);
+
+        client.MyOperation({}, {headers: {'options-test-header': 'test'}}, {'test-header': 'test'}, function(err, result, body) {
+          assert.ok(!err);
+          assert.ok(result);
+          assert.ok(body.tempResponse === 'temp');
+          assert.ok(client.lastResponseHeaders.status === 'pass');
+          assert.ok(client.lastRequestHeaders['options-test-header'] === 'test');
+
+          done();
+        });
+      }, baseUrl);
+    });
   });
 
   it('should add soap headers', function (done) {
