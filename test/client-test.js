@@ -74,6 +74,18 @@ describe('SOAP Client', function() {
       });
   });
 
+  it('should allow customization of envelope', function(done) {
+    soap.createClient(__dirname+'/wsdl/default_namespace.wsdl', {envelopeKey: 'soapenv'}, function(err, client) {
+      assert.ok(client);
+      assert.ok(!err);
+
+      client.MyOperation({}, function(err, result) {
+        assert.notEqual(client.lastRequest.indexOf('xmlns:soapenv='), -1);
+        done();
+      });
+    });
+  });
+
   it('should set binding style to "document" by default if not explicitly set in WSDL, per SOAP spec', function (done) {
     soap.createClient(__dirname+'/wsdl/binding_document.wsdl', function(err, client) {
       assert.ok(client);
@@ -303,7 +315,7 @@ describe('SOAP Client', function() {
       done();
     });
   });
-  
+
   it('should add http headers', function(done) {
     soap.createClient(__dirname+'/wsdl/default_namespace.wsdl', function(err, client) {
       assert.ok(client);

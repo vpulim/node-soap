@@ -51,6 +51,7 @@ The `options` argument allows you to customize the client with the following pro
 - request: to override the [request](https://github.com/request/request) module.
 - httpClient: to provide your own http client that implements `request(rurl, data, callback, exheaders, exoptions)`.
 - forceSoap12Headers: to set proper headers for SOAP v1.2
+- envelopeKey: to set specific key instead of <pre><<b>soap</b>:Body></<b>soap</b>:Body></pre>
 - wsdl_options: custom options for the request module on WSDL requests.
 - wsdl_headers: custom HTTP headers to be sent on WSDL requests.
 
