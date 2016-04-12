@@ -1,3 +1,17 @@
+0.14.0 / 2016-04-12
+=================
+* [ENHANCEMENT] Allow to call methods with `callback` as last param in order to align with node.js `callback last` pattern (#814)
+* [ENHANCEMENT] Re-enabled `ignoreBaseNameSpaces` option (#809)
+* [FIX] Avoid overwriting request headers with options in client method invocation (#813)
+* [ENHANCEMENT] Accept `time` value in in `extraHeaders` options in order to retrieve the `lastElapsedTime` for the response (#811)
+* [ENHANCEMENT] Allow to set a custom envelope key for the SOAP request (#812)
+* [FIX] Removed double declaration of `WSDL` variable in `lib/soap.js` (#810)
+* [DOC] Added documentation for `wsdl_options` and `wsdl_headers` options in `createClient()` method (#806)
+* [ENHANCEMENT] Added support to override the namespace definition of the root element (#805)
+* [ENHANCEMENT] Ignore "whitespace only" differences in `request/response sample tests` in order to make differences easier to spot (#804)
+* [ENHANCEMENT] Added support for WSSecurity XML signing with x509 certificats. Dropped support for node.js < 0.10.x (#801)
+* [ENHANCEMENT] Remove assertions/checkin of certificates in `ClientSSLSecurity` (#800)
+
 0.13.0 / 2016-02-16
 =================
 * [FIX] Maintain `ignoredNamespaces` option when processing WSDL includes (#796)
