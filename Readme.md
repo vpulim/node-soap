@@ -349,28 +349,12 @@ as default request options to the constructor:
       // soapHeader is the response soap header as a javascript object
   })
 ```
-### Client.*service*.*port*.*method*(args, callback[, options]) - call a *method* using a specific *service* and *port*
+### Client.*service*.*port*.*method*(args, callback[, options[, extraHeaders]]) - call a *method* using a specific *service* and *port*
 
 ``` javascript
   client.MyService.MyPort.MyFunction({name: 'value'}, function(err, result) {
       // result is a javascript object
   })
-```
-###Overriding the namespace prefix
-`node-soap` is still working out some kinks regarding namespaces.  If you find that an element is given the wrong namespace prefix in the request body, you can add the prefix to it's name in the containing object.  I.E.:
-
-```javascript
-  client.MyService.MyPort.MyFunction({'ns1:name': 'value'}, function(err, result) {
-      // request body sent with `<ns1:name`, regardless of what the namespace should have been.
-  }, {timeout: 5000})
-```
-
-- Remove namespace prefix of param
-
-```javascript
-  client.MyService.MyPort.MyFunction({':name': 'value'}, function(err, result) {
-      // request body sent with `<name`, regardless of what the namespace should have been.
-  }, {timeout: 5000})
 ```
 
 #### Options (optional)
@@ -387,6 +371,41 @@ as default request options to the constructor:
   client.MyService.MyPort.MyFunction({name: 'value'}, function(err, result) {
       // client.lastElapsedTime - the elapsed time of the last request in milliseconds
   }, {time: true})
+```
+
+#### Extra Headers (optional)
+
+Object properties define extra HTTP headers to be sent on the request.
+
+#### Alternative method call using callback-last pattern
+
+To align method call signature with node' standard callback-last patter and event allow promisification of method calls, the following method signatures are also supported:
+
+```javascript
+client.MyService.MyPort.MyFunction({name: 'value'}, options, function (err, result) {
+  // result is a javascript object
+})
+
+client.MyService.MyPort.MyFunction({name: 'value'}, options, extraHeaders, function (err, result) {
+  // result is a javascript object
+})
+```
+
+###Overriding the namespace prefix
+`node-soap` is still working out some kinks regarding namespaces.  If you find that an element is given the wrong namespace prefix in the request body, you can add the prefix to it's name in the containing object.  I.E.:
+
+```javascript
+  client.MyService.MyPort.MyFunction({'ns1:name': 'value'}, function(err, result) {
+      // request body sent with `<ns1:name`, regardless of what the namespace should have been.
+  }, {timeout: 5000})
+```
+
+- Remove namespace prefix of param
+
+```javascript
+  client.MyService.MyPort.MyFunction({':name': 'value'}, function(err, result) {
+      // request body sent with `<name`, regardless of what the namespace should have been.
+  }, {timeout: 5000})
 ```
 
 ### Client.*lastRequest* - the property that contains last full soap request for client logging
