@@ -632,14 +632,15 @@ describe('SOAP Client', function() {
       }, baseUrl);
     });
 
-    it('Should emit the "response" event with Soap Body string', function (done) {
+    it('Should emit the "response" event with Soap Body string and Response object', function (done) {
       soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', function (err, client) {
         var didEmitEvent = false;
-        client.on('response', function (xml) {
+        client.on('response', function (xml, response) {
           didEmitEvent = true;
           // Should contain entire soap message
           assert.equal(typeof xml, 'string');
           assert.equal(xml.indexOf('soap:Envelope'), -1);
+          assert.ok(response);
         });
 
         client.MyOperation({}, function() {

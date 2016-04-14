@@ -422,8 +422,8 @@ Soap body contents. Useful if you don't want to log /store Soap headers.
 * soapError - Emitted when an erroneous response is received.
   Useful if you want to globally log errors.
 * response - Emitted after a response is received. The event handler receives
-the entire response body. This is emitted for all responses (both success and
-errors).
+the SOAP response body as well as the entire `IncomingMessage` response object.
+This is emitted for all responses (both success and errors).
 
 
 ## WSSecurity
