@@ -1,6 +1,6 @@
 {
   "name": "soap",
-  "version": "0.14.0-mroutis",
+  "version": "0.14.1-mroutis",
   "description": "A minimal node SOAP client",
   "engines": {
     "node": ">=0.10.0"
