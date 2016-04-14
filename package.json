@@ -49,5 +49,8 @@
     "semver": "~5.0.3",
     "should": "~3.3.0",
     "timekeeper": "~0.0.4"
-  }
+  },
+   "browser": {
+      "fs": false
+   }
 }
