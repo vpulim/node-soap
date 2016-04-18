@@ -55,6 +55,8 @@ The `options` argument allows you to customize the client with the following pro
 - wsdl_options: custom options for the request module on WSDL requests.
 - wsdl_headers: custom HTTP headers to be sent on WSDL requests.
 
+Note: for versions of node >0.10.X, you may need to specify `{connection: 'keep-alive'}` in SOAP headers to avoid truncation of longer chunked responses.
+
 ### soap.listen(*server*, *path*, *services*, *wsdl*) - create a new SOAP server that listens on *path* and provides *services*.
 *wsdl* is an xml string that defines the service.
 
