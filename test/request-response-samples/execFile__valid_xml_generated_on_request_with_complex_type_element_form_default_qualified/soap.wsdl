@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns:tns="urn:RpcExample" xmlns:SOAP-ENV="http://www.w3.org/2003/05/soap-envelope" xmlns:SOAP-ENC="http://www.w3.org/2003/05/soap-encoding" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:RpcExample="urn:RpcExample" xmlns:SOAP="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:MIME="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:DIME="http://schemas.xmlsoap.org/ws/2002/04/dime/wsdl/" xmlns:WSDL="http://schemas.xmlsoap.org/wsdl/" xmlns="http://schemas.xmlsoap.org/wsdl/" name="urn:RpcExample" targetNamespace="urn:RpcExample">
 	<types>
-		<schema xmlns:SOAP-ENV="http://www.w3.org/2003/05/soap-envelope" xmlns:SOAP-ENC="http://www.w3.org/2003/05/soap-encoding" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:RpcExample="urn:RpcExample" xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:RpcExample" elementFormDefault="unqualified" attributeFormDefault="unqualified">
-			<import namespace="http://www.w3.org/2003/05/soap-encoding"/>
+		<schema xmlns:SOAP-ENV="http://www.w3.org/2003/05/soap-envelope" xmlns:SOAP-ENC="http://www.w3.org/2003/05/soap-encoding" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:RpcExample="urn:RpcExample" xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:RpcExample" elementFormDefault="qualified" attributeFormDefault="unqualified">
+			<element name="execFileParams" type="tns:execFileParams"/>
 			<complexType name="execFileParams">
 				<sequence>
 					<element name="fileName" type="xsd:string" minOccurs="1" maxOccurs="1"/>
@@ -11,6 +11,7 @@
 					<element name="startDetached" type="xsd:boolean" minOccurs="1" maxOccurs="1"/>
 				</sequence>
 			</complexType>
+			<element name="execFileResult" type="tns:execFileResult"/>
 			<complexType name="execFileResult">
 				<sequence>
 					<element name="base64EncodedStdOut" type="xsd:string" minOccurs="1" maxOccurs="1"/>
@@ -19,10 +20,10 @@
 		</schema>
 	</types>
 	<message name="execFile">
-		<part name="params" type="RpcExample:execFileParams"/>
+		<part name="execFile" element="RpcExample:execFileParams"/>
 	</message>
 	<message name="execFileResponse">
-		<part name="result" type="RpcExample:execFileResult"/>
+		<part name="execFileResponse" element="RpcExample:execFileResult"/>
 	</message>
 	<portType name="RpcExamplePortType">
 		<operation name="execFile">
@@ -31,19 +32,19 @@
 		</operation>
 	</portType>
 	<binding name="RpcExample" type="tns:RpcExamplePortType">
-		<SOAP:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<SOAP:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
 		<operation name="execFile">
-			<SOAP:operation style="rpc"/>
+			<SOAP:operation type="document"/>
 			<input>
-				<SOAP:body use="encoded" namespace="urn:RpcExample" encodingStyle="http://www.w3.org/2003/05/soap-encoding"/>
+				<SOAP:body use="literal"/>
 			</input>
 			<output>
-				<SOAP:body use="encoded" namespace="urn:RpcExample" encodingStyle="http://www.w3.org/2003/05/soap-encoding"/>
+				<SOAP:body use="literal"/>
 			</output>
 		</operation>
 	</binding>
 	<service name="RpcExample">
-		<port name="RpcExample" binding="tns:RpcExample">
+		<port name="RpcExamplePortType" binding="tns:RpcExample">
 			<SOAP:address location="http://127.0.0.1/"/>
 		</port>
 	</service>
