@@ -4,6 +4,44 @@
 
 This module lets you connect to web services using SOAP.  It also provides a server that allows you to run your own SOAP services.
 
+<!-- Run `npm run toc` to update below section -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+
+- [Features:](#features)
+- [Install](#install)
+- [Where can I file an issue?](#where-can-i-file-an-issue)
+- [Module](#module)
+  - [soap.createClient(url[, options], callback) - create a new SOAP client from a WSDL url. Also supports a local filesystem path.](#soapcreateclienturl-options-callback---create-a-new-soap-client-from-a-wsdl-url-also-supports-a-local-filesystem-path)
+  - [soap.listen(*server*, *path*, *services*, *wsdl*) - create a new SOAP server that listens on *path* and provides *services*.](#soaplistenserver-path-services-wsdl---create-a-new-soap-server-that-listens-on-path-and-provides-services)
+  - [Options](#options)
+  - [Server Logging](#server-logging)
+  - [Server Events](#server-events)
+  - [SOAP Fault](#soap-fault)
+  - [Server security example using PasswordDigest](#server-security-example-using-passworddigest)
+  - [Server connection authorization](#server-connection-authorization)
+- [SOAP Headers](#soap-headers)
+  - [Received SOAP Headers](#received-soap-headers)
+  - [Outgoing SOAP Headers](#outgoing-soap-headers)
+- [Client](#client)
+  - [Client.describe() - description of services, ports and methods as a JavaScript object](#clientdescribe---description-of-services-ports-and-methods-as-a-javascript-object)
+  - [Client.setSecurity(security) - use the specified security protocol](#clientsetsecuritysecurity---use-the-specified-security-protocol)
+  - [Client.*method*(args, callback) - call *method* on the SOAP service.](#clientmethodargs-callback---call-method-on-the-soap-service)
+  - [Client.*service*.*port*.*method*(args, callback[, options[, extraHeaders]]) - call a *method* using a specific *service* and *port*](#clientserviceportmethodargs-callback-options-extraheaders---call-a-method-using-a-specific-service-and-port)
+  - [Client.*lastRequest* - the property that contains last full soap request for client logging](#clientlastrequest---the-property-that-contains-last-full-soap-request-for-client-logging)
+  - [Client Events](#client-events)
+- [WSSecurity](#wssecurity)
+- [Handling XML Attributes, Value and XML (wsdlOptions).](#handling-xml-attributes-value-and-xml-wsdloptions)
+  - [Specifying the exact namespace definition of the root element](#specifying-the-exact-namespace-definition-of-the-root-element)
+- [Handling "ignored" namespaces](#handling-ignored-namespaces)
+- [Handling "ignoreBaseNameSpaces" attribute](#handling-ignorebasenamespaces-attribute)
+- [soap-stub](#soap-stub)
+  - [Example](#example)
+- [Contributors](#contributors)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## Features:
 
 * Very simple API
