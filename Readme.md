@@ -412,6 +412,8 @@ client.MyService.MyPort.MyFunction({name: 'value'}, options, extraHeaders, funct
 
 ### Client.*lastRequest* - the property that contains last full soap request for client logging
 
+### Client.setEndpoint(url) - overwrite the SOAP service endpoint address
+
 ### Client Events
 Client instances emit the following events:
 
