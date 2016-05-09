@@ -8,18 +8,22 @@
              xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
 
     <wsdl:types>
-       <xsd:schema targetNamespace="http://example.com/testservice.xsd" xmlns:xsd="http://www.w3.org/2000/10/XMLSchema">
-           <xsd:element name="TestMessage">
-              <xsd:complexType/>
-           </xsd:element>
-           <xsd:element name="TestResponse">
-               <s:complexType>
-                      <s:sequence>
-                          <s:element maxOccurs="1" minOccurs="0" name="TestResult" type="s:string"/>
-                      </s:sequence>
-                  </s:complexType>
-           </xsd:element>
-       </xsd:schema>
+        <xsd:schema targetNamespace="http://example.com/testservice.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            <xsd:element name="TestMessage">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element maxOccurs="1" minOccurs="0" name="message" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="TestResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element maxOccurs="1" minOccurs="0" name="TestResult" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:schema>
     </wsdl:types>
 
     <wsdl:message name="GetTestMessageInput">
