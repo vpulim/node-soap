@@ -30,8 +30,14 @@ This module lets you connect to web services using SOAP.  It also provides a ser
   - [Client.*method*(args, callback) - call *method* on the SOAP service.](#clientmethodargs-callback---call-method-on-the-soap-service)
   - [Client.*service*.*port*.*method*(args, callback[, options[, extraHeaders]]) - call a *method* using a specific *service* and *port*](#clientserviceportmethodargs-callback-options-extraheaders---call-a-method-using-a-specific-service-and-port)
   - [Client.*lastRequest* - the property that contains last full soap request for client logging](#clientlastrequest---the-property-that-contains-last-full-soap-request-for-client-logging)
+  - [Client.setEndpoint(url) - overwrite the SOAP service endpoint address](#clientsetendpointurl---overwrite-the-soap-service-endpoint-address)
   - [Client Events](#client-events)
-- [WSSecurity](#wssecurity)
+- [Security](#security)
+  - [BasicAuthSecurity](#basicauthsecurity)
+  - [BearerSecurity](#bearersecurity)
+  - [ClientSSLSecurity](#clientsslsecurity)
+  - [WSSecurity](#wssecurity)
+  - [WSSecurityCert](#wssecuritycert)
 - [Handling XML Attributes, Value and XML (wsdlOptions).](#handling-xml-attributes-value-and-xml-wsdloptions)
   - [Specifying the exact namespace definition of the root element](#specifying-the-exact-namespace-definition-of-the-root-element)
 - [Handling "ignored" namespaces](#handling-ignored-namespaces)
@@ -330,55 +336,6 @@ An instance of `Client` is passed to the `soap.createClient` callback.  It is us
 ```
 
 ### Client.setSecurity(security) - use the specified security protocol
-`node-soap` has several default security protocols.  You can easily add your own
-as well.  The interface is quite simple.  Each protocol defines 2 methods:
-* `addOptions` - a method that accepts an options arg that is eventually passed directly to `request`
-* `toXML` - a method that returns a string of XML.
-
-By default there are 3 protocols:
-
-####BasicAuthSecurity
-
-``` javascript
-  client.setSecurity(new soap.BasicAuthSecurity('username', 'password'));
-```
-
-####ClientSSLSecurity
-_Note_: If you run into issues using this protocol, consider passing these options
-as default request options to the constructor:
-* `rejectUnauthorized: false`
-* `strictSSL: false`
-* `secureOptions: constants.SSL_OP_NO_TLSv1_2` (this is likely needed for node >= 10.0)
-
-``` javascript
-  client.setSecurity(new soap.ClientSSLSecurity(
-    '/path/to/key'
-    , '/path/to/cert'
-    , {/*default request options*/}
-  ));
-```
-
-####WSSecurity
-
-``` javascript
-  client.setSecurity(new soap.WSSecurity('username', 'password'))
-```
-
-####WSSecurity with X509 Certificate
-
-``` javascript
-  var privateKey = fs.readFileSync(privateKeyPath);
-  var publicKey = fs.readFileSync(publicKeyPath);
-  var password = ''; // optional password
-  var wsSecurity = new soap.WSSecurityCert(privateKey, publicKey, password, 'utf8');
-  client.setSecurity(wsSecurity);
-```
-
-####BearerSecurity
-
-``` javascript
-  client.setSecurity(new soap.BearerSecurity('token'));
-```
 
 ### Client.*method*(args, callback) - call *method* on the SOAP service.
 
@@ -465,17 +422,66 @@ Soap body contents. Useful if you don't want to log /store Soap headers.
 the SOAP response body as well as the entire `IncomingMessage` response object.
 This is emitted for all responses (both success and errors).
 
+## Security
 
-## WSSecurity
+`node-soap` has several default security protocols.  You can easily add your own
+as well.  The interface is quite simple. Each protocol defines 2 methods:
+* `addOptions` - a method that accepts an options arg that is eventually passed directly to `request`
+* `toXML` - a method that returns a string of XML.
 
-WSSecurity implements WS-Security.  UsernameToken and PasswordText/PasswordDigest is supported. An instance of WSSecurity is passed to Client.setSecurity.
+### BasicAuthSecurity
 
 ``` javascript
-  new WSSecurity(username, password, options)
+  client.setSecurity(new soap.BasicAuthSecurity('username', 'password'));
+```
+
+### BearerSecurity
+
+``` javascript
+  client.setSecurity(new soap.BearerSecurity('token'));
+```
+
+### ClientSSLSecurity
+
+_Note_: If you run into issues using this protocol, consider passing these options
+as default request options to the constructor:
+* `rejectUnauthorized: false`
+* `strictSSL: false`
+* `secureOptions: constants.SSL_OP_NO_TLSv1_2` (this is likely needed for node >= 10.0)
+
+``` javascript
+  client.setSecurity(new soap.ClientSSLSecurity(
+    '/path/to/key'
+    , '/path/to/cert'
+    , {/*default request options*/}
+  ));
+```
+
+### WSSecurity
+
+`WSSecurity` implements WS-Security. UsernameToken and PasswordText/PasswordDigest is supported.
+
+``` javascript
+  var wsSecurity = new WSSecurity(username, password, options)
     //the 'options' object is optional and contains properties:
     //passwordType: 'PasswordDigest' or 'PasswordText' default is PasswordText
     //hasTimeStamp: true or false default is true
+  client.setSecurity(wsSecurity);
 ```
+
+### WSSecurityCert
+
+WS-Security X509 Certificate support.
+
+``` javascript
+  var privateKey = fs.readFileSync(privateKeyPath);
+  var publicKey = fs.readFileSync(publicKeyPath);
+  var password = ''; // optional password
+  var wsSecurity = new soap.WSSecurityCert(privateKey, publicKey, password, 'utf8');
+  client.setSecurity(wsSecurity);
+```
+
+_Note_: Optional dependency 'ursa' is required to be installed succefully when WSSecurityCert is used.
 
 ## Handling XML Attributes, Value and XML (wsdlOptions).
 Sometimes it is necessary to override the default behaviour of `node-soap` in order to deal with the special requirements
