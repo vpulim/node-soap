@@ -1,3 +1,18 @@
+0.15.0 / 2016-05-09
+=================
+* [FIX] Make `ursa` an optional dependency since it's currently nearly impossible to install `soap` on a windows machine otherwise (#832)
+* [FIX] Fixed issue of referencing element in another namespace (#831)
+* [FIX] Fixed incorrect WSDL in `CDATA` tests (#830)
+* [FIX] Added mocks for node.js streams `cork`/`uncork` in tests (for `node >= 4.x`) (#829) 
+* [ENHANCEMENT] Added basic `CDATA` support (#787)
+* [DOC] Added missing documentation about `Client.setEndpoint(url)` (#827)
+* [ENHANCEMENT] Added `toc` node-module in order to generate TOC in README.md via `npm run toc` command (#826)
+* [FIX] Fix `elementFormDefault` handling (#822)
+* [FIX] Added missing `compress` node-module to `package.json` dependencies (#823)
+* [ENHANCEMENT] The client `response` event is now triggered with the "raw" `IncomingMessage` object as second parameter (#816)
+* [DOC] Added note about the `keep-alive` workaround to prevent truncation of longer chunked reponses in `node > 0.10.x` (#818)
+* [ENHANCEMENT] Make it possible to overwrite the request module, e.g. for using `multipart-body` for file up- and downloads (#817)
+
 0.14.0 / 2016-04-12
 =================
 * [ENHANCEMENT] Allow to call methods with `callback` as last param in order to align with node.js `callback last` pattern (#814)
