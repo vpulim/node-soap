@@ -9,7 +9,7 @@
   xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
   targetNamespace="http://tempuri.org/">
   <wsdl:types>
-    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+    <s:schema elementFormDefault="unqualified" targetNamespace="http://tempuri.org/">
       <s:element name="addPets">
         <s:complexType name="petList">
           <s:sequence>
