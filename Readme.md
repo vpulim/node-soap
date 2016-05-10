@@ -465,7 +465,8 @@ as default request options to the constructor:
   var wsSecurity = new WSSecurity(username, password, options)
     //the 'options' object is optional and contains properties:
     //passwordType: 'PasswordDigest' or 'PasswordText' default is PasswordText
-    //hasTimeStamp: true or false default is true
+    //hasTimeStamp: true or false, default is true
+    //hasTokenCreated: true or false, default is true
   client.setSecurity(wsSecurity);
 ```
 
