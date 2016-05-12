@@ -20,7 +20,7 @@
     "xml-crypto": "~0.8.0"
   },
   "optionalDependencies": {
-    "ursa": "0.8.5 || >=0.9.3"
+    "ursa": "0.8.5 || >=0.9.4"
   },
   "repository": {
     "type": "git",
