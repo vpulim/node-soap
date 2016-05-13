@@ -8,6 +8,7 @@
   "author": "Vinay Pulim <v@pulim.com>",
   "dependencies": {
     "compress": "^0.99.0",
+    "concat-stream": "^1.5.1",
     "debug": "~0.7.4",
     "ejs": "~2.3.4",
     "lodash": "3.x.x",
