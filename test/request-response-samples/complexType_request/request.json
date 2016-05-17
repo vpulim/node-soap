@@ -1,4 +1,5 @@
-ModelCRUDRequest:{
+{
+  ModelCRUDRequest:{
   ModelCRUD:{
     serviceType:"CreateInterest",
     TableName:"WTC_EmployeeInterest",
@@ -26,3 +27,4 @@ ModelCRUDRequest:{
           stage:0
   }
  }
+}
