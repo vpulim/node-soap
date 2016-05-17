@@ -1,0 +1,36 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:adin="http://3e.pl/ADInterface">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <adin:createData>
+         <adin:ModelCRUDRequest>
+            <adin:ModelCRUD>
+               <adin:serviceType>CreateInterest</adin:serviceType>
+               <adin:TableName>WTC_EmployeeInterest</adin:TableName>
+               <adin:RecordID>0</adin:RecordID>
+               <adin:Filter></adin:Filter>
+               <adin:Action>Create</adin:Action>
+               <!--Optional:-->
+               <adin:DataRow>
+                  <!--Zero or more repetitions:-->
+                  <adin:field column="C_BPartner_ID" >
+                     <adin:val>100407</adin:val>
+                  </adin:field>
+                  <adin:field column="Interest" >
+                     <adin:val>Coocking</adin:val>
+                  </adin:field>
+               </adin:DataRow>
+            </adin:ModelCRUD>
+            <adin:ADLoginRequest>
+               <adin:user>1213</adin:user>
+               <adin:pass>3423</adin:pass>
+               <adin:lang>19</adin:lang>
+               <adin:ClientID>11</adin:ClientID>
+               <adin:RoleID>34</adin:RoleID>
+               <adin:OrgID>1</adin:OrgID>
+               <adin:WarehouseID>12</adin:WarehouseID>
+               <adin:stage>0</adin:stage>
+            </adin:ADLoginRequest>
+         </adin:ModelCRUDRequest>
+      </adin:createData>
+   </soapenv:Body>
+</soapenv:Envelope>
