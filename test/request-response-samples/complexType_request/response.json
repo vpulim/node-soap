@@ -1,7 +1,7 @@
 {
-createDataResponse:{
-  StandardResponse:{
-    attributes:{RecordID:1000027}
+"createDataResponse":{
+  "StandardResponse":{
+    "attributes":{"RecordID":1000027}
   }
 }
 }
