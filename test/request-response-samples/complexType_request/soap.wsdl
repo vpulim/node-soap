@@ -2,77 +2,7 @@
 <script id="tinyhippos-injected"/>
 <wsdl:types>
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://3e.pl/ADInterface" elementFormDefault="qualified" targetNamespace="http://3e.pl/ADInterface">
-<xsd:element name="Window" type="tns:Window"/>
-<xsd:complexType name="Window">
-<xsd:sequence>
-<xsd:element name="Description" type="xsd:string"/>
-<xsd:element name="Help" type="xsd:string"/>
-<xsd:element name="Tabs" type="tns:TabList"/>
-</xsd:sequence>
-<xsd:attribute name="Name" type="xsd:string"/>
-<xsd:attribute name="IsSoTrx" type="xsd:boolean"/>
-<xsd:attribute name="WindowNo" type="xsd:int"/>
-<xsd:attribute name="AD_Table_ID" type="xsd:int"/>
-<xsd:attribute name="AD_Window_ID" type="xsd:int"/>
-<xsd:attribute name="WindowType" type="xsd:int"/>
-<xsd:attribute name="AD_Image_ID" type="xsd:int"/>
-<xsd:attribute name="AD_Color_ID" type="xsd:int"/>
-<xsd:attribute name="IsReadWrite" type="xsd:boolean"/>
-<xsd:attribute name="WinWidth" type="xsd:int"/>
-<xsd:attribute name="WinHeight" type="xsd:int"/>
-<xsd:attribute name="IsError" type="xsd:boolean"/>
-<xsd:attribute name="Error" type="xsd:string"/>
-</xsd:complexType>
-<xsd:complexType name="Tab">
-<xsd:sequence>
-<xsd:element name="Description" type="xsd:string"/>
-<xsd:element name="Help" type="xsd:string"/>
-<xsd:element name="ReadOnlyLogic" type="xsd:string"/>
-<xsd:element name="DisplayLogic" type="xsd:string"/>
-<xsd:element name="Fields" type="tns:FieldList"/>
-<xsd:element name="CommitWarning" type="xsd:string"/>
-<xsd:element name="WhereClause" type="xsd:string"/>
-<xsd:element name="OrderByClause" type="xsd:string"/>
-</xsd:sequence>
-<xsd:attribute name="Name" type="xsd:string"/>
-<xsd:attribute name="IsSoTrx" type="xsd:boolean"/>
-<xsd:attribute name="TabNo" type="xsd:int"/>
-<xsd:attribute name="WindowNo" type="xsd:int"/>
-<xsd:attribute name="AD_Table_ID" type="xsd:int"/>
-<xsd:attribute name="AD_Window_ID" type="xsd:int"/>
-<xsd:attribute name="AD_Tab_ID" type="xsd:int"/>
-<xsd:attribute name="IsSingleRow" type="xsd:boolean"/>
-<xsd:attribute name="IsReadOnly" type="xsd:boolean"/>
-<xsd:attribute name="IsInsertRecord" type="xsd:boolean"/>
-<xsd:attribute name="HasTree" type="xsd:boolean"/>
-<xsd:attribute name="IsView" type="xsd:boolean"/>
-<xsd:attribute name="AD_Column_ID" type="xsd:int"/>
-<xsd:attribute name="TableName" type="xsd:string"/>
-<xsd:attribute name="AccessLevel" type="xsd:string"/>
-<xsd:attribute name="IsSecurityEnabled" type="xsd:boolean"/>
-<xsd:attribute name="IsDeleteable" type="xsd:boolean"/>
-<xsd:attribute name="IsHighVolume" type="xsd:boolean"/>
-<xsd:attribute name="AD_Process_ID" type="xsd:int"/>
-<xsd:attribute name="TabLevel" type="xsd:int"/>
-<xsd:attribute name="AD_Image_ID" type="xsd:int"/>
-<xsd:attribute name="Included_Tab_ID" type="xsd:int"/>
-<xsd:attribute name="ReplicationType" type="xsd:string"/>
-<xsd:attribute name="IsSortTab" type="xsd:boolean"/>
-<xsd:attribute name="AD_ColumnSortOrder_ID" type="xsd:int"/>
-<xsd:attribute name="AD_ColumnSortYesNo_ID" type="xsd:int"/>
-<xsd:attribute name="onlyCurrentRows" type="xsd:boolean"/>
-<xsd:attribute name="onlyCurrentDays" type="xsd:int"/>
-</xsd:complexType>
-<xsd:complexType name="TabList">
-<xsd:sequence>
-<xsd:element maxOccurs="unbounded" minOccurs="1" name="Tab" type="tns:Tab"/>
-</xsd:sequence>
-</xsd:complexType>
-<xsd:complexType name="FieldList">
-<xsd:sequence>
-<xsd:element maxOccurs="unbounded" minOccurs="1" name="Field" type="tns:Field"/>
-</xsd:sequence>
-</xsd:complexType>
+
 <xsd:complexType name="Field">
 <xsd:sequence>
 <xsd:element name="Tab" type="tns:Tab"/>
@@ -123,189 +53,16 @@
 <xsd:attribute name="isRange" type="xsd:boolean"/>
 <xsd:attribute name="DefaultValue2" type="xsd:string"/>
 </xsd:complexType>
-<xsd:complexType name="LookupInfo">
-<xsd:sequence>
-<!--
-  <xsd:element name="Tab" type="tns:Tab"/>   		
-   		<xsd:element name="lookupInfo" type="tns:LookupInfo"/>
--->
-<xsd:element name="ZoomWindow" type="xsd:int"/>
-<xsd:element name="ZoomWindowPO" type="xsd:int"/>
-</xsd:sequence>
-</xsd:complexType>
-<xsd:element name="WindowTabData" type="tns:WindowTabData"/>
-<xsd:complexType name="WindowTabData">
-<xsd:sequence>
-<xsd:element maxOccurs="1" minOccurs="0" name="DataSet" type="tns:DataSet"/>
-<xsd:element maxOccurs="1" minOccurs="0" name="RowCount" type="xsd:int"/>
-<xsd:element maxOccurs="1" minOccurs="0" name="Success" type="xsd:boolean"/>
-<xsd:element maxOccurs="1" minOccurs="0" name="Error" type="xsd:string"/>
-<xsd:element maxOccurs="1" minOccurs="0" name="ErrorInfo" type="xsd:string"/>
-<xsd:element maxOccurs="1" minOccurs="0" name="Status" type="xsd:string"/>
-<xsd:element maxOccurs="1" minOccurs="0" name="StatusError" type="xsd:boolean"/>
-</xsd:sequence>
-<xsd:attribute name="NumRows" type="xsd:int"/>
-<xsd:attribute name="TotalRows" type="xsd:int"/>
-<xsd:attribute name="StartRow" type="xsd:int"/>
-</xsd:complexType>
-<xsd:complexType name="DataSet">
-<xsd:sequence>
-<xsd:element maxOccurs="unbounded" minOccurs="0" name="DataRow" type="tns:DataRow"/>
-</xsd:sequence>
-</xsd:complexType>
 <xsd:complexType name="DataRow">
 <xsd:sequence>
 <xsd:element maxOccurs="unbounded" minOccurs="0" name="field" type="tns:DataField"/>
 </xsd:sequence>
 </xsd:complexType>
-<xsd:complexType name="DataField">
-<xsd:sequence>
-<!--
- <xsd:element name="access_card_no" type="xsd:string" minOccurs="1" maxOccurs="1"/>
-   			<xsd:element name="attendance_date_time" type="xsd:dateTime"  minOccurs="1" maxOccurs="1"/>
-   			<xsd:element name="inorout" type="xsd:string" minOccurs="1" maxOccurs="1"/>
-   			<xsd:element name="device_name" type="xsd:string"  minOccurs="1" maxOccurs="1"/> 
--->
-<xsd:element name="val" type="xsd:string"/>
-<xsd:element maxOccurs="1" minOccurs="0" name="lookup" type="tns:LookupValues"/>
-</xsd:sequence>
-<xsd:attribute name="type" type="xsd:string" use="optional"/>
-<xsd:attribute name="column" type="xsd:string"/>
-<xsd:attribute name="lval" type="xsd:string" use="optional"/>
-<xsd:attribute name="disp" type="xsd:boolean" use="optional"/>
-<xsd:attribute name="edit" type="xsd:boolean" use="optional"/>
-<xsd:attribute name="error" type="xsd:boolean" use="optional"/>
-<xsd:attribute name="errorVal" type="xsd:string" use="optional"/>
-</xsd:complexType>
-<xsd:complexType name="LookupValues">
-<xsd:sequence>
-<xsd:element maxOccurs="unbounded" minOccurs="0" name="lv" type="tns:LookupValue"/>
-</xsd:sequence>
-</xsd:complexType>
-<xsd:complexType name="LookupValue">
-<xsd:sequence></xsd:sequence>
-<xsd:attribute name="val" type="xsd:string"/>
-<xsd:attribute name="key" type="xsd:string"/>
-</xsd:complexType>
-<xsd:element name="GetProcessParams" type="tns:GetProcessParams"/>
-<xsd:element name="ProcessParams" type="tns:ProcessParams"/>
-<xsd:element name="RunProcess" type="tns:RunProcess"/>
-<xsd:element name="RunProcessResponse" type="tns:RunProcessResponse"/>
-<xsd:complexType name="ProcessParams">
-<xsd:sequence>
-<xsd:element name="Params" type="tns:ProcessParamList"/>
-<xsd:element name="Description" type="xsd:string"/>
-<xsd:element name="Name" type="xsd:string"/>
-<xsd:element name="Help" type="xsd:string"/>
-</xsd:sequence>
-<xsd:attribute name="AD_Process_ID" type="xsd:int"/>
-</xsd:complexType>
-<xsd:complexType name="GetProcessParams">
-<xsd:sequence></xsd:sequence>
-<xsd:attribute name="AD_Process_ID" type="xsd:int"/>
-<xsd:attribute name="AD_Menu_ID" type="xsd:int"/>
-<xsd:attribute name="AD_Record_ID" type="xsd:int"/>
-</xsd:complexType>
-<xsd:complexType name="RunProcess">
-<xsd:sequence>
-<xsd:element name="ParamValues" type="tns:DataRow"/>
-</xsd:sequence>
-<xsd:attribute name="AD_Process_ID" type="xsd:int"/>
-<xsd:attribute name="AD_Menu_ID" type="xsd:int"/>
-<xsd:attribute name="AD_Record_ID" type="xsd:int"/>
-<xsd:attribute name="DocAction" type="xsd:string"/>
-</xsd:complexType>
-<xsd:complexType name="RunProcessResponse">
-<xsd:sequence>
-<xsd:element name="Error" type="xsd:string"/>
-<xsd:element name="Summary" type="xsd:string"/>
-<xsd:element name="LogInfo" type="xsd:string"/>
-<xsd:element name="Data" type="xsd:hexBinary"/>
-</xsd:sequence>
-<xsd:attribute name="IsError" type="xsd:boolean"/>
-<xsd:attribute name="IsReport" type="xsd:boolean"/>
-<xsd:attribute name="ReportFormat" type="xsd:string"/>
-</xsd:complexType>
-<xsd:complexType name="ProcessParamList">
-<xsd:sequence>
-<xsd:element maxOccurs="unbounded" minOccurs="0" name="Param" type="tns:ProcessParam"/>
-</xsd:sequence>
-</xsd:complexType>
-<xsd:complexType name="ProcessParam">
-<xsd:sequence>
-<xsd:element name="Description" type="xsd:string"/>
-<xsd:element name="Help" type="xsd:string"/>
-<xsd:element maxOccurs="1" minOccurs="0" name="lookup" type="tns:LookupValues"/>
-</xsd:sequence>
-<xsd:attribute name="Name" type="xsd:string"/>
-<xsd:attribute name="DefaultValue" type="xsd:string"/>
-<xsd:attribute name="DefaultValue2" type="xsd:string"/>
-<xsd:attribute name="IsMandatory" type="xsd:boolean"/>
-<xsd:attribute name="IsRange" type="xsd:boolean"/>
-<xsd:attribute name="FieldLength" type="xsd:int"/>
-<xsd:attribute name="DisplayType" type="xsd:int"/>
-<xsd:attribute name="ColumnName" type="xsd:string"/>
-</xsd:complexType>
 <!--
 
    int WindowNo, int AD_Window_ID, int AD_Menu_ID, int TabNo, int PrevTabNo, int PrevRecNo, boolean getData, int RowStart, int RowCount)
-   
+
 -->
-<xsd:element name="WindowTabDataReq" type="tns:WindowTabDataReq"/>
-<xsd:complexType name="WindowTabDataReq">
-<xsd:sequence>
-<xsd:element name="FindCriteria" type="tns:DataRow"/>
-</xsd:sequence>
-<xsd:attribute name="WindowNo" type="xsd:int"/>
-<xsd:attribute name="AD_Window_ID" type="xsd:int"/>
-<xsd:attribute name="AD_Menu_ID" type="xsd:int"/>
-<xsd:attribute name="TabNo" type="xsd:int"/>
-<xsd:attribute name="PrevTabNo" type="xsd:int"/>
-<xsd:attribute name="PrevRecNo" type="xsd:int"/>
-<xsd:attribute name="getData" type="xsd:boolean"/>
-<xsd:attribute name="RowStart" type="xsd:int"/>
-<xsd:attribute name="RowCount" type="xsd:int"/>
-<xsd:attribute name="fromZoom" type="xsd:boolean"/>
-<xsd:attribute name="fromZoom_Window_ID" type="xsd:int"/>
-<xsd:attribute name="fromZoom_Tab_ID" type="xsd:int"/>
-<xsd:attribute name="fromZoom_Row_ID" type="xsd:int"/>
-<xsd:attribute name="fromZoom_ColumnName" type="xsd:string"/>
-<xsd:attribute name="fromZoom_ColumnValue" type="xsd:string"/>
-</xsd:complexType>
-<xsd:element name="ADMenu" type="tns:ADMenuItem"/>
-<xsd:complexType name="ADMenuItemList">
-<xsd:sequence>
-<xsd:element maxOccurs="unbounded" minOccurs="0" name="Item" type="tns:ADMenuItem"/>
-</xsd:sequence>
-</xsd:complexType>
-<xsd:complexType name="ADMenuItem">
-<xsd:sequence>
-<xsd:element name="items" type="tns:ADMenuItemList"/>
-<xsd:element name="description" type="xsd:string"/>
-<xsd:element name="url" type="xsd:string"/>
-</xsd:sequence>
-<xsd:attribute name="AD_Menu_ID" type="xsd:int"/>
-<xsd:attribute name="type" type="xsd:string"/>
-<xsd:attribute name="name" type="xsd:string"/>
-</xsd:complexType>
-<xsd:element name="ModelCreateAttendanceRequest" type="tns:ModelCreateAttendanceRequest"/>
-<xsd:complexType name="ModelCreateAttendance">
-<xsd:sequence>
-<xsd:element name="serviceType" type="xsd:string"/>
-<xsd:element maxOccurs="1" minOccurs="1" name="access_card_no" type="xsd:string"/>
-<xsd:element maxOccurs="1" minOccurs="1" name="attendance_date_time" type="xsd:dateTime"/>
-<xsd:element maxOccurs="1" minOccurs="1" name="inorout" type="xsd:string"/>
-<xsd:element maxOccurs="1" minOccurs="1" name="device_name" type="xsd:string"/>
-</xsd:sequence>
-</xsd:complexType>
-<xsd:complexType name="ModelCreateAttendanceRequest">
-<xsd:sequence>
-<xsd:element maxOccurs="1" minOccurs="1" name="ModelCreateAttendance" type="tns:ModelCreateAttendance"/>
-<!--
- <xsd:element name="ADLoginRequest" type="tns:ADLoginRequest" minOccurs="1" maxOccurs="1" /> 
--->
-</xsd:sequence>
-</xsd:complexType>
 <xsd:element name="ADLoginRequest" type="tns:ADLoginRequest"/>
 <xsd:element name="ADLoginResponse" type="tns:ADLoginResponse"/>
 <xsd:complexType name="ADLoginRequest">
@@ -330,22 +87,6 @@
 <xsd:element name="warehouses" type="tns:LookupValues"/>
 </xsd:sequence>
 </xsd:complexType>
-<xsd:complexType name="Location">
-<xsd:sequence>
-<xsd:element name="C_Location_ID" type="xsd:int"/>
-<xsd:element name="Name" type="xsd:string"/>
-<xsd:element name="Address1" type="xsd:string"/>
-<xsd:element name="Address2" type="xsd:string"/>
-<xsd:element name="City" type="xsd:string"/>
-<xsd:element name="PostalCode" type="xsd:string"/>
-<xsd:element name="C_Country_ID" type="xsd:int"/>
-<xsd:element name="C_Region_ID" type="xsd:int"/>
-<xsd:element maxOccurs="1" minOccurs="0" name="Countries" type="tns:LookupValues"/>
-<!--
-  <xsd:element name="Regions" type="tns:LookupValues" minOccurs="0" maxOccurs="1" />    
--->
-</xsd:sequence>
-</xsd:complexType>
 <xsd:complexType name="StandardResponse">
 <xsd:sequence>
 <xsd:element name="Error" type="xsd:string"/>
@@ -355,73 +96,8 @@
 </xsd:complexType>
 <xsd:element name="Location" type="tns:Location"/>
 <xsd:element name="StandardResponse" type="tns:StandardResponse"/>
-<xsd:element name="DocAction" type="tns:DocAction"/>
-<xsd:complexType name="DocAction">
-<xsd:sequence>
-<xsd:element maxOccurs="1" minOccurs="0" name="Action" type="tns:LookupValues"/>
-<xsd:element name="Error" type="xsd:string"/>
-</xsd:sequence>
-<xsd:attribute name="IsError" type="xsd:boolean"/>
-<xsd:attribute name="RecordID" type="xsd:int"/>
-</xsd:complexType>
-<xsd:element name="getLookupSearchDataReq" type="tns:getLookupSearchDataReq"/>
-<xsd:complexType name="getLookupSearchDataReq">
-<xsd:sequence>
-<xsd:element maxOccurs="1" minOccurs="0" name="Params" type="tns:DataRow"/>
-</xsd:sequence>
-<xsd:attribute name="WindowNo" type="xsd:int"/>
-<xsd:attribute name="TabNo" type="xsd:int"/>
-<xsd:attribute name="RowNo" type="xsd:int"/>
-<xsd:attribute name="ColumnName" type="xsd:string"/>
-</xsd:complexType>
-<!--  Elements added for model web services  -->
-<xsd:element name="ModelSetDocActionRequest" type="tns:ModelSetDocActionRequest"/>
-<xsd:complexType name="ModelSetDocAction">
-<xsd:sequence>
-<xsd:element name="serviceType" type="xsd:string"/>
-<xsd:element name="tableName" type="xsd:string"/>
-<xsd:element name="recordID" type="xsd:int"/>
-<xsd:element name="docAction" type="xsd:string"/>
-</xsd:sequence>
-</xsd:complexType>
-<xsd:complexType name="ModelSetDocActionRequest">
-<xsd:sequence>
-<xsd:element maxOccurs="1" minOccurs="1" name="ModelSetDocAction" type="tns:ModelSetDocAction"/>
-<xsd:element maxOccurs="1" minOccurs="1" name="ADLoginRequest" type="tns:ADLoginRequest"/>
-</xsd:sequence>
-</xsd:complexType>
-<xsd:element name="ModelRunProcess" type="tns:ModelRunProcess"/>
-<xsd:complexType name="ModelRunProcess">
-<xsd:sequence>
-<xsd:element name="serviceType" type="xsd:string"/>
-<xsd:element name="ParamValues" type="tns:DataRow"/>
-</xsd:sequence>
-<xsd:attribute name="AD_Process_ID" type="xsd:int"/>
-<xsd:attribute name="AD_Menu_ID" type="xsd:int"/>
-<xsd:attribute name="AD_Record_ID" type="xsd:int"/>
-<xsd:attribute name="DocAction" type="xsd:string"/>
-</xsd:complexType>
-<xsd:element name="ModelRunProcessRequest" type="tns:ModelRunProcessRequest"/>
-<xsd:complexType name="ModelRunProcessRequest">
-<xsd:sequence>
-<xsd:element maxOccurs="1" minOccurs="1" name="ModelRunProcess" type="tns:ModelRunProcess"/>
-<xsd:element maxOccurs="1" minOccurs="1" name="ADLoginRequest" type="tns:ADLoginRequest"/>
-</xsd:sequence>
-</xsd:complexType>
-<xsd:element name="ModelGetListRequest" type="tns:ModelGetListRequest"/>
-<xsd:complexType name="ModelGetList">
-<xsd:sequence>
-<xsd:element name="serviceType" type="xsd:string"/>
-<xsd:element name="AD_Reference_ID" type="xsd:int"/>
-<xsd:element name="Filter" type="xsd:string"/>
-</xsd:sequence>
-</xsd:complexType>
-<xsd:complexType name="ModelGetListRequest">
-<xsd:sequence>
-<xsd:element maxOccurs="1" minOccurs="1" name="ModelGetList" type="tns:ModelGetList"/>
-<xsd:element maxOccurs="1" minOccurs="1" name="ADLoginRequest" type="tns:ADLoginRequest"/>
-</xsd:sequence>
-</xsd:complexType>
+
+
 <xsd:element name="ModelCRUDRequest" type="tns:ModelCRUDRequest"/>
 <xsd:complexType name="ModelCRUD">
 <xsd:sequence>
@@ -450,96 +126,16 @@
 </xsd:complexType>
 </xsd:schema>
 </wsdl:types>
-<wsdl:message name="updateDataResponse">
-<wsdl:part name="StandardResponse" element="tns:StandardResponse"/>
-</wsdl:message>
-<wsdl:message name="setDocActionResponse">
-<wsdl:part name="StandardResponse" element="tns:StandardResponse"/>
-</wsdl:message>
-<wsdl:message name="deleteDataRequest">
+<wsdl:message name="createDataRequest">
 <wsdl:part name="ModelCRUDRequest" element="tns:ModelCRUDRequest"/>
-</wsdl:message>
-<wsdl:message name="createAttendanceResponse">
-<wsdl:part name="StandardResponse" element="tns:StandardResponse"/>
-</wsdl:message>
-<wsdl:message name="setDocActionRequest">
-<wsdl:part name="ModelSetDocActionRequest" element="tns:ModelSetDocActionRequest"/>
-</wsdl:message>
-<wsdl:message name="readDataRequest">
-<wsdl:part name="ModelCRUDRequest" element="tns:ModelCRUDRequest"/>
-</wsdl:message>
-<wsdl:message name="queryDataRequest">
-<wsdl:part name="ModelCRUDRequest" element="tns:ModelCRUDRequest"/>
-</wsdl:message>
-<wsdl:message name="runProcessRequest">
-<wsdl:part name="ModelRunProcessRequest" element="tns:ModelRunProcessRequest"/>
-</wsdl:message>
-<wsdl:message name="updateDataRequest">
-<wsdl:part name="ModelCRUDRequest" element="tns:ModelCRUDRequest"/>
-</wsdl:message>
-<wsdl:message name="getListResponse">
-<wsdl:part name="WindowTabData" element="tns:WindowTabData"/>
-</wsdl:message>
-<wsdl:message name="createAttendanceRequest">
-<wsdl:part name="ModelCreateAttendanceRequest" element="tns:ModelCreateAttendanceRequest"/>
-</wsdl:message>
-<wsdl:message name="queryDataResponse">
-<wsdl:part name="WindowTabData" element="tns:WindowTabData"/>
-</wsdl:message>
-<wsdl:message name="deleteDataResponse">
-<wsdl:part name="StandardResponse" element="tns:StandardResponse"/>
-</wsdl:message>
-<wsdl:message name="runProcessResponse">
-<wsdl:part name="RunProcessResponse" element="tns:RunProcessResponse"/>
-</wsdl:message>
-<wsdl:message name="readDataResponse">
-<wsdl:part name="WindowTabData" element="tns:WindowTabData"/>
 </wsdl:message>
 <wsdl:message name="createDataResponse">
 <wsdl:part name="StandardResponse" element="tns:StandardResponse"/>
-</wsdl:message>
-<wsdl:message name="getListRequest">
-<wsdl:part name="ModelGetListRequest" element="tns:ModelGetListRequest"/>
-</wsdl:message>
-<wsdl:message name="createDataRequest">
-<wsdl:part name="ModelCRUDRequest" element="tns:ModelCRUDRequest"/>
 </wsdl:message>
 <wsdl:portType name="ModelADServicePortType">
 <wsdl:operation name="createData">
 <wsdl:input name="createDataRequest" message="tns:createDataRequest"/>
 <wsdl:output name="createDataResponse" message="tns:createDataResponse"/>
-</wsdl:operation>
-<wsdl:operation name="readData">
-<wsdl:input name="readDataRequest" message="tns:readDataRequest"/>
-<wsdl:output name="readDataResponse" message="tns:readDataResponse"/>
-</wsdl:operation>
-<wsdl:operation name="queryData">
-<wsdl:input name="queryDataRequest" message="tns:queryDataRequest"/>
-<wsdl:output name="queryDataResponse" message="tns:queryDataResponse"/>
-</wsdl:operation>
-<wsdl:operation name="getList">
-<wsdl:input name="getListRequest" message="tns:getListRequest"/>
-<wsdl:output name="getListResponse" message="tns:getListResponse"/>
-</wsdl:operation>
-<wsdl:operation name="deleteData">
-<wsdl:input name="deleteDataRequest" message="tns:deleteDataRequest"/>
-<wsdl:output name="deleteDataResponse" message="tns:deleteDataResponse"/>
-</wsdl:operation>
-<wsdl:operation name="createAttendance">
-<wsdl:input name="createAttendanceRequest" message="tns:createAttendanceRequest"/>
-<wsdl:output name="createAttendanceResponse" message="tns:createAttendanceResponse"/>
-</wsdl:operation>
-<wsdl:operation name="updateData">
-<wsdl:input name="updateDataRequest" message="tns:updateDataRequest"/>
-<wsdl:output name="updateDataResponse" message="tns:updateDataResponse"/>
-</wsdl:operation>
-<wsdl:operation name="runProcess">
-<wsdl:input name="runProcessRequest" message="tns:runProcessRequest"/>
-<wsdl:output name="runProcessResponse" message="tns:runProcessResponse"/>
-</wsdl:operation>
-<wsdl:operation name="setDocAction">
-<wsdl:input name="setDocActionRequest" message="tns:setDocActionRequest"/>
-<wsdl:output name="setDocActionResponse" message="tns:setDocActionResponse"/>
 </wsdl:operation>
 </wsdl:portType>
 <wsdl:binding name="ModelADServiceHttpBinding" type="tns:ModelADServicePortType">
@@ -553,78 +149,7 @@
 <wsdlsoap:body use="literal" namespace="http://3e.pl/ADInterface"/>
 </wsdl:output>
 </wsdl:operation>
-<wsdl:operation name="readData">
-<wsdlsoap:operation soapAction=""/>
-<wsdl:input name="readDataRequest">
-<wsdlsoap:body use="literal" namespace="http://3e.pl/ADInterface"/>
-</wsdl:input>
-<wsdl:output name="readDataResponse">
-<wsdlsoap:body use="literal" namespace="http://3e.pl/ADInterface"/>
-</wsdl:output>
-</wsdl:operation>
-<wsdl:operation name="queryData">
-<wsdlsoap:operation soapAction=""/>
-<wsdl:input name="queryDataRequest">
-<wsdlsoap:body use="literal" namespace="http://3e.pl/ADInterface"/>
-</wsdl:input>
-<wsdl:output name="queryDataResponse">
-<wsdlsoap:body use="literal" namespace="http://3e.pl/ADInterface"/>
-</wsdl:output>
-</wsdl:operation>
-<wsdl:operation name="getList">
-<wsdlsoap:operation soapAction=""/>
-<wsdl:input name="getListRequest">
-<wsdlsoap:body use="literal" namespace="http://3e.pl/ADInterface"/>
-</wsdl:input>
-<wsdl:output name="getListResponse">
-<wsdlsoap:body use="literal" namespace="http://3e.pl/ADInterface"/>
-</wsdl:output>
-</wsdl:operation>
-<wsdl:operation name="deleteData">
-<wsdlsoap:operation soapAction=""/>
-<wsdl:input name="deleteDataRequest">
-<wsdlsoap:body use="literal" namespace="http://3e.pl/ADInterface"/>
-</wsdl:input>
-<wsdl:output name="deleteDataResponse">
-<wsdlsoap:body use="literal" namespace="http://3e.pl/ADInterface"/>
-</wsdl:output>
-</wsdl:operation>
-<wsdl:operation name="createAttendance">
-<wsdlsoap:operation soapAction=""/>
-<wsdl:input name="createAttendanceRequest">
-<wsdlsoap:body use="literal" namespace="http://3e.pl/ADInterface"/>
-</wsdl:input>
-<wsdl:output name="createAttendanceResponse">
-<wsdlsoap:body use="literal" namespace="http://3e.pl/ADInterface"/>
-</wsdl:output>
-</wsdl:operation>
-<wsdl:operation name="updateData">
-<wsdlsoap:operation soapAction=""/>
-<wsdl:input name="updateDataRequest">
-<wsdlsoap:body use="literal" namespace="http://3e.pl/ADInterface"/>
-</wsdl:input>
-<wsdl:output name="updateDataResponse">
-<wsdlsoap:body use="literal" namespace="http://3e.pl/ADInterface"/>
-</wsdl:output>
-</wsdl:operation>
-<wsdl:operation name="runProcess">
-<wsdlsoap:operation soapAction=""/>
-<wsdl:input name="runProcessRequest">
-<wsdlsoap:body use="literal" namespace="http://3e.pl/ADInterface"/>
-</wsdl:input>
-<wsdl:output name="runProcessResponse">
-<wsdlsoap:body use="literal" namespace="http://3e.pl/ADInterface"/>
-</wsdl:output>
-</wsdl:operation>
-<wsdl:operation name="setDocAction">
-<wsdlsoap:operation soapAction=""/>
-<wsdl:input name="setDocActionRequest">
-<wsdlsoap:body use="literal" namespace="http://3e.pl/ADInterface"/>
-</wsdl:input>
-<wsdl:output name="setDocActionResponse">
-<wsdlsoap:body use="literal" namespace="http://3e.pl/ADInterface"/>
-</wsdl:output>
-</wsdl:operation>
+
 </wsdl:binding>
 <wsdl:service name="ModelADService">
 <wsdl:port name="ModelADServiceHttpPort" binding="tns:ModelADServiceHttpBinding">
