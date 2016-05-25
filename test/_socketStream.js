@@ -1,4 +1,4 @@
-
+'use strict';
 var fs = require('fs'),
   duplexer = require('duplexer'),
   semver = require('semver'),
