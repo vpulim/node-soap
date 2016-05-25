@@ -43,4 +43,10 @@ describe('ClientSSLSecurity', function() {
     instance.should.have.property("cert", certBuffer);
     instance.should.have.property("key", keyBuffer);
   });
+
+  it('should accept a Array as argument for the ca', function () {
+    var caList = [];
+    var instance = new ClientSSLSecurity(null, null, caList);
+    instance.should.have.property("ca", caList);
+  });
 });
