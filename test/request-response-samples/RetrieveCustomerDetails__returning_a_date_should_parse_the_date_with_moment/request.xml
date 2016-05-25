@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bons0="http://www.somecompany.co.uk/RetrieveCustomerProductConfiguration" xmlns:bons2="http://www.somecompany.co.uk/CustomerManagement" xmlns:bons01="http://www.somecompany.co.uk/sharedType" xmlns:bons010="http://www.somecompany.co.uk/sharedType" xmlns:bons011="http://www.somecompany.co.uk/CustomerManagement" xmlns:bons012="http://www.somecompany.co.uk/sharedType" xmlns:bons013="http://www.somecompany.co.uk/sharedType" xmlns:bons014="http://www.somecompany.co.uk/sharedType" xmlns:bons015="http://www.somecompany.co.uk/sharedType" xmlns:bons016="http://www.somecompany.co.uk/sharedType" xmlns:bons017="http://www.somecompany.co.uk/sharedType" xmlns:bons018="http://www.somecompany.co.uk/sharedType" xmlns:bons019="http://www.somecompany.co.uk/sharedType" xmlns:bons02="http://www.somecompany.co.uk/sharedType" xmlns:bons020="http://www.somecompany.co.uk/sharedType" xmlns:bons021="http://www.somecompany.co.uk/CustomerManagement" xmlns:bons022="http://www.somecompany.co.uk/sharedType" xmlns:bons023="http://www.somecompany.co.uk/sharedType" xmlns:bons024="http://www.somecompany.co.uk/sharedType" xmlns:bons025="http://www.somecompany.co.uk/sharedType" xmlns:bons026="http://www.somecompany.co.uk/sharedType" xmlns:bons027="http://www.somecompany.co.uk/sharedType" xmlns:bons028="http://www.somecompany.co.uk/sharedType" xmlns:bons029="http://www.somecompany.co.uk/sharedType" xmlns:bons03="http://www.somecompany.co.uk/sharedType" xmlns:bons030="http://www.somecompany.co.uk/sharedType" xmlns:bons031="http://www.somecompany.co.uk/CustomerManagement" xmlns:bons032="http://www.somecompany.co.uk/sharedType" xmlns:bons033="http://www.somecompany.co.uk/sharedType" xmlns:bons04="http://www.somecompany.co.uk/sharedType" xmlns:bons041="http://www.somecompany.co.uk/CustomerManagement" xmlns:bons05="http://www.somecompany.co.uk/sharedType" xmlns:bons06="http://www.somecompany.co.uk/sharedType" xmlns:bons07="http://www.somecompany.co.uk/sharedType" xmlns:bons08="http://www.somecompany.co.uk/sharedType" xmlns:bons09="http://www.somecompany.co.uk/sharedType" xmlns:bons1="http://www.somecompany.co.uk/sharedType" xmlns:bons11="http://www.somecompany.co.uk/CustomerManagement" xmlns:bons110="http://www.somecompany.co.uk/CustomerManagement" xmlns:bons111="http://www.somecompany.co.uk/CustomerManagement" xmlns:bons12="http://www.somecompany.co.uk/CustomerManagement" xmlns:bons13="http://www.somecompany.co.uk/CustomerManagement" xmlns:bons14="http://www.somecompany.co.uk/CustomerManagement" xmlns:bons15="http://www.somecompany.co.uk/CustomerManagement" xmlns:bons16="http://www.somecompany.co.uk/CustomerManagement" xmlns:bons17="http://www.somecompany.co.uk/CustomerManagement" xmlns:bons18="http://www.somecompany.co.uk/CustomerManagement" xmlns:bons19="http://www.somecompany.co.uk/CustomerManagement">
+    <soap:Body>
+        <bons2:RetrieveCustomerDetails xmlns:bons2="http://www.somecompany.co.uk/CustomerManagement">
+            <RetrieveCustomerDetailsInput>
+                <header>
+                    <requestingApplication>SIGMA</requestingApplication>
+                    <securityInfo>
+                        <userId>t_crm004</userId>
+                        <employeeId>000444</employeeId>
+                    </securityInfo>
+                </header>
+                <accountId>
+                    <telephoneNumber>
+                        <telephoneNumber>5175224392</telephoneNumber>
+                        <sequenceNumber>0</sequenceNumber>
+                    </telephoneNumber>
+                </accountId>
+                <includeDetailedProductInformation>true</includeDetailedProductInformation>
+                <includePromotionInformation>true</includePromotionInformation>
+            </RetrieveCustomerDetailsInput>
+        </bons2:RetrieveCustomerDetails>
+    </soap:Body>
+</soap:Envelope>

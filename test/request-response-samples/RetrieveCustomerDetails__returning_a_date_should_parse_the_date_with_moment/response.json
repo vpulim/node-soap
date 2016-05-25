@@ -1,0 +1,224 @@
+{
+    "retrieveCustomerDetailsOutput": {
+        "header": {
+            "requestingApplication": "APPLICATION",
+            "operationStatus": "TRUE",
+            "executionStatusMessage": {
+                "severity": "INFO",
+                "service": "CustomerManagement",
+                "operation": "RetrieveCustomerDetails",
+                "operationStatusCode": "000-000-0000",
+                "operationStatusDescription": "Success",
+                "executionStatusMessage": [
+                    {
+                        "severity": "INFO",
+                        "service": "API_ManageAccount",
+                        "operation": "getAccount",
+                        "operationStatusCode": "0",
+                        "operationStatusDescription": ""
+                    }
+                ]
+            }
+        },
+        "customer": {
+            "individual": {
+                "givenAndFamilyName": {
+                    "givenName": "ELAINE",
+                    "familyName": "STONE"
+                }
+            },
+            "customerAccount": [
+                {
+                    "accountId": {
+                        "accountNumber": "51752243921105015",
+                        "telephoneNumber": {
+                            "telephoneNumber": "5175224392",
+                            "sequenceNumber": 0
+                        },
+                        "universalServiceId": "130004281242",
+                        "environment": "MS"
+                    },
+                    "billingAccountId": {
+                        "accountNumber": "51752243921105015",
+                        "telephoneNumber": {
+                            "telephoneNumber": "5175224392",
+                            "sequenceNumber": 0
+                        },
+                        "universalServiceId": "130004281242"
+                    },
+                    "accountType": "BILLING",
+                    "accountStatus": "LIVE",
+                    "personalIdentificationNumber": "0000",
+                    "accountServiceType": {
+                        "code": "R1",
+                        "description": "RESIDENCE"
+                    },
+                    "accountAmounts": {
+                        "currentDueBalance": {
+                            "amount": "175.67"
+                        },
+                        "currentPaymentAmount": {
+                            "amount": "0"
+                        },
+                        "currentAdjustmentAmount": {
+                            "amount": "0"
+                        },
+                        "lastPaymentAmount": {
+                            "amount": "0"
+                        },
+                        "pastDueAmounts": {
+                            "totalPastDue": {
+                                "amount": "0"
+                            },
+                            "from_0_To_30_Days": {
+                                "amount": "0"
+                            },
+                            "from_31_To_60_Days": {
+                                "amount": "175.67"
+                            },
+                            "from_61_To_90_Days": {
+                                "amount": "0"
+                            },
+                            "totalOver_60_Days": {
+                                "amount": "0"
+                            },
+                            "totalOver_90_Days": {
+                                "amount": "0"
+                            }
+                        },
+                        "previousBillAmount": {
+                            "amount": "175.67"
+                        },
+                        "depositDetails": [
+                            {
+                                "depositAmount": {
+                                    "amount": "0"
+                                },
+                                "interestRefundToDate": {
+                                    "amount": "0"
+                                },
+                                "lastInterestCalculatedAmount": {
+                                    "amount": "0"
+                                },
+                                "lastInterestRefundAmount": {
+                                    "amount": "0"
+                                }
+                            }
+                        ]
+                    },
+                    "accountPreferences": {
+                        "billHandlingCode": "M",
+                        "billPrintSourceCode": "5",
+                        "numberOfCopiesOfBillToPrint": 1,
+                        "allowCollectCalls": true,
+                        "allowThirdNumberCalls": true,
+                        "privateLine": 0,
+                        "isCrmEligible": true,
+                        "tollBillingExceptionIndicator": "A",
+                        "tollLimitCode": "D",
+                        "primaryInterExchangeCarrierFreezeInfo": "SUPERBALLOT",
+                        "hasPrimaryLocalOperatingCompanyFreeze": true
+                    },
+                    "accountEventSummary": {
+                        "numberOfDisconnects": 0,
+                        "numberOfReturnedChecks": 0,
+                        "numberOfSecondNotices": 0
+                    },
+                    "affiliatedAccount": {
+                        "dishAccount": {
+                            "accountNumber": "8272600234806371",
+                            "lastUpdatedDate": "2015-04-03T05:00:00.000Z"
+                        }
+                    },
+                    "customerBill": {
+                        "billFormat": "true",
+                        "billingCycle": {
+                            "cyclePeriod": {
+                                "endDate": "2016-05-03T05:00:00.000Z"
+                            },
+                            "billCycle": 4
+                        },
+                        "billingMethod": "Advance",
+                        "existingPaymentExtension": "0",
+                        "onDeferredPaymentArrangement": false,
+                        "billDetailLevel": "Y",
+                        "billDueDate": "2016-04-28T06:00:00.000Z",
+                        "priorBillingMethod": "A",
+                        "priorBillDate": "2016-04-04T06:00:00.000Z"
+                    },
+                    "customerPayment": {
+                        "paymentMethod": {
+                            "paymentMethodName": "A"
+                        },
+                        "autoPayment": true
+                    },
+                    "customerProprietaryNetworkInformation": {
+                        "askForCreditInformation": true
+                    },
+                    "onlineBillPay": {
+                        "isEnabled": true,
+                        "enrollmentStatus": "false",
+                        "isOnlineBillPayBlocked": false
+                    },
+                    "globalAccount": {
+                        "number": "0"
+                    },
+                    "taxProfile": {
+                        "stateTaxCode": "MI",
+                        "taxDistrict": {
+                            "code": "UAC81",
+                            "description": "JACKSON CNTY (MI)"
+                        },
+                        "schoolCode": 1,
+                        "countyCode": "81",
+                        "countyCodeDescription": "JACKSON  (MI)"
+                    },
+                    "directory": {
+                        "delivery": {
+                            "directoryLabelQuantity": {
+                                "amount": 1
+                            },
+                            "midiLabelQuantity": {
+                                "amount": 0
+                            },
+                            "alternateDeliveryAddress": {
+                                "givenAndFamilyName": {
+                                    "givenName": "SOME",
+                                    "familyName": "USER"
+                                },
+                                "tradingName": "SOMEUSER",
+                                "internationalAddress": {
+                                    "addressLine1": "1 SOME ROAD",
+                                    "cityName": "SOME PLACE",
+                                    "stateOrProvince": "MI",
+                                    "postalCode": "123456789"
+                                }
+                            },
+                            "deliveryType": "O"
+                        },
+                        "directoryListingType": "LN",
+                        "directoryListingAllowance": "0"
+                    },
+                    "treatmentProfile": {
+                        "lastTreatmentDate": "2016-01-01T06:00:00.000Z"
+                    },
+                    "connectDate": "2001-11-05T06:00:00.000Z"
+                }
+            ],
+            "customerCreditProfile": {
+                "lastCreditRating": "X",
+                "atRiskToChurnScore": "0",
+                "propensityToPayScore": "1"
+            },
+            "bankingInfo": {
+                "routingNumber": "0",
+                "accountNumber": "0"
+            },
+            "upSellEligible": true,
+            "customerPricingSegmentIndicator": "3",
+            "pricingSegmentIndicator": "3",
+            "isFederalTaxExempt": true,
+            "customerType": "Residential"
+        }
+    }
+}
