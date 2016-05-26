@@ -34,7 +34,8 @@ module.exports = function createSocketStream(file, length) {
 
     //This is for compatibility with old node releases <= 0.10
     //Hackish
-    if(semver.lt(process.version, '0.11.0')) {
+    if(semver.lt(process.version, '0.11.0'))
+    {
       socketStream.on('data', function(data) {
         socketStream.ondata(data,0,length + header.length);
       });
@@ -42,4 +43,6 @@ module.exports = function createSocketStream(file, length) {
     //Now write the response with the wsdl
     var state = socketStream.res.write(header+wsdl);
   });
+
+  return socketStream;
 };
