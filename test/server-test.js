@@ -185,6 +185,25 @@ describe('SOAP Server', function() {
     );
   });
 
+  it('should 500 on missing tag message', function(done) {
+    request.post({
+        url: test.baseUrl + '/stockquote?wsdl',
+        body : '<soapenv:Envelope' +
+                    ' xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"' +
+                    ' xmlns:soap="http://service.applicationsnet.com/soap/">' +
+                '  <soapenv:Header/>' +
+                '  <soapenv:Body>' +
+                '</soapenv:Envelope>',
+        headers: {'Content-Type': 'text/xml'}
+      }, function(err, res, body) {
+        assert.ok(!err);
+        assert.equal(res.statusCode, 500);
+        assert.ok(body.length);
+        done();
+      }
+    );
+  });
+
   it('should server up WSDL', function(done) {
     request(test.baseUrl + '/stockquote?wsdl', function(err, res, body) {
       assert.ok(!err);
