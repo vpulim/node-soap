@@ -1,0 +1,30 @@
+{
+  "ModelCRUDRequest":{
+  "ModelCRUD":{
+    "serviceType":"CreateInterest",
+    "TableName":"WTC_EmployeeInterest",
+    "RecordID":0,
+    "Filter":"",
+    "Action":"Create",
+          "DataRow":{
+              "field":[{
+                  "attributes":{"column":"C_BPartner_ID"},
+                  "val":"1001047"
+              },{
+                "attributes":{"column":"Interest"},
+                "val":"Cooking"
+              }]
+          }
+  },
+  "ADLoginRequest":{
+    "user":"WTCAdmin",
+    "pass":"WTCAdmin",
+    "lang":"192",
+    "ClientID":11,
+    "RoleID":102,
+    "OrgID":1000001,
+    "WarehouseID":1000000,
+    "stage":0
+  }
+ }
+}

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   <soap:Body>
+      <ns1:createDataResponse xmlns:ns1="http://3e.pl/ADInterface">
+         <StandardResponse RecordID="1000027" xmlns="http://3e.pl/ADInterface"/>
+      </ns1:createDataResponse>
+   </soap:Body>
+</soap:Envelope>
