@@ -53,7 +53,7 @@ describe('WSSecurityCert', function() {
     xml.should.containEql('<wsse:Security');
     xml.should.containEql('http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd');
     xml.should.containEql('http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd');
-    xml.should.containEql('soap:mustUnderstand="true"');
+    xml.should.containEql('soap:mustUnderstand="1"');
     xml.should.containEql('<wsse:BinarySecurityToken');
     xml.should.containEql('EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary');
     xml.should.containEql('ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3"');
