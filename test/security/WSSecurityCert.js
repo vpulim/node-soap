@@ -64,7 +64,7 @@ describe('WSSecurityCert', function() {
     xml.should.containEql('<Expires>' + instance.expires);
     xml.should.containEql('<Signature xmlns="http://www.w3.org/2000/09/xmldsig#">');
     xml.should.containEql('<wsse:SecurityTokenReference>');
-    xml.should.containEql('<wsse:Reference URI="' + instance.x509Id);
+    xml.should.containEql('<wsse:Reference URI="#' + instance.x509Id);
     xml.should.containEql('ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3"/>');
     xml.should.containEql(instance.publicP12PEM);
     xml.should.containEql(instance.signer.getSignatureXml());
