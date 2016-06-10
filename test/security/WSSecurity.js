@@ -29,7 +29,7 @@ describe('WSSecurity', function() {
   it('should accept passwordType as 3rd arg', function() {
     var username = 'myUser';
     var password = 'myPass';
-    var passwordType = 'PasswordText'
+    var passwordType = 'PasswordText';
     var instance = new WSSecurity(username, password, passwordType);
     instance.should.have.property('_username', username);
     instance.should.have.property('_password', password);
