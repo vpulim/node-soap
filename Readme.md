@@ -130,8 +130,8 @@ Note: for versions of node >0.10.X, you may need to specify `{connection: 'keep-
               },
 
               // You can also inspect the original `req`
-              reallyDeatailedFunction: function(args, cb, headers, req) {
-                  console.log('SOAP `reallyDeatailedFunction` request from ' + req.connection.remoteAddress);
+              reallyDetailedFunction: function(args, cb, headers, req) {
+                  console.log('SOAP `reallyDetailedFunction` request from ' + req.connection.remoteAddress);
                   return {
                       name: headers.Token
                   };
