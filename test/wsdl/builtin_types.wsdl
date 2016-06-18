@@ -98,6 +98,10 @@
     <wsdl:part name="unsignedByte" element="tns:unsignedByteElement" />
   </wsdl:message>
 
+  <wsdl:message name="StringRequest">
+    <wsdl:part element="tns:sstringElement" name="string"></wsdl:part>
+  </wsdl:message>
+
   <wsdl:message name="Response">
     <wsdl:part name="nonPositiveInteger" element="tns:nonPositiveIntegerElement" />
     <wsdl:part name="body" element="tns:nonNegativeIntegerElement"/>
@@ -108,12 +112,26 @@
       <wsdl:input message="tns:Request"/>
       <wsdl:output message="tns:Response"/>
     </wsdl:operation>
+    <wsdl:operation name="StringOperation">
+      <wsdl:input message="tns:StringRequest"/>
+      <wsdl:output message="tns:Response"/>
+    </wsdl:operation>
   </wsdl:portType>
 
   <wsdl:binding name="Binding" type="tns:PortType">
     <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
     <wsdl:operation name="Operation">
       <soap:operation soapAction="http://www.BuiltinTypes.com/Operation" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="StringOperation">
+      <soap:operation soapAction="http://www.BuiltinTypes.com/StringOperation" style="document"/>
       <wsdl:input>
         <soap:body use="literal"/>
       </wsdl:input>
