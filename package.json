@@ -1,7 +1,7 @@
 {
-  "name": "soap",
+  "name": "soap-noendlessloop",
   "version": "0.15.0",
-  "description": "A minimal node SOAP client",
+  "description": "A minimal node SOAP client with modifications for EWS soap requests",
   "engines": {
     "node": ">=0.10.0"
   },
