@@ -695,4 +695,35 @@ describe('SOAP Client', function() {
 
   });
 
+  describe('Method invocation', function() {
+
+    it('shall generate correct payload for methods with string parameter', function(done) {
+      // Mock the http post function in order to easy be able to validate the
+      // generated payload
+      var stringParameterValue = 'MY_STRING_PARAMETER_VALUE';
+      var expectedSoapBody = '<sstringElement xmlns="http://www.BuiltinTypes.com/">' +
+          stringParameterValue +
+          '</sstringElement>';
+      var request = null;
+      var mockRequestHandler = function(_request) {
+        request = _request;
+        return {};
+      };
+      var options = {
+        request: mockRequestHandler,
+      };
+      soap.createClient(__dirname+'/wsdl/builtin_types.wsdl', options, function(err, client) {
+        assert.ok(client);
+
+        // Call the method
+        client.StringOperation(stringParameterValue);
+
+        // Analyse and validate the generated soap body
+        var requestBody = request.body;
+        var soapBody = requestBody.match(/<soap:Body>(.*)<\/soap:Body>/)[1];
+        assert.ok(soapBody === expectedSoapBody);
+        done();
+      });
+    });
+  });
 });
