@@ -17,21 +17,22 @@
     "sax": ">=0.6",
     "selectn": "^0.9.6",
     "strip-bom": "~0.3.1",
-    "xml-crypto": "~0.8.0"
+    "xml-crypto": "~0.8.0",
+    "ursa": "0.8.5 || >=0.9.4"
   },
   "optionalDependencies": {
     "ursa": "0.8.5 || >=0.9.4"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/milewise/node-soap.git"
+    "url": "git+https://github.com/omerson/node-soap"
   },
   "main": "./index.js",
   "directories": {
-    "lib": "./lib"
+    "test": "test"
   },
   "scripts": {
-    "toc": "./node_modules/.bin/doctoc Readme.md --github --maxlevel 3",
+    "toc": "doctoc Readme.md --github --maxlevel 3",
     "pretest": "jshint index.js lib test",
     "cover": "istanbul cover _mocha -- --timeout 10000 test/*-test.js test/security/*.js",
     "coveralls": "cat ./coverage/lcov.info | coveralls -v",
@@ -55,5 +56,9 @@
     "semver": "~5.0.3",
     "should": "~3.3.0",
     "timekeeper": "~0.0.4"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/omerson/node-soap/issues"
+  },
+  "homepage": "https://github.com/omerson/node-soap#readme"
 }
