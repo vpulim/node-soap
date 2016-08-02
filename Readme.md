@@ -467,6 +467,9 @@ as default request options to the constructor:
     //passwordType: 'PasswordDigest' or 'PasswordText' default is PasswordText
     //hasTimeStamp: true or false, default is true
     //hasTokenCreated: true or false, default is true
+    //hasNonce: includes Nonce if set
+    //mustUnderstand: adds `mustUnderstand=1` to header
+    //actor: adds actor to security block
   client.setSecurity(wsSecurity);
 ```
 
