@@ -184,6 +184,20 @@ describe('SOAP Server', function() {
       }
     );
   });
+  
+  it('should 500 on empty message and undefined Content-Type', function(done) {
+    request.post({
+        url: test.baseUrl + '/stockquote?wsdl',
+        body : '',
+        headers: {'Content-Type': undefined}
+      }, function(err, res, body) {
+        assert.ok(!err);
+        assert.equal(res.statusCode, 500);
+        assert.ok(body.length);
+        done();
+      }
+    );
+  });
 
   it('should 500 on missing tag message', function(done) {
     request.post({
