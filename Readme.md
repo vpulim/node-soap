@@ -55,6 +55,7 @@ This module lets you connect to web services using SOAP.  It also provides a ser
 * Supports multiRef SOAP messages (thanks to [@kaven276](https://github.com/kaven276))
 * Support for both synchronous and asynchronous method handlers
 * WS-Security (currently only UsernameToken and PasswordText encoding is supported)
+* Supports [express](http://expressjs.com/) based web server(body parser middleware can be used)
 
 ## Install
 
@@ -102,6 +103,7 @@ The `options` argument allows you to customize the client with the following pro
 Note: for versions of node >0.10.X, you may need to specify `{connection: 'keep-alive'}` in SOAP headers to avoid truncation of longer chunked responses.
 
 ### soap.listen(*server*, *path*, *services*, *wsdl*) - create a new SOAP server that listens on *path* and provides *services*.
+*server* can be a [http](https://nodejs.org/api/http.html) Server or [express](http://expressjs.com/) framework based server
 *wsdl* is an xml string that defines the service.
 
 ``` javascript
@@ -140,13 +142,26 @@ Note: for versions of node >0.10.X, you may need to specify `{connection: 'keep-
       }
   };
 
-  var xml = require('fs').readFileSync('myservice.wsdl', 'utf8'),
-      server = http.createServer(function(request,response) {
-          response.end("404: Not Found: " + request.url);
-      });
+  var xml = require('fs').readFileSync('myservice.wsdl', 'utf8');
+
+  //http server example  
+  var server = http.createServer(function(request,response) {
+      response.end("404: Not Found: " + request.url);
+  });
 
   server.listen(8000);
   soap.listen(server, '/wsdl', myService, xml);
+
+  //express server example
+  var app = express();
+  //body parser middleware are supported (optional)
+  app.use(bodyParser.raw({type: function(){return true;}, limit: '5mb'}));
+  app.listen(8001, function(){
+      //Note: /wsdl route will be handled by soap module
+      //and all other routes & middleware will continue to work
+      soap.listen(app, '/wsdl', service, xml);
+  });
+
 ```
 
 ### Options
