@@ -93,12 +93,13 @@ If you're in need of support we encourage you to join us and other `node-soap` u
 The `options` argument allows you to customize the client with the following properties:
 
 - endpoint: to override the SOAP service's host specified in the `.wsdl` file.
-- request: to override the [request](https://github.com/request/request) module.
+- envelopeKey: to set specific key instead of `<pre><<b>soap</b>:Body></<b>soap</b>:Body></pre>`.
+- escapeXML: escape special XML characters in SOAP message (e.g. `&`, `>`, `<` etc).
+- forceSoap12Headers: to set proper headers for SOAP v1.2.
 - httpClient: to provide your own http client that implements `request(rurl, data, callback, exheaders, exoptions)`.
-- forceSoap12Headers: to set proper headers for SOAP v1.2
-- envelopeKey: to set specific key instead of <pre><<b>soap</b>:Body></<b>soap</b>:Body></pre>
-- wsdl_options: custom options for the request module on WSDL requests.
+- request: to override the [request](https://github.com/request/request) module.
 - wsdl_headers: custom HTTP headers to be sent on WSDL requests.
+- wsdl_options: custom options for the request module on WSDL requests.
 
 Note: for versions of node >0.10.X, you may need to specify `{connection: 'keep-alive'}` in SOAP headers to avoid truncation of longer chunked responses.
 
