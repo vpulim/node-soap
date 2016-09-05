@@ -133,6 +133,12 @@ function generateTest(name, methodName, wsdlPath, headerJSON, securityJSON, requ
       if (securityJSON && securityJSON.type === 'ws') {
         client.setSecurity(new WSSecurity(securityJSON.username, securityJSON.password, securityJSON.options));
       }
+
+      //throw more meaningful error
+      if(typeof client[methodName] !== 'function'){
+        throw new Error(method + ' ' + methodName + ' does not exists in wsdl specified in test wsdl: ' + wsdlPath);
+      }
+
       client[methodName](requestJSON, function(err, json, body, soapHeader){
         if(requestJSON){
           if (err) {
