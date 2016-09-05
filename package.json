@@ -1,6 +1,6 @@
 {
   "name": "soap",
-  "version": "0.16.0",
+  "version": "0.16.1",
   "description": "A minimal node SOAP client",
   "engines": {
     "node": ">=0.10.0"
