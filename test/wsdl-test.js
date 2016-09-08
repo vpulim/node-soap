@@ -73,6 +73,15 @@ wsdlStrictTests['should get the parent namespace when parent namespace is empty 
   });
 };
 
+wsdlStrictTests['should describe extended elements in correct order'] = function(done) {
+  var expected = '{"DummyService":{"DummyPortType":{"Dummy":{"input":{"DummyRequest":{"DummyField1":"xs:string","DummyField2":"xs:string"},"ExtendedDummyField":"xs:string"},"output":{"DummyResult":"c:DummyResult"}}}}}';
+  soap.createClient(__dirname+'/wsdl/extended_element.wsdl', function(err, client){
+    assert.ok(!err);
+    assert.equal(JSON.stringify(client.describe()), expected);
+    done();
+  });
+};
+
 wsdlStrictTests['should handle element ref'] = function(done) {
   var expectedMsg = '<ns1:fooRq xmlns:ns1="http://example.com/bar/xsd"' +
     ' xmlns="http://example.com/bar/xsd"><bar1:paymentRq' +
