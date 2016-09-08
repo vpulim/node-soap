@@ -3,7 +3,9 @@
 var fs = require('fs'),
     soap = require('..'),
     http = require('http'),
-    assert = require('assert');
+    assert = require('assert'),
+    sinon = require('sinon'),
+    wsdl = require('../lib/wsdl');
 
 describe('SOAP Client', function() {
   it('should error on invalid host', function(done) {
@@ -93,6 +95,22 @@ describe('SOAP Client', function() {
 
       assert.ok(client.wsdl.definitions.bindings.mySoapBinding.style === 'document');
       done();
+    });
+  });
+
+  it('should allow disabling the wsdl cache', function (done) {
+    var spy = sinon.spy(wsdl, 'open_wsdl');
+    var options = {disableCache: true};
+    soap.createClient(__dirname+'/wsdl/binding_document.wsdl', options, function(err1, client1) {
+      assert.ok(client1);
+      assert.ok(!err1);
+      soap.createClient(__dirname+'/wsdl/binding_document.wsdl', options, function(err2, client2) {
+        assert.ok(client2);
+        assert.ok(!err2);
+        assert.ok(spy.calledTwice);
+        wsdl.open_wsdl.restore();
+        done();
+      });
     });
   });
 
