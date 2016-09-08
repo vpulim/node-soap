@@ -87,6 +87,7 @@ If you're in need of support we encourage you to join us and other `node-soap` u
       });
   });
 ```
+This client has a built in WSDL cache. You can use the `disableCache` option to disable it.
 
 #### Options
 
@@ -100,6 +101,7 @@ The `options` argument allows you to customize the client with the following pro
 - request: to override the [request](https://github.com/request/request) module.
 - wsdl_headers: custom HTTP headers to be sent on WSDL requests.
 - wsdl_options: custom options for the request module on WSDL requests.
+- disableCache: don't cache WSDL files, request them every time.
 
 Note: for versions of node >0.10.X, you may need to specify `{connection: 'keep-alive'}` in SOAP headers to avoid truncation of longer chunked responses.
 
@@ -145,7 +147,7 @@ Note: for versions of node >0.10.X, you may need to specify `{connection: 'keep-
 
   var xml = require('fs').readFileSync('myservice.wsdl', 'utf8');
 
-  //http server example  
+  //http server example
   var server = http.createServer(function(request,response) {
       response.end("404: Not Found: " + request.url);
   });
