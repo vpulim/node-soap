@@ -1,3 +1,19 @@
+0.17.0 / 2016-06-23
+=================
+
+* [ENHANCEMENT] Add option for disabling the WSDL cache (#876)
+* [DOC] Add `escapeXML` option to README file (#874)
+* [DOC] updated readme for express support (#873)
+* [ENHANCEMENT] express server support (#872)
+* [ENHANCEMENT] better error 1. SOAP message missing evelope and body 2. request/response tests (#869)
+* [FIX] Fix possible crash when send empty post using postman (#861)
+* [FIX] fix ExtensionElement description to match order (#866)
+* [DOC] Added descriptions for actor, hasNonce & mustUndertand options (#865)
+* [FIX] Fix namespaces in client soap requests (#863)
+* [FIX] Always submit valid XML from the client. (#862)
+* [MAINTENANCE] mustUnderstand must be 0 or 1.. with tests (#850)
+* [MAINTENANCE] Remove special handling of methods only taking a string paramter (#854)
+
 0.16.0 / 2016-06-23
 =================
 * [ENHANCEMENT] Add nonce and soap:actor support for WSSecurity (#851)
