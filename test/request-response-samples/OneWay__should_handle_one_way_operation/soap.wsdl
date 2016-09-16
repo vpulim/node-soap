@@ -4,7 +4,7 @@
                   xmlns:xs="http://www.w3.org/2001/XMLSchema"
                   xmlns:tns="http://www.OneWay.com" xmlns:n="http://www.OneWay.com/Name/Types" xmlns:ns="http://schemas.xmlsoap.org/soap/encoding/" targetNamespace="http://www.OneWay.com">
     <wsdl:types>
-        <xs:schema targetNamespace="http://www.OneWay.com/Name/Types">
+        <xs:schema targetNamespace="http://www.OneWay.com/Name/Types" elementFormDefault="qualified">
             <xs:element name="OneWayRequest">
                 <xs:complexType>
                     <xs:sequence>
@@ -42,4 +42,3 @@
     </wsdl:service>
 
 </wsdl:definitions>
-
