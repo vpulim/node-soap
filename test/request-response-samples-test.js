@@ -38,7 +38,6 @@ var requestContext = {
     });
     req.on('end', function(){
       if(!requestContext.expectedRequest)return res.end(requestContext.responseToSend);
-      if(!requestContext.responseToSend)return requestContext.doneHandler();
 
       var actualRequest = normalizeWhiteSpace(chunks.join(''));
       var expectedRequest = normalizeWhiteSpace(requestContext.expectedRequest);
@@ -56,7 +55,10 @@ var requestContext = {
       }
 
       assert.equal(actualRequest, expectedRequest);
+
+      if(!requestContext.responseToSend)return requestContext.doneHandler();
       res.end(requestContext.responseToSend);
+
       requestContext.expectedRequest = null;
       requestContext.responseToSend = null;
     });
