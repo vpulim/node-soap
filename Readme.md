@@ -628,6 +628,19 @@ var wsdlOptions = {
 
 To see it in practice, consider the sample files in: [test/request-response-samples/addPets__force_namespaces](https://github.com/vpulim/node-soap/tree/master/test/request-response-samples/addPets__force_namespaces)
 
+### Changing the tag formats to use self-closing (empty element) tags
+The XML specification specifies that there is no semantic difference between `<Tag></Tag>` and `<Tag />`, and node-soap defaults to using the `<Tag></Tag>` format. But if your web service is particular, or if there is a stylistic preference, the `useEmptyTag` option causes tags with no contents to use the `<Tag />` format instead.
+
+```javascript
+var wsdlOptions = {
+  useEmptyTag: true
+};
+```
+
+For example: `{ MyTag: { attributes: { MyAttr: 'value' } } }` is:
+
+* **Without useEmptyTag**: `<MyTag MyAttr="value"></MyTag>`
+* **With useEmptyTag set to true**: `<MyTag MyAttr="value" />`
 
 ## Handling "ignored" namespaces
 If an Element in a `schema` definition depends on an Element which is present in the same namespace, normally the `tns:`
