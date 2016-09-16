@@ -805,6 +805,20 @@ Example :
 
 ```
 
+### Changing the tag formats to use self-closing (empty element) tags
+The XML specification specifies that there is no semantic difference between `<Tag></Tag>` and `<Tag />`, and node-soap defaults to using the `<Tag></Tag>` format. But if your web service is particular, or if there is a stylistic preference, the `useEmptyTag` option causes tags with no contents to use the `<Tag />` format instead.
+
+```javascript
+var wsdlOptions = {
+  useEmptyTag: true
+};
+```
+
+For example: `{ MyTag: { attributes: { MyAttr: 'value' } } }` is:
+
+* **Without useEmptyTag**: `<MyTag MyAttr="value"></MyTag>`
+* **With useEmptyTag set to true**: `<MyTag MyAttr="value" />`
+
 ## Handling "ignored" namespaces
 If an Element in a `schema` definition depends on an Element which is present in the same namespace, normally the `tns:`
 namespace prefix is used to identify this Element. This is not much of a problem as long as you have just one `schema` defined
