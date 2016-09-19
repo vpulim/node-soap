@@ -69,4 +69,30 @@ describe('WSSecurityCert', function() {
     xml.should.containEql(instance.publicP12PEM);
     xml.should.containEql(instance.signer.getSignatureXml());
   });
+
+  it('should take parameters as options object', function() {
+    var instance = new WSSecurityCert({
+      privateKey: key,
+      publicKey: cert,
+      keyPassword: '',
+      encoding: 'utf8'
+    });
+    var xml = instance.postProcess('<soap:Header></soap:Header><soap:Body></soap:Body>');
+    xml.should.containEql('<wsse:Security');
+
+  });
+
+  it('should contain username and password', function() {
+    var instance = new WSSecurityCert({
+      privateKey: key,
+      publicKey: cert,
+      keyPassword: '',
+      username: 'testuser',
+      password: 'testpw',
+      encoding: 'utf8'
+    });
+    var xml = instance.postProcess('<soap:Header></soap:Header><soap:Body></soap:Body>');
+    xml.should.containEql('<wsse:Username>testuser</wsse:Username>');
+    xml.should.containEql('<wsse:Password>testpw</wsse:Password>');
+  });
 });

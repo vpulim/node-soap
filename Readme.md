@@ -498,10 +498,25 @@ WS-Security X509 Certificate support.
 ``` javascript
   var privateKey = fs.readFileSync(privateKeyPath);
   var publicKey = fs.readFileSync(publicKeyPath);
-  var password = ''; // optional password
-  var wsSecurity = new soap.WSSecurityCert(privateKey, publicKey, password, 'utf8');
+  var keyPassword = ''; // optional key password
+  var wsSecurity = new soap.WSSecurityCert(privateKey, publicKey, keyPassword, 'utf8');
   client.setSecurity(wsSecurity);
 ```
+
+or
+
+``` javascript
+  var wsSecurity = new soap.WSSecurityCert({
+    privateKey: fs.readFileSync(privateKeyPath),
+    publicKey: fs.readFileSync(publicKeyPath),
+    keyPassword: '', // optional password
+    username: 'my-user', // optional user
+    password: '', //optional user password
+    encoding: 'utf8'
+  });
+  client.setSecurity(wsSecurity);
+```
+
 
 _Note_: Optional dependency 'ursa' is required to be installed succefully when WSSecurityCert is used.
 
