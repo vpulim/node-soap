@@ -1,9 +1,40 @@
+0.17.0 / 2016-06-23
+=================
+
+* [ENHANCEMENT] Add option for disabling the WSDL cache (#876)
+* [DOC] Add `escapeXML` option to README file (#874)
+* [DOC] updated readme for express support (#873)
+* [ENHANCEMENT] express server support (#872)
+* [ENHANCEMENT] better error 1. SOAP message missing evelope and body 2. request/response tests (#869)
+* [FIX] Fix possible crash when send empty post using postman (#861)
+* [FIX] fix ExtensionElement description to match order (#866)
+* [DOC] Added descriptions for actor, hasNonce & mustUndertand options (#865)
+* [FIX] Fix namespaces in client soap requests (#863)
+* [FIX] Always submit valid XML from the client. (#862)
+* [MAINTENANCE] mustUnderstand must be 0 or 1.. with tests (#850)
+* [MAINTENANCE] Remove special handling of methods only taking a string paramter (#854)
+
+0.16.0 / 2016-06-23
+=================
+* [ENHANCEMENT] Add nonce and soap:actor support for WSSecurity (#851)
+* [MAINTENANCE] Fix typo in readme (#853)
+* [FIX fixes and issue that causes the module to break if no re or req.headers present in client (#852)
+* [FIX] fixed the soap request envelop generation part when request has complex Type as root. (#849)
+* [FIX] Gracefully handle errors while parsing xml in xmlToObject and resume the parser with p.resume() (#842)
+* [FIX] XSD import in WSDL files and relative path (server creation) - resubmit (#846)
+* [ENHANCEMENT] Support array of certs for ClientSSLSecurity ca. (#841)
+* [MAINTENANCE] Attribute value of body id in double quotes (#843)
+* [MAINTENANCE] Bumping ursa to 0.9.4 (#836)
+* [ENHANCEMENT] Optionally add Created to wssecurity header (#833)
+* [MAINTENANCE] Clean up brace style (#835)
+* [FIX] Fix custom http client not being used when fetching related resources (#834)
+
 0.15.0 / 2016-05-09
 =================
 * [FIX] Make `ursa` an optional dependency since it's currently nearly impossible to install `soap` on a windows machine otherwise (#832)
 * [FIX] Fixed issue of referencing element in another namespace (#831)
 * [FIX] Fixed incorrect WSDL in `CDATA` tests (#830)
-* [FIX] Added mocks for node.js streams `cork`/`uncork` in tests (for `node >= 4.x`) (#829) 
+* [FIX] Added mocks for node.js streams `cork`/`uncork` in tests (for `node >= 4.x`) (#829)
 * [ENHANCEMENT] Added basic `CDATA` support (#787)
 * [DOC] Added missing documentation about `Client.setEndpoint(url)` (#827)
 * [ENHANCEMENT] Added `toc` node-module in order to generate TOC in README.md via `npm run toc` command (#826)
@@ -30,7 +61,7 @@
 0.13.0 / 2016-02-16
 =================
 * [FIX] Maintain `ignoredNamespaces` option when processing WSDL includes (#796)
-* [ENHANCEMENT] SOAP Headers for server response & `changeSoapHeader()` method for client & server (#792) 
+* [ENHANCEMENT] SOAP Headers for server response & `changeSoapHeader()` method for client & server (#792)
 * [ENHANCEMENT] Added XML declaration (version & encoding) to client requests (#797)
 * [DOC] Added example for `server.options` to README, fixed typos in CONTRIBUTING (#798)
 * [FIX] Keep `nsContext` stack consistent even on recursive calls (#799)

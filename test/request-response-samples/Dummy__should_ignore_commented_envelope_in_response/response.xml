@@ -1,0 +1,21 @@
+<!--
+  Note that one can use envelope tags such as:
+    <soap:Envelope>
+      Some stuff
+    </soap:Envelope>
+  But these tags should be ignored if commented like here
+-->
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tns="http://www.Dummy.com" xmlns:n="http://www.Dummy.com/Name/Types">
+    <soap:Header></soap:Header>
+    <soap:Body>
+       <n:DummyResponse>
+           <n:DummyResult>
+               <c:DummyList xmlns:c="http://www.Dummy.com/Common/Types">
+                   <c:DummyElement language="en-US">
+                    Dummy Element Entry
+                   </c:DummyElement>
+               </c:DummyList>
+           </n:DummyResult>
+       </n:DummyResponse>
+    </soap:Body>
+</soap:Envelope>

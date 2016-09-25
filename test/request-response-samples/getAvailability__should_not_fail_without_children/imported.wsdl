@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/xsl" href="/wsdl-viewer.xsl"?>
-<wsdl:definitions xmlns:foo="http://fo.bar/doIt/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+<wsdl:definitions xmlns:foo="http://foo.bar/doIt/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
                   xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-                  name="doIt" targetNamespace="http://foo.bar/doIt">
+                  name="doIt" targetNamespace="http://foo.bar/doIt/">
 
     <wsdl:portType name="doIt">
         <wsdl:operation name="doItMan"/>

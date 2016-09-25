@@ -21,6 +21,9 @@ module.exports = function createSocketStream(file, length) {
   socketStream.uncork = function() {
   };
 
+  socketStream.destroy = function() {
+  };
+
   socketStream.req = httpReqStream;
   socketStream.res = httpResStream;
 

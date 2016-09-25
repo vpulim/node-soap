@@ -3,7 +3,9 @@
 var fs = require('fs'),
     soap = require('..'),
     http = require('http'),
-    assert = require('assert');
+    assert = require('assert'),
+    sinon = require('sinon'),
+    wsdl = require('../lib/wsdl');
 
 describe('SOAP Client', function() {
   it('should error on invalid host', function(done) {
@@ -93,6 +95,22 @@ describe('SOAP Client', function() {
 
       assert.ok(client.wsdl.definitions.bindings.mySoapBinding.style === 'document');
       done();
+    });
+  });
+
+  it('should allow disabling the wsdl cache', function (done) {
+    var spy = sinon.spy(wsdl, 'open_wsdl');
+    var options = {disableCache: true};
+    soap.createClient(__dirname+'/wsdl/binding_document.wsdl', options, function(err1, client1) {
+      assert.ok(client1);
+      assert.ok(!err1);
+      soap.createClient(__dirname+'/wsdl/binding_document.wsdl', options, function(err2, client2) {
+        assert.ok(client2);
+        assert.ok(!err2);
+        assert.ok(spy.calledTwice);
+        wsdl.open_wsdl.restore();
+        done();
+      });
     });
   });
 
@@ -695,4 +713,35 @@ describe('SOAP Client', function() {
 
   });
 
+  describe('Method invocation', function() {
+
+    it('shall generate correct payload for methods with string parameter', function(done) {
+      // Mock the http post function in order to easy be able to validate the
+      // generated payload
+      var stringParameterValue = 'MY_STRING_PARAMETER_VALUE';
+      var expectedSoapBody = '<sstringElement xmlns="http://www.BuiltinTypes.com/">' +
+          stringParameterValue +
+          '</sstringElement>';
+      var request = null;
+      var mockRequestHandler = function(_request) {
+        request = _request;
+        return {};
+      };
+      var options = {
+        request: mockRequestHandler,
+      };
+      soap.createClient(__dirname+'/wsdl/builtin_types.wsdl', options, function(err, client) {
+        assert.ok(client);
+
+        // Call the method
+        client.StringOperation(stringParameterValue);
+
+        // Analyse and validate the generated soap body
+        var requestBody = request.body;
+        var soapBody = requestBody.match(/<soap:Body>(.*)<\/soap:Body>/)[1];
+        assert.ok(soapBody === expectedSoapBody);
+        done();
+      });
+    });
+  });
 });

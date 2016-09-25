@@ -1,6 +1,6 @@
 {
   "name": "soap",
-  "version": "0.15.0",
+  "version": "0.17.0",
   "description": "A minimal node SOAP client",
   "engines": {
     "node": ">=0.10.0"
@@ -21,7 +21,7 @@
     "xml-crypto": "~0.8.0"
   },
   "optionalDependencies": {
-    "ursa": "0.8.5 || >=0.9.3"
+    "ursa": "0.8.5 || >=0.9.4"
   },
   "repository": {
     "type": "git",
@@ -43,11 +43,13 @@
   ],
   "license": "MIT",
   "devDependencies": {
+    "body-parser": "^1.15.2",
     "colors": "^1.1.2",
     "coveralls": "^2.11.6",
     "diff": "^2.2.1",
     "doctoc": "^1.0.0",
     "duplexer": "~0.1.1",
+    "express": "^4.14.0",
     "glob": "~3.2.8",
     "istanbul": "^0.4.1",
     "jshint": "2.3.0",
@@ -55,6 +57,7 @@
     "readable-stream": "~2.0.2",
     "semver": "~5.0.3",
     "should": "~3.3.0",
+    "sinon": "^1.17.5",
     "timekeeper": "~0.0.4"
   }
 }
