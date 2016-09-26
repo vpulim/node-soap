@@ -588,6 +588,8 @@ describe('SOAP Client', function() {
       soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', function (err, client) {
         client.MyOperation({}, function(err, result) {
           assert.ok(err);
+          assert.ok(err instanceof Error);
+          assert.ok(err.stack);
           assert.ok(err.response);
           assert.ok(err.body);
           done();
