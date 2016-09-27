@@ -4,9 +4,6 @@
     "sessionid": "42"
   },
   "getAvailabilityRequest": {
-    "attributes": {
-      "currency": "EUR"
-    },
     "departure": "HAM",
     "destination": "FRA",
     "flightDate": "2016-01-01",
