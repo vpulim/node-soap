@@ -4,19 +4,23 @@ var fs = require('fs'),
     soap = require('..'),
     http = require('http'),
     assert = require('assert'),
+    _ = require('lodash'),
     sinon = require('sinon'),
     wsdl = require('../lib/wsdl');
 
-describe('SOAP Client', function() {
+[
+  {suffix: '', options: {}},
+  {suffix: ' (with streaming)', options: {stream: true}}
+].forEach(function (meta) { describe('SOAP Client' + meta.suffix, function() {
   it('should error on invalid host', function(done) {
-    soap.createClient('http://localhost:1', function(err, client) {
+    soap.createClient('http://localhost:1', meta.options, function(err, client) {
       assert.ok(err);
       done();
     });
   });
 
   it('should add and clear soap headers', function(done) {
-    soap.createClient(__dirname+'/wsdl/default_namespace.wsdl', function(err, client) {
+    soap.createClient(__dirname+'/wsdl/default_namespace.wsdl', meta.options, function(err, client) {
       assert.ok(client);
       assert.ok(!client.getSoapHeaders());
 
@@ -40,7 +44,7 @@ describe('SOAP Client', function() {
 
   it('should issue async callback for cached wsdl', function(done) {
     var called = false;
-    soap.createClient(__dirname+'/wsdl/default_namespace.wsdl', function(err, client) {
+    soap.createClient(__dirname+'/wsdl/default_namespace.wsdl', meta.options, function(err, client) {
       assert.ok(client);
       assert.ok(!err);
       called = true;
@@ -54,7 +58,7 @@ describe('SOAP Client', function() {
       request: function() {}
     };
     soap.createClient(__dirname + '/wsdl/default_namespace.wsdl',
-      {httpClient: myHttpClient},
+      _.assign({httpClient: myHttpClient}, meta.options),
       function(err, client) {
         assert.ok(client);
         assert.ok(!err);
@@ -67,7 +71,7 @@ describe('SOAP Client', function() {
     var myRequest = function() {
     };
     soap.createClient(__dirname + '/wsdl/default_namespace.wsdl',
-      {request: myRequest},
+      _.assign({request: myRequest}, meta.options),
       function(err, client) {
         assert.ok(client);
         assert.ok(!err);
@@ -77,7 +81,7 @@ describe('SOAP Client', function() {
   });
 
   it('should allow customization of envelope', function(done) {
-    soap.createClient(__dirname+'/wsdl/default_namespace.wsdl', {envelopeKey: 'soapenv'}, function(err, client) {
+    soap.createClient(__dirname+'/wsdl/default_namespace.wsdl', _.assign({envelopeKey: 'soapenv'}, meta.options), function(err, client) {
       assert.ok(client);
       assert.ok(!err);
 
@@ -89,7 +93,7 @@ describe('SOAP Client', function() {
   });
 
   it('should set binding style to "document" by default if not explicitly set in WSDL, per SOAP spec', function (done) {
-    soap.createClient(__dirname+'/wsdl/binding_document.wsdl', function(err, client) {
+    soap.createClient(__dirname+'/wsdl/binding_document.wsdl', meta.options, function(err, client) {
       assert.ok(client);
       assert.ok(!err);
 
@@ -100,7 +104,7 @@ describe('SOAP Client', function() {
 
   it('should allow disabling the wsdl cache', function (done) {
     var spy = sinon.spy(wsdl, 'open_wsdl');
-    var options = {disableCache: true};
+    var options = _.assign({disableCache: true}, meta.options);
     soap.createClient(__dirname+'/wsdl/binding_document.wsdl', options, function(err1, client1) {
       assert.ok(client1);
       assert.ok(!err1);
@@ -138,7 +142,7 @@ describe('SOAP Client', function() {
     });
 
     it('should append `:' + port + '` to the Host header on for a request to a service on that port', function(done) {
-      soap.createClient(__dirname+'/wsdl/default_namespace.wsdl', function(err, client) {
+      soap.createClient(__dirname+'/wsdl/default_namespace.wsdl', meta.options, function(err, client) {
         assert.ok(client);
         assert.ok(!err);
 
@@ -151,7 +155,7 @@ describe('SOAP Client', function() {
     });
 
     it('should not append `:80` to the Host header on for a request to a service without a port explicitly defined', function(done) {
-      soap.createClient(__dirname+'/wsdl/default_namespace.wsdl', function(err, client) {
+      soap.createClient(__dirname+'/wsdl/default_namespace.wsdl', meta.options, function(err, client) {
         assert.ok(client);
         assert.ok(!err);
 
@@ -164,7 +168,7 @@ describe('SOAP Client', function() {
     });
 
     it('should not append `:443` to the Host header if endpoints runs on `https`', function (done) {
-      soap.createClient(__dirname+'/wsdl/default_namespace.wsdl', function(err, client) {
+      soap.createClient(__dirname+'/wsdl/default_namespace.wsdl', meta.options, function(err, client) {
         assert.ok(client);
         assert.ok(!err);
 
@@ -176,7 +180,7 @@ describe('SOAP Client', function() {
     });
 
     it('should append a port to the Host header if explicitly defined', function (done) {
-      soap.createClient(__dirname+'/wsdl/default_namespace.wsdl', function(err, client) {
+      soap.createClient(__dirname+'/wsdl/default_namespace.wsdl', meta.options, function(err, client) {
         assert.ok(client);
         assert.ok(!err);
 
@@ -188,7 +192,7 @@ describe('SOAP Client', function() {
     });
 
     it('should have the correct extra header in the request', function(done) {
-      soap.createClient(__dirname+'/wsdl/default_namespace.wsdl', function(err, client) {
+      soap.createClient(__dirname+'/wsdl/default_namespace.wsdl', meta.options, function(err, client) {
         assert.ok(client);
         assert.ok(!err);
 
@@ -203,7 +207,7 @@ describe('SOAP Client', function() {
     });
 
     it('should have the wrong extra header in the request', function(done) {
-      soap.createClient(__dirname+'/wsdl/default_namespace.wsdl', function(err, client) {
+      soap.createClient(__dirname+'/wsdl/default_namespace.wsdl', meta.options, function(err, client) {
         assert.ok(client);
         assert.ok(!err);
 
@@ -218,7 +222,7 @@ describe('SOAP Client', function() {
     });
 
     it('should have lastResponse and lastResponseHeaders after the call', function(done) {
-      soap.createClient(__dirname+'/wsdl/default_namespace.wsdl', function(err, client) {
+      soap.createClient(__dirname+'/wsdl/default_namespace.wsdl', meta.options, function(err, client) {
         assert.ok(client);
         assert.ok(!err);
 
@@ -233,7 +237,7 @@ describe('SOAP Client', function() {
     });
 
     it('should have lastElapsedTime after a call with the time option passed', function(done) {
-      soap.createClient(__dirname+'/wsdl/default_namespace.wsdl', function(err, client) {
+      soap.createClient(__dirname+'/wsdl/default_namespace.wsdl', meta.options, function(err, client) {
         assert.ok(client);
         assert.ok(!err);
 
@@ -249,7 +253,7 @@ describe('SOAP Client', function() {
     });
 
     it('should add http headers in method call options', function(done) {
-      soap.createClient(__dirname+'/wsdl/default_namespace.wsdl', function(err, client) {
+      soap.createClient(__dirname+'/wsdl/default_namespace.wsdl', meta.options, function(err, client) {
         assert.ok(client);
         assert.ok(!err);
 
@@ -264,7 +268,7 @@ describe('SOAP Client', function() {
     });
 
     it('should not return error in the call and return the json in body', function(done) {
-      soap.createClient(__dirname+'/wsdl/json_response.wsdl', function(err, client) {
+      soap.createClient(__dirname+'/wsdl/json_response.wsdl', meta.options, function(err, client) {
         assert.ok(client);
         assert.ok(!err);
 
@@ -278,7 +282,7 @@ describe('SOAP Client', function() {
     });
 
     it('should add proper headers for soap12', function(done) {
-      soap.createClient(__dirname+'/wsdl/default_namespace_soap12.wsdl', {forceSoap12Headers: true}, function(err, client) {
+      soap.createClient(__dirname+'/wsdl/default_namespace_soap12.wsdl', _.assign({forceSoap12Headers: true}, meta.options), function(err, client) {
         assert.ok(client);
         assert.ok(!err);
 
@@ -295,7 +299,7 @@ describe('SOAP Client', function() {
     });
 
     it('should allow calling the method with args, callback, options and extra headers', function(done) {
-      soap.createClient(__dirname+'/wsdl/json_response.wsdl', function(err, client) {
+      soap.createClient(__dirname+'/wsdl/json_response.wsdl', meta.options, function(err, client) {
         assert.ok(client);
         assert.ok(!err);
 
@@ -312,7 +316,7 @@ describe('SOAP Client', function() {
     });
 
     it('should allow calling the method with only a callback', function(done) {
-      soap.createClient(__dirname+'/wsdl/json_response.wsdl', function(err, client) {
+      soap.createClient(__dirname+'/wsdl/json_response.wsdl', meta.options, function(err, client) {
         assert.ok(client);
         assert.ok(!err);
 
@@ -328,7 +332,7 @@ describe('SOAP Client', function() {
     });
 
     it('should allow calling the method with args, options and callback last', function(done) {
-      soap.createClient(__dirname+'/wsdl/json_response.wsdl', function(err, client) {
+      soap.createClient(__dirname+'/wsdl/json_response.wsdl', meta.options, function(err, client) {
         assert.ok(client);
         assert.ok(!err);
 
@@ -345,7 +349,7 @@ describe('SOAP Client', function() {
     });
 
     it('should allow calling the method with args, options, extra headers and callback last', function(done) {
-      soap.createClient(__dirname+'/wsdl/json_response.wsdl', function(err, client) {
+      soap.createClient(__dirname+'/wsdl/json_response.wsdl', meta.options, function(err, client) {
         assert.ok(client);
         assert.ok(!err);
 
@@ -363,7 +367,7 @@ describe('SOAP Client', function() {
   });
 
   it('should add soap headers', function (done) {
-    soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', function (err, client) {
+    soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
         assert.ok(client);
         assert.ok(!client.getSoapHeaders());
         var soapheader = {
@@ -386,7 +390,7 @@ describe('SOAP Client', function() {
   });
 
   it('should add soap headers with a namespace', function(done) {
-    soap.createClient(__dirname+'/wsdl/default_namespace.wsdl', function(err, client) {
+    soap.createClient(__dirname+'/wsdl/default_namespace.wsdl', meta.options, function(err, client) {
       assert.ok(client);
       assert.ok(!client.getSoapHeaders());
 
@@ -402,7 +406,7 @@ describe('SOAP Client', function() {
   });
 
   it('should add http headers', function(done) {
-    soap.createClient(__dirname+'/wsdl/default_namespace.wsdl', function(err, client) {
+    soap.createClient(__dirname+'/wsdl/default_namespace.wsdl', meta.options, function(err, client) {
       assert.ok(client);
       assert.ok(!client.getHttpHeaders());
 
@@ -438,7 +442,7 @@ describe('SOAP Client', function() {
     });
 
     it('should reset the namespace number', function (done) {
-      soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', function (err, client) {
+      soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
         assert.ok(client);
 
         var data = {
@@ -510,7 +514,7 @@ describe('SOAP Client', function() {
     });
 
     it('should return an error', function (done) {
-      soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', function (err, client) {
+      soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
         client.MyOperation({}, function(err, result) {
           assert.ok(err);
           assert.ok(err.response);
@@ -542,7 +546,7 @@ describe('SOAP Client', function() {
     });
 
     it('should return an error', function (done) {
-      soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', function (err, client) {
+      soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
         client.MyOperation({}, function(err, result) {
           assert.ok(err);
           assert.ok(err.response);
@@ -553,7 +557,7 @@ describe('SOAP Client', function() {
     });
 
     it('should emit a \'soapError\' event', function (done) {
-      soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', function (err, client) {
+      soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
         client.on('soapError', function(err) {
           assert.ok(err);
         });
@@ -585,7 +589,7 @@ describe('SOAP Client', function() {
     });
 
     it('should return an error', function (done) {
-      soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', function (err, client) {
+      soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
         client.MyOperation({}, function(err, result) {
           assert.ok(err);
           assert.ok(err.response);
@@ -617,7 +621,7 @@ describe('SOAP Client', function() {
 
 
     it('Should emit the "message" event with Soap Body string', function (done) {
-      soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', function (err, client) {
+      soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
         var didEmitEvent = false;
         client.on('message', function (xml) {
           didEmitEvent = true;
@@ -634,7 +638,7 @@ describe('SOAP Client', function() {
     });
 
     it('Should emit the "request" event with entire XML message', function (done) {
-      soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', function (err, client) {
+      soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
         var didEmitEvent = false;
         client.on('request', function (xml) {
           didEmitEvent = true;
@@ -651,7 +655,7 @@ describe('SOAP Client', function() {
     });
 
     it('Should emit the "response" event with Soap Body string and Response object', function (done) {
-      soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', function (err, client) {
+      soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
         var didEmitEvent = false;
         client.on('response', function (xml, response) {
           didEmitEvent = true;
@@ -669,7 +673,7 @@ describe('SOAP Client', function() {
     });
 
     it('should emit a \'soapError\' event', function (done) {
-      soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', function (err, client) {
+      soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
         var didEmitEvent = false;
         client.on('soapError', function(err) {
           didEmitEvent = true;
@@ -695,7 +699,7 @@ describe('SOAP Client', function() {
       res.write("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?><SOAP-ENV:Envelope SOAP-ENV:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"\n  xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\"\n  xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"\n  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n  xmlns:SOAP-ENC=\"http://schemas.xmlsoap.org/soap/encoding/\">\n<SOAP-ENV:Body><SOAP-ENV:Fault><faultcode xsi:type=\"xsd:string\">Test</faultcode><faultactor xsi:type=\"xsd:string\"></faultactor><faultstring xsi:type=\"xsd:string\">test error</faultstring><detail xsi:type=\"xsd:string\">test detail</detail></SOAP-ENV:Fault></SOAP-ENV:Body></SOAP-ENV:Envelope>");
       res.end();
     }).listen(port, hostname, function() {
-      soap.createClient(__dirname+'/wsdl/json_response.wsdl', function(err, client) {
+      soap.createClient(__dirname+'/wsdl/json_response.wsdl', meta.options, function(err, client) {
         assert.ok(client);
         assert.ok(!err);
 
@@ -725,11 +729,13 @@ describe('SOAP Client', function() {
       var request = null;
       var mockRequestHandler = function(_request) {
         request = _request;
-        return {};
+        return {
+          on: function () {}
+        };
       };
-      var options = {
+      var options = _.assign({
         request: mockRequestHandler,
-      };
+      }, meta.options);
       soap.createClient(__dirname+'/wsdl/builtin_types.wsdl', options, function(err, client) {
         assert.ok(client);
 
@@ -744,4 +750,4 @@ describe('SOAP Client', function() {
       });
     });
   });
-});
+})});
