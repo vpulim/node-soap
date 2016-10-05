@@ -706,7 +706,7 @@ var clientStub = {
   SomeOperation: sinon.stub()
 };
 
-clientStub.SomeOperation.respondWithError = soapStub.createRespondingStub({..error json...});
+clientStub.SomeOperation.respondWithError = soapStub.createErroringStub({..error json...});
 clientStub.SomeOperation.respondWithSuccess = soapStub.createRespondingStub({..success json...});
 
 soapStub.registerClient('my client alias', urlMyApplicationWillUseWithCreateClient, clientStub);
