@@ -147,7 +147,7 @@ describe('Express server with middleware', function () {
     server.close();
   });
 
-  it('should should allow parsing body via express middleware', function (done) {
+  it('should allow parsing body via express middleware', function (done) {
     request({
       url: url + '/SayHello',
       method: 'POST',
