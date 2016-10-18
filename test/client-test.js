@@ -744,7 +744,6 @@ var fs = require('fs'),
           });
         }, baseUrl);
       });
-
     });
 
     describe('Method invocation', function () {
