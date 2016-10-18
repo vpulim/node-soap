@@ -392,6 +392,11 @@ An instance of `Client` is passed to the `soap.createClient` callback.  It is us
 
 Object properties define extra HTTP headers to be sent on the request.
 
+- Add custom User-Agent:
+```javascript
+client.addHttpHeader('User-Agent', `CustomUserAgent`);
+```
+
 #### Alternative method call using callback-last pattern
 
 To align method call signature with node' standard callback-last patter and event allow promisification of method calls, the following method signatures are also supported:
