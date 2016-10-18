@@ -508,6 +508,25 @@ WS-Security X509 Certificate support.
   client.setSecurity(wsSecurity);
 ```
 
+### ClinetSSLWSSecurity
+
+`ClientSSLWSSecurity` Combile CilentSSlSecurity and WSSecurity implements WS-Security.
+
+``` javascript
+  var clientSSLWsSecurity = new ClientSSLWSSecurity(username, password, options, '/path/to/key', '/path/to/cert'
+    , {/*default request options*/})
+    //the 'options' object is optional and contains properties:
+    //passwordType: 'PasswordDigest' or 'PasswordText' default is PasswordText
+    //hasTimeStamp: true or false, default is true
+    //hasTokenCreated: true or false, default is true
+    //hasNonce: includes Nonce if set
+    //mustUnderstand: adds `mustUnderstand=1` to header
+    //actor: adds actor to security block
+  client.setSecurity(clientWsSecurity);
+```
+
+
+
 _Note_: Optional dependency 'ursa' is required to be installed succefully when WSSecurityCert is used.
 
 ## Handling XML Attributes, Value and XML (wsdlOptions).
