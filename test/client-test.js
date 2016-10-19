@@ -718,6 +718,34 @@ var fs = require('fs'),
 
     });
 
+    it('should return error in the call when Body was returned empty', function (done) {
+      var server = null;
+      var hostname = '127.0.0.1';
+      var port = 15099;
+      var baseUrl = 'http://' + hostname + ':' + port;
+
+      server = http.createServer(function (req, res) {
+        res.statusCode = 200;
+        res.write("<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'><soapenv:Body/></soapenv:Envelope>");
+        res.end();
+      }).listen(port, hostname, function () {
+        soap.createClient(__dirname + '/wsdl/empty_body.wsdl', meta.options, function (err, client) {
+          assert.ok(client);
+          assert.ok(!err);
+
+          client.MyOperation({}, function (err, result, body, responseSoapHeaders) {
+            server.close();
+            server = null;
+            assert.ok(!err);
+            assert.ok(!responseSoapHeaders);
+            assert.ok(result);
+            assert.ok(body);
+            done();
+          });
+        }, baseUrl);
+      });
+    });
+
     describe('Method invocation', function () {
 
       it('shall generate correct payload for methods with string parameter', function (done) {
