@@ -13,7 +13,8 @@ describe('SOAP Client', function() {
     },
     'overrideRootElement': {
       'namespace': 'tns'
-    }
+    },
+    'request': 'customRequest'
   };
 
   it('should set WSDL options to those specified in createClient', function(done) {
@@ -23,6 +24,7 @@ describe('SOAP Client', function() {
 
       assert.ok(client.wsdl.options.ignoredNamespaces[0] === 'ignoreThisNS');
       assert.ok(client.wsdl.options.overrideRootElement.namespace === 'tns');
+      assert.ok(client.wsdl.options.request, "customRequest");
       done();
     });
   });
