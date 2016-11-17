@@ -1,0 +1,19 @@
+{
+    "RetrieveCustomerDetailsInput": {
+        "header": {
+            "requestingApplication": "SIGMA",
+            "securityInfo": {
+                "userId": "t_crm004",
+                "employeeId": "000444"
+            }
+        },
+        "accountId": {
+            "telephoneNumber": {
+                "telephoneNumber": "5175224392",
+                "sequenceNumber": 0
+            }
+        },
+        "includeDetailedProductInformation": true,
+        "includePromotionInformation": true
+    }
+}
