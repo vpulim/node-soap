@@ -1,3 +1,19 @@
+0.18.0 / 2016-11-25
+=================
+
+* [DOC] Added documentation for adding custom http header (#890)
+* [DOC] Update soap stub example (#883)
+* [ENHANCEMENT] Add body parameter to soap responding stub. (#897)
+* [ENHANCEMENT] Added Stream support. (#837)
+* [ENHANCEMENT] Avoid matching <x:Envelope> tags inside comments (#877)
+* [FIX] Ensure that supplied request-object is passed through. (#894)
+* [FIX] Fix exception 'Parameter 'url' must be a string, not object' (#870)
+* [FIX] Handle empty SOAP Body properly. (#891)
+* [FIX] Set lodash dependency version to ^3.10.1 (#895)
+* [MAINTENANCE] Fix test case description (#886)
+* [MAINTENANCE] Fixed request-response-samples-test so that tests with only request.xml and request.json actually get run (#878)
+* [MAINTENANCE] Fixing minor jshint issues. (#884)
+
 0.17.0 / 2016-06-23
 =================
 
