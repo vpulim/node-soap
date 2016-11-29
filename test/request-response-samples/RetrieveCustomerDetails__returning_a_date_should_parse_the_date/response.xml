@@ -7,7 +7,7 @@
         <bons2:RetrieveCustomerDetailsResponse
                 xmlns:bons2="http://www.somecompany.co.uk/CustomerManagement">
             <accountNumber>8272600234806371</accountNumber>
-            <lastUpdatedDate>2016-12-01-05:00</lastUpdatedDate>
+            <lastUpdatedDate>2017-12-01-05:00</lastUpdatedDate>
         </bons2:RetrieveCustomerDetailsResponse>
     </soapenv:Body>
 </soapenv:Envelope>
