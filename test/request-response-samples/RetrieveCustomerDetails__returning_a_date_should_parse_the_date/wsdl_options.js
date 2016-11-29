@@ -2,7 +2,7 @@
 
 exports.customDeserializer = {
 
-  date: function (text, name, context) {
+  date: function (text, context) {
     return text;
   }
 };

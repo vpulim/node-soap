@@ -445,6 +445,8 @@ Soap body contents. Useful if you don't want to log /store Soap headers.
 the SOAP response body as well as the entire `IncomingMessage` response object.
 This is emitted for all responses (both success and errors).
 
+  
+
 ## Security
 
 `node-soap` has several default security protocols.  You can easily add your own
@@ -633,6 +635,42 @@ var wsdlOptions = {
 
 To see it in practice, consider the sample files in: [test/request-response-samples/addPets__force_namespaces](https://github.com/vpulim/node-soap/tree/master/test/request-response-samples/addPets__force_namespaces)
 
+### Custom Deserializer
+
+Sometimes it's useful to handle deserialization in your code instead of letting node-soap do it.
+For example if the soap response contains dates that are not in a format recognized by javascript, you might want to use your own function to handle them.
+
+To do so, you can pass an customDeserializer object in options. The properties of this object are the types that your deserializer handles itself.
+
+Example :
+```javascript
+   
+   var wsdlOptions = {
+     customDeserializer = {
+     
+       // this function will be used to any date found in soap responses
+       date: function (text, context) {
+         /* text is the value of the xml element.
+           context contains the name of the xml element and other infos : 
+             { 
+                 name: 'lastUpdatedDate',
+                 object: {},
+                 schema: 'xsd:date',
+                 id: undefined,
+                 nil: false 
+             }
+                    
+          */
+         return text;
+       }
+     }
+   };
+   
+   soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', wsdlOptions, function (err, client) {
+     ...
+   });
+   
+```
 
 ## Handling "ignored" namespaces
 If an Element in a `schema` definition depends on an Element which is present in the same namespace, normally the `tns:`
