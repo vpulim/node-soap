@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions
+	targetNamespace="urn:FileExecutor"
+	xmlns:tns="urn:FileExecutor"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns="http://schemas.xmlsoap.org/wsdl/">
+	<types>
+		<schema
+			xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+			xmlns="http://www.w3.org/2001/XMLSchema"
+			xmlns:tns="urn:FileExecutor"
+			targetNamespace="urn:FileExecutor"
+			elementFormDefault="unqualified" attributeFormDefault="unqualified">
+			<element name="execFileParams" type="tns:execFileParams"/>
+			<complexType name="execFileParams">
+				<sequence>
+					<element name="fileName" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+					<element name="arguments" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+					<element name="base64EncodedStdIn" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+					<element name="startDetached" type="xsd:boolean" minOccurs="1" maxOccurs="1"/>
+				</sequence>
+			</complexType>
+			<element name="execFileResult" type="tns:execFileResult"/>
+			<complexType name="execFileResult">
+				<sequence>
+					<element name="base64EncodedStdOut" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+				</sequence>
+			</complexType>
+		</schema>
+	</types>
+	<message name="execFileRequest">
+		<part name="execFileRequest" element="tns:execFileParams"/>
+	</message>
+	<message name="execFileResponse">
+		<part name="execFileResponse" element="tns:execFileResult"/>
+	</message>
+	<portType name="FileExecutorPortType">
+		<operation name="execFile">
+			<input message="tns:execFileRequest"/>
+			<output message="tns:execFileResponse"/>
+		</operation>
+	</portType>
+	<binding name="FileExecutorBinding" type="tns:FileExecutorPortType">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<operation name="execFile">
+			<soap:operation type="document"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+		</operation>
+	</binding>
+	<service name="FileExecutorService">
+		<port name="FileExecutorPortType" binding="tns:FileExecutorBinding">
+			<soap:address location="http://127.0.0.1/"/>
+		</port>
+	</service>
+</definitions>
