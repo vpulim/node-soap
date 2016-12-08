@@ -445,8 +445,6 @@ Soap body contents. Useful if you don't want to log /store Soap headers.
 the SOAP response body as well as the entire `IncomingMessage` response object.
 This is emitted for all responses (both success and errors).
 
-  
-
 ## Security
 
 `node-soap` has several default security protocols.  You can easily add your own
