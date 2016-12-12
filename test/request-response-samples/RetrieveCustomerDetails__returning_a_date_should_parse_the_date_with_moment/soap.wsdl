@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" name="CustomerManagement"
+                  targetNamespace="http://www.somecompany.co.uk/CustomerManagement"
+                  xmlns:bons2="http://www.somecompany.co.uk/CustomerManagement"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <wsdl:types>
+        <xsd:schema targetNamespace="http://www.somecompany.co.uk/CustomerManagement">
+
+            <xsd:element name="RetrieveCustomerDetails">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="retrieveCustomerDetailsInput" nillable="true" type="bons2:msg_RetrieveCustomerDetailsRequest"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:complexType name="msg_RetrieveCustomerDetailsRequest">
+
+            </xsd:complexType>
+
+            <xsd:element name="RetrieveCustomerDetailsResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element maxOccurs="1" minOccurs="0" name="accountNumber" nillable="false"
+                                     type="xsd:string"/>
+                        <xsd:element minOccurs="0" name="lastUpdatedDate" type="xsd:date"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:schema>
+    </wsdl:types>
+
+
+
+    <xsd:element name="RetrieveCustomerDetails">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="retrieveCustomerDetailsInput" nillable="true"
+                             type="bons2:msg_RetrieveCustomerDetailsRequest"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+
+
+    <wsdl:message name="RetrieveCustomerDetailsResponseMsg">
+        <wsdl:part element="bons2:RetrieveCustomerDetailsResponse" name="RetrieveCustomerDetailsResult1"/>
+    </wsdl:message>
+
+    <wsdl:message name="RetrieveCustomerDetailsRequestMsg">
+        <wsdl:part element="bons2:RetrieveCustomerDetails" name="RetrieveCustomerDetailsParameters1"/>
+    </wsdl:message>
+
+
+    <wsdl:portType name="CustomerManagement">
+
+        <wsdl:operation name="RetrieveCustomerDetails">
+            <wsdl:documentation>Responsible for retrieving the details associated with a customer.</wsdl:documentation>
+            <wsdl:input message="bons2:RetrieveCustomerDetailsRequestMsg" name="RetrieveCustomerDetailsRequest"/>
+            <wsdl:output message="bons2:RetrieveCustomerDetailsResponseMsg" name="RetrieveCustomerDetailsResponse"/>
+        </wsdl:operation>
+
+
+    </wsdl:portType>
+    <wsdl:binding name="CustomerManagement_CustomerManagementHttpBinding" type="bons2:CustomerManagement">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+
+        <wsdl:operation name="RetrieveCustomerDetails">
+            <soap:operation soapAction=""/>
+            <wsdl:input name="RetrieveCustomerDetailsRequest">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="RetrieveCustomerDetailsResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+
+    </wsdl:binding>
+    <wsdl:service name="CustomerManagement_CustomerManagementHttpService">
+        <wsdl:port binding="bons2:CustomerManagement_CustomerManagementHttpBinding"
+                   name="CustomerManagement_CustomerManagementHttpPort">
+            <soap:address location="http://localhost:9080/CustomerManagement"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

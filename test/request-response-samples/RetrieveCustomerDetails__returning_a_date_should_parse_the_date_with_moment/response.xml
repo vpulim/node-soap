@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:snv="http://www.webserviceX.NET">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <bons2:RetrieveCustomerDetailsResponse
+                xmlns:bons2="http://www.somecompany.co.uk/CustomerManagement">
+            <retrieveCustomerDetailsOutput>
+
+                <accountNumber>8272600234806371</accountNumber>
+                <lastUpdatedDate>2016-12-01-05:00</lastUpdatedDate>
+
+            </retrieveCustomerDetailsOutput>
+        </bons2:RetrieveCustomerDetailsResponse>
+    </soapenv:Body>
+</soapenv:Envelope>

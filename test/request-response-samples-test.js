@@ -123,6 +123,7 @@ tests.forEach(function(test){
 
 function generateTest(name, methodName, wsdlPath, headerJSON, securityJSON, requestXML, requestJSON, responseXML, responseJSON, responseSoapHeaderJSON, wsdlOptions, options){
   suite[name] = function(done){
+  
     if(requestXML) requestContext.expectedRequest = requestXML;
     if(responseXML) requestContext.responseToSend = responseXML;
     requestContext.doneHandler = done;

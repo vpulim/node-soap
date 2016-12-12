@@ -621,14 +621,15 @@ var fs = require('fs'),
       });
 
 
-      it('Should emit the "message" event with Soap Body string', function (done) {
+      it('Should emit the "message" event with Soap Body string and an exchange id', function (done) {
         soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
           var didEmitEvent = false;
-          client.on('message', function (xml) {
+          client.on('message', function (xml, eid) {
             didEmitEvent = true;
             // Should contain only message body
             assert.equal(typeof xml, 'string');
             assert.equal(xml.indexOf('soap:Envelope'), -1);
+            assert.ok(eid);
           });
 
           client.MyOperation({}, function () {
@@ -638,14 +639,15 @@ var fs = require('fs'),
         }, baseUrl);
       });
 
-      it('Should emit the "request" event with entire XML message', function (done) {
+      it('Should emit the "request" event with entire XML message and an exchange id', function (done) {
         soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
           var didEmitEvent = false;
-          client.on('request', function (xml) {
+          client.on('request', function (xml, eid) {
             didEmitEvent = true;
             // Should contain entire soap message
             assert.equal(typeof xml, 'string');
             assert.notEqual(xml.indexOf('soap:Envelope'), -1);
+            assert.ok(eid);
           });
 
           client.MyOperation({}, function () {
@@ -655,15 +657,16 @@ var fs = require('fs'),
         }, baseUrl);
       });
 
-      it('Should emit the "response" event with Soap Body string and Response object', function (done) {
+      it('Should emit the "response" event with Soap Body string and Response object and an exchange id', function (done) {
         soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
           var didEmitEvent = false;
-          client.on('response', function (xml, response) {
+          client.on('response', function (xml, response, eid) {
             didEmitEvent = true;
             // Should contain entire soap message
             assert.equal(typeof xml, 'string');
             assert.equal(xml.indexOf('soap:Envelope'), -1);
             assert.ok(response);
+            assert.ok(eid);
           });
 
           client.MyOperation({}, function () {
@@ -673,12 +676,40 @@ var fs = require('fs'),
         }, baseUrl);
       });
 
-      it('should emit a \'soapError\' event', function (done) {
+      it('Should emit the "request" and "response" events with the same exchange id', function (done) {
+        soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
+          var didEmitRequestEvent = false;
+          var didEmitResponseEvent = false;
+          var requestEid, responseEid;
+
+          client.on('request', function (xml, eid) {
+            didEmitRequestEvent = true;
+            requestEid = eid;
+            assert.ok(eid);
+          });
+
+          client.on('response', function (xml, response, eid) {
+            didEmitResponseEvent = true;
+            responseEid = eid;
+            assert.ok(eid);
+          });
+
+          client.MyOperation({}, function () {
+            assert.ok(didEmitRequestEvent);
+            assert.ok(didEmitResponseEvent);
+            assert.equal(responseEid, requestEid);
+            done();
+          });
+        }, baseUrl);
+      });
+
+      it('should emit a \'soapError\' event with an exchange id', function (done) {
         soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
           var didEmitEvent = false;
-          client.on('soapError', function (err) {
+          client.on('soapError', function (err, eid) {
             didEmitEvent = true;
             assert.ok(err.root.Envelope.Body.Fault);
+            assert.ok(eid);
           });
           client.MyOperation({}, function (err, result) {
             assert.ok(didEmitEvent);
