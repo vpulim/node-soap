@@ -213,5 +213,81 @@ describe('SOAP Server with Options', function() {
       });
     });
   });
-  
+
+  it('should disclose error stack in server response', function(done) {
+    test.server.listen(15099, null, null, function() {
+      test.soapServer = soap.listen(test.server, {
+        path: '/stockquote',
+        services: test.service,
+        xml: test.wsdl,
+        uri: __dirname + '/wsdl/strict/',
+        escapeXML: false
+      }, test.service, test.wsdl);
+      test.baseUrl = 'http://' + test.server.address().address + ":" + test.server.address().port;
+
+      //windows return 0.0.0.0 as address and that is not
+      //valid to use in a request
+      if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
+        test.baseUrl = 'http://127.0.0.1:' + test.server.address().port;
+      }
+ 
+      request.post({
+         url: test.baseUrl + '/stockquote?wsdl',
+         body : '<soapenv:Envelope' +
+                     ' xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"' +
+                     ' xmlns:soap="http://service.applicationsnet.com/soap/">' +
+                 '  <soapenv:Header/>' +
+                 '  <soapenv:Body>' +
+                 '    <soap:WrongTag/>' +
+                 '  </soapenv:Body>' +
+                 '</soapenv:Envelope>',
+         headers: {'Content-Type': 'text/xml'}
+       }, function(err, res, body) {
+         assert.ok(!err);
+         assert.equal(res.statusCode, 500);
+         assert.ok(body.indexOf('\n    at') !== -1);
+         done();
+       }
+      );
+    });
+  });
+
+  it('should not disclose error stack in server response', function(done) {
+    test.server.listen(15099, null, null, function() {
+      test.soapServer = soap.listen(test.server, {
+        path: '/stockquote',
+        services: test.service,
+        xml: test.wsdl,
+        uri: __dirname + '/wsdl/strict/',
+        escapeXML: false,
+	suppressStack: true
+      }, test.service, test.wsdl);
+      test.baseUrl = 'http://' + test.server.address().address + ":" + test.server.address().port;
+
+      //windows return 0.0.0.0 as address and that is not
+      //valid to use in a request
+      if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
+        test.baseUrl = 'http://127.0.0.1:' + test.server.address().port;
+      }
+ 
+      request.post({
+         url: test.baseUrl + '/stockquote?wsdl',
+         body : '<soapenv:Envelope' +
+                     ' xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"' +
+                     ' xmlns:soap="http://service.applicationsnet.com/soap/">' +
+                 '  <soapenv:Header/>' +
+                 '  <soapenv:Body>' +
+                 '    <soap:WrongTag/>' +
+                 '  </soapenv:Body>' +
+                 '</soapenv:Envelope>',
+         headers: {'Content-Type': 'text/xml'}
+       }, function(err, res, body) {
+         assert.ok(!err);
+         assert.equal(res.statusCode, 500);
+         assert.equal(body.indexOf('\n    at'), -1);
+         done();
+       }
+      );
+    });
+  });
 });
