@@ -676,7 +676,7 @@ var fs = require('fs'),
         }, baseUrl);
       });
 
-      it('Should emit the "request" and "response" events with the same exchange id', function (done) {
+      it('Should emit the "request" and "response" events with the same generated exchange id if none is given', function (done) {
         soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
           var didEmitRequestEvent = false;
           var didEmitResponseEvent = false;
@@ -700,6 +700,34 @@ var fs = require('fs'),
             assert.equal(responseEid, requestEid);
             done();
           });
+        }, baseUrl);
+      });
+
+      it('Should emit the "request" and "response" events with the given exchange id', function (done) {
+        soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
+          var didEmitRequestEvent = false;
+          var didEmitResponseEvent = false;
+          var requestEid, responseEid;
+
+          client.on('request', function (xml, eid) {
+            didEmitRequestEvent = true;
+            requestEid = eid;
+            assert.ok(eid);
+          });
+
+          client.on('response', function (xml, response, eid) {
+            didEmitResponseEvent = true;
+            responseEid = eid;
+            assert.ok(eid);
+          });
+
+          client.MyOperation({}, function () {
+            assert.ok(didEmitRequestEvent);
+            assert.ok(didEmitResponseEvent);
+            assert.equal('unit', requestEid);
+            assert.equal(responseEid, requestEid);
+            done();
+          }, {exchangeId : 'unit'});
         }, baseUrl);
       });
 
