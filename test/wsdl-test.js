@@ -137,6 +137,24 @@ wsdlNonStrictTests['should load same namespace from included xsd'] = function(do
   });
 };
 
+wsdlNonStrictTests['should all attributes to root elements'] = function(done) {
+  var expectedMsg = '<ns1:fooRq xmlns:ns1="http://example.com/bar/xsd"' +
+    ' xmlns="http://example.com/bar/xsd"><bar1:paymentRq bar1:test="attr"' +
+    ' xmlns:bar1="http://example.com/bar1/xsd">' +
+    '<bar1:bankSvcRq>' +
+    '<requestUID>001</requestUID></bar1:bankSvcRq>' +
+    '</bar1:paymentRq></ns1:fooRq>';
+  // var expectedMsg = 'gg';
+
+  soap.createClient(__dirname + '/wsdl/elementref/foo.wsdl', {}, function(err, client) {
+    assert.ok(!err);
+    client.fooOp({paymentRq: { attributes: {'bar1:test': 'attr'}, bankSvcRq: {':requestUID': '001'}}}, function(err, result) {
+      assert.equal(client.lastMessage, expectedMsg);
+      done();
+    });
+  });
+};
+
 module.exports = {
   'WSDL Parser (strict)': wsdlStrictTests,
   'WSDL Parser (non-strict)': wsdlNonStrictTests
