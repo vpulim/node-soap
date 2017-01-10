@@ -48,7 +48,7 @@ describe('WSSecurityCert', function() {
 
   it('should insert a WSSecurity signing block when postProcess is called', function() {
     var instance = new WSSecurityCert(key, cert, '', 'utf8');
-    var xml = instance.postProcess('<soap:Header></soap:Header><soap:Body></soap:Body>');
+    var xml = instance.postProcess('<soap:Header></soap:Header><soap:Body></soap:Body>', 'soap');
 
     xml.should.containEql('<wsse:Security');
     xml.should.containEql('http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd');
@@ -68,5 +68,12 @@ describe('WSSecurityCert', function() {
     xml.should.containEql('ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3"/>');
     xml.should.containEql(instance.publicP12PEM);
     xml.should.containEql(instance.signer.getSignatureXml());
+  });
+
+  it('should only add two Reference elements, for Soap Body and Timestamp inside wsse:Security element', function() {
+    var instance = new WSSecurityCert(key, cert, '', 'utf8');
+    var xml = instance.postProcess('<soap:Header></soap:Header><soap:Body><Body></Body><Timestamp></Timestamp></soap:Body>', 'soap');
+
+    xml.match(/<Reference URI="#/g).should.have.length(2);
   });
 });
