@@ -37,7 +37,7 @@
     "toc": "./node_modules/.bin/doctoc Readme.md --github --maxlevel 3",
     "pretest": "jshint index.js lib test",
     "cover": "istanbul cover _mocha -- --timeout 10000 test/*-test.js test/security/*.js",
-    "coveralls": "cat ./coverage/lcov.info | coveralls -v",
+    "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js -v",
     "test": "mocha --timeout 10000 test/*-test.js test/security/*.js"
   },
   "keywords": [
