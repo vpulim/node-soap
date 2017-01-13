@@ -55,6 +55,7 @@ This module lets you connect to web services using SOAP.  It also provides a ser
 * Supports multiRef SOAP messages (thanks to [@kaven276](https://github.com/kaven276))
 * Support for both synchronous and asynchronous method handlers
 * WS-Security (currently only UsernameToken and PasswordText encoding is supported)
+* Supports [express](http://expressjs.com/) based web server(body parser middleware can be used)
 
 ## Install
 
@@ -86,22 +87,26 @@ If you're in need of support we encourage you to join us and other `node-soap` u
       });
   });
 ```
+This client has a built in WSDL cache. You can use the `disableCache` option to disable it.
 
 #### Options
 
 The `options` argument allows you to customize the client with the following properties:
 
 - endpoint: to override the SOAP service's host specified in the `.wsdl` file.
-- request: to override the [request](https://github.com/request/request) module.
+- envelopeKey: to set specific key instead of `<pre><<b>soap</b>:Body></<b>soap</b>:Body></pre>`.
+- escapeXML: escape special XML characters in SOAP message (e.g. `&`, `>`, `<` etc).
+- forceSoap12Headers: to set proper headers for SOAP v1.2.
 - httpClient: to provide your own http client that implements `request(rurl, data, callback, exheaders, exoptions)`.
-- forceSoap12Headers: to set proper headers for SOAP v1.2
-- envelopeKey: to set specific key instead of <pre><<b>soap</b>:Body></<b>soap</b>:Body></pre>
-- wsdl_options: custom options for the request module on WSDL requests.
+- request: to override the [request](https://github.com/request/request) module.
 - wsdl_headers: custom HTTP headers to be sent on WSDL requests.
+- wsdl_options: custom options for the request module on WSDL requests.
+- disableCache: don't cache WSDL files, request them every time.
 
 Note: for versions of node >0.10.X, you may need to specify `{connection: 'keep-alive'}` in SOAP headers to avoid truncation of longer chunked responses.
 
 ### soap.listen(*server*, *path*, *services*, *wsdl*) - create a new SOAP server that listens on *path* and provides *services*.
+*server* can be a [http](https://nodejs.org/api/http.html) Server or [express](http://expressjs.com/) framework based server
 *wsdl* is an xml string that defines the service.
 
 ``` javascript
@@ -140,13 +145,26 @@ Note: for versions of node >0.10.X, you may need to specify `{connection: 'keep-
       }
   };
 
-  var xml = require('fs').readFileSync('myservice.wsdl', 'utf8'),
-      server = http.createServer(function(request,response) {
-          response.end("404: Not Found: " + request.url);
-      });
+  var xml = require('fs').readFileSync('myservice.wsdl', 'utf8');
+
+  //http server example
+  var server = http.createServer(function(request,response) {
+      response.end("404: Not Found: " + request.url);
+  });
 
   server.listen(8000);
   soap.listen(server, '/wsdl', myService, xml);
+
+  //express server example
+  var app = express();
+  //body parser middleware are supported (optional)
+  app.use(bodyParser.raw({type: function(){return true;}, limit: '5mb'}));
+  app.listen(8001, function(){
+      //Note: /wsdl route will be handled by soap module
+      //and all other routes & middleware will continue to work
+      soap.listen(app, '/wsdl', service, xml);
+  });
+
 ```
 
 ### Options
@@ -374,6 +392,11 @@ An instance of `Client` is passed to the `soap.createClient` callback.  It is us
 
 Object properties define extra HTTP headers to be sent on the request.
 
+- Add custom User-Agent:
+```javascript
+client.addHttpHeader('User-Agent', `CustomUserAgent`);
+```
+
 #### Alternative method call using callback-last pattern
 
 To align method call signature with node' standard callback-last patter and event allow promisification of method calls, the following method signatures are also supported:
@@ -413,14 +436,32 @@ client.MyService.MyPort.MyFunction({name: 'value'}, options, extraHeaders, funct
 Client instances emit the following events:
 
 * request - Emitted before a request is sent. The event handler receives the
-entire Soap request (Envelope) including headers.
+entire Soap request (Envelope) including headers. The second parameter is the exchange id. 
 * message - Emitted before a request is sent. The event handler receives the
-Soap body contents. Useful if you don't want to log /store Soap headers.
+Soap body contents. Useful if you don't want to log /store Soap headers. The second parameter is the exchange id. 
 * soapError - Emitted when an erroneous response is received.
   Useful if you want to globally log errors.
+  The second parameter is the exchange id. 
 * response - Emitted after a response is received. The event handler receives
 the SOAP response body as well as the entire `IncomingMessage` response object.
+The third parameter is the exchange id. 
 This is emitted for all responses (both success and errors).
+
+An 'exchange' is a request/response couple. 
+Event handlers receive the exchange id in all events.
+The exchange id is the same for the requests events and the responses events, this way you can use it to retrieve the matching request
+when an response event is received.
+
+By default exchange ids are generated by using node-uuid but you can use options in client calls to pass your own exchange id.
+
+Example :
+
+```javascript
+  client.MyService.MyPort.MyFunction(args , function(err, result) {
+      
+  }, {exchangeId: myExchangeId})
+```
+
 
 ## Security
 
@@ -467,6 +508,9 @@ as default request options to the constructor:
     //passwordType: 'PasswordDigest' or 'PasswordText' default is PasswordText
     //hasTimeStamp: true or false, default is true
     //hasTokenCreated: true or false, default is true
+    //hasNonce: includes Nonce if set
+    //mustUnderstand: adds `mustUnderstand=1` to header
+    //actor: adds actor to security block
   client.setSecurity(wsSecurity);
 ```
 
@@ -607,6 +651,42 @@ var wsdlOptions = {
 
 To see it in practice, consider the sample files in: [test/request-response-samples/addPets__force_namespaces](https://github.com/vpulim/node-soap/tree/master/test/request-response-samples/addPets__force_namespaces)
 
+### Custom Deserializer
+
+Sometimes it's useful to handle deserialization in your code instead of letting node-soap do it.
+For example if the soap response contains dates that are not in a format recognized by javascript, you might want to use your own function to handle them.
+
+To do so, you can pass an customDeserializer object in options. The properties of this object are the types that your deserializer handles itself.
+
+Example :
+```javascript
+   
+   var wsdlOptions = {
+     customDeserializer = {
+     
+       // this function will be used to any date found in soap responses
+       date: function (text, context) {
+         /* text is the value of the xml element.
+           context contains the name of the xml element and other infos : 
+             { 
+                 name: 'lastUpdatedDate',
+                 object: {},
+                 schema: 'xsd:date',
+                 id: undefined,
+                 nil: false 
+             }
+                    
+          */
+         return text;
+       }
+     }
+   };
+   
+   soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', wsdlOptions, function (err, client) {
+     ...
+   });
+   
+```
 
 ## Handling "ignored" namespaces
 If an Element in a `schema` definition depends on an Element which is present in the same namespace, normally the `tns:`
@@ -685,7 +765,7 @@ var clientStub = {
   SomeOperation: sinon.stub()
 };
 
-clientStub.SomeOperation.respondWithError = soapStub.createRespondingStub({..error json...});
+clientStub.SomeOperation.respondWithError = soapStub.createErroringStub({..error json...});
 clientStub.SomeOperation.respondWithSuccess = soapStub.createRespondingStub({..success json...});
 
 soapStub.registerClient('my client alias', urlMyApplicationWillUseWithCreateClient, clientStub);

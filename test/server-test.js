@@ -185,6 +185,20 @@ describe('SOAP Server', function() {
     );
   });
 
+  it('should 500 on empty message and undefined Content-Type', function(done) {
+    request.post({
+        url: test.baseUrl + '/stockquote?wsdl',
+        body : '',
+        headers: {'Content-Type': undefined}
+      }, function(err, res, body) {
+        assert.ok(!err);
+        assert.equal(res.statusCode, 500);
+        assert.ok(body.length);
+        done();
+      }
+    );
+  });
+
   it('should 500 on missing tag message', function(done) {
     request.post({
         url: test.baseUrl + '/stockquote?wsdl',
@@ -263,7 +277,7 @@ describe('SOAP Server', function() {
       client.IsValidPrice({ price: 50000 }, function(err, result) {
         // node V3.x+ reports addresses as IPV6
         var addressParts = lastReqAddress.split(':');
-        addressParts[(addressParts.length - 1)].should.equal('127.0.0.1');
+        assert.equal(addressParts[(addressParts.length - 1)], '127.0.0.1');
         done();
       });
     });

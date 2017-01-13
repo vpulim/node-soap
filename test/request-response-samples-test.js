@@ -38,7 +38,6 @@ var requestContext = {
     });
     req.on('end', function(){
       if(!requestContext.expectedRequest)return res.end(requestContext.responseToSend);
-      if(!requestContext.responseToSend)return requestContext.doneHandler();
 
       var actualRequest = normalizeWhiteSpace(chunks.join(''));
       var expectedRequest = normalizeWhiteSpace(requestContext.expectedRequest);
@@ -56,7 +55,10 @@ var requestContext = {
       }
 
       assert.equal(actualRequest, expectedRequest);
+
+      if(!requestContext.responseToSend)return requestContext.doneHandler();
       res.end(requestContext.responseToSend);
+
       requestContext.expectedRequest = null;
       requestContext.responseToSend = null;
     });
@@ -78,6 +80,7 @@ tests.forEach(function(test){
   var responseXML = path.resolve(test, 'response.xml');
   var options = path.resolve(test, 'options.json');
   var wsdlOptionsFile = path.resolve(test, 'wsdl_options.json');
+  var wsdlJSOptionsFile = path.resolve(test, 'wsdl_options.js');
   var wsdlOptions = {};
 
   //headerJSON is optional
@@ -114,6 +117,7 @@ tests.forEach(function(test){
 
   //wsdlOptions is optional
   if(fs.existsSync(wsdlOptionsFile)) wsdlOptions = require(wsdlOptionsFile);
+  else if(fs.existsSync(wsdlJSOptionsFile)) wsdlOptions = require(wsdlJSOptionsFile);
   else wsdlOptions = {};
 
   generateTest(name, methodName, wsdl, headerJSON, securityJSON, requestXML, requestJSON, responseXML, responseJSON, responseSoapHeaderJSON, wsdlOptions, options);
@@ -133,6 +137,12 @@ function generateTest(name, methodName, wsdlPath, headerJSON, securityJSON, requ
       if (securityJSON && securityJSON.type === 'ws') {
         client.setSecurity(new WSSecurity(securityJSON.username, securityJSON.password, securityJSON.options));
       }
+
+      //throw more meaningful error
+      if(typeof client[methodName] !== 'function'){
+        throw new Error('method ' + methodName + ' does not exists in wsdl specified in test wsdl: ' + wsdlPath);
+      }
+
       client[methodName](requestJSON, function(err, json, body, soapHeader){
         if(requestJSON){
           if (err) {

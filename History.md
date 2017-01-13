@@ -1,3 +1,35 @@
+0.18.0 / 2016-11-25
+=================
+
+* [DOC] Added documentation for adding custom http header (#890)
+* [DOC] Update soap stub example (#883)
+* [ENHANCEMENT] Add body parameter to soap responding stub. (#897)
+* [ENHANCEMENT] Added Stream support. (#837)
+* [ENHANCEMENT] Avoid matching <x:Envelope> tags inside comments (#877)
+* [FIX] Ensure that supplied request-object is passed through. (#894)
+* [FIX] Fix exception 'Parameter 'url' must be a string, not object' (#870)
+* [FIX] Handle empty SOAP Body properly. (#891)
+* [FIX] Set lodash dependency version to ^3.10.1 (#895)
+* [MAINTENANCE] Fix test case description (#886)
+* [MAINTENANCE] Fixed request-response-samples-test so that tests with only request.xml and request.json actually get run (#878)
+* [MAINTENANCE] Fixing minor jshint issues. (#884)
+
+0.17.0 / 2016-06-23
+=================
+
+* [ENHANCEMENT] Add option for disabling the WSDL cache (#876)
+* [DOC] Add `escapeXML` option to README file (#874)
+* [DOC] updated readme for express support (#873)
+* [ENHANCEMENT] express server support (#872)
+* [ENHANCEMENT] better error 1. SOAP message missing evelope and body 2. request/response tests (#869)
+* [FIX] Fix possible crash when send empty post using postman (#861)
+* [FIX] fix ExtensionElement description to match order (#866)
+* [DOC] Added descriptions for actor, hasNonce & mustUndertand options (#865)
+* [FIX] Fix namespaces in client soap requests (#863)
+* [FIX] Always submit valid XML from the client. (#862)
+* [MAINTENANCE] mustUnderstand must be 0 or 1.. with tests (#850)
+* [MAINTENANCE] Remove special handling of methods only taking a string paramter (#854)
+
 0.16.0 / 2016-06-23
 =================
 * [ENHANCEMENT] Add nonce and soap:actor support for WSSecurity (#851)
