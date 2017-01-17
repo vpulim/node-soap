@@ -838,5 +838,36 @@ var fs = require('fs'),
         });
       });
     });
+
+    describe('Method args sequence', function() {
+
+      // it('check if method required sequence args', function(done) {
+      //   soap.createClient(__dirname + '/wsdl/rpcexample.wsdl', meta.options, function(err, client) {
+      //     assert.ok(client);
+      //     assert.ok(client._isSequenceRequired(client.wsdl.definitions.bindings.RpcExample.methods.pullFile) === true);
+      //     done();
+      //   });
+      // });
+
+      it('check sort args on sequence required method', function(done) {
+        soap.createClient(__dirname + '/wsdl/rpcexample.wsdl', meta.options, function(err, client) {
+          assert.ok(client);
+          assert.ok(true);
+          client.pullFile({
+            'password': 'qwerty',
+            'base64EncodedCallback': '123',
+            'username': 'qwert',
+            'forceOverwrite': true,
+            'fileMode': 1,
+            'fileName': 'qwe.txt',
+            'url': 'https://github.com'
+          }, function(err, result) {
+            assert.ok(result);
+            done();
+          });
+        });
+      });
+
+    });
   });
 });
