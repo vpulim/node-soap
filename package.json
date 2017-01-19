@@ -13,13 +13,13 @@
     "ejs": "~2.5.5",
     "finalhandler": "^0.5.0",
     "lodash": "^3.10.1",
-    "node-uuid": "~1.4.3",
     "optional": "^0.1.3",
     "request": ">=2.9.0",
     "sax": ">=0.6",
     "selectn": "^0.9.6",
     "serve-static": "^1.11.1",
     "strip-bom": "~0.3.1",
+    "uuid": "^3.0.1",
     "xml-crypto": "~0.8.0"
   },
   "optionalDependencies": {
@@ -37,7 +37,7 @@
     "toc": "./node_modules/.bin/doctoc Readme.md --github --maxlevel 3",
     "pretest": "jshint index.js lib test",
     "cover": "istanbul cover _mocha -- --timeout 10000 test/*-test.js test/security/*.js",
-    "coveralls": "cat ./coverage/lcov.info | coveralls -v",
+    "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js -v",
     "test": "mocha --timeout 10000 test/*-test.js test/security/*.js"
   },
   "keywords": [
