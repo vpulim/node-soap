@@ -376,44 +376,29 @@ An instance of `Client` is passed to the `soap.createClient` callback.  It is us
       // result is a javascript object
   })
 ```
-
 #### args
 
 The `args` argument allows you to supply arguments that generate an XML document inside of the SOAP Body section.
 
 ##### Example with JSON as an argument
-``` javascript
-  var args = {
-      "ChildElementNoNS": {
-          "ns1:ChildElementNS": {
-             attributes: {
-                 "attribute1": "attrib1val",
-                 "attribute2": "attrib2val",
-                 "xmlns:ns1": "urn:somenamespace"
-             },
-             "$value": "elementvalue1"
-           }
-      }
-  };
-```
 may generate an XML in the SOAP Body such as:
 ``` javascript
-  <f:MyFunction xmlns:f="urn:functionnamespace" xmlns="urn:functionnamespace" xmlns:o="urn:someothernamespace">
-      <f:ChildElementNoNS>
-          <ns1:ChildElementNS attribute1="attrib1val" attribute2="attrib2val" xmlns:ns1="urn:somenamespace">elementvalue1</ns1:ChildElementNS>
-      </f:ChildElementNoNS>
-  </f:MyFunction>
+  <nsPrefixInXsd:MyMessage xmlns:nsPrefixInXsd="http://www.example.com/v1/ns1">
+      <ChildElementNoNS>
+          <nsPrefixNOTInXsd:ChildElementNS nsPrefixNOTInXsd="http://www.example.com/v1/ns2">elementvalue</nsPrefixNOTInXsd:ChildElementNS>
+          <nsPrefixInXsd:ChildElementNS>elementvalue</nsPrefixInXsd:ChildElementNS>
+      </ChildElementNoNS>
+  </nsPrefixInXsd:MyMessage>
 ```
-If no namespace prefix, such as `ns1`, precedes the element name, MyFunction's namespace prefix (e.g., `f`) is applied.
+The namespaces and namespace prefixes should already be pre-populated from the WSDL/XSDs in the MyMessage and/or SOAP Envelope elements.  If an element in args contains no namespace prefix, the target namespace of MyMessage is used.  A prefix may or may not be added, depending on how the XSD is setup.
+Currently, elements may not contain both child elements and a text value.
 
 ##### Example with XML String as an argument
 You may pass in a fully-formed XML string instead the individual elements and attributes that make up the XML.  The XML string should not contain an XML declaration (e.g., `<?xml version="1.0" encoding="UTF-8"?>`) or a document type declaration (e.g., `<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">`).
 ``` javascript
-  {_xml: "<f:MyFunction xmlns:f="urn:functionnamespace" xmlns="urn:functionnamespace" xmlns:o="urn:someothernamespace">
-      <f:ChildElementNoNS>
-          <ns1:ChildElementNS attribute1="attrib1val" attribute2="attrib2val" xmlns:ns1="urn:somenamespace">elementvalue1</ns1:ChildElementNS>
-      </f:ChildElementNoNS>
-  </f:MyFunction>"
+  {_xml: "<nsPrefixInXsd:MyMessage xmlns:nsPrefixInXsd="http://www.example.com/v1/ns1">
+              <ChildElement>elementvalue</ChildElement>
+          </nsPrefixInXsd:MyMessage>"
   }
 ```
 
