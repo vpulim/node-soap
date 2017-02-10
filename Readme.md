@@ -377,6 +377,46 @@ An instance of `Client` is passed to the `soap.createClient` callback.  It is us
   })
 ```
 
+#### args
+
+The `args` argument allows you to supply arguments that generate an XML document inside of the SOAP Body section.
+
+##### Example with JSON as an argument
+``` javascript
+  var args = {
+      "ChildElementNoNS": {
+          "ns1:ChildElementNS": {
+             attributes: {
+                 "attribute1": "attrib1val",
+                 "attribute2": "attrib2val",
+                 "xmlns:ns1": "urn:somenamespace"
+             },
+             "$value": "elementvalue1"
+           }
+      }
+  };
+```
+may generate an XML in the SOAP Body such as:
+``` javascript
+  <f:MyFunction xmlns:f="urn:functionnamespace" xmlns="urn:functionnamespace" xmlns:o="urn:someothernamespace">
+      <f:ChildElementNoNS>
+          <ns1:ChildElementNS attribute1="attrib1val" attribute2="attrib2val" xmlns:ns1="urn:somenamespace">elementvalue1</ns1:ChildElementNS>
+      </f:ChildElementNoNS>
+  </f:MyFunction>
+```
+If no namespace prefix, such as `ns1`, precedes the element name, MyFunction's namespace prefix (e.g., `f`) is applied.
+
+##### Example with XML String as an argument
+You may pass in a fully-formed XML string instead the individual elements and attributes that make up the XML.  The XML string should not contain an XML declaration (e.g., `<?xml version="1.0" encoding="UTF-8"?>`) or a document type declaration (e.g., `<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">`).
+``` javascript
+  {_xml: "<f:MyFunction xmlns:f="urn:functionnamespace" xmlns="urn:functionnamespace" xmlns:o="urn:someothernamespace">
+      <f:ChildElementNoNS>
+          <ns1:ChildElementNS attribute1="attrib1val" attribute2="attrib2val" xmlns:ns1="urn:somenamespace">elementvalue1</ns1:ChildElementNS>
+      </f:ChildElementNoNS>
+  </f:MyFunction>"
+  }
+```
+
 #### Options (optional)
  - Accepts any option that the request module accepts, see [here.](https://github.com/mikeal/request)
  - For example, you could set a timeout of 5 seconds on the request like this:

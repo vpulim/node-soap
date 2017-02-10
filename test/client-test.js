@@ -6,7 +6,8 @@ var fs = require('fs'),
   assert = require('assert'),
   _ = require('lodash'),
   sinon = require('sinon'),
-  wsdl = require('../lib/wsdl');
+  wsdl = require('../lib/wsdl'),
+  util = require('util');
 
 [
   { suffix: '', options: {} },
@@ -88,6 +89,20 @@ var fs = require('fs'),
 
         client.MyOperation({}, function (err, result) {
           assert.notEqual(client.lastRequest.indexOf('xmlns:soapenv='), -1);
+          done();
+        });
+      });
+    });
+    
+    it('should allow passing in XML strings', function (done) {
+      soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', _.assign({ envelopeKey: 'soapenv' }, meta.options), function (err, client) {
+        assert.ok(client);
+        assert.ok(!err);
+        
+        var xmlStr = '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">\n\t<head>\n\t\t<title>404 - Not Found</title>\n\t</head>\n\t<body>\n\t\t<h1>404 - Not Found</h1>\n\t\t<script type="text/javascript" src="http://gp1.wpc.edgecastcdn.net/00222B/beluga/pilot_rtm/beluga_beacon.js"></script>\n\t</body>\n</html>';
+        client.MyOperation({xml: xmlStr}, function (err, result, raw, soapHeader) {
+          console.log("AAA:" +util.inspect(raw));
+          assert.notEqual(raw.indexOf('html'), -1);
           done();
         });
       });

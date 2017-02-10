@@ -1539,10 +1539,6 @@ WSDL.prototype.findSchemaObject = function(nsURI, qname) {
  * @param {String} type
  */
 WSDL.prototype.objectToDocumentXML = function(name, params, nsPrefix, nsURI, type) {
-  //If user supplies XML already, just use that.  XML Declaration should not be present.
-  if (params || params._xml) {
-    return params.xml;
-  }
   var args = {};
   args[name] = params;
   var parameterTypeObj = type ? this.findSchemaObject(nsURI, type) : null;
@@ -1821,13 +1817,10 @@ WSDL.prototype.objectToXML = function(obj, name, nsPrefix, nsURI, isFirst, xmlns
                   current: childNsPrefix,
                   parent: ns
                 };
-              } else {
-                //parent (array) already got the namespace
-                childXmlnsAttrib = null;
               }
 
               value = self.objectToXML(child, name, childNsPrefix, childNsURI,
-                false, childXmlnsAttrib, resolvedChildSchemaObject, nsContext);
+                false, null, resolvedChildSchemaObject, nsContext);
             } else if (obj[self.options.attributesKey] && obj[self.options.attributesKey].xsi_type) {
               //if parent object has complex type defined and child not found in parent
               var completeChildParamTypeObject = self.findChildSchemaObject(
@@ -1936,22 +1929,10 @@ WSDL.prototype.findSchemaType = function(name, nsURI) {
   return schema.complexTypes[name];
 };
 
-WSDL.prototype.findChildSchemaObject = function(parameterTypeObj, childName, backtrace) {
+WSDL.prototype.findChildSchemaObject = function(parameterTypeObj, childName) {
   if (!parameterTypeObj || !childName) {
     return null;
   }
-
-  if (!backtrace) {
-    backtrace = [];
-  }
-
-  if (backtrace.indexOf(parameterTypeObj) >= 0) {
-    // We've recursed back to ourselves; break.
-    return null;
-  } else {
-    backtrace = backtrace.concat([parameterTypeObj]);
-  }
-
   var found = null,
       i = 0,
       child,
@@ -1991,13 +1972,13 @@ WSDL.prototype.findChildSchemaObject = function(parameterTypeObj, childName, bac
     }
     var typeDef = this.findSchemaType(typeInfo.name, childNsURI);
     if (typeDef) {
-      return this.findChildSchemaObject(typeDef, childName, backtrace);
+      return this.findChildSchemaObject(typeDef, childName);
     }
   }
 
   if (object.children) {
     for (i = 0, child; child = object.children[i]; i++) {
-      found = this.findChildSchemaObject(child, childName, backtrace);
+      found = this.findChildSchemaObject(child, childName);
       if (found) {
         break;
       }
@@ -2010,7 +1991,7 @@ WSDL.prototype.findChildSchemaObject = function(parameterTypeObj, childName, bac
         var foundBase = this.findSchemaType(baseQName.name, childNsURI);
 
         if (foundBase) {
-          found = this.findChildSchemaObject(foundBase, childName, backtrace);
+          found = this.findChildSchemaObject(foundBase, childName);
 
           if (found) {
             found.$baseNameSpace = childNameSpace;
@@ -2098,7 +2079,7 @@ WSDL.prototype._fromServices = function(services) {
 
 };
 
-
+WSDL.prototype._splitQName = splitQName;
 
 WSDL.prototype._xmlnsMap = function() {
   var xmlns = this.definitions.xmlns;
