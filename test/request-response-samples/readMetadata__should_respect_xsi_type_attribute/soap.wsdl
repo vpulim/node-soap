@@ -11,7 +11,7 @@ Copyright 2006-2015 Salesforce.com, inc. All Rights Reserved
     <xsd:complexType>
      <xsd:sequence>
       <xsd:element name="type" type="xsd:string"/>
-      <xsd:element name="fullNames" minOccurs="0" maxOccurs="unbounded" type="xsd:string"/>
+      <xsd:element name="fullNames" type="xsd:string"/>
      </xsd:sequence>
     </xsd:complexType>
    </xsd:element>

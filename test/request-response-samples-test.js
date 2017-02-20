@@ -80,6 +80,7 @@ tests.forEach(function(test){
   var responseXML = path.resolve(test, 'response.xml');
   var options = path.resolve(test, 'options.json');
   var wsdlOptionsFile = path.resolve(test, 'wsdl_options.json');
+  var wsdlJSOptionsFile = path.resolve(test, 'wsdl_options.js');
   var wsdlOptions = {};
 
   //headerJSON is optional
@@ -116,6 +117,7 @@ tests.forEach(function(test){
 
   //wsdlOptions is optional
   if(fs.existsSync(wsdlOptionsFile)) wsdlOptions = require(wsdlOptionsFile);
+  else if(fs.existsSync(wsdlJSOptionsFile)) wsdlOptions = require(wsdlJSOptionsFile);
   else wsdlOptions = {};
 
   generateTest(name, methodName, wsdl, headerJSON, securityJSON, requestXML, requestJSON, responseXML, responseJSON, responseSoapHeaderJSON, wsdlOptions, options);
