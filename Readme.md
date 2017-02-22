@@ -747,6 +747,18 @@ ignoredNamespaces: true
 }
 ```
 
+## Handling "xmlnsIntoEnvelope" attribute
+If do you want to append WSDL xmlns definitions into Envelope you have to add an array named `xmlnsIntoEnvelope` into [WSDL Options](#options).
+
+i.e. For adding `xsd` and `wsdl` xmlns just add this array options:
+```javascript
+var wsdlOptions = {
+  xmlnsIntoEnvelope: ['xsd', 'wsdl'],
+};
+```
+
+This array options will add enumerated namespaces into Envelope attributes result.
+
 ## soap-stub
 
 Unit testing services that use soap clients can be very cumbersome.  In order to get
