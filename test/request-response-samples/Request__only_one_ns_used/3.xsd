@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://ws.example.com/data/logon" targetNamespace="http://ws.example.com/data/logon" attributeFormDefault="qualified" elementFormDefault="qualified">
+	
+	<xsd:simpleType name="PasswordType">
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="0" />
+			<xsd:maxLength value="80" />
+		</xsd:restriction>
+	</xsd:simpleType>
+		
+    <xsd:simpleType name="LogonResults">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="LOGON_FAILED">
+            </xsd:enumeration>
+            <xsd:enumeration value="LOGON_FAILED_INVALID">
+            </xsd:enumeration>
+            <xsd:enumeration value="LOGON_FAILED_DISABLED">
+            </xsd:enumeration>
+            <xsd:enumeration value="LOGON_FAILED_PASSWORD_EXPIRED">
+            </xsd:enumeration>
+            <xsd:enumeration value="LOGON_FAILED_COM_UNAVAILABLE">
+            </xsd:enumeration>
+            <xsd:enumeration value="LOGON_SUCCESSFUL">
+            </xsd:enumeration>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+	<xsd:complexType name="LogonIdData">
+		<xsd:sequence>
+            <xsd:element name="userId" type="xsd:string">
+            </xsd:element>
+            <xsd:element name="password" type="PasswordType">
+            </xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="LogonResultData">
+	    <xsd:sequence>
+            <xsd:element name="logonResult" type="LogonResults">
+            </xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:element name="LogonResultData" type="LogonResultData" />
+	
+
+</xsd:schema>

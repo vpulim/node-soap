@@ -1,0 +1,11 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:log="http://example.com/soap/LogonService" xmlns:log1="http://ws.example.com/data/logon">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <log:logon>
+         <log:logonId>
+            <log1:userId>superuser</log1:userId>
+            <log1:password>supersecret</log1:password>
+         </log:logonId>
+      </log:logon>
+   </soapenv:Body>
+</soapenv:Envelope>

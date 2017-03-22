@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8'?><!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is JAX-WS RI 2.1.4-b01-. --><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:logon="http://ws.example.com/data/logon" xmlns:com="http://ws.example.com/data/common" targetNamespace="http://example.com/soap/LogonService" elementFormDefault="qualified">
+            
+    <xsd:import namespace="http://ws.example.com/data/logon" schemaLocation="3.xsd" />
+    <xsd:import namespace="http://ws.example.com/data/common" schemaLocation="2.xsd" />
+
+    <xsd:element name="wsFault" type="com:ErrorData" />
+
+    <xsd:element name="logon">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="logonId" type="logon:LogonIdData">
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+	<xsd:element name="logonResponse" type="logon:LogonResultData">
+	</xsd:element>
+
+</xsd:schema>

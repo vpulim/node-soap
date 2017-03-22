@@ -1,0 +1,44 @@
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:impl="http://example.com/soap/LogonService" targetNamespace="http://example.com/soap/LogonService">
+  <types>
+	<xsd:schema targetNamespace="http://example.com/soap/LogonService">
+	  <xsd:include schemaLocation="1.xsd"/>
+	</xsd:schema>
+  </types>
+  <message name="serviceFault">
+	<part name="fault" element="impl:serviceFault"/>
+  </message>
+  <message name="logonRequest">
+	<part name="input" element="impl:logon"/>
+  </message>
+  <message name="logonResponse">
+	<part name="output" element="impl:logonResponse"/>
+  </message>
+  <portType name="LogonServicePortType">
+	<operation name="logon">
+	  <input message="impl:logonRequest"/>
+	  <output message="impl:logonResponse"/>
+	  <fault name="fault" message="impl:serviceFault"/>
+	</operation>
+  </portType>
+  <binding name="LogonServiceSoapBinding" type="impl:LogonServicePortType">
+	<wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+	<!--  logon  -->
+	<operation name="logon">
+	  <wsdlsoap:operation soapAction="logon" style="document"/>
+	  <input name="logonRequest">
+		<wsdlsoap:body use="literal"/>
+	  </input>
+	  <output name="logonResponse">
+		<wsdlsoap:body use="literal"/>
+	  </output>
+	  <fault name="fault">
+		<wsdlsoap:fault name="fault" use="literal"/>
+	  </fault>
+	</operation>
+  </binding>
+  <service name="LogonService">
+	<port binding="impl:LogonServiceSoapBinding" name="LogonServicePort">
+	  <wsdlsoap:address location="http://example.com/ws/LogonService"/>
+	</port>
+  </service>
+</definitions>

@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://ws.example.com/data/common" targetNamespace="http://ws.example.com/data/common" elementFormDefault="qualified" attributeFormDefault="qualified">
+
+  <xsd:complexType name="ErrorData">
+	<xsd:sequence>
+	  <xsd:element name="errorText" type="xsd:string">
+	  </xsd:element>
+	  <xsd:element name="errorArgs" type="xsd:string" minOccurs="0" maxOccurs="unbounded" nillable="true">
+	  </xsd:element>
+	  <xsd:element name="errorDesc" type="xsd:string" minOccurs="0">
+	  </xsd:element>
+	</xsd:sequence>
+  </xsd:complexType>
+
+</xsd:schema>
