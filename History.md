@@ -1,3 +1,20 @@
+0.19.0 / 2017-03-16
+===================
+
+* [FIX] Fixed missing namespace declaration on `Array` if the namespace is already declared with another prefix. (#923)
+* [DOC] Fix spelling error (#917)
+* [FIX] Add `sequence` to field if it's defined within the `complextType` (#914)
+* [MAINTENANCE] Drop deprecated `node-uuid` package and use the `uuid` (successor) instead (#913)
+* [FIX] Only add references for the soap:Body and wsse:Security/Timestamp elements in WSSecurityCert (#911)
+* [MAINTENANCE] Updated `ejs` package version in `package.json` (#908)
+* [ENHANCEMENT] Added possiblity to pass your own "custom deserializer" within the `wsdlOptions` in `createClient()` method (#901)
+* [ENHANCEMENT] Added possibility to use your own "exchange ID" (#907)
+* [ENHANCEMENT] Added "exchange ID" (`eid`) in emitted client events (#903)
+* [ENHANCEMENT] Added option to suppress error stack in server response (#904)
+* [FIX] Set namespace prefix for first element if `elementFormDefault=unqualified` (#905)
+* [FIX] Fixed test (use `assert` instead of `should()` chain) in `test/server-test.js` (#906)
+* [DOC] Fix documentation in `test/request-response-samples/README.md` (#900)
+
 0.18.0 / 2016-11-25
 =================
 

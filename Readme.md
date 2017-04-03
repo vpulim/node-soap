@@ -163,7 +163,7 @@ Note: for versions of node >0.10.X, you may need to specify `{connection: 'keep-
   app.listen(8001, function(){
       //Note: /wsdl route will be handled by soap module
       //and all other routes & middleware will continue to work
-      soap.listen(app, '/wsdl', service, xml);
+      soap.listen(app, '/wsdl', myService, xml);
   });
 
 ```
