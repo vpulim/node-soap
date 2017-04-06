@@ -162,7 +162,7 @@ Note: for versions of node >0.10.X, you may need to specify `{connection: 'keep-
   app.listen(8001, function(){
       //Note: /wsdl route will be handled by soap module
       //and all other routes & middleware will continue to work
-      soap.listen(app, '/wsdl', service, xml);
+      soap.listen(app, '/wsdl', myService, xml);
   });
 
 ```
@@ -436,18 +436,18 @@ client.MyService.MyPort.MyFunction({name: 'value'}, options, extraHeaders, funct
 Client instances emit the following events:
 
 * request - Emitted before a request is sent. The event handler receives the
-entire Soap request (Envelope) including headers. The second parameter is the exchange id. 
+entire Soap request (Envelope) including headers. The second parameter is the exchange id.
 * message - Emitted before a request is sent. The event handler receives the
-Soap body contents. Useful if you don't want to log /store Soap headers. The second parameter is the exchange id. 
+Soap body contents. Useful if you don't want to log /store Soap headers. The second parameter is the exchange id.
 * soapError - Emitted when an erroneous response is received.
   Useful if you want to globally log errors.
-  The second parameter is the exchange id. 
+  The second parameter is the exchange id.
 * response - Emitted after a response is received. The event handler receives
 the SOAP response body as well as the entire `IncomingMessage` response object.
-The third parameter is the exchange id. 
+The third parameter is the exchange id.
 This is emitted for all responses (both success and errors).
 
-An 'exchange' is a request/response couple. 
+An 'exchange' is a request/response couple.
 Event handlers receive the exchange id in all events.
 The exchange id is the same for the requests events and the responses events, this way you can use it to retrieve the matching request
 when an response event is received.
@@ -458,7 +458,7 @@ Example :
 
 ```javascript
   client.MyService.MyPort.MyFunction(args , function(err, result) {
-      
+
   }, {exchangeId: myExchangeId})
 ```
 
@@ -526,7 +526,7 @@ WS-Security X509 Certificate support.
   client.setSecurity(wsSecurity);
 ```
 
-_Note_: Optional dependency 'ursa' is required to be installed succefully when WSSecurityCert is used.
+_Note_: Optional dependency 'ursa' is required to be installed successfully when WSSecurityCert is used.
 
 ## Handling XML Attributes, Value and XML (wsdlOptions).
 Sometimes it is necessary to override the default behaviour of `node-soap` in order to deal with the special requirements
@@ -660,32 +660,32 @@ To do so, you can pass an customDeserializer object in options. The properties o
 
 Example :
 ```javascript
-   
+
    var wsdlOptions = {
      customDeserializer = {
-     
+
        // this function will be used to any date found in soap responses
        date: function (text, context) {
          /* text is the value of the xml element.
-           context contains the name of the xml element and other infos : 
-             { 
+           context contains the name of the xml element and other infos :
+             {
                  name: 'lastUpdatedDate',
                  object: {},
                  schema: 'xsd:date',
                  id: undefined,
-                 nil: false 
+                 nil: false
              }
-                    
+
           */
          return text;
        }
      }
    };
-   
+
    soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', wsdlOptions, function (err, client) {
      ...
    });
-   
+
 ```
 
 ## Handling "ignored" namespaces
