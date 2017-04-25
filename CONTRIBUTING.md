@@ -1,16 +1,16 @@
-#Contribution Guidelines
+# Contribution Guidelines
 
 Thank you for your support!  node-soap wouldn't be where it is today without contributors like you who are willing to take the time to improve it for everyone else.
 
 Because SOAP Web Services can differ amongst implementations, there is high risk involved in making changes.  What works for your WSDL, might not work with another.  It is therefore _essential_ that contributors to node-soap adhere to these guidelines.
 
-##Filing issues
+## Filing issues
 * Please look through the issues that are currently open in the attempt to find one that matches yours.
 * If you find an issue that matches yours, please submit your documentation about it there as it will help everyone understand it more.
 * If you plan on fixing the issue, please take the time to fix it first and then provide a Pull Request.
 * Please be descriptive in your issue titles  I.E. "Error occurs when calling client.foo on WSDL without import element."
 
-##Submitting a Pull Request
+## Submitting a Pull Request
 * Pull Requests **must be rebased to the latest version of master and _squashed to a single commit_** i.e. `git checkout master;git pull upstream master;git checkout feature-branch;git rebase -i master`
 * Pull Requests **must have accompanying tests** (either Unit or Request/Response Sample tests are welcome). Your chances of getting the PR merged are very low if you don't provide any tests.
 * Pull Requests must have passing travis builds.
@@ -23,7 +23,7 @@ Very useful articles/help on this topic:
 
 * Please use descriptive commit messages.  Commit messages are used during the creation of history and release notes.  You'll make the job of maintainers much easier by doing this.
 
-##Making Changes
+## Making Changes
 * Any and all pull requests to change documentation or typos are welcome!
 * Any WSDL checked in should be as small and as generic as possible.  This is to keep the size of the codebase from growing too large and to keep the reason for submitting the WSDL clear I.E. if the WSDL was submitted because attributes were not being parsed on response XML, then it would be appropriate to submit a WSDL that defines a response with attributes *and nothing else*.  If you find an issue with the parser not being able to handle large WSDLs, then it would be appropriate to submit a large WSDL to recreate the issue with.
 * If your issue is WSDL related:
@@ -51,8 +51,8 @@ Very useful articles/help on this topic:
     3. Issue a pull request.
 ````
 
-##Issue Expiration
+## Issue Expiration
 Any pull request or issue filed is subject to an expiration date.  We will close any open issue that has not received a response within a 2 week timeframe.  The goal is not to sweep dirt under the rug, but to keep the focus on merging in pull requests.  Please provide pull requests that meet the above criteria wherever possible.
 
-##Other ways you can contribute
+## Other ways you can contribute
 Please add response, request, and WSDL files to test/wsdl, and test/request-response-samples (see README therein).  Doing so documents behavior and reduces the likelihood that bugs will be introduced by future pull requests.
