@@ -1,7 +1,8 @@
 'use strict';
 
 var fs = require('fs'),
-  join = require('path').join;
+  join = require('path').join,
+	assert = require('assert');
 
 describe('WSSecurity', function() {
   var WSSecurity = require('../../').WSSecurity;
@@ -69,4 +70,37 @@ describe('WSSecurity', function() {
     xml.should.containEql('</wsse:UsernameToken></wsse:Security>');
 
   });
+	var username = 'myUser';
+	var password = 'myPass';
+	it('should accept additional parameters for custom UsernameToken attribute.', function() {
+		var options = {
+			customWsuName: "kor",
+			customWsuId: "clientId",
+			customWsuValue: "12345678",
+			customWsuPath: "http://www.korea.com",
+		};
+		var instance = new WSSecurity(username, password, options);
+		instance.should.have.property('_wsu', {
+			name: options.customWsuName,
+			id: options.customWsuId,
+			value: options.customWsuValue,
+			path: options.customWsuPath,
+		});
+	});
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
