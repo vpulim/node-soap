@@ -84,7 +84,7 @@ describe('Method args sequence', function () {
     });
   });
 
-  it('should return args if args[partIndex] === \'undefined\'', function (done) {
+  it('should run setSequence ignoring brackets', function (done) {
     soap.createClient(__dirname + '/wsdl/sequnceexmple.wsdl', {
       suffix: '',
       options: {}
