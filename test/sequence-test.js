@@ -1,12 +1,12 @@
 'use strict';
 
 var fs = require('fs'),
-  soap = require('..'),
-  http = require('http'),
-  assert = require('assert'),
-  _ = require('lodash'),
-  sinon = require('sinon'),
-  wsdl = require('../lib/wsdl');
+    soap = require('..'),
+    http = require('http'),
+    assert = require('assert'),
+    _ = require('lodash'),
+    sinon = require('sinon'),
+    wsdl = require('../lib/wsdl');
 
 var sequencedRequest = {
   'url': 'https://github.com',
