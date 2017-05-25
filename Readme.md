@@ -503,16 +503,20 @@ as default request options to the constructor:
 `WSSecurity` implements WS-Security. UsernameToken and PasswordText/PasswordDigest is supported.
 
 ``` javascript
-  var wsSecurity = new WSSecurity(username, password, options)
-    //the 'options' object is optional and contains properties:
-    //passwordType: 'PasswordDigest' or 'PasswordText' default is PasswordText
-    //hasTimeStamp: true or false, default is true
-    //hasTokenCreated: true or false, default is true
-    //hasNonce: includes Nonce if set
-    //mustUnderstand: adds `mustUnderstand=1` to header
-    //actor: adds actor to security block
+  var options = {
+    hasNonce: true,
+    actor: 'actor'
+  };
+  var wsSecurity = new soap.WSSecurity('username', 'password', options)
   client.setSecurity(wsSecurity);
 ```
+the `options` object is optional and can contain the following properties:
+* `passwordType`: 'PasswordDigest' or 'PasswordText' (default: `'PasswordText'`)
+* `hasTimeStamp`: adds Timestamp element (default: `true`)
+* `hasTokenCreated`: adds Created element (default: `true`)
+* `hasNonce`: adds Nonce element (default: `false`)
+* `mustUnderstand`: adds mustUnderstand=1 attribute to security tag (default: `false`)
+* `actor`: if set, adds Actor attribute with given value to security tag (default: `''`)
 
 ### WSSecurityCert
 
