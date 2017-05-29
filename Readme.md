@@ -560,26 +560,45 @@ soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', wsdlOptions, funct
 });
 ```
 
-###Overriding the `xml` key
-As `valueKey`, `node-soap` uses `$xml` as key. The xml key is used to pass XML Object without adding namespace or parsing the string.
+### Overriding the `xml` key
+By default, `node-soap` uses `$xml` as the key to pass through an XML string as is; without parsing or namespacing it. It overrides all the other content that the node might have otherwise had.
 
-Example :
-
+For example :
 ```javascript
-dom = {
-     $xml: '<parentnode type="type"><childnode></childnode></parentnode>'
+{
+  dom: {
+    nodeone: {
+      $xml: '<parentnode type="type"><childnode></childnode></parentnode>',
+      siblingnode: 'Cant see me.'
+    },
+    nodetwo: {
+      parentnode: {
+        attributes: {
+          type: 'type'
+        },
+        childnode: ''
+      }
+    }
+  }
 };
 ```
-
+could become
 ```xml
 <tns:dom>
+  <tns:nodeone>
     <parentnode type="type">
-          <childnode></childnode>
+      <childnode></childnode>
     </parentnode>
+  </tns:nodeone>
+  <tns:nodetwo>
+    <tns:parentnode type="type">
+      <tns:childnode></tns:childnode>
+    </tns:parent>
+  </tns:nodetwo>
 </tns:dom>
 ```
 
-You can define your own `xmlKey` by passing it in the `wsdl_options` to the createClient call like so:
+You can define your own `xmlKey` by passing it in the `wsdl_options` object to the createClient call:
 ```javascript
 var wsdlOptions = {
   xmlKey: 'theXml'
@@ -591,44 +610,47 @@ soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', wsdlOptions, funct
 ```
 
 ###Overriding the `attributes` key
-You can achieve attributes like:
-``` xml
-<parentnode>
-  <childnode name="childsname">
-  </childnode>
-</parentnode>
-```
-By attaching an attributes object to a node.
+By default, `node-soap` uses `attributes` as the key to define a nodes attributes.
+
 ``` javascript
 {
   parentnode: {
     childnode: {
       attributes: {
         name: 'childsname'
-      }
+      },
+      $value: 'Value'
     }
   }
 }
 ```
-However, "attributes" may be a reserved key for some systems that actually want a node
+could become
+``` xml
+<parentnode>
+  <childnode name="childsname">Value</childnode>
+</parentnode>
+```
+
+However, `attributes` may be a reserved key for some systems that actually want a node called `attributes`
 ```xml
 <attributes>
 </attributes>
 ```
 
-In this case you can configure the attributes key in the `wsdlOptions` like so.
+You can define your own `attributesKey` by passing it in the `wsdl_options` object to the createClient call:
 ```javascript
 var wsdlOptions = {
   attributesKey: '$attributes'
 };
 
 soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', wsdlOptions, function (err, client) {
-  client.*method*({
+  client.method({
     parentnode: {
       childnode: {
         $attributes: {
           name: 'childsname'
-        }
+        },
+        $value: 'Value'
       }
     }
   });
