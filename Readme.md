@@ -149,7 +149,7 @@ Note: for versions of node >0.10.X, you may need to specify `{connection: 'keep-
 
   //http server example
   var server = http.createServer(function(request,response) {
-      response.end("404: Not Found: " + request.url);
+      response.end('404: Not Found: ' + request.url);
   });
 
   server.listen(8000);
@@ -220,10 +220,10 @@ object with a `Fault` property.
   throw {
     Fault: {
       Code: {
-        Value: "soap:Sender",
-        Subcode: { value: "rpc:BadArguments" }
+        Value: 'soap:Sender',
+        Subcode: { value: 'rpc:BadArguments' }
       },
-      Reason: { Text: "Processing Error" }
+      Reason: { Text: 'Processing Error' }
     }
   };
 ```
@@ -234,10 +234,10 @@ To change the HTTP statusCode of the response include it on the fault.  The stat
   throw {
     Fault: {
       Code: {
-        Value: "soap:Sender",
-        Subcode: { value: "rpc:BadArguments" }
+        Value: 'soap:Sender',
+        Subcode: { value: 'rpc:BadArguments' }
       },
-      Reason: { Text: "Processing Error" },
+      Reason: { Text: 'Processing Error' },
       statusCode: 500
     }
   };
@@ -312,7 +312,7 @@ They provide the following methods to manage the headers.
 
 #### *addSoapHeader*(soapHeader[, name, namespace, xmlns]) - add soapHeader to soap:Header node
 ##### Parameters
- - `soapHeader`     Object({rootName: {name: "value"}}) or strict xml-string
+ - `soapHeader`     Object({rootName: {name: 'value'}}) or strict xml-string
 
 ##### Returns
 The index where the header is inserted.
@@ -325,7 +325,7 @@ The index where the header is inserted.
 #### *changeSoapHeader*(index, soapHeader[, name, namespace, xmlns]) - change an already existing soapHeader
 ##### Parameters
  - `index`          index of the header to replace with provided new value
- - `soapHeader`     Object({rootName: {name: "value"}}) or strict xml-string
+ - `soapHeader`     Object({rootName: {name: 'value'}}) or strict xml-string
 
 #### *getSoapHeaders*() - return all defined headers
 
@@ -411,7 +411,7 @@ client.MyService.MyPort.MyFunction({name: 'value'}, options, extraHeaders, funct
 })
 ```
 
-###Overriding the namespace prefix
+### Overriding the namespace prefix
 `node-soap` is still working out some kinks regarding namespaces.  If you find that an element is given the wrong namespace prefix in the request body, you can add the prefix to it's name in the containing object.  I.E.:
 
 ```javascript
@@ -545,11 +545,11 @@ var wsdlOptions = {
 ```
 If nothing (or an empty Object `{}`) is passed to the `#createClient()` method, the `node-soap` defaults (`attributesKey: 'attributes'`, `valueKey: '$value'` and `xmlKey: '$xml'`) are used.
 
-###Overriding the `value` key
-By default, `node-soap` uses `$value` as key for any parsed XML value which may interfere with your other code as it
+### Overriding the `value` key
+By default, `node-soap` uses `$value` as the key for any parsed XML value which may interfere with your other code as it
 could be some reserved word, or the `$` in general cannot be used for a key to start with.
 
-You can define your own `valueKey` by passing it in the `wsdl_options` to the createClient call like so:
+You can define your own `valueKey` by passing it in the `wsdl_options` to the createClient call:
 ```javascript
 var wsdlOptions = {
   valueKey: 'theVal'
@@ -637,30 +637,30 @@ soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', wsdlOptions, funct
 ### Specifying the exact namespace definition of the root element
 In rare cases, you may want to precisely control the namespace definition that is included in the root element.
 
-You can specify the namespace definitions by setting the overrideRootElement key in the `wsdlOptions` like so:
+You can specify the namespace definitions by setting the `overrideRootElement` key in the `wsdlOptions` like so:
 ```javascript
 var wsdlOptions = {
-  "overrideRootElement": {
-    "namespace": "xmlns:tns",
-    "xmlnsAttributes": [{
-      "name": "xmlns:ns2",
-      "value": "http://tempuri.org/"
+  overrideRootElement: {
+    namespace: 'xmlns:tns',
+    xmlnsAttributes: [{
+      name: 'xmlns:ns2',
+      value: "http://tempuri.org/"
     }, {
-      "name": "xmlns:ns3",
-      "value": "http://sillypets.com/xsd"
+      name: 'xmlns:ns3',
+      value: "http://sillypets.com/xsd"
     }]
   }
 };
 ```
 
-To see it in practice, consider the sample files in: [test/request-response-samples/addPets__force_namespaces](https://github.com/vpulim/node-soap/tree/master/test/request-response-samples/addPets__force_namespaces)
+To see it in practice, have a look at the sample files in: [test/request-response-samples/addPets__force_namespaces](https://github.com/vpulim/node-soap/tree/master/test/request-response-samples/addPets__force_namespaces)
 
 ### Custom Deserializer
 
 Sometimes it's useful to handle deserialization in your code instead of letting node-soap do it.
 For example if the soap response contains dates that are not in a format recognized by javascript, you might want to use your own function to handle them.
 
-To do so, you can pass an customDeserializer object in options. The properties of this object are the types that your deserializer handles itself.
+To do so, you can pass a `customDeserializer` object in `options`. The properties of this object are the types that your deserializer handles itself.
 
 Example :
 ```javascript
