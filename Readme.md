@@ -149,7 +149,7 @@ Note: for versions of node >0.10.X, you may need to specify `{connection: 'keep-
 
   //http server example
   var server = http.createServer(function(request,response) {
-      response.end("404: Not Found: " + request.url);
+      response.end('404: Not Found: ' + request.url);
   });
 
   server.listen(8000);
@@ -220,10 +220,10 @@ object with a `Fault` property.
   throw {
     Fault: {
       Code: {
-        Value: "soap:Sender",
-        Subcode: { value: "rpc:BadArguments" }
+        Value: 'soap:Sender',
+        Subcode: { value: 'rpc:BadArguments' }
       },
-      Reason: { Text: "Processing Error" }
+      Reason: { Text: 'Processing Error' }
     }
   };
 ```
@@ -234,10 +234,10 @@ To change the HTTP statusCode of the response include it on the fault.  The stat
   throw {
     Fault: {
       Code: {
-        Value: "soap:Sender",
-        Subcode: { value: "rpc:BadArguments" }
+        Value: 'soap:Sender',
+        Subcode: { value: 'rpc:BadArguments' }
       },
-      Reason: { Text: "Processing Error" },
+      Reason: { Text: 'Processing Error' },
       statusCode: 500
     }
   };
@@ -312,7 +312,7 @@ They provide the following methods to manage the headers.
 
 #### *addSoapHeader*(soapHeader[, name, namespace, xmlns]) - add soapHeader to soap:Header node
 ##### Parameters
- - `soapHeader`     Object({rootName: {name: "value"}}) or strict xml-string
+ - `soapHeader`     Object({rootName: {name: 'value'}}) or strict xml-string
 
 ##### Returns
 The index where the header is inserted.
@@ -325,7 +325,7 @@ The index where the header is inserted.
 #### *changeSoapHeader*(index, soapHeader[, name, namespace, xmlns]) - change an already existing soapHeader
 ##### Parameters
  - `index`          index of the header to replace with provided new value
- - `soapHeader`     Object({rootName: {name: "value"}}) or strict xml-string
+ - `soapHeader`     Object({rootName: {name: 'value'}}) or strict xml-string
 
 #### *getSoapHeaders*() - return all defined headers
 
@@ -388,6 +388,12 @@ An instance of `Client` is passed to the `soap.createClient` callback.  It is us
   }, {time: true})
 ```
 
+- Also, you could pass your soap request through a debugging proxy such as [Fiddler](http://www.telerik.com/fiddler) or [Betwixt](https://github.com/kdzwinel/betwixt).
+``` javascript
+  client.MyService.MyPort.MyFunction({name: 'value'}, function(err, result) {
+      // client.lastElapsedTime - the elapsed time of the last request in milliseconds
+  }, {proxy: 'http://localhost:8888'})
+```
 #### Extra Headers (optional)
 
 Object properties define extra HTTP headers to be sent on the request.
@@ -411,7 +417,7 @@ client.MyService.MyPort.MyFunction({name: 'value'}, options, extraHeaders, funct
 })
 ```
 
-###Overriding the namespace prefix
+### Overriding the namespace prefix
 `node-soap` is still working out some kinks regarding namespaces.  If you find that an element is given the wrong namespace prefix in the request body, you can add the prefix to it's name in the containing object.  I.E.:
 
 ```javascript
@@ -503,16 +509,20 @@ as default request options to the constructor:
 `WSSecurity` implements WS-Security. UsernameToken and PasswordText/PasswordDigest is supported.
 
 ``` javascript
-  var wsSecurity = new WSSecurity(username, password, options)
-    //the 'options' object is optional and contains properties:
-    //passwordType: 'PasswordDigest' or 'PasswordText' default is PasswordText
-    //hasTimeStamp: true or false, default is true
-    //hasTokenCreated: true or false, default is true
-    //hasNonce: includes Nonce if set
-    //mustUnderstand: adds `mustUnderstand=1` to header
-    //actor: adds actor to security block
+  var options = {
+    hasNonce: true,
+    actor: 'actor'
+  };
+  var wsSecurity = new soap.WSSecurity('username', 'password', options)
   client.setSecurity(wsSecurity);
 ```
+the `options` object is optional and can contain the following properties:
+* `passwordType`: 'PasswordDigest' or 'PasswordText' (default: `'PasswordText'`)
+* `hasTimeStamp`: adds Timestamp element (default: `true`)
+* `hasTokenCreated`: adds Created element (default: `true`)
+* `hasNonce`: adds Nonce element (default: `false`)
+* `mustUnderstand`: adds mustUnderstand=1 attribute to security tag (default: `false`)
+* `actor`: if set, adds Actor attribute with given value to security tag (default: `''`)
 
 ### WSSecurityCert
 
@@ -541,11 +551,11 @@ var wsdlOptions = {
 ```
 If nothing (or an empty Object `{}`) is passed to the `#createClient()` method, the `node-soap` defaults (`attributesKey: 'attributes'`, `valueKey: '$value'` and `xmlKey: '$xml'`) are used.
 
-###Overriding the `value` key
-By default, `node-soap` uses `$value` as key for any parsed XML value which may interfere with your other code as it
+### Overriding the `value` key
+By default, `node-soap` uses `$value` as the key for any parsed XML value which may interfere with your other code as it
 could be some reserved word, or the `$` in general cannot be used for a key to start with.
 
-You can define your own `valueKey` by passing it in the `wsdl_options` to the createClient call like so:
+You can define your own `valueKey` by passing it in the `wsdl_options` to the createClient call:
 ```javascript
 var wsdlOptions = {
   valueKey: 'theVal'
@@ -556,26 +566,45 @@ soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', wsdlOptions, funct
 });
 ```
 
-###Overriding the `xml` key
-As `valueKey`, `node-soap` uses `$xml` as key. The xml key is used to pass XML Object without adding namespace or parsing the string.
+### Overriding the `xml` key
+By default, `node-soap` uses `$xml` as the key to pass through an XML string as is; without parsing or namespacing it. It overrides all the other content that the node might have otherwise had.
 
-Example :
-
+For example :
 ```javascript
-dom = {
-     $xml: '<parentnode type="type"><childnode></childnode></parentnode>'
+{
+  dom: {
+    nodeone: {
+      $xml: '<parentnode type="type"><childnode></childnode></parentnode>',
+      siblingnode: 'Cant see me.'
+    },
+    nodetwo: {
+      parentnode: {
+        attributes: {
+          type: 'type'
+        },
+        childnode: ''
+      }
+    }
+  }
 };
 ```
-
+could become
 ```xml
 <tns:dom>
+  <tns:nodeone>
     <parentnode type="type">
-          <childnode></childnode>
+      <childnode></childnode>
     </parentnode>
+  </tns:nodeone>
+  <tns:nodetwo>
+    <tns:parentnode type="type">
+      <tns:childnode></tns:childnode>
+    </tns:parent>
+  </tns:nodetwo>
 </tns:dom>
 ```
 
-You can define your own `xmlKey` by passing it in the `wsdl_options` to the createClient call like so:
+You can define your own `xmlKey` by passing it in the `wsdl_options` object to the createClient call:
 ```javascript
 var wsdlOptions = {
   xmlKey: 'theXml'
@@ -587,44 +616,47 @@ soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', wsdlOptions, funct
 ```
 
 ###Overriding the `attributes` key
-You can achieve attributes like:
-``` xml
-<parentnode>
-  <childnode name="childsname">
-  </childnode>
-</parentnode>
-```
-By attaching an attributes object to a node.
+By default, `node-soap` uses `attributes` as the key to define a nodes attributes.
+
 ``` javascript
 {
   parentnode: {
     childnode: {
       attributes: {
         name: 'childsname'
-      }
+      },
+      $value: 'Value'
     }
   }
 }
 ```
-However, "attributes" may be a reserved key for some systems that actually want a node
+could become
+``` xml
+<parentnode>
+  <childnode name="childsname">Value</childnode>
+</parentnode>
+```
+
+However, `attributes` may be a reserved key for some systems that actually want a node called `attributes`
 ```xml
 <attributes>
 </attributes>
 ```
 
-In this case you can configure the attributes key in the `wsdlOptions` like so.
+You can define your own `attributesKey` by passing it in the `wsdl_options` object to the createClient call:
 ```javascript
 var wsdlOptions = {
   attributesKey: '$attributes'
 };
 
 soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', wsdlOptions, function (err, client) {
-  client.*method*({
+  client.method({
     parentnode: {
       childnode: {
         $attributes: {
           name: 'childsname'
-        }
+        },
+        $value: 'Value'
       }
     }
   });
@@ -633,30 +665,30 @@ soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', wsdlOptions, funct
 ### Specifying the exact namespace definition of the root element
 In rare cases, you may want to precisely control the namespace definition that is included in the root element.
 
-You can specify the namespace definitions by setting the overrideRootElement key in the `wsdlOptions` like so:
+You can specify the namespace definitions by setting the `overrideRootElement` key in the `wsdlOptions` like so:
 ```javascript
 var wsdlOptions = {
-  "overrideRootElement": {
-    "namespace": "xmlns:tns",
-    "xmlnsAttributes": [{
-      "name": "xmlns:ns2",
-      "value": "http://tempuri.org/"
+  overrideRootElement: {
+    namespace: 'xmlns:tns',
+    xmlnsAttributes: [{
+      name: 'xmlns:ns2',
+      value: "http://tempuri.org/"
     }, {
-      "name": "xmlns:ns3",
-      "value": "http://sillypets.com/xsd"
+      name: 'xmlns:ns3',
+      value: "http://sillypets.com/xsd"
     }]
   }
 };
 ```
 
-To see it in practice, consider the sample files in: [test/request-response-samples/addPets__force_namespaces](https://github.com/vpulim/node-soap/tree/master/test/request-response-samples/addPets__force_namespaces)
+To see it in practice, have a look at the sample files in: [test/request-response-samples/addPets__force_namespaces](https://github.com/vpulim/node-soap/tree/master/test/request-response-samples/addPets__force_namespaces)
 
 ### Custom Deserializer
 
 Sometimes it's useful to handle deserialization in your code instead of letting node-soap do it.
 For example if the soap response contains dates that are not in a format recognized by javascript, you might want to use your own function to handle them.
 
-To do so, you can pass an customDeserializer object in options. The properties of this object are the types that your deserializer handles itself.
+To do so, you can pass a `customDeserializer` object in `options`. The properties of this object are the types that your deserializer handles itself.
 
 Example :
 ```javascript
