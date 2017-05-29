@@ -388,6 +388,12 @@ An instance of `Client` is passed to the `soap.createClient` callback.  It is us
   }, {time: true})
 ```
 
+- Also, you could pass your soap request through a debugging proxy such as [Fiddler](http://www.telerik.com/fiddler) or [Betwixt](https://github.com/kdzwinel/betwixt).
+``` javascript
+  client.MyService.MyPort.MyFunction({name: 'value'}, function(err, result) {
+      // client.lastElapsedTime - the elapsed time of the last request in milliseconds
+  }, {proxy: 'http://localhost:8888'})
+```
 #### Extra Headers (optional)
 
 Object properties define extra HTTP headers to be sent on the request.
