@@ -837,6 +837,20 @@ var fs = require('fs'),
           done();
         });
       });
+
+      it('shall generate correct payload for methods with array parameter', function(done) {
+        soap.createClient(__dirname + '/wsdl/list_parameter.wsdl', function(err, client) {
+          assert.ok(client);
+          var pathToArrayContainer = 'TimesheetV201511Mobile.TimesheetV201511MobileSoap.AddTimesheet.input.input.PeriodList';
+          var arrayParameter = _.get(client.describe(), pathToArrayContainer)['PeriodType[]'];
+          assert.ok(arrayParameter);
+          client.AddTimesheet({input: {PeriodList: {PeriodType: [{PeriodId: '1'}]}}}, function() {
+            var sentInputContent = client.lastRequest.substring(client.lastRequest.indexOf('<input>') + '<input>'.length, client.lastRequest.indexOf('</input>'));
+            assert.equal(sentInputContent, '<PeriodList><PeriodType><PeriodId>1</PeriodId></PeriodType></PeriodList>');
+            done();
+          });
+        });
+      });
     });
   });
 });
