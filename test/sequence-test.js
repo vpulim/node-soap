@@ -1,12 +1,12 @@
 'use strict';
 
 var fs = require('fs'),
-    soap = require('..'),
-    http = require('http'),
-    assert = require('assert'),
-    _ = require('lodash'),
-    sinon = require('sinon'),
-    wsdl = require('../lib/wsdl');
+  soap = require('..'),
+  http = require('http'),
+  assert = require('assert'),
+  _ = require('lodash'),
+  sinon = require('sinon'),
+  wsdl = require('../lib/wsdl');
 
 var sequencedRequest = {
   'url': 'https://github.com',
@@ -30,26 +30,26 @@ var notSequencedRequest = {
 
 describe('Method args sequence', function() {
 
-    it('check if method required sequence args', function(done) {
-      soap.createClient(__dirname + '/wsdl/rpcexample.wsdl',  { suffix: '', options: {} }, function(err, client) {
-        assert.ok(client);
-        assert.ok(client._isSequenceRequired('pullFile') === false);
+  it('check if method required sequence args', function(done) {
+    soap.createClient(__dirname + '/wsdl/rpcexample.wsdl', {suffix: '', options: {}}, function(err, client) {
+      assert.ok(client);
+      assert.ok(client._isSequenceRequired('pullFile') === false);
 
-        soap.createClient(__dirname + '/wsdl/sequnceexmple.wsdl',  { suffix: '', options: {} }, function(err, client) {
-          assert.ok(client);
-          assert.ok(client._isSequenceRequired('pullFile') === true);
-          done();
-        });
+      soap.createClient(__dirname + '/wsdl/sequnceexmple.wsdl', {suffix: '', options: {}}, function(err, client) {
+        assert.ok(client);
+        assert.ok(client._isSequenceRequired('pullFile') === true);
+        done();
       });
     });
+  });
 
-    it('check sort args on sequence required method', function(done) {
-        soap.createClient(__dirname + '/wsdl/sequnceexmple.wsdl', { suffix: '', options: {} }, function(err, client) {
-          assert.ok(client);
-          var sequencedMethodRequest = client._setSequenceArgs(client._getArgsScheme('pullFile'), notSequencedRequest);
-          assert.ok(JSON.stringify(sequencedMethodRequest) === JSON.stringify(sequencedRequest));
-          done();
-        });
+  it('check sort args on sequence required method', function(done) {
+    soap.createClient(__dirname + '/wsdl/sequnceexmple.wsdl', {suffix: '', options: {}}, function(err, client) {
+      assert.ok(client);
+      var sequencedMethodRequest = client._setSequenceArgs(client._getArgsScheme('pullFile'), notSequencedRequest);
+      assert.ok(JSON.stringify(sequencedMethodRequest) === JSON.stringify(sequencedRequest));
+      done();
     });
+  });
 
 });
