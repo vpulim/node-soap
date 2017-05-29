@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:ns0="http://wsiv.ratp.fr/xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ns1="http://wsiv.ratp.fr" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" targetNamespace="http://wsiv.ratp.fr">
+    <wsdl:types>
+        <xs:schema xmlns:ax21="http://wsiv.ratp.fr/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://wsiv.ratp.fr/xsd">
+    <xs:complexType name="Direction">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="line" nillable="true" type="ax21:Line"/>
+            <xs:element minOccurs="0" name="name" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="sens" nillable="true" type="xs:string"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="stationsEndLine" nillable="true" type="ax21:Station"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Station">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="direction" nillable="true" type="ax21:Direction"/>
+            <xs:element minOccurs="0" name="geoPointA" nillable="true" type="ax21:GeoPoint"/>
+            <xs:element minOccurs="0" name="geoPointR" nillable="true" type="ax21:GeoPoint"/>
+            <xs:element minOccurs="0" name="id" nillable="true" type="xs:string"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="idsNextA" nillable="true" type="xs:string"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="idsNextR" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="line" nillable="true" type="ax21:Line"/>
+            <xs:element minOccurs="0" name="name" nillable="true" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
+        <xs:schema xmlns:ns="http://wsiv.ratp.fr" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://wsiv.ratp.fr">
+    <xs:element name="getMissionsNext">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" name="station" nillable="true" type="ns0:Station"/>
+                <xs:element minOccurs="0" name="direction" nillable="true" type="ns0:Direction"/>
+                <xs:element minOccurs="0" name="dateStart" nillable="true" type="xs:string"/>
+                <xs:element minOccurs="0" name="limit" type="xs:int"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
+    </wsdl:types>
+    <wsdl:message name="getMissionsNextRequest">
+        <wsdl:part name="parameters" element="ns1:getMissionsNext"/>
+    </wsdl:message>
+    <wsdl:message name="getMissionsNextResponse">
+        <wsdl:part name="parameters" element="ns1:getMissionsNextResponse"/>
+    </wsdl:message>
+    <wsdl:portType name="WsivPortType">
+        <wsdl:operation name="getMissionsNext">
+            <wsdl:input message="ns1:getMissionsNextRequest" wsaw:Action="urn:getMissionsNext"/>
+            <wsdl:output message="ns1:getMissionsNextResponse" wsaw:Action="urn:getMissionsNextResponse"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="WsivSOAP12Binding" type="ns1:WsivPortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="getMissionsNext">
+            <soap12:operation soapAction="urn:getMissionsNext" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="WsivHttpBinding" type="ns1:WsivPortType">
+        <http:binding verb="POST"/>
+        <wsdl:operation name="getMissionsNext">
+            <http:operation location="Wsiv/getMissionsNext"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="getMissionsNext"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getMissionsNext"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="Wsiv">
+        <wsdl:port name="WsivSOAP11port_http" binding="ns1:WsivSOAP11Binding">
+            <soap:address location="http://opendata-tr.ratp.fr/wsiv/services/Wsiv"/>
+        </wsdl:port>
+        <wsdl:port name="WsivSOAP12port_http" binding="ns1:WsivSOAP12Binding">
+            <soap12:address location="http://opendata-tr.ratp.fr/wsiv/services/Wsiv"/>
+        </wsdl:port>
+        <wsdl:port name="WsivHttpport" binding="ns1:WsivHttpBinding">
+            <http:address location="http://opendata-tr.ratp.fr/wsiv/services/Wsiv"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

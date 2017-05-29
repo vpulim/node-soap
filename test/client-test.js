@@ -837,6 +837,14 @@ var fs = require('fs'),
           done();
         });
       });
+
+      it('should not throw a Maximum call stack size exceeded', function (done) {
+        soap.createClient(__dirname + '/wsdl/complex_recursive.wsdl', meta.options, function (err, client) {
+          client.getMissionsNext({ limit: 1 }, function () {
+            done();
+          });
+        });
+      });
     });
   });
 });
