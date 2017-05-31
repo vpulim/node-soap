@@ -1,3 +1,13 @@
+0.19.1 / 2017-05-30
+===================
+* [FIX] Reverting #914.  It broke existing behavior and prevented array type arguments. (#937)
+* [FIX] Add test for accepting array as parameter based on wsdl (#933)
+* [DOC] readme.md clarifications, examples and typos (#930)
+* [MAINTENANCE] Fix build by satisfying jshint indentation (#931)
+* [MAINTENANCE] Drop `travis-ci` test support for `node.js` < `4.x` (LTS) (#932)
+* [DOC] Update CONTRIBUTING.md
+* [DOC] typo in server example (#925)
+
 0.19.0 / 2017-03-16
 ===================
 
