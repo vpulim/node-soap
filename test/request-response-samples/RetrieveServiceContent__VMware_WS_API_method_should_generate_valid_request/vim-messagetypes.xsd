@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+   Copyright 2005-2015 VMware, Inc.  All rights reserved.
+
+   Truncated by reedog117 for node-soap testing
+-->
+<schema
+   targetNamespace="urn:vim25"
+   xmlns="http://www.w3.org/2001/XMLSchema"
+   xmlns:vim25="urn:vim25"
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xmlns:reflect="urn:reflect"
+   elementFormDefault="qualified"
+>
+   <include schemaLocation="query-types.xsd" />
+   <include schemaLocation="core-types.xsd" />
+   <import namespace="urn:reflect" schemaLocation="reflect-types.xsd" />
+   <include schemaLocation="vim-types.xsd" />
+   <complexType name="RetrieveServiceContentRequestType">
+      <sequence>
+         <element name="_this" type="vim25:ManagedObjectReference" />
+      </sequence>
+   </complexType>
+</schema>

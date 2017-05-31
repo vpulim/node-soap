@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+   Copyright 2005-2015 VMware, Inc.  All rights reserved.
+
+   Truncated by reedog117 for node-soap testing
+-->
+<definitions targetNamespace="urn:vim25"
+   xmlns="http://schemas.xmlsoap.org/wsdl/"
+   xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+   xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+   xmlns:vim25="urn:vim25"
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+>
+   <types>
+      <schema
+         targetNamespace="urn:vim25"
+         xmlns="http://www.w3.org/2001/XMLSchema"
+         xmlns:vim25="urn:vim25"
+         xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+         xmlns:reflect="urn:reflect"
+         elementFormDefault="qualified"
+      >
+         <include schemaLocation="query-messagetypes.xsd" />
+         <include schemaLocation="core-types.xsd" />
+         <import namespace="urn:reflect" schemaLocation="reflect-messagetypes.xsd" />
+         <include schemaLocation="vim-messagetypes.xsd" />
+         <element name="versionURI" type="xsd:string" />
+         <element name="RetrieveServiceContent"  type="vim25:RetrieveServiceContentRequestType" />
+         <element name="RetrieveServiceContentResponse">
+            <complexType>
+               <sequence>
+                  <element name="returnval" type="vim25:ServiceContent" />
+               </sequence>
+            </complexType>
+         </element>
+      </schema>
+   </types>
+   <message name="RetrieveServiceContentRequestMsg">
+      <part name="parameters" element="vim25:RetrieveServiceContent" />
+   </message>
+   <message name="RetrieveServiceContentResponseMsg">
+      <part name="parameters" element="vim25:RetrieveServiceContentResponse" />
+   </message>
+   <portType name="VimPortType">
+      <operation name="RetrieveServiceContent">
+         <input message="vim25:RetrieveServiceContentRequestMsg" />
+         <output message="vim25:RetrieveServiceContentResponseMsg" />
+         <fault name="RuntimeFault" message="vim25:RuntimeFaultFaultMsg"/>
+      </operation>
+   </portType>
+   <binding name="VimBinding" type="vim25:VimPortType">
+      <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+      <operation name="RetrieveServiceContent">
+         <soap:operation soapAction="urn:vim25/5.5" style="document" />
+         <input>
+            <soap:body use="literal" />
+         </input>
+         <output>
+            <soap:body use="literal" />
+         </output>
+         <fault name="RuntimeFault">
+            <soap:fault name="RuntimeFault" use="literal" />
+         </fault>
+      </operation>
+   </binding>
+</definitions>

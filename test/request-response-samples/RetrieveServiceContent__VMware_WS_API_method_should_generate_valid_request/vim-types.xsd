@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+   Copyright 2005-2015 VMware, Inc.  All rights reserved.
+
+   Truncated by reedog117 for node-soap testing
+-->
+<schema
+   targetNamespace="urn:vim25"
+   xmlns="http://www.w3.org/2001/XMLSchema"
+   xmlns:vim25="urn:vim25"
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xmlns:reflect="urn:reflect"
+   elementFormDefault="qualified"
+>
+   <include schemaLocation="query-types.xsd" />
+   <include schemaLocation="core-types.xsd" />
+   <import namespace="urn:reflect" schemaLocation="reflect-types.xsd" />
+   <complexType name="ServiceContent">
+      <complexContent>
+         <extension base="vim25:DynamicData">
+            <sequence>
+               <element name="rootFolder" type="vim25:ManagedObjectReference" />
+               <element name="propertyCollector" type="vim25:ManagedObjectReference" />
+               <element name="viewManager" type="vim25:ManagedObjectReference" minOccurs="0" />
+               <element name="about" type="vim25:AboutInfo" />
+               <element name="setting" type="vim25:ManagedObjectReference" minOccurs="0" />
+               <element name="userDirectory" type="vim25:ManagedObjectReference" minOccurs="0" />
+               <element name="sessionManager" type="vim25:ManagedObjectReference" minOccurs="0" />
+               <element name="authorizationManager" type="vim25:ManagedObjectReference" minOccurs="0" />
+               <element name="serviceManager" type="vim25:ManagedObjectReference" minOccurs="0" />
+               <element name="perfManager" type="vim25:ManagedObjectReference" minOccurs="0" />
+               <element name="scheduledTaskManager" type="vim25:ManagedObjectReference" minOccurs="0" />
+               <element name="alarmManager" type="vim25:ManagedObjectReference" minOccurs="0" />
+               <element name="eventManager" type="vim25:ManagedObjectReference" minOccurs="0" />
+               <element name="taskManager" type="vim25:ManagedObjectReference" minOccurs="0" />
+               <element name="extensionManager" type="vim25:ManagedObjectReference" minOccurs="0" />
+               <element name="customizationSpecManager" type="vim25:ManagedObjectReference" minOccurs="0" />
+               <element name="customFieldsManager" type="vim25:ManagedObjectReference" minOccurs="0" />
+               <element name="accountManager" type="vim25:ManagedObjectReference" minOccurs="0" />
+               <element name="diagnosticManager" type="vim25:ManagedObjectReference" minOccurs="0" />
+               <element name="licenseManager" type="vim25:ManagedObjectReference" minOccurs="0" />
+               <element name="searchIndex" type="vim25:ManagedObjectReference" minOccurs="0" />
+               <element name="fileManager" type="vim25:ManagedObjectReference" minOccurs="0" />
+               <element name="datastoreNamespaceManager" type="vim25:ManagedObjectReference" minOccurs="0" />
+               <element name="virtualDiskManager" type="vim25:ManagedObjectReference" minOccurs="0" />
+               <element name="virtualizationManager" type="vim25:ManagedObjectReference" minOccurs="0" />
+               <element name="snmpSystem" type="vim25:ManagedObjectReference" minOccurs="0" />
+               <element name="vmProvisioningChecker" type="vim25:ManagedObjectReference" minOccurs="0" />
+               <element name="vmCompatibilityChecker" type="vim25:ManagedObjectReference" minOccurs="0" />
+               <element name="ovfManager" type="vim25:ManagedObjectReference" minOccurs="0" />
+               <element name="ipPoolManager" type="vim25:ManagedObjectReference" minOccurs="0" />
+               <element name="dvSwitchManager" type="vim25:ManagedObjectReference" minOccurs="0" />
+               <element name="hostProfileManager" type="vim25:ManagedObjectReference" minOccurs="0" />
+               <element name="clusterProfileManager" type="vim25:ManagedObjectReference" minOccurs="0" />
+               <element name="complianceManager" type="vim25:ManagedObjectReference" minOccurs="0" />
+               <element name="localizationManager" type="vim25:ManagedObjectReference" minOccurs="0" />
+               <element name="storageResourceManager" type="vim25:ManagedObjectReference" minOccurs="0" />
+               <element name="guestOperationsManager" type="vim25:ManagedObjectReference" minOccurs="0" />
+            </sequence>
+         </extension>
+      </complexContent>
+   </complexType>
+</schema>
