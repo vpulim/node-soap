@@ -38,6 +38,7 @@ This module lets you connect to web services using SOAP.  It also provides a ser
   - [ClientSSLSecurity](#clientsslsecurity)
   - [WSSecurity](#wssecurity)
   - [WSSecurityCert](#wssecuritycert)
+  - [NtlmSecurity](#ntlmsecurity)
 - [Handling XML Attributes, Value and XML (wsdlOptions).](#handling-xml-attributes-value-and-xml-wsdloptions)
   - [Specifying the exact namespace definition of the root element](#specifying-the-exact-namespace-definition-of-the-root-element)
 - [Handling "ignored" namespaces](#handling-ignored-namespaces)
@@ -537,6 +538,12 @@ WS-Security X509 Certificate support.
 ```
 
 _Note_: Optional dependency 'ursa' is required to be installed successfully when WSSecurityCert is used.
+
+### NtlmSecurity
+
+``` javascript
+  client.setSecurity(new soap.NtlmSecurity('username', 'password', 'domain', 'workstation'));
+```
 
 ## Handling XML Attributes, Value and XML (wsdlOptions).
 Sometimes it is necessary to override the default behaviour of `node-soap` in order to deal with the special requirements
