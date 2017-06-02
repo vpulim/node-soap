@@ -532,11 +532,9 @@ WS-Security X509 Certificate support.
   var privateKey = fs.readFileSync(privateKeyPath);
   var publicKey = fs.readFileSync(publicKeyPath);
   var password = ''; // optional password
-  var wsSecurity = new soap.WSSecurityCert(privateKey, publicKey, password, 'utf8');
+  var wsSecurity = new soap.WSSecurityCert(privateKey, publicKey, password);
   client.setSecurity(wsSecurity);
 ```
-
-_Note_: Optional dependency 'ursa' is required to be installed successfully when WSSecurityCert is used.
 
 ## Handling XML Attributes, Value and XML (wsdlOptions).
 Sometimes it is necessary to override the default behaviour of `node-soap` in order to deal with the special requirements
