@@ -396,7 +396,7 @@ Currently, when supplying JSON args, elements may not contain both child element
 You may pass in a fully-formed XML string instead the individual elements in JSON `args` and attributes that make up the XML.  The XML string should not contain an XML declaration (e.g., `<?xml version="1.0" encoding="UTF-8"?>`) or a document type declaration (e.g., `<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">`).
 
 ```
- var args = { _xml: "<ns1:MyRootElement xmlns:ns1=\"http://www.example.com/v1/ns1\">
+ var args = { _xml: "<ns1:MyRootElement xmlns:ns1="http://www.example.com/v1/ns1">
                         <ChildElement>elementvalue</ChildElement>
                      </ns1:MyRootElement>"
             };
