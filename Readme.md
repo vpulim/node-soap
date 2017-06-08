@@ -369,37 +369,46 @@ An instance of `Client` is passed to the `soap.createClient` callback.  It is us
       // soapHeader is the response soap header as a javascript object
   })
 ```
+
+The `args` argument allows you to supply arguments that generate an XML document inside of the SOAP Body section.
+
+
+
+##### Example with JSON as an argument
+The example above with "{name: 'value'}" are the args may generate a SOAP messages such as:
+
+``` javascript
+<?xml version="1.0" encoding="utf-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
+   <soapenv:Body>
+      <Request xmlns="http://www.example.com/v1">
+          <name>value</name>
+      </Request>
+   </soapenv:Body>
+</soapenv:Envelope>
+```
+
+Note that the "Request" element in the output above comes from the WSDL.  If an element in `args` contains no namespace prefix, the default namespace is assumed.  Otherwise, you must add the namespace prefixes to the element names as necessary (e.g., "ns1:name").
+
+Currently, when supplying JSON args, elements may not contain both child elements and a text value, even though that is allowed in the XML specification.
+
+##### Example with XML String as an argument
+You may pass in a fully-formed XML string instead the individual elements in JSON `args` and attributes that make up the XML.  The XML string should not contain an XML declaration (e.g., `<?xml version="1.0" encoding="UTF-8"?>`) or a document type declaration (e.g., `<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">`).
+
+``` javascript
+  { _xml: "<ns1:MyRootElement xmlns:ns2=\"http://www.example.com/v1/ns1\">
+              <ChildElement>elementvalue</ChildElement>
+          </ns1:MyRootElement>"
+  }
+```
+You must specify all of the namespaces and namespace prefixes yourself.  The element(s) from the WSDL are not utilized as they were in  the "Example with JSON as an argument" example above, which automatically populated the "Request" element.
+
 ### Client.*service*.*port*.*method*(args, callback[, options[, extraHeaders]]) - call a *method* using a specific *service* and *port*
 
 ``` javascript
   client.MyService.MyPort.MyFunction({name: 'value'}, function(err, result) {
       // result is a javascript object
   })
-```
-#### args
-
-The `args` argument allows you to supply arguments that generate an XML document inside of the SOAP Body section.
-
-##### Example with JSON as an argument
-may generate an XML in the SOAP Body such as:
-``` javascript
-  <nsPrefixInXsd:MyMessage xmlns:nsPrefixInXsd="http://www.example.com/v1/ns1">
-      <ChildElementNoNS>
-          <nsPrefixNOTInXsd:ChildElementNS nsPrefixNOTInXsd="http://www.example.com/v1/ns2">elementvalue</nsPrefixNOTInXsd:ChildElementNS>
-          <nsPrefixInXsd:ChildElementNS>elementvalue</nsPrefixInXsd:ChildElementNS>
-      </ChildElementNoNS>
-  </nsPrefixInXsd:MyMessage>
-```
-The namespaces and namespace prefixes should already be pre-populated from the WSDL/XSDs in the MyMessage and/or SOAP Envelope elements.  If an element in args contains no namespace prefix, the target namespace of MyMessage is used.  A prefix may or may not be added, depending on how the XSD is setup.
-Currently, elements may not contain both child elements and a text value.
-
-##### Example with XML String as an argument
-You may pass in a fully-formed XML string instead the individual elements and attributes that make up the XML.  The XML string should not contain an XML declaration (e.g., `<?xml version="1.0" encoding="UTF-8"?>`) or a document type declaration (e.g., `<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">`).
-``` javascript
-  {_xml: "<nsPrefixInXsd:MyMessage xmlns:nsPrefixInXsd="http://www.example.com/v1/ns1">
-              <ChildElement>elementvalue</ChildElement>
-          </nsPrefixInXsd:MyMessage>"
-  }
 ```
 
 #### Options (optional)
