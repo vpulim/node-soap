@@ -9,9 +9,10 @@ This module lets you connect to web services using SOAP.  It also provides a ser
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 
-- [Features:](#features)
+- [Features](#features)
 - [Install](#install)
-- [Where can I file an issue?](#where-can-i-file-an-issue)
+- [Why can't I file an issue?](#why-cant-i-file-an-issue)
+- [Where can I find help?](#where-can-i-find-help)
 - [Module](#module)
   - [soap.createClient(url[, options], callback) - create a new SOAP client from a WSDL url. Also supports a local filesystem path.](#soapcreateclienturl-options-callback---create-a-new-soap-client-from-a-wsdl-url-also-supports-a-local-filesystem-path)
   - [soap.listen(*server*, *path*, *services*, *wsdl*) - create a new SOAP server that listens on *path* and provides *services*.](#soaplistenserver-path-services-wsdl---create-a-new-soap-server-that-listens-on-path-and-provides-services)
@@ -65,13 +66,17 @@ Install with [npm](http://github.com/isaacs/npm):
   npm install soap
 ```
 
-## Where can I file an issue?
+## Why can't I file an issue?
 
 We've disabled issues in the repository and are now solely reviewing pull requests.  The reasons why we disabled issues can be found here [#731](https://github.com/vpulim/node-soap/pull/731).
 
-If you're in need of support we encourage you to join us and other `node-soap` users on gitter:
+## Where can I find help?
+
+Community support can be found on gitter:
 
 [![Gitter chat][gitter-image]][gitter-url]
+
+If you're looking for professional help you can contact the maintainers through this [google form](https://docs.google.com/forms/d/e/1FAIpQLSdj5EXxd5flcukLInmpFQhEvQYeERaReFFh9F0nqC_4EUmeLg/viewform).
 
 ## Module
 
