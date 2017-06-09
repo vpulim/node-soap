@@ -838,7 +838,7 @@ var fs = require('fs'),
         });
       });
 
-      it('shall generate correct payload for methods with array parameter', function(done) {
+      it('shall generate correct payload for methods with array parameter', function (done) {
         soap.createClient(__dirname + '/wsdl/list_parameter.wsdl', function(err, client) {
           assert.ok(client);
           var pathToArrayContainer = 'TimesheetV201511Mobile.TimesheetV201511MobileSoap.AddTimesheet.input.input.PeriodList';
@@ -847,6 +847,51 @@ var fs = require('fs'),
           client.AddTimesheet({input: {PeriodList: {PeriodType: [{PeriodId: '1'}]}}}, function() {
             var sentInputContent = client.lastRequest.substring(client.lastRequest.indexOf('<input>') + '<input>'.length, client.lastRequest.indexOf('</input>'));
             assert.equal(sentInputContent, '<PeriodList><PeriodType><PeriodId>1</PeriodId></PeriodType></PeriodList>');
+            done();
+          });
+        });
+      });
+
+      it('shall generate correct payload for recursively-defined types', function (done) {
+        soap.createClient(__dirname + '/wsdl/recursive2.wsdl', function (err, client) {
+          assert.ok(!err);
+          assert.ok(client);
+          client.AddAttribute({
+            "Requests":{
+              "AddAttributeRequest":[
+                {
+                  "RequestIdx":1,
+                  "Identifier":{
+                    "SystemNamespace":"bugrepro",
+                    "ResellerId":1,
+                    "CustomerNum":"860692",
+                    "AccountUid":"80a6e559-4d65-11e7-bd5b-0050569a12d7"
+                  },
+                  "Attr":{
+                    "AttributeId":716,
+                    "IsTemplateAttribute":0,
+                    "ReadOnly":0,
+                    "CanBeModified":1,
+                    "Name":"domain",
+                    "AccountElements":{
+                      "AccountElement":[
+                        {
+                          "ElementId":1693,
+                          "Name":"domain",
+                          "Value":"foo",
+                          "ReadOnly":0,
+                          "CanBeModified":1
+                        }
+                      ]
+                    }
+                  },
+                  "RequestedBy":"blah",
+                  "RequestedByLogin":"system"
+                }
+              ]
+            }
+          }, function(err) {
+            assert.ok(!err);
             done();
           });
         });
