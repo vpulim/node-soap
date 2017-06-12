@@ -1,3 +1,10 @@
+0.19.2 / 2017-06-12
+===================
+* [FIX] Recursive types cause infinite loop (#940)
+* [DOC] Adding a note about consulting in the README. (#939)
+* [MAINTENANCE] Add yarn.lock to gitignore (#938)
+* [MAINTENANCE] Remove dependency to ursa (#928)
+
 0.19.1 / 2017-05-30
 ===================
 * [FIX] Reverting #914.  It broke existing behavior and prevented array type arguments. (#937)
