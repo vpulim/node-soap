@@ -92,6 +92,19 @@ var fs = require('fs'),
         });
       });
     });
+    
+    it('should allow passing in XML strings', function (done) {
+      soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', _.assign({ envelopeKey: 'soapenv' }, meta.options), function (err, client) {
+        assert.ok(client);
+        assert.ok(!err);
+        
+        var xmlStr = '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">\n\t<head>\n\t\t<title>404 - Not Found</title>\n\t</head>\n\t<body>\n\t\t<h1>404 - Not Found</h1>\n\t\t<script type="text/javascript" src="http://gp1.wpc.edgecastcdn.net/00222B/beluga/pilot_rtm/beluga_beacon.js"></script>\n\t</body>\n</html>';
+        client.MyOperation({_xml: xmlStr}, function (err, result, raw, soapHeader) {
+            assert.notEqual(raw.indexOf('html'), -1);
+          done();
+        });
+      });
+    });
 
     it('should set binding style to "document" by default if not explicitly set in WSDL, per SOAP spec', function (done) {
       soap.createClient(__dirname + '/wsdl/binding_document.wsdl', meta.options, function (err, client) {
