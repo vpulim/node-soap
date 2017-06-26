@@ -1,10 +1,6 @@
 {
   "name": "soap",
-<<<<<<< HEAD
-  "version": "0.11.5",
-=======
   "version": "0.19.2",
->>>>>>> vpulim/master
   "description": "A minimal node SOAP client",
   "engines": {
     "node": ">=0.10.0"
@@ -15,7 +11,7 @@
     "concat-stream": "^1.5.1",
     "debug": "~0.7.4",
     "ejs": "~2.5.5",
-    "finalhandler": "^0.5.0",
+    "finalhandler": "^1.0.3",
     "lodash": "^3.10.1",
     "request": ">=2.9.0",
     "sax": ">=0.6",
