@@ -205,6 +205,24 @@ var fs = require('fs'),
         }, 'https://127.0.0.1:443');
       });
 
+     it('should have xml request modified', function (done) {
+        soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
+          assert.ok(client);
+          assert.ok(!err);
+
+          client.MyOperation({}, function (err, result) {
+            assert.ok(result);
+            assert.ok(client.lastResponseHeaders);
+            assert.equal(client.lastResponseHeaders.status, 'pass');
+
+            done();
+          }, null, { postProcess: function(_xml) {
+				return _xml.replace('soap', 'SOAP');
+			}
+		  });
+        }, baseUrl);
+      });
+      
       it('should have the correct extra header in the request', function (done) {
         soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
           assert.ok(client);
