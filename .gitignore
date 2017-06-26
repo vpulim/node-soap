@@ -1,6 +1,7 @@
 node_modules
 npm-debug.log
 coverage
-
+yarn.lock
+.vscode
 .idea
 *.iml

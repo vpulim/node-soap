@@ -6,6 +6,8 @@ var glob   = require('glob');
 var http = require('http');
 var path = require('path');
 var timekeeper = require('timekeeper');
+var jsdiff = require('diff');
+require('colors');
 var soap = require('../');
 var WSSecurity = require('../lib/security/WSSecurity');
 var server;
@@ -14,6 +16,14 @@ var tests = glob.sync('./request-response-samples/*', {cwd:__dirname})
   .map(function(node){return path.resolve(__dirname, node);})
   .filter(function(node){return fs.statSync(node).isDirectory();});
 var suite = {};
+
+function normalizeWhiteSpace(raw)
+{
+  var normalized = raw.replace(/\r\n|\r|\n/g, '');  // strip line endings
+  normalized = normalized.replace(/\s\s+/g, ' '); // convert whitespace to spaces
+  normalized = normalized.replace(/> </g, '><');  // get rid of spaces between elements
+  return normalized;
+}
 
 var requestContext = {
   //set these two within each test
@@ -28,9 +38,27 @@ var requestContext = {
     });
     req.on('end', function(){
       if(!requestContext.expectedRequest)return res.end(requestContext.responseToSend);
+
+      var actualRequest = normalizeWhiteSpace(chunks.join(''));
+      var expectedRequest = normalizeWhiteSpace(requestContext.expectedRequest);
+
+      if (actualRequest !== expectedRequest) {
+        var diff = jsdiff.diffChars(actualRequest, expectedRequest);
+        var comparison = '';
+        diff.forEach(function(part) {
+          var color = 'grey';
+          if (part.added) { color = 'green'; }
+          if (part.removed) { color = 'red'; }
+          comparison += part.value[color];
+        });
+        console.log(comparison);
+      }
+
+      assert.equal(actualRequest, expectedRequest);
+
       if(!requestContext.responseToSend)return requestContext.doneHandler();
-      assert.equal(chunks.join(''), requestContext.expectedRequest);
       res.end(requestContext.responseToSend);
+
       requestContext.expectedRequest = null;
       requestContext.responseToSend = null;
     });
@@ -52,6 +80,7 @@ tests.forEach(function(test){
   var responseXML = path.resolve(test, 'response.xml');
   var options = path.resolve(test, 'options.json');
   var wsdlOptionsFile = path.resolve(test, 'wsdl_options.json');
+  var wsdlJSOptionsFile = path.resolve(test, 'wsdl_options.js');
   var wsdlOptions = {};
 
   //headerJSON is optional
@@ -88,6 +117,7 @@ tests.forEach(function(test){
 
   //wsdlOptions is optional
   if(fs.existsSync(wsdlOptionsFile)) wsdlOptions = require(wsdlOptionsFile);
+  else if(fs.existsSync(wsdlJSOptionsFile)) wsdlOptions = require(wsdlJSOptionsFile);
   else wsdlOptions = {};
 
   generateTest(name, methodName, wsdl, headerJSON, securityJSON, requestXML, requestJSON, responseXML, responseJSON, responseSoapHeaderJSON, wsdlOptions, options);
@@ -107,6 +137,12 @@ function generateTest(name, methodName, wsdlPath, headerJSON, securityJSON, requ
       if (securityJSON && securityJSON.type === 'ws') {
         client.setSecurity(new WSSecurity(securityJSON.username, securityJSON.password, securityJSON.options));
       }
+
+      //throw more meaningful error
+      if(typeof client[methodName] !== 'function'){
+        throw new Error('method ' + methodName + ' does not exists in wsdl specified in test wsdl: ' + wsdlPath);
+      }
+
       client[methodName](requestJSON, function(err, json, body, soapHeader){
         if(requestJSON){
           if (err) {

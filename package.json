@@ -1,18 +1,29 @@
 {
   "name": "soap",
+<<<<<<< HEAD
   "version": "0.11.5",
+=======
+  "version": "0.19.2",
+>>>>>>> vpulim/master
   "description": "A minimal node SOAP client",
   "engines": {
-    "node": ">=0.8.0"
+    "node": ">=0.10.0"
   },
   "author": "Vinay Pulim <v@pulim.com>",
   "dependencies": {
+    "compress": "^0.99.0",
+    "concat-stream": "^1.5.1",
     "debug": "~0.7.4",
-    "lodash": "~2.4.1",
+    "ejs": "~2.5.5",
+    "finalhandler": "^0.5.0",
+    "lodash": "^3.10.1",
     "request": ">=2.9.0",
     "sax": ">=0.6",
     "selectn": "^0.9.6",
-    "strip-bom": "~0.3.1"
+    "serve-static": "^1.11.1",
+    "strip-bom": "~0.3.1",
+    "uuid": "^3.0.1",
+    "xml-crypto": "~0.8.0"
   },
   "repository": {
     "type": "git",
@@ -23,9 +34,10 @@
     "lib": "./lib"
   },
   "scripts": {
+    "toc": "./node_modules/.bin/doctoc Readme.md --github --maxlevel 3",
     "pretest": "jshint index.js lib test",
     "cover": "istanbul cover _mocha -- --timeout 10000 test/*-test.js test/security/*.js",
-    "coveralls": "cat ./coverage/lcov.info | coveralls -v",
+    "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js -v",
     "test": "mocha --timeout 10000 test/*-test.js test/security/*.js"
   },
   "keywords": [
@@ -33,8 +45,13 @@
   ],
   "license": "MIT",
   "devDependencies": {
+    "body-parser": "^1.15.2",
+    "colors": "^1.1.2",
     "coveralls": "^2.11.6",
+    "diff": "^2.2.1",
+    "doctoc": "^1.0.0",
     "duplexer": "~0.1.1",
+    "express": "^4.14.0",
     "glob": "~3.2.8",
     "istanbul": "^0.4.1",
     "jshint": "2.3.0",
@@ -42,6 +59,7 @@
     "readable-stream": "~2.0.2",
     "semver": "~5.0.3",
     "should": "~3.3.0",
+    "sinon": "^1.17.5",
     "timekeeper": "~0.0.4"
   }
 }

@@ -1,3 +1,127 @@
+0.19.2 / 2017-06-12
+===================
+* [FIX] Recursive types cause infinite loop (#940)
+* [DOC] Adding a note about consulting in the README. (#939)
+* [MAINTENANCE] Add yarn.lock to gitignore (#938)
+* [MAINTENANCE] Remove dependency to ursa (#928)
+
+0.19.1 / 2017-05-30
+===================
+* [FIX] Reverting #914.  It broke existing behavior and prevented array type arguments. (#937)
+* [FIX] Add test for accepting array as parameter based on wsdl (#933)
+* [DOC] readme.md clarifications, examples and typos (#930)
+* [MAINTENANCE] Fix build by satisfying jshint indentation (#931)
+* [MAINTENANCE] Drop `travis-ci` test support for `node.js` < `4.x` (LTS) (#932)
+* [DOC] Update CONTRIBUTING.md
+* [DOC] typo in server example (#925)
+
+0.19.0 / 2017-03-16
+===================
+
+* [FIX] Fixed missing namespace declaration on `Array` if the namespace is already declared with another prefix. (#923)
+* [DOC] Fix spelling error (#917)
+* [FIX] Add `sequence` to field if it's defined within the `complextType` (#914)
+* [MAINTENANCE] Drop deprecated `node-uuid` package and use the `uuid` (successor) instead (#913)
+* [FIX] Only add references for the soap:Body and wsse:Security/Timestamp elements in WSSecurityCert (#911)
+* [MAINTENANCE] Updated `ejs` package version in `package.json` (#908)
+* [ENHANCEMENT] Added possiblity to pass your own "custom deserializer" within the `wsdlOptions` in `createClient()` method (#901)
+* [ENHANCEMENT] Added possibility to use your own "exchange ID" (#907)
+* [ENHANCEMENT] Added "exchange ID" (`eid`) in emitted client events (#903)
+* [ENHANCEMENT] Added option to suppress error stack in server response (#904)
+* [FIX] Set namespace prefix for first element if `elementFormDefault=unqualified` (#905)
+* [FIX] Fixed test (use `assert` instead of `should()` chain) in `test/server-test.js` (#906)
+* [DOC] Fix documentation in `test/request-response-samples/README.md` (#900)
+
+0.18.0 / 2016-11-25
+=================
+
+* [DOC] Added documentation for adding custom http header (#890)
+* [DOC] Update soap stub example (#883)
+* [ENHANCEMENT] Add body parameter to soap responding stub. (#897)
+* [ENHANCEMENT] Added Stream support. (#837)
+* [ENHANCEMENT] Avoid matching <x:Envelope> tags inside comments (#877)
+* [FIX] Ensure that supplied request-object is passed through. (#894)
+* [FIX] Fix exception 'Parameter 'url' must be a string, not object' (#870)
+* [FIX] Handle empty SOAP Body properly. (#891)
+* [FIX] Set lodash dependency version to ^3.10.1 (#895)
+* [MAINTENANCE] Fix test case description (#886)
+* [MAINTENANCE] Fixed request-response-samples-test so that tests with only request.xml and request.json actually get run (#878)
+* [MAINTENANCE] Fixing minor jshint issues. (#884)
+
+0.17.0 / 2016-06-23
+=================
+
+* [ENHANCEMENT] Add option for disabling the WSDL cache (#876)
+* [DOC] Add `escapeXML` option to README file (#874)
+* [DOC] updated readme for express support (#873)
+* [ENHANCEMENT] express server support (#872)
+* [ENHANCEMENT] better error 1. SOAP message missing evelope and body 2. request/response tests (#869)
+* [FIX] Fix possible crash when send empty post using postman (#861)
+* [FIX] fix ExtensionElement description to match order (#866)
+* [DOC] Added descriptions for actor, hasNonce & mustUndertand options (#865)
+* [FIX] Fix namespaces in client soap requests (#863)
+* [FIX] Always submit valid XML from the client. (#862)
+* [MAINTENANCE] mustUnderstand must be 0 or 1.. with tests (#850)
+* [MAINTENANCE] Remove special handling of methods only taking a string paramter (#854)
+
+0.16.0 / 2016-06-23
+=================
+* [ENHANCEMENT] Add nonce and soap:actor support for WSSecurity (#851)
+* [MAINTENANCE] Fix typo in readme (#853)
+* [FIX fixes and issue that causes the module to break if no re or req.headers present in client (#852)
+* [FIX] fixed the soap request envelop generation part when request has complex Type as root. (#849)
+* [FIX] Gracefully handle errors while parsing xml in xmlToObject and resume the parser with p.resume() (#842)
+* [FIX] XSD import in WSDL files and relative path (server creation) - resubmit (#846)
+* [ENHANCEMENT] Support array of certs for ClientSSLSecurity ca. (#841)
+* [MAINTENANCE] Attribute value of body id in double quotes (#843)
+* [MAINTENANCE] Bumping ursa to 0.9.4 (#836)
+* [ENHANCEMENT] Optionally add Created to wssecurity header (#833)
+* [MAINTENANCE] Clean up brace style (#835)
+* [FIX] Fix custom http client not being used when fetching related resources (#834)
+
+0.15.0 / 2016-05-09
+=================
+* [FIX] Make `ursa` an optional dependency since it's currently nearly impossible to install `soap` on a windows machine otherwise (#832)
+* [FIX] Fixed issue of referencing element in another namespace (#831)
+* [FIX] Fixed incorrect WSDL in `CDATA` tests (#830)
+* [FIX] Added mocks for node.js streams `cork`/`uncork` in tests (for `node >= 4.x`) (#829)
+* [ENHANCEMENT] Added basic `CDATA` support (#787)
+* [DOC] Added missing documentation about `Client.setEndpoint(url)` (#827)
+* [ENHANCEMENT] Added `toc` node-module in order to generate TOC in README.md via `npm run toc` command (#826)
+* [FIX] Fix `elementFormDefault` handling (#822)
+* [FIX] Added missing `compress` node-module to `package.json` dependencies (#823)
+* [ENHANCEMENT] The client `response` event is now triggered with the "raw" `IncomingMessage` object as second parameter (#816)
+* [DOC] Added note about the `keep-alive` workaround to prevent truncation of longer chunked reponses in `node > 0.10.x` (#818)
+* [ENHANCEMENT] Make it possible to overwrite the request module, e.g. for using `multipart-body` for file up- and downloads (#817)
+
+0.14.0 / 2016-04-12
+=================
+* [ENHANCEMENT] Allow to call methods with `callback` as last param in order to align with node.js `callback last` pattern (#814)
+* [ENHANCEMENT] Re-enabled `ignoreBaseNameSpaces` option (#809)
+* [FIX] Avoid overwriting request headers with options in client method invocation (#813)
+* [ENHANCEMENT] Accept `time` value in in `extraHeaders` options in order to retrieve the `lastElapsedTime` for the response (#811)
+* [ENHANCEMENT] Allow to set a custom envelope key for the SOAP request (#812)
+* [FIX] Removed double declaration of `WSDL` variable in `lib/soap.js` (#810)
+* [DOC] Added documentation for `wsdl_options` and `wsdl_headers` options in `createClient()` method (#806)
+* [ENHANCEMENT] Added support to override the namespace definition of the root element (#805)
+* [ENHANCEMENT] Ignore "whitespace only" differences in `request/response sample tests` in order to make differences easier to spot (#804)
+* [ENHANCEMENT] Added support for WSSecurity XML signing with x509 certificats. Dropped support for node.js < 0.10.x (#801)
+* [ENHANCEMENT] Remove assertions/checkin of certificates in `ClientSSLSecurity` (#800)
+
+0.13.0 / 2016-02-16
+=================
+* [FIX] Maintain `ignoredNamespaces` option when processing WSDL includes (#796)
+* [ENHANCEMENT] SOAP Headers for server response & `changeSoapHeader()` method for client & server (#792)
+* [ENHANCEMENT] Added XML declaration (version & encoding) to client requests (#797)
+* [DOC] Added example for `server.options` to README, fixed typos in CONTRIBUTING (#798)
+* [FIX] Keep `nsContext` stack consistent even on recursive calls (#799)
+* [FIX] Prevent NPE when processing an empty children array (#789)
+
+0.12.0 / 2016-02-02
+=================
+* [MAINTENANCE] updating lodash to 3.x.x
+* [FIX] Schema overwrite when include a xsd with <xsd:include> (#788)
+
 0.11.4 / 2016-01-09
 =================
 * [MAINTENANCE] Adding coverage to project.

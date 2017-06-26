@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xmlns:bons2="http://www.somecompany.co.uk/CustomerManagement">
+    <soap:Body>
+        <bons2:RetrieveCustomerDetails xmlns:bons2="http://www.somecompany.co.uk/CustomerManagement">
+
+        </bons2:RetrieveCustomerDetails>
+    </soap:Body>
+</soap:Envelope>
