@@ -433,6 +433,16 @@ You must specify all of the namespaces and namespace prefixes yourself.  The ele
       // client.lastElapsedTime - the elapsed time of the last request in milliseconds
   }, {proxy: 'http://localhost:8888'})
 ```
+
+- You can modify xml (string) before call:
+ ``` javascript
+   client.MyService.MyPort.MyFunction({name: 'value'}, function(err, result) {
+       // client.lastElapsedTime - the elapsed time of the last request in milliseconds
+   }, {postProcess: function(_xml) {
+     return _xml.replace('text', 'newtext');
+   })
+ ```
+ 
 #### Extra Headers (optional)
 
 Object properties define extra HTTP headers to be sent on the request.
