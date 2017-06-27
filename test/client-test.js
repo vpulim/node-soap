@@ -222,7 +222,7 @@ var fs = require('fs'),
                           return _xml.replace('soap', 'SOAP');
                       }
                   }
-              });
+              );
           }, baseUrl);
        });
    
