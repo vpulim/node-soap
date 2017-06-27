@@ -213,8 +213,8 @@ var fs = require('fs'),
 
               client.MyOperation({}, function(err, result) {
                       assert.ok(result);
+                      assert.ok(client.lastResponse);
                       assert.ok(client.lastResponseHeaders);
-                      assert.equal(client.lastResponseHeaders.status, 'pass');
 
                       done();
                   }, {
@@ -225,7 +225,7 @@ var fs = require('fs'),
               );
           }, baseUrl);
        });
-   
+      
       it('should have the correct extra header in the request', function (done) {
         soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
           assert.ok(client);
