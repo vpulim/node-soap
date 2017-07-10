@@ -129,7 +129,7 @@ wsdlStrictTests['should get empty namespace prefix'] = function(done) {
 };
 
 wsdlNonStrictTests['should load same namespace from included xsd'] = function(done) {
-  var expected = '{"DummyService":{"DummyPortType":{"Dummy":{"input":{"ID":"IdType|xs:string|pattern","Name":"NameType|xs:string|minLength,maxLength"},"output":{"Result":"dummy:DummyList"}}}}}';
+  var expected = '{"DummyService":{"DummyPortType":{"Dummy":{"input":{"ID":"xs:string","Name":"xs:string"},"output":{"Result":"dummy:DummyList"}}}}}';
   soap.createClient(__dirname + '/wsdl/xsdinclude/xsd_include.wsdl', function(err, client) {
     assert.ok(!err);
     assert.equal(JSON.stringify(client.describe()), expected);

@@ -77,8 +77,8 @@ it('should allow customization of httpClient, the wsdl file, and associated data
           DummyPortType: {
             Dummy: {
               "input": {
-                "ID": "IdType|xs:string|pattern",
-                "Name": "NameType|xs:string|minLength,maxLength"
+                "ID": "xs:string",
+                "Name": "xs:string"
               },
               "output": {
                 "Result": "dummy:DummyList"

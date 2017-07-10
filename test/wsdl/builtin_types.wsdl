@@ -47,6 +47,14 @@
       <xs:element name="unsignedShortElement" type="xs:unsignedShort" />
       <xs:element name="unsignedByteElement" type="xs:unsignedByte" />
       <xs:element name="stringElement" type="xs:string" />
+      <xs:element name="restrictedIntElement">
+          <xs:simpleType>
+              <xs:restriction base="xs:int">
+                  <xs:minInclusive value="0"/>
+                  <xs:maxInclusive value="99"/>
+              </xs:restriction>
+          </xs:simpleType>
+      </xs:element>
     </xs:schema>
   </wsdl:types>
 
@@ -106,6 +114,10 @@
     <wsdl:part name="nonPositiveInteger" element="tns:nonPositiveIntegerElement" />
     <wsdl:part name="body" element="tns:nonNegativeIntegerElement"/>
   </wsdl:message>
+  
+  <wsdl:message name="IntResponse">
+    <wsdl:part name="restrictedInteger" element="tns:restrictedIntElement" />
+  </wsdl:message>
 
   <wsdl:portType name="PortType">
     <wsdl:operation name="Operation">
@@ -115,6 +127,10 @@
     <wsdl:operation name="StringOperation">
       <wsdl:input message="tns:StringRequest"/>
       <wsdl:output message="tns:Response"/>
+    </wsdl:operation>
+    <wsdl:operation name="IntOperation">
+      <wsdl:input message="tns:Request"/>
+      <wsdl:output message="tns:IntResponse"/>
     </wsdl:operation>
   </wsdl:portType>
 
@@ -139,6 +155,16 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
+
+    <wsdl:operation name="IntOperation">
+      <soap:operation soapAction="http://www.BuiltinTypes.com/StringOperation" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
   </wsdl:binding>
 
   <wsdl:service name="Service">
@@ -147,4 +173,3 @@
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>
-
