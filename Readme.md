@@ -100,7 +100,9 @@ The `options` argument allows you to customize the client with the following pro
 
 - endpoint: to override the SOAP service's host specified in the `.wsdl` file.
 - envelopeKey: to set specific key instead of `<pre><<b>soap</b>:Body></<b>soap</b>:Body></pre>`.
-- escapeXML: escape special XML characters in SOAP message (e.g. `&`, `>`, `<` etc).
+- escapeXML: escape special XML characters in SOAP message (e.g. `&`, `>`, `<` etc), default: `true`.
+- suppressStack: suppress the full stack trace for error messages.
+- returnFault: return an `Invalid XML` SOAP fault on a bad request, default: `false`.
 - forceSoap12Headers: to set proper headers for SOAP v1.2.
 - httpClient: to provide your own http client that implements `request(rurl, data, callback, exheaders, exoptions)`.
 - request: to override the [request](https://github.com/request/request) module.
