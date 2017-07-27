@@ -101,8 +101,8 @@ var fs = require('fs'),
         var xmlStr = '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">\n\t<head>\n\t\t<title>404 - Not Found</title>\n\t</head>\n\t<body>\n\t\t<h1>404 - Not Found</h1>\n\t\t<script type="text/javascript" src="http://gp1.wpc.edgecastcdn.net/00222B/beluga/pilot_rtm/beluga_beacon.js"></script>\n\t</body>\n</html>';
         client.MyOperation({_xml: xmlStr}, function (err, result, raw, soapHeader) {
             assert.notEqual(raw.indexOf('html'), -1);
-          done();
-        });
+            done();
+          });
       });
     });
 
@@ -206,7 +206,7 @@ var fs = require('fs'),
       });
 
       
-     it('should have xml request modified', function (done) {
+      it('should have xml request modified', function (done) {
           soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function(err, client) {
               assert.ok(client);
               assert.ok(!err);
@@ -217,14 +217,14 @@ var fs = require('fs'),
                       assert.ok(client.lastResponseHeaders);
 
                       done();
-                  }, {
-                      postProcess: function(_xml) {
+                    }, {
+                  postProcess: function(_xml) {
                           return _xml.replace('soap', 'SOAP');
-                      }
-                  }
+                        }
+                }
               );
-          }, baseUrl);
-       });
+            }, baseUrl);
+        });
       
       it('should have the correct extra header in the request', function (done) {
         soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
