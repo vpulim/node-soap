@@ -7,7 +7,7 @@ export interface ISoapMethod {
 }
 
 export interface ISoapServiceMethod {
-    (args:any, callback?: (data: any) => void, headers?: any, req?: any) => any;
+    (args:any, callback?: (data: any) => void, headers?: any, req?: any): any;
 }
 
 // SOAP Fault 1.1 & 1.2
