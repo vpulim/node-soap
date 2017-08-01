@@ -26,6 +26,7 @@
     "url": "https://github.com/milewise/node-soap.git"
   },
   "main": "./index.js",
+  "types": "./lib/soap.d.ts",
   "directories": {
     "lib": "./lib"
   },
