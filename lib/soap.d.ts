@@ -22,7 +22,7 @@ export interface ISoapFault11 {
 
 // SOAP Fault 1.2
 // 1.2 also supports additional, optional elements:
-// Role, Node, Detail but soap module does not seem to implement them
+// Role, Node, Detail. Should be added when soap module implements them
 // https://www.w3.org/TR/soap12/#soapfault
 export interface ISoapFault12 {
     Fault: {
