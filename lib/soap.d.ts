@@ -6,8 +6,11 @@ export interface ISoapMethod {
     (args: any, callback: (err: any, result: any, raw: any, soapHeader: any) => void, options?: any, extraHeaders?: any): void;
 }
 
+export interface ISoapServiceMethod {
+    (args:any, callback?: (data: any) => void, headers?: any, req?: any) => any;
+}
+
 // SOAP Fault 1.1 & 1.2
-// https://github.com/vpulim/node-soap#soap-fault
 export type ISoapFault = ISoapFault12 | ISoapFault11;
 
 // SOAP Fault 1.1
@@ -38,7 +41,7 @@ export interface ISecurity {
 }
 
 export interface IServicePort {
-    [methodName: string]: (args:any, callback?: (data: any) => void, headers?: any, req?: any) => any;
+    [methodName: string]: ISoapServiceMethod;
 }
 
 export interface IService {
