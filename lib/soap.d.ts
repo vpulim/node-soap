@@ -201,3 +201,8 @@ export class ClientSSLSecurityPFX implements ISecurity {
 }
 
 export function passwordDigest(nonce: string, created: string, password: string): string;
+
+// Below are added for backwards compatibility for previous @types/soap users.
+export interface Security extends ISecurity {}
+export interface SoapMethod extends ISoapMethod {}
+export interface Option extends IOptions {}
