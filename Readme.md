@@ -442,7 +442,7 @@ You must specify all of the namespaces and namespace prefixes yourself.  The ele
        // client.lastElapsedTime - the elapsed time of the last request in milliseconds
    }, {postProcess: function(_xml) {
      return _xml.replace('text', 'newtext');
-   })
+   }})
  ```
  
 #### Extra Headers (optional)
