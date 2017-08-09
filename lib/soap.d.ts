@@ -1,6 +1,7 @@
 /// <reference types="node" />
 
 import { EventEmitter } from 'events';
+import * as BluebirdPromise from 'bluebird';
 
 export interface ISoapMethod {
     (args: any, callback: (err: any, result: any, raw: any, soapHeader: any) => void, options?: any, extraHeaders?: any): void;
@@ -65,6 +66,8 @@ export interface IWsdlBaseOptions {
     ignoredNamespaces?: boolean | string[] | { namespaces?: string[]; override?: boolean; };
     ignoreBaseNameSpaces?: boolean;
     escapeXML?: boolean;
+    returnFault?: boolean;
+    handleNilAsNull?: boolean;
     wsdl_headers?: { [key: string]: any };
     wsdl_options?: { [key: string]: any };
 }
@@ -133,7 +136,9 @@ export class Client extends EventEmitter {
     [method: string]: ISoapMethod | Function;
 }
 
-declare function createClient(wsdlPath: string, options: IOptions, fn: (err: any, client: Client) => void): void;
+declare function createClient(url: string, callback: (err: any, client: Client) => void): void;
+declare function createClient(url: string, options: IOptions, callback: (err: any, client: Client) => void): void;
+declare function createClientAsync(url: string, options?: IOptions, endpoint?: string): BluebirdPromise<Client>;
 
 export class Server extends EventEmitter {
     constructor(server: any, path: string, services: IServices, wsdl: WSDL, options: IServerOptions);
