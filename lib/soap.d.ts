@@ -136,9 +136,9 @@ export class Client extends EventEmitter {
     [method: string]: ISoapMethod | Function;
 }
 
-declare function createClient(url: string, callback: (err: any, client: Client) => void): void;
-declare function createClient(url: string, options: IOptions, callback: (err: any, client: Client) => void): void;
-declare function createClientAsync(url: string, options?: IOptions, endpoint?: string): BluebirdPromise<Client>;
+export function createClient(url: string, callback: (err: any, client: Client) => void): void;
+export function createClient(url: string, options: IOptions, callback: (err: any, client: Client) => void): void;
+export function createClientAsync(url: string, options?: IOptions, endpoint?: string): BluebirdPromise<Client>;
 
 export class Server extends EventEmitter {
     constructor(server: any, path: string, services: IServices, wsdl: WSDL, options: IServerOptions);
