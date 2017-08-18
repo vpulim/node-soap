@@ -580,9 +580,9 @@ as default request options to the constructor:
 ``` javascript
 client.setSecurity(new soap.ClientSSLSecurity(
                 '/path/to/key',
-                'path/to/cert,
+                'path/to/cert',
                 '/path/to/ca-cert',  /*or an array of buffer: [fs.readFileSync('/path/to/ca-cert/1', 'utf8'),
-                'fs.readFileSync('/path/to/ca-cert/2', 'utf8')'], */
+                'fs.readFileSync('/path/to/ca-cert/2', 'utf8')], */
                 {   /*default request options like */
                     // strictSSL: true,
                     // rejectUnauthorized: false,
