@@ -200,6 +200,15 @@ Note: for versions of node >0.10.X, you may need to specify `{connection: 'keep-
 You can pass in server and [WSDL Options](#handling-xml-attributes-value-and-xml-wsdloptions)
 using an options hash.
 
+Server options include the below: 
+`pfx`: A string or Buffer containing the private key, certificate and CA certs of the server in PFX or PKCS12 format. (Mutually exclusive with the key, cert and ca options.)
+`key`: A string or Buffer containing the private key of the server in PEM format. (Could be an array of keys). (Required)
+`passphrase`: A string of passphrase for the private key or pfx.
+`cert`: A string or Buffer containing the certificate key of the server in PEM format. (Could be an array of certs). (Required)
+`ca`: An array of strings or Buffers of trusted certificates in PEM format. If this is omitted several well known "root" CAs will be used, like VeriSign. These are used to authorize connections.
+`crl` : Either a string or list of strings of PEM encoded CRLs (Certificate Revocation List)
+`ciphers`: A string describing the ciphers to use or exclude, separated by  :. The default cipher suite is:
+
 ``` javascript
 var xml = require('fs').readFileSync('myservice.wsdl', 'utf8');
 
