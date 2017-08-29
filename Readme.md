@@ -200,7 +200,7 @@ Note: for versions of node >0.10.X, you may need to specify `{connection: 'keep-
 You can pass in server and [WSDL Options](#handling-xml-attributes-value-and-xml-wsdloptions)
 using an options hash.
 
-Server options include the below: 
+Server options include the below:
 `pfx`: A string or Buffer containing the private key, certificate and CA certs of the server in PFX or PKCS12 format. (Mutually exclusive with the key, cert and ca options.)
 `key`: A string or Buffer containing the private key of the server in PEM format. (Could be an array of keys). (Required)
 `passphrase`: A string of passphrase for the private key or pfx.
@@ -483,7 +483,7 @@ You must specify all of the namespaces and namespace prefixes yourself.  The ele
      return _xml.replace('text', 'newtext');
    }})
  ```
- 
+
 #### Extra Headers (optional)
 
 Object properties define extra HTTP headers to be sent on the request.
@@ -562,9 +562,11 @@ Example :
 ## Security
 
 `node-soap` has several default security protocols.  You can easily add your own
-as well.  The interface is quite simple. Each protocol defines 2 methods:
-* `addOptions` - a method that accepts an options arg that is eventually passed directly to `request`
-* `toXML` - a method that returns a string of XML.
+as well.  The interface is quite simple. Each protocol defines these optional methods:
+* `addOptions(options)` - a method that accepts an options arg that is eventually passed directly to `request`.
+* `addHeaders(headers)` - a method that accepts an argument with HTTP headers, to add new ones.
+* `toXML()` - a method that returns a string of XML to be appended to the SOAP headers. Not executed if `postProcess` is also defined.
+* `postProcess(xml, envelopeKey)` - a method that receives the the assembled request XML plus envelope key, and returns a processed string of XML. Executed before `options.postProcess`.
 
 ### BasicAuthSecurity
 
