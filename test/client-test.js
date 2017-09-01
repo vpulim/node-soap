@@ -1,6 +1,7 @@
 'use strict';
 
 var fs = require('fs'),
+  path = require('path'),
   soap = require('..'),
   http = require('http'),
   assert = require('assert'),
@@ -135,7 +136,6 @@ var fs = require('fs'),
         });
       });
     });
-
 
     describe('Headers in request and last response', function () {
       var server = null;
@@ -942,7 +942,7 @@ var fs = require('fs'),
         });
       });
     });
-    
+  
     describe('Client created with createClientAsync', function () {
       it('should error on invalid host', function (done) {
         soap.createClientAsync('http://localhost:1', meta.options)
@@ -1106,5 +1106,36 @@ var fs = require('fs'),
       });
 
     });
+    //
+    describe('wsdl available from an http endpoint', function () {
+      var server, port;
+      //
+      before(function (done) {
+           server = http.createServer(function (req, res) {
+            var rs;
+            try {
+              rs = fs.createReadStream(path.join(__dirname, '/wsdl/default_namespace.wsdl'));
+              res.statusCode = 200;
+              res.setHeader('content-type', 'text/xml; charset=utf-8');
+              rs.pipe(res);
+            }
+            catch (e) {
+              console.log('ERROR: ' + e.stack);
+            }
+        });
+        // take * host, and assigned port, should work fine and avoid EACCESS errors
+        server.listen(function (e) {
+            port = server.address().port;
+            done(e);
+        });
+      });
+      //
+      it('should allow a Client using an http endpoint for the wsdl', function(done) {
+          soap.createClient('http://localhost:' + port, function (err, client) {
+            done(err);
+          });
+      });
+    });
+
   });
 });
