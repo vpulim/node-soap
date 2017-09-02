@@ -37,8 +37,10 @@ export interface ISoapFault12 {
 }
 
 export interface ISecurity {
-    addOptions(options: any): void;
-    toXML(): string;
+    addOptions?(options: any): void;
+    addHeaders?(headers: any): void;
+    toXML?(): string;
+    postProcess?(xml: any, envelopeKey: string): string;
 }
 
 export interface IServicePort {
@@ -79,6 +81,7 @@ export interface IOptions extends IWsdlBaseOptions {
     httpClient?: HttpClient;
     request?: (options: any, callback?: (error: any, res: any, body: any) => void) => void;
     stream?: boolean;
+    overridePromiseSuffix?: string;
     // wsdl options that only work for client
     forceSoap12Headers?: boolean;
     customDeserializer?: any;
