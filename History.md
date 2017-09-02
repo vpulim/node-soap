@@ -1,5 +1,3 @@
-* [ENHANCEMENT] Added `bluebird.js` promise library in order to provide `[methodName]Asyc` in `Client` (#956) 
-=======
 0.21.0 / 2017-08-28
 ===================
 * [DOC] Removed issues from Contributing Readme (#963)
