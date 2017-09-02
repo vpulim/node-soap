@@ -14,6 +14,7 @@ describe('SOAP Client', function() {
     'overrideRootElement': {
       'namespace': 'tns'
     },
+    'overridePromiseSuffix': 'Test',
     'request': 'customRequest'
   };
 
@@ -24,6 +25,7 @@ describe('SOAP Client', function() {
 
       assert.ok(client.wsdl.options.ignoredNamespaces[0] === 'ignoreThisNS');
       assert.ok(client.wsdl.options.overrideRootElement.namespace === 'tns');
+      assert.ok(typeof client.MyOperationTest === 'function');
       assert.ok(client.wsdl.options.request, "customRequest");
       done();
     });

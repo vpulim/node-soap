@@ -2,7 +2,8 @@
 
 var fs = require('fs'),
     soap = require('..'),
-    assert = require('assert');
+    assert = require('assert'),
+    sinon = require('sinon');
 
 var wsdlStrictTests = {},
     wsdlNonStrictTests = {};
@@ -105,6 +106,36 @@ wsdlStrictTests['should handle type ref'] = function(done) {
     assert.ok(!err);
     client.order(reqJson, function(err, result) {
       assert.equal(client.lastMessage, expectedMsg);
+      done();
+    });
+  });
+};
+
+wsdlStrictTests['should parse POJO into xml without making unnecessary recursion'] = function(done) {
+  var expectedMsg = require('./wsdl/perf/request.xml.js');
+  var reqJson = require('./wsdl/perf/request.json');
+  var spy = sinon.spy(soap.WSDL.prototype, "findChildSchemaObject");
+
+  soap.createClient(__dirname + '/wsdl/perf/order.wsdl', {strict: true}, function(err, client) {
+    var i, spyCall;
+
+    assert.ok(!err);
+    client.order(reqJson, function(err, result) {
+      assert.equal(client.lastMessage, expectedMsg);
+
+      // since the reqJson does not use the element named "thing", then findChildSchemaObject should never get to the type named RabbitHole
+      // see perf/ns1.xsd
+      // this tests the fix for the performance problem where we too many calls to findChildSchemaObject
+      // https://github.com/CumberlandGroup/node-ews/issues/58
+      assert.ok(spy.callCount);
+      for (i = 0; i < spy.callCount; i++) {
+        spyCall = spy.getCall(i);
+        if (spyCall.args[0]) {
+          assert.notEqual(spyCall.args[0].$type, "RabbitHole");
+        }
+      }
+
+      spy.restore();
       done();
     });
   });

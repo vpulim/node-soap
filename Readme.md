@@ -131,6 +131,7 @@ The `options` argument allows you to customize the client with the following pro
 - wsdl_headers: custom HTTP headers to be sent on WSDL requests.
 - wsdl_options: custom options for the request module on WSDL requests.
 - disableCache: don't cache WSDL files, request them every time.
+- overridePromiseSuffix: If your wsdl operations contains names with Async suffix, you will need to override the default promise suffix to a custom one, default: `Async`.
 
 Note: for versions of node >0.10.X, you may need to specify `{connection: 'keep-alive'}` in SOAP headers to avoid truncation of longer chunked responses.
 
@@ -199,6 +200,15 @@ Note: for versions of node >0.10.X, you may need to specify `{connection: 'keep-
 ### Options
 You can pass in server and [WSDL Options](#handling-xml-attributes-value-and-xml-wsdloptions)
 using an options hash.
+
+Server options include the below:
+`pfx`: A string or Buffer containing the private key, certificate and CA certs of the server in PFX or PKCS12 format. (Mutually exclusive with the key, cert and ca options.)
+`key`: A string or Buffer containing the private key of the server in PEM format. (Could be an array of keys). (Required)
+`passphrase`: A string of passphrase for the private key or pfx.
+`cert`: A string or Buffer containing the certificate key of the server in PEM format. (Could be an array of certs). (Required)
+`ca`: An array of strings or Buffers of trusted certificates in PEM format. If this is omitted several well known "root" CAs will be used, like VeriSign. These are used to authorize connections.
+`crl` : Either a string or list of strings of PEM encoded CRLs (Certificate Revocation List)
+`ciphers`: A string describing the ciphers to use or exclude, separated by  :. The default cipher suite is:
 
 ``` javascript
 var xml = require('fs').readFileSync('myservice.wsdl', 'utf8');
@@ -474,7 +484,7 @@ You must specify all of the namespaces and namespace prefixes yourself.  The ele
      return _xml.replace('text', 'newtext');
    }})
  ```
- 
+
 #### Extra Headers (optional)
 
 Object properties define extra HTTP headers to be sent on the request.
@@ -553,9 +563,11 @@ Example :
 ## Security
 
 `node-soap` has several default security protocols.  You can easily add your own
-as well.  The interface is quite simple. Each protocol defines 2 methods:
-* `addOptions` - a method that accepts an options arg that is eventually passed directly to `request`
-* `toXML` - a method that returns a string of XML.
+as well.  The interface is quite simple. Each protocol defines these optional methods:
+* `addOptions(options)` - a method that accepts an options arg that is eventually passed directly to `request`.
+* `addHeaders(headers)` - a method that accepts an argument with HTTP headers, to add new ones.
+* `toXML()` - a method that returns a string of XML to be appended to the SOAP headers. Not executed if `postProcess` is also defined.
+* `postProcess(xml, envelopeKey)` - a method that receives the the assembled request XML plus envelope key, and returns a processed string of XML. Executed before `options.postProcess`.
 
 ### BasicAuthSecurity
 
@@ -578,13 +590,19 @@ as default request options to the constructor:
 * `secureOptions: constants.SSL_OP_NO_TLSv1_2` (this is likely needed for node >= 10.0)
 
 ``` javascript
-  client.setSecurity(new soap.ClientSSLSecurity(
-    '/path/to/key'
-    , '/path/to/cert'
-    , {/*default request options*/}
-  ));
+client.setSecurity(new soap.ClientSSLSecurity(
+                '/path/to/key',
+                'path/to/cert',
+                '/path/to/ca-cert',  /*or an array of buffer: [fs.readFileSync('/path/to/ca-cert/1', 'utf8'),
+                'fs.readFileSync('/path/to/ca-cert/2', 'utf8')], */
+                {   /*default request options like */
+                    // strictSSL: true,
+                    // rejectUnauthorized: false,
+                    // hostname: 'some-hostname'
+                    // secureOptions: constants.SSL_OP_NO_TLSv1_2,
+                },
+      ));
 ```
-
 ### WSSecurity
 
 `WSSecurity` implements WS-Security. UsernameToken and PasswordText/PasswordDigest is supported.
@@ -798,6 +816,20 @@ Example :
    });
 
 ```
+
+### Changing the tag formats to use self-closing (empty element) tags
+The XML specification specifies that there is no semantic difference between `<Tag></Tag>` and `<Tag />`, and node-soap defaults to using the `<Tag></Tag>` format. But if your web service is particular, or if there is a stylistic preference, the `useEmptyTag` option causes tags with no contents to use the `<Tag />` format instead.
+
+```javascript
+var wsdlOptions = {
+  useEmptyTag: true
+};
+```
+
+For example: `{ MyTag: { attributes: { MyAttr: 'value' } } }` is:
+
+* **Without useEmptyTag**: `<MyTag MyAttr="value"></MyTag>`
+* **With useEmptyTag set to true**: `<MyTag MyAttr="value" />`
 
 ## Handling "ignored" namespaces
 If an Element in a `schema` definition depends on an Element which is present in the same namespace, normally the `tns:`

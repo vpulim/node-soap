@@ -1,11 +1,25 @@
+* [ENHANCEMENT] Added `bluebird.js` promise library in order to provide `[methodName]Asyc` in `Client` (#956) 
+=======
+0.21.0 / 2017-08-28
+===================
+* [DOC] Removed issues from Contributing Readme (#963)
+* [DOC] Add server option details to readme.md (#965)
+* [DOC] Added details to clientSSLSecurity (#960)
+* [ENHANCEMENT] Added 'useEmptyTag' wsdlOption, which if set, creates <Tag /> instead of <Tag></Tag> if no body is present (#962)
+* [ENHANCEMENT] Add typescript support (#955)
+* [FIX] `path.resolve` cannot resolve a null path (#959)
+* [MAINTENANCE] Updated minimum node version to 4.0.0 (#964)
+* [MAINTENANCE] Update `uuid` library to latest release (`3.1.0`) and use their newly introduced "modules" instead of the outdated/deprecated direct method calls.
+* [MAINTENANCE] Fixed JSHint indentation errors in `test/client-test.js`.
+
 0.20.0 / 2017-08-08
 ===================
-* [ENHANCEMENT] Added `bluebird.js` promise library in order to provide `[methodName]Asyc` in `Client` (#956) 
+* [ENHANCEMENT] Added `bluebird.js` promise library in order to provide `[methodName]Asyc` in `Client` (#956)
 * [ENHANCEMENT] Added `option` to handle `nilAsNull` in `SOAP` responses (#952)
 * [ENHANCEMENT] Added `option` to return a `SOAP Fault` instead of `stack` (error) on bad request (#951)
 * [MAINTENANCE] Removed uneccessary variable declaration in `http.js` (#948)
 * [ENHANCEMENT] Added possibiltiy to alter `XML` before it is sent (#943)
-* [FIX] Updated vulnerable module `finalhandler` to version `^1.0.3` (#946) 
+* [FIX] Updated vulnerable module `finalhandler` to version `^1.0.3` (#946)
 * [ENHANCEMENT] Added possibility to submit `XML`-Strings to SOAP Client API (#918)
 
 0.19.2 / 2017-06-12
