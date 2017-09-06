@@ -12,10 +12,9 @@ var path = 'test/request-response-samples/DefaultNamespace__no_xmlns_prefix_used
 var wsdl = path + 'soap.wsdl'
 
 var xml = fs.readFileSync(path + '/soap.wsdl', 'utf8');
+var json = fs.readFileSync(path + '/request.json', 'utf8');
 var request = fs.readFileSync(path + '/request.xml', 'utf8');
-var json = fs.readFileSync(path + '/response.json', 'utf8');
 var response = fs.readFileSync(path + '/response.xml', 'utf8');
-
 
 var service = {
   MyService: {
@@ -28,20 +27,17 @@ var service = {
 };
 
 describe('SOAP Server', function () {
+  // This test sends two requests and checks the responses for equality. The
+  // first request is sent through a soap client. The second request sends the
+  // same request in gzipped format.
   it('should properly handle compression', function (done) {
-    //http server example
     var server = http.createServer(function (req, res) {});
-    var clientResponse, gunzipResponse;
-    var count = 0;
+    var clientResponse, gzipResponse;
 
+    // If both arguments are defined, check if they are equal and exit the test.
     var check = function (a, b) {
-      count += 1;
-
       if (a && b) {
         assert(a === b);
-      }
-
-      if (count === 2) {
         done();
       }
     }
@@ -53,15 +49,16 @@ describe('SOAP Server', function () {
       endpoint: 'http://localhost:8000/wsdl'
     }, function (error, client) {
       assert(!error);
-      client.DefaultNamespace({}, function (error, response) {
+      client.DefaultNamespace(json, function (error, response) {
         assert(!error);
         clientResponse = client.lastResponse;
-        check(clientResponse, gunzipResponse);
+        check(clientResponse, gzipResponse);
       });
     });
 
     var gzip = zlib.createGzip();
 
+    // Construct a request with the appropriate headers.
     gzip.pipe(http.request({
       host: 'localhost',
       path: '/wsdl',
@@ -75,15 +72,18 @@ describe('SOAP Server', function () {
     }, function (res) {
       var body = '';
       res.on('data', function (data) {
+        // Parse the response body.
         body += data;
       });
       res.on('end', function () {
-        gunzipResponse = body;
-        check(clientResponse, gunzipResponse);
+        gzipResponse = body;
+        check(clientResponse, gzipResponse);
+        // Don't forget to close the server.
         server.close();
       });
     }));
 
+    // Send the request body through the gzip stream to the server.
     gzip.end(request);
   });
 });
