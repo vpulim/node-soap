@@ -1,0 +1,20 @@
+<xsd:schema targetNamespace="http://example.org/ns1"
+            elementFormDefault="qualified"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:ns1="http://example.org/ns1">
+    <xsd:element name="orderRq">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="thing" type="OptionalThing"/>
+                <xsd:element name="item" type="xsd:string"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:complexType name="OptionalThing">
+        <xsd:sequence>
+            <xsd:element name="rabbitHole" type="RabbitHole"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="RabbitHole" type="xsd:string"/>
+    <xsd:element name="orderRs" type="xsd:string"/>
+</xsd:schema>
