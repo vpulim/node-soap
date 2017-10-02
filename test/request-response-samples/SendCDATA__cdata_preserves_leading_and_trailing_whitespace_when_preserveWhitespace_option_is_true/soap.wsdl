@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+
+<wsdl:definitions name="TestService"
+             targetNamespace="http://example.com/testservice.wsdl"
+             xmlns:tns="http://example.com/testservice.wsdl"
+             xmlns:xsd1="http://example.com/testservice.xsd"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+
+    <wsdl:types>
+        <xsd:schema targetNamespace="http://example.com/testservice.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            <xsd:element name="TestMessage">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element maxOccurs="1" minOccurs="0" name="message" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="TestResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element maxOccurs="1" minOccurs="0" name="TestResult" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:schema>
+    </wsdl:types>
+
+    <wsdl:message name="GetTestMessageInput">
+        <wsdl:part name="body" element="xsd1:TestMessage"/>
+    </wsdl:message>
+
+    <wsdl:message name="GetTestMessageOutput">
+        <wsdl:part name="body" element="xsd1:TestResponse"/>
+    </wsdl:message>
+
+    <wsdl:portType name="TestServicePortType">
+        <wsdl:operation name="SendCDATA">
+            <wsdl:input message="tns:GetTestMessageInput"/>
+            <wsdl:output message="tns:GetTestMessageOutput"/>
+        </wsdl:operation>
+    </wsdl:portType>
+
+    <wsdl:binding name="TestServiceSoapBinding" type="tns:TestServicePortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="SendCDATA">
+            <soap:operation soapAction="http://example.com/SendCDATA"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <wsdl:service name="TestService">
+        <wsdl:port name="TestServicePort" binding="tns:TestServiceSoapBinding">
+           <soap:address location="http://localhost:15099/testservice"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
