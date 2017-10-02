@@ -15,7 +15,6 @@
     "lodash": "^4.17.5",
     "request": ">=2.9.0",
     "sax": ">=0.6",
-    "selectn": "^0.9.6",
     "serve-static": "^1.11.1",
     "strip-bom": "~0.3.1",
     "uuid": "^3.1.0",
