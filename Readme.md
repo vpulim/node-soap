@@ -395,7 +395,7 @@ An instance of `Client` is passed to the `soap.createClient` callback.  It is us
 
 ### Client.setSecurity(security) - use the specified security protocol
 
-### Client.*method*(args, callback) - call *method* on the SOAP service.
+### Client.*method*(args, callback, options) - call *method* on the SOAP service.
 
 ``` javascript
   client.MyFunction({name: 'value'}, function(err, result, raw, soapHeader) {
@@ -406,6 +406,11 @@ An instance of `Client` is passed to the `soap.createClient` callback.  It is us
 ```
 
 The `args` argument allows you to supply arguments that generate an XML document inside of the SOAP Body section.
+
+The `options` object is optional and is passed to the `request`-module.
+Interesting properties might be:
+* `timeout`: Timeout in milliseconds
+* `forever`: Enables keep alive connections
 
 ### Client.*method*Async(args) - call *method* on the SOAP service.
 
@@ -590,6 +595,8 @@ as default request options to the constructor:
 * `strictSSL: false`
 * `secureOptions: constants.SSL_OP_NO_TLSv1_2` (this is likely needed for node >= 10.0)
 
+If you want to reuse tls sessions, you can use the option `forever: true`. 
+
 ``` javascript
 client.setSecurity(new soap.ClientSSLSecurity(
                 '/path/to/key',
@@ -601,6 +608,7 @@ client.setSecurity(new soap.ClientSSLSecurity(
                     // rejectUnauthorized: false,
                     // hostname: 'some-hostname'
                     // secureOptions: constants.SSL_OP_NO_TLSv1_2,
+                    // forever: true,
                 },
       ));
 ```
