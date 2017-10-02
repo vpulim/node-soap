@@ -21,7 +21,7 @@ describe('SOAP Client', function() {
   it('should set WSDL options to those specified in createClient', function(done) {
     soap.createClient(__dirname+'/wsdl/json_response.wsdl', options, function(err, client) {
       assert.ok(client);
-      assert.ok(!err);
+      assert.ifError(err);
 
       assert.ok(client.wsdl.options.ignoredNamespaces[0] === 'ignoreThisNS');
       assert.ok(client.wsdl.options.overrideRootElement.namespace === 'tns');

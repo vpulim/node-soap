@@ -80,7 +80,7 @@ test.service = {
 describe('SOAP Server with Options', function() {
   before(function(done) {
     fs.readFile(__dirname + '/wsdl/strict/stockquote.wsdl', 'utf8', function(err, data) {
-      assert.ok(!err);
+      assert.ifError(err);
       test.wsdl = data;
       done();
     });
@@ -122,7 +122,7 @@ describe('SOAP Server with Options', function() {
       }
       // console.log(test.baseUrl);
       request(test.baseUrl, function(err, res, body) {
-        assert.ok(!err);
+        assert.ifError(err);
         console.log(body);
         done();
       });
@@ -148,7 +148,7 @@ describe('SOAP Server with Options', function() {
           'http://127.0.0.1:' + test.server.address().port;
       }
       request(test.baseUrl, function(err, res, body) {
-        assert.ok(!err);
+        assert.ifError(err);
         console.log(body);
         done();
       });
@@ -175,9 +175,9 @@ describe('SOAP Server with Options', function() {
       }
 
       soap.createClient(test.baseUrl + '/stockquote?wsdl', function(err, client) {
-        assert.ok(!err);
+        assert.ifError(err);
         client.GetLastTradePrice({ tickerSymbol: 'xml response' }, function(err, response, body) {
-          assert.ok(!err);
+          assert.ifError(err);
           assert.strictEqual(body, responseData);
           done();
         });
@@ -204,9 +204,9 @@ describe('SOAP Server with Options', function() {
       }
 
       soap.createClient(test.baseUrl + '/stockquote?wsdl', function(err, client) {
-        assert.ok(!err);
+        assert.ifError(err);
         client.GetLastTradePrice({ tickerSymbol: 'xml response' }, function(err, response, body) {
-          assert.ok(!err);
+          assert.ifError(err);
           assert.strictEqual(body, responseData);
           done();
         });
@@ -243,7 +243,7 @@ describe('SOAP Server with Options', function() {
                 '</soapenv:Envelope>',
         headers: {'Content-Type': 'text/xml'}
       }, function(err, res, body) {
-        assert.ok(!err);
+        assert.ifError(err);
         assert.equal(res.statusCode, 500);
         assert.ok(body.indexOf('\n    at') !== -1);
         done();
@@ -282,7 +282,7 @@ describe('SOAP Server with Options', function() {
                 '</soapenv:Envelope>',
         headers: {'Content-Type': 'text/xml'}
       }, function(err, res, body) {
-        assert.ok(!err);
+        assert.ifError(err);
         assert.equal(res.statusCode, 500);
         assert.equal(body.indexOf('\n    at'), -1);
         done();
@@ -321,7 +321,7 @@ describe('SOAP Server with Options', function() {
                 '</soapenv:Envelope>',
         headers: {'Content-Type': 'text/xml'}
       }, function(err, res, body) {
-        assert.ok(!err);
+        assert.ifError(err);
         assert.equal(res.statusCode, 500);
         assert.ok(body.match(/<faultcode>.*<\/faultcode>/g),
           "Invalid XML");

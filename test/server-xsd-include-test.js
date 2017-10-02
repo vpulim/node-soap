@@ -27,7 +27,7 @@ test.service = {
 describe('SOAP Server(XSD include)', function () {
   before(function (done) {
     fs.readFile(__dirname + '/wsdl/strict/stockquote-url.wsdl', 'utf8', function (err, data) {
-      assert.ok(!err);
+      assert.ifError(err);
       test.wsdl = data;
       done();
     });
@@ -67,7 +67,7 @@ describe('SOAP Server(XSD include)', function () {
     var url = __dirname + '/wsdl/strict/stockquote-url.wsdl';
     
     soap.createClient(url, function (err, client) {
-      assert.ok(!err);
+      assert.ifError(err);
       assert.ok(client);
       done();
     });
