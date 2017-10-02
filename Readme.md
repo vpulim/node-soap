@@ -352,7 +352,35 @@ They provide the following methods to manage the headers.
 
 #### *addSoapHeader*(soapHeader[, name, namespace, xmlns]) - add soapHeader to soap:Header node
 ##### Parameters
- - `soapHeader`     Object({rootName: {name: 'value'}}) or strict xml-string
+ - `soapHeader`     Object({rootName: {name: 'value'}}), strict xml-string,
+                    or function (server only)
+
+For servers only, `soapHeader` can be a function, which allows headers to be
+dynamically generated from information in the request. This function will be
+called with the following arguments for each received request:
+
+ - `methodName`     The name of the request method
+ - `args`           The arguments of the request
+ - `headers`        The headers in the request
+ - `req`            The original request object
+
+The return value of the function must be an Object({rootName: {name: 'value'}})
+or strict xml-string, which will be inserted as an outgoing header of the
+response to that request.
+
+For example:
+
+``` javascript
+  server = soap.listen(...);
+  server.addSoapHeader(function(methodName, args, headers, req) {
+    console.log('Adding headers for method', methodName);
+    return {
+      MyHeader1: args.SomeValueFromArgs,
+      MyHeader2: headers.SomeRequestHeader
+    };
+    // or you can return "<MyHeader1>SomeValue</MyHeader1>"
+  });
+```
 
 ##### Returns
 The index where the header is inserted.
@@ -365,7 +393,10 @@ The index where the header is inserted.
 #### *changeSoapHeader*(index, soapHeader[, name, namespace, xmlns]) - change an already existing soapHeader
 ##### Parameters
  - `index`          index of the header to replace with provided new value
- - `soapHeader`     Object({rootName: {name: 'value'}}) or strict xml-string
+ - `soapHeader`     Object({rootName: {name: 'value'}}), strict xml-string
+                    or function (server only)
+
+See `addSoapHeader` for how to pass a function into `soapHeader`.
 
 #### *getSoapHeaders*() - return all defined headers
 
