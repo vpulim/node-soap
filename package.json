@@ -8,9 +8,8 @@
   "author": "Vinay Pulim <v@pulim.com>",
   "dependencies": {
     "bluebird": "^3.5.0",
-    "compress": "^0.99.0",
     "concat-stream": "^1.5.1",
-    "debug": "~0.7.4",
+    "debug": "^2.6.9",
     "ejs": "~2.5.5",
     "finalhandler": "^1.0.3",
     "lodash": "^3.10.1",
