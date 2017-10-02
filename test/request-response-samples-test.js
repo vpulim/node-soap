@@ -188,9 +188,7 @@ describe('Request Response Sampling', function() {
     server.close();
   });
 
-  var name = "should preserve leading and trailing whitespace when preserveWhitespace is true";
-  it.only(name, suite[name]);
-  // Object.keys(suite).map(function(key) {
-    
-  // });
+  Object.keys(suite).map(function(key) {
+    it(key, suite[key]);
+  });
 });
