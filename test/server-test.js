@@ -138,12 +138,29 @@ describe('SOAP Server', function() {
 
   it('should return predefined headers in response', function(done) {
     soap.createClient(test.baseUrl + '/stockquote?wsdl', function(err, client) {
-      assert.ok(!err);
+      var clientArgs = { tickerSymbol: 'AAPL'};
+
+      assert.ifError(err);
       test.soapServer.addSoapHeader('<header1>ONE</header1>');
       test.soapServer.changeSoapHeader(1, { header2: 'TWO' });
-      client.GetLastTradePrice({ tickerSymbol: 'AAPL'}, function(err, result, raw, headers) {
-        assert.ok(!err);
-        assert.deepEqual(headers, { header1: 'ONE', header2: 'TWO' });
+      test.soapServer.addSoapHeader(function() { return { header3: 'THREE' }; });
+
+      client.addSoapHeader({ headerFromClient: 'FOUR' });
+      test.soapServer.changeSoapHeader(3, function(methodName, args, headers, req) {
+        assert.equal(methodName, 'GetLastTradePrice');
+        assert.deepEqual(clientArgs, args);
+        assert.deepEqual(headers, { headerFromClient: 'FOUR' });
+        return { header4: headers.headerFromClient };
+      });
+
+      client.GetLastTradePrice(clientArgs, function(err, result, raw, headers) {
+        assert.ifError(err);
+        assert.deepEqual(headers, {
+          header1: 'ONE',
+          header2: 'TWO',
+          header3: 'THREE',
+          header4: 'FOUR'
+        });
         done();
       });
     });
