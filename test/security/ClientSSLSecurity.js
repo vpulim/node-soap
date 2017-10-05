@@ -49,4 +49,39 @@ describe('ClientSSLSecurity', function() {
     var instance = new ClientSSLSecurity(null, null, caList);
     instance.should.have.property("ca", caList);
   });
+
+  describe('forever parameter', function () {
+    it('should return different agents if parameter is not present', function () {
+      var instance = new ClientSSLSecurity();
+      var firstOptions = {};
+      var secondOptions = {};
+
+      instance.addOptions(firstOptions);
+      instance.addOptions(secondOptions);
+
+      firstOptions.agent.should.not.equal(secondOptions.agent);
+    });
+
+    it('should return the same agent if parameter is present', function () {
+      var instance = new ClientSSLSecurity();
+      var firstOptions = {forever: true};
+      var secondOptions = {forever: true};
+
+      instance.addOptions(firstOptions);
+      instance.addOptions(secondOptions);
+
+      firstOptions.agent.should.equal(secondOptions.agent);
+    });
+
+    it('should return the same agent if set in defaults', function () {
+      var instance = new ClientSSLSecurity(null, null, null, {forever: true});
+      var firstOptions = {};
+      var secondOptions = {};
+
+      instance.addOptions(firstOptions);
+      instance.addOptions(secondOptions);
+
+      firstOptions.agent.should.equal(secondOptions.agent);
+    });
+  });
 });

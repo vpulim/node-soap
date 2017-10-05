@@ -123,6 +123,7 @@ The `options` argument allows you to customize the client with the following pro
 
 - endpoint: to override the SOAP service's host specified in the `.wsdl` file.
 - envelopeKey: to set specific key instead of `<pre><<b>soap</b>:Body></<b>soap</b>:Body></pre>`.
+- preserveWhitespace: to preserve leading and trailing whitespace characters in text and cdata.
 - escapeXML: escape special XML characters in SOAP message (e.g. `&`, `>`, `<` etc), default: `true`.
 - suppressStack: suppress the full stack trace for error messages.
 - returnFault: return an `Invalid XML` SOAP fault on a bad request, default: `false`.
@@ -352,7 +353,35 @@ They provide the following methods to manage the headers.
 
 #### *addSoapHeader*(soapHeader[, name, namespace, xmlns]) - add soapHeader to soap:Header node
 ##### Parameters
- - `soapHeader`     Object({rootName: {name: 'value'}}) or strict xml-string
+ - `soapHeader`     Object({rootName: {name: 'value'}}), strict xml-string,
+                    or function (server only)
+
+For servers only, `soapHeader` can be a function, which allows headers to be
+dynamically generated from information in the request. This function will be
+called with the following arguments for each received request:
+
+ - `methodName`     The name of the request method
+ - `args`           The arguments of the request
+ - `headers`        The headers in the request
+ - `req`            The original request object
+
+The return value of the function must be an Object({rootName: {name: 'value'}})
+or strict xml-string, which will be inserted as an outgoing header of the
+response to that request.
+
+For example:
+
+``` javascript
+  server = soap.listen(...);
+  server.addSoapHeader(function(methodName, args, headers, req) {
+    console.log('Adding headers for method', methodName);
+    return {
+      MyHeader1: args.SomeValueFromArgs,
+      MyHeader2: headers.SomeRequestHeader
+    };
+    // or you can return "<MyHeader1>SomeValue</MyHeader1>"
+  });
+```
 
 ##### Returns
 The index where the header is inserted.
@@ -365,7 +394,10 @@ The index where the header is inserted.
 #### *changeSoapHeader*(index, soapHeader[, name, namespace, xmlns]) - change an already existing soapHeader
 ##### Parameters
  - `index`          index of the header to replace with provided new value
- - `soapHeader`     Object({rootName: {name: 'value'}}) or strict xml-string
+ - `soapHeader`     Object({rootName: {name: 'value'}}), strict xml-string
+                    or function (server only)
+
+See `addSoapHeader` for how to pass a function into `soapHeader`.
 
 #### *getSoapHeaders*() - return all defined headers
 
@@ -395,7 +427,7 @@ An instance of `Client` is passed to the `soap.createClient` callback.  It is us
 
 ### Client.setSecurity(security) - use the specified security protocol
 
-### Client.*method*(args, callback) - call *method* on the SOAP service.
+### Client.*method*(args, callback, options) - call *method* on the SOAP service.
 
 ``` javascript
   client.MyFunction({name: 'value'}, function(err, result, raw, soapHeader) {
@@ -406,6 +438,11 @@ An instance of `Client` is passed to the `soap.createClient` callback.  It is us
 ```
 
 The `args` argument allows you to supply arguments that generate an XML document inside of the SOAP Body section.
+
+The `options` object is optional and is passed to the `request`-module.
+Interesting properties might be:
+* `timeout`: Timeout in milliseconds
+* `forever`: Enables keep alive connections
 
 ### Client.*method*Async(args) - call *method* on the SOAP service.
 
@@ -590,6 +627,8 @@ as default request options to the constructor:
 * `strictSSL: false`
 * `secureOptions: constants.SSL_OP_NO_TLSv1_2` (this is likely needed for node >= 10.0)
 
+If you want to reuse tls sessions, you can use the option `forever: true`. 
+
 ``` javascript
 client.setSecurity(new soap.ClientSSLSecurity(
                 '/path/to/key',
@@ -601,6 +640,7 @@ client.setSecurity(new soap.ClientSSLSecurity(
                     // rejectUnauthorized: false,
                     // hostname: 'some-hostname'
                     // secureOptions: constants.SSL_OP_NO_TLSv1_2,
+                    // forever: true,
                 },
       ));
 ```

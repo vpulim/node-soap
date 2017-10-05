@@ -69,7 +69,7 @@ it('should allow customization of httpClient, the wsdl file, and associated data
     {httpClient: httpCustomClient},
     function(err, client) {
       assert.ok(client);
-      assert.ok(!err);
+      assert.ifError(err);
       assert.equal(client.httpClient, httpCustomClient);
       var description = (client.describe());
       assert.deepEqual(client.describe(), {

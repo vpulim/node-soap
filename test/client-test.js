@@ -47,7 +47,7 @@ var fs = require('fs'),
       var called = false;
       soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
         assert.ok(client);
-        assert.ok(!err);
+        assert.ifError(err);
         called = true;
         done();
       });
@@ -62,7 +62,7 @@ var fs = require('fs'),
         _.assign({ httpClient: myHttpClient }, meta.options),
         function (err, client) {
           assert.ok(client);
-          assert.ok(!err);
+          assert.ifError(err);
           assert.equal(client.httpClient, myHttpClient);
           done();
         });
@@ -75,7 +75,7 @@ var fs = require('fs'),
         _.assign({ request: myRequest }, meta.options),
         function (err, client) {
           assert.ok(client);
-          assert.ok(!err);
+          assert.ifError(err);
           assert.equal(client.httpClient._request, myRequest);
           done();
         });
@@ -85,7 +85,7 @@ var fs = require('fs'),
     it('should allow customization of envelope', function (done) {
       soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', _.assign({ envelopeKey: 'soapenv' }, meta.options), function (err, client) {
         assert.ok(client);
-        assert.ok(!err);
+        assert.ifError(err);
 
         client.MyOperation({}, function (err, result) {
           assert.notEqual(client.lastRequest.indexOf('xmlns:soapenv='), -1);
@@ -98,7 +98,7 @@ var fs = require('fs'),
     it('should allow passing in XML strings', function (done) {
       soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', _.assign({ envelopeKey: 'soapenv' }, meta.options), function (err, client) {
         assert.ok(client);
-        assert.ok(!err);
+        assert.ifError(err);
         
         var xmlStr = '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">\n\t<head>\n\t\t<title>404 - Not Found</title>\n\t</head>\n\t<body>\n\t\t<h1>404 - Not Found</h1>\n\t\t<script type="text/javascript" src="http://gp1.wpc.edgecastcdn.net/00222B/beluga/pilot_rtm/beluga_beacon.js"></script>\n\t</body>\n</html>';
         client.MyOperation({_xml: xmlStr}, function (err, result, raw, soapHeader) {
@@ -112,7 +112,7 @@ var fs = require('fs'),
     it('should set binding style to "document" by default if not explicitly set in WSDL, per SOAP spec', function (done) {
       soap.createClient(__dirname + '/wsdl/binding_document.wsdl', meta.options, function (err, client) {
         assert.ok(client);
-        assert.ok(!err);
+        assert.ifError(err);
 
         assert.ok(client.wsdl.definitions.bindings.mySoapBinding.style === 'document');
         done();
@@ -163,7 +163,7 @@ var fs = require('fs'),
       it('should append `:' + port + '` to the Host header on for a request to a service on that port', function (done) {
         soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
           assert.ok(client);
-          assert.ok(!err);
+          assert.ifError(err);
 
           client.MyOperation({}, function (err, result) {
             assert.notEqual(client.lastRequestHeaders.Host.indexOf(':' + port), -1);
@@ -176,7 +176,7 @@ var fs = require('fs'),
       it('should not append `:80` to the Host header on for a request to a service without a port explicitly defined', function (done) {
         soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
           assert.ok(client);
-          assert.ok(!err);
+          assert.ifError(err);
 
           client.MyOperation({}, function (err, result) {
             assert.equal(client.lastRequestHeaders.Host.indexOf(':80'), -1);
@@ -189,7 +189,7 @@ var fs = require('fs'),
       it('should not append `:443` to the Host header if endpoints runs on `https`', function (done) {
         soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
           assert.ok(client);
-          assert.ok(!err);
+          assert.ifError(err);
 
           client.MyOperation({}, function () {
             assert.equal(client.lastRequestHeaders.Host.indexOf(':443'), -1);
@@ -201,7 +201,7 @@ var fs = require('fs'),
       it('should append a port to the Host header if explicitly defined', function (done) {
         soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
           assert.ok(client);
-          assert.ok(!err);
+          assert.ifError(err);
 
           client.MyOperation({}, function () {
             assert.ok(client.lastRequestHeaders.Host.indexOf(':443') > -1);
@@ -214,7 +214,7 @@ var fs = require('fs'),
       it('should have xml request modified', function (done) {
           soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function(err, client) {
               assert.ok(client);
-              assert.ok(!err);
+              assert.ifError(err);
 
               client.MyOperation({}, function(err, result) {
                       assert.ok(result);
@@ -234,7 +234,7 @@ var fs = require('fs'),
       it('should have the correct extra header in the request', function (done) {
         soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
           assert.ok(client);
-          assert.ok(!err);
+          assert.ifError(err);
 
           client.MyOperation({}, function (err, result) {
             assert.ok(result);
@@ -249,7 +249,7 @@ var fs = require('fs'),
       it('should have the wrong extra header in the request', function (done) {
         soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
           assert.ok(client);
-          assert.ok(!err);
+          assert.ifError(err);
 
           client.MyOperation({}, function (err, result) {
             assert.ok(result);
@@ -264,7 +264,7 @@ var fs = require('fs'),
       it('should have lastResponse and lastResponseHeaders after the call', function (done) {
         soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
           assert.ok(client);
-          assert.ok(!err);
+          assert.ifError(err);
 
           client.MyOperation({}, function (err, result) {
             assert.ok(result);
@@ -279,7 +279,7 @@ var fs = require('fs'),
       it('should have lastElapsedTime after a call with the time option passed', function (done) {
         soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
           assert.ok(client);
-          assert.ok(!err);
+          assert.ifError(err);
 
           client.MyOperation({}, function (err, result) {
             assert.ok(result);
@@ -295,7 +295,7 @@ var fs = require('fs'),
       it('should add http headers in method call options', function (done) {
         soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
           assert.ok(client);
-          assert.ok(!err);
+          assert.ifError(err);
 
           client.MyOperation({}, function (err, result) {
             assert.ok(result);
@@ -310,11 +310,11 @@ var fs = require('fs'),
       it('should not return error in the call and return the json in body', function (done) {
         soap.createClient(__dirname + '/wsdl/json_response.wsdl', meta.options, function (err, client) {
           assert.ok(client);
-          assert.ok(!err);
+          assert.ifError(err);
 
           client.MyOperation({}, function (err, result, body) {
             assert.ok(result);
-            assert.ok(!err);
+            assert.ifError(err);
             assert.ok(body);
             done();
           }, null, { "test-header": 'test' });
@@ -324,7 +324,7 @@ var fs = require('fs'),
       it('should add proper headers for soap12', function (done) {
         soap.createClient(__dirname + '/wsdl/default_namespace_soap12.wsdl', _.assign({ forceSoap12Headers: true }, meta.options), function (err, client) {
           assert.ok(client);
-          assert.ok(!err);
+          assert.ifError(err);
 
           client.MyOperation({}, function (err, result) {
             assert.ok(result);
@@ -341,10 +341,10 @@ var fs = require('fs'),
       it('should allow calling the method with args, callback, options and extra headers', function (done) {
         soap.createClient(__dirname + '/wsdl/json_response.wsdl', meta.options, function (err, client) {
           assert.ok(client);
-          assert.ok(!err);
+          assert.ifError(err);
 
           client.MyOperation({}, function (err, result, body) {
-            assert.ok(!err);
+            assert.ifError(err);
             assert.ok(result);
             assert.ok(body.tempResponse === 'temp');
             assert.ok(client.lastResponseHeaders.status === 'pass');
@@ -358,10 +358,10 @@ var fs = require('fs'),
       it('should allow calling the method with only a callback', function (done) {
         soap.createClient(__dirname + '/wsdl/json_response.wsdl', meta.options, function (err, client) {
           assert.ok(client);
-          assert.ok(!err);
+          assert.ifError(err);
 
           client.MyOperation(function (err, result, body) {
-            assert.ok(!err);
+            assert.ifError(err);
             assert.ok(result);
             assert.ok(body.tempResponse === 'temp');
             assert.ok(client.lastResponseHeaders.status === 'fail');
@@ -374,10 +374,10 @@ var fs = require('fs'),
       it('should allow calling the method with args, options and callback last', function (done) {
         soap.createClient(__dirname + '/wsdl/json_response.wsdl', meta.options, function (err, client) {
           assert.ok(client);
-          assert.ok(!err);
+          assert.ifError(err);
 
           client.MyOperation({}, { headers: { 'options-test-header': 'test' } }, function (err, result, body) {
-            assert.ok(!err);
+            assert.ifError(err);
             assert.ok(result);
             assert.ok(body.tempResponse === 'temp');
             assert.ok(client.lastResponseHeaders.status === 'fail');
@@ -391,10 +391,10 @@ var fs = require('fs'),
       it('should allow calling the method with args, options, extra headers and callback last', function (done) {
         soap.createClient(__dirname + '/wsdl/json_response.wsdl', meta.options, function (err, client) {
           assert.ok(client);
-          assert.ok(!err);
+          assert.ifError(err);
 
           client.MyOperation({}, { headers: { 'options-test-header': 'test' } }, { 'test-header': 'test' }, function (err, result, body) {
-            assert.ok(!err);
+            assert.ifError(err);
             assert.ok(result);
             assert.ok(body.tempResponse === 'temp');
             assert.ok(client.lastResponseHeaders.status === 'pass');
@@ -800,7 +800,7 @@ var fs = require('fs'),
       }).listen(port, hostname, function () {
         soap.createClient(__dirname + '/wsdl/json_response.wsdl', meta.options, function (err, client) {
           assert.ok(client);
-          assert.ok(!err);
+          assert.ifError(err);
 
           client.MyOperation({}, function (err, result, body) {
             server.close();
@@ -829,12 +829,12 @@ var fs = require('fs'),
       }).listen(port, hostname, function () {
         soap.createClient(__dirname + '/wsdl/empty_body.wsdl', meta.options, function (err, client) {
           assert.ok(client);
-          assert.ok(!err);
+          assert.ifError(err);
 
           client.MyOperation({}, function (err, result, body, responseSoapHeaders) {
             server.close();
             server = null;
-            assert.ok(!err);
+            assert.ifError(err);
             assert.ok(!responseSoapHeaders);
             assert.ok(result);
             assert.ok(body);
