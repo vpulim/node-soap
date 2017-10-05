@@ -441,7 +441,7 @@ The `args` argument allows you to supply arguments that generate an XML document
 The `options` object is optional and is passed to the `request`-module.
 Interesting properties might be:
 * `timeout`: Timeout in milliseconds
-* `forever`: Enables keep alive connections
+* `forever`: Enables keep-alive connections and pools them
 
 ### Client.*method*Async(args) - call *method* on the SOAP service.
 
