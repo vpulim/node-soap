@@ -958,7 +958,9 @@ var fs = require('fs'),
         soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
           assert.ok(client);
           assert.ifError(err);
+          /*jshint -W069 */
           assert.throws(function(){client.MyService.MyServicePort['prefixed_MyOperation']({});},TypeError);
+          /*jshint +W069 */
           client.MyService.MyServicePort['prefixed-MyOperation']({},function(err, result){
             // only need to check that a valid request is generated, response isn't needed
             assert.ok(client.lastRequest);
@@ -985,8 +987,8 @@ var fs = require('fs'),
         soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
           assert.ok(client);
           assert.ifError(err);
-          assert.throws(function() {client['prefixed-MyOperationAsync']({})}, TypeError);
-          assert.throws(function() {client['prefixed-MyOperation']({})}, TypeError);
+          assert.throws(function() {client['prefixed-MyOperationAsync']({});}, TypeError);
+          assert.throws(function() {client['prefixed-MyOperation']({});}, TypeError);
           done();
         });
       });
