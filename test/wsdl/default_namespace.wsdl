@@ -24,12 +24,27 @@
       <wsdl:output message="OutputMessage">
     </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="prefixed-MyOperation">
+      <wsdl:input message="InputMessage">
+      </wsdl:input>
+      <wsdl:output message="OutputMessage">
+      </wsdl:output>
+    </wsdl:operation>
   </wsdl:portType>
 
   <wsdl:binding name="MyServiceBinding" type="MyServicePortType">
     <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
     <wsdl:operation name="MyOperation">
       <soap:operation soapAction="MyOperation"/>
+      <wsdl:input>
+        <soap:body use="literal" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="prefixed-MyOperation">
+      <soap:operation soapAction="prefixed-MyOperation"/>
       <wsdl:input>
         <soap:body use="literal" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
       </wsdl:input>

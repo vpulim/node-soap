@@ -941,6 +941,55 @@ var fs = require('fs'),
           });
         });
       });
+
+      it('should create node-style method with normalized name (a valid Javascript identifier)', function (done) {
+        soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
+          assert.ok(client);
+          assert.ifError(err);
+          client.prefixed_MyOperation({},function(err, result){
+              // only need to check that a valid request is generated, response isn't needed
+              assert.ok(client.lastRequest);
+              done();
+            });
+        });
+      });
+
+      it('should create node-style method with non-normalized name on Client.service.port.method style invocation', function (done) {
+        soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
+          assert.ok(client);
+          assert.ifError(err);
+          assert.throws(function(){client.MyService.MyServicePort['prefixed_MyOperation']({});},TypeError);
+          client.MyService.MyServicePort['prefixed-MyOperation']({},function(err, result){
+            // only need to check that a valid request is generated, response isn't needed
+            assert.ok(client.lastRequest);
+            done();
+          });
+        });
+      });
+
+      it('should create promise-style method with normalized name (a valid Javascript identifier)', function (done) {
+        soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
+          assert.ok(client);
+          assert.ifError(err);
+          client.prefixed_MyOperationAsync({})
+            .then(function(result){})
+            .catch(function(err){
+              // only need to check that a valid request is generated, response isn't needed
+              assert.ok(client.lastRequest);
+              done();
+            });
+        });
+      });
+
+      it('should not not create method with invalid Javascript identifier', function (done) {
+        soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
+          assert.ok(client);
+          assert.ifError(err);
+          assert.throws(function() {client['prefixed-MyOperationAsync']({})}, TypeError);
+          assert.throws(function() {client['prefixed-MyOperation']({})}, TypeError);
+          done();
+        });
+      });
     });
     
     describe('Client created with createClientAsync', function () {
