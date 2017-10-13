@@ -132,7 +132,8 @@ The `options` argument allows you to customize the client with the following pro
 - wsdl_headers: custom HTTP headers to be sent on WSDL requests.
 - wsdl_options: custom options for the request module on WSDL requests.
 - disableCache: don't cache WSDL files, request them every time.
-- overridePromiseSuffix: If your wsdl operations contains names with Async suffix, you will need to override the default promise suffix to a custom one, default: `Async`.
+- overridePromiseSuffix: if your wsdl operations contains names with Async suffix, you will need to override the default promise suffix to a custom one, default: `Async`.
+- normalizeNames: if your wsdl operations contains names with non identifier characters (`[^a-z$_0-9]`), replace them with `_`. Note: if using this option, clients using wsdls with two operations like `soap:method` and `soap-method` will be overwritten. Then, use bracket notation instead (`client['soap:method']()`).
 
 Note: for versions of node >0.10.X, you may need to specify `{connection: 'keep-alive'}` in SOAP headers to avoid truncation of longer chunked responses.
 
