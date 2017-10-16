@@ -1106,5 +1106,80 @@ var fs = require('fs'),
       });
 
     });
+
+    describe('Client created with option normalizeNames', function(){
+
+      it('should create node-style method with normalized name (a valid Javascript identifier)', function (done) {
+        soap.createClient(__dirname + '/wsdl/non_identifier_chars_in_operation.wsdl', _.assign({ normalizeNames: true }, meta.options), function (err, client) {
+          assert.ok(client);
+          assert.ifError(err);
+          client.prefixed_MyOperation({},function(err, result){
+            // only need to check that a valid request is generated, response isn't needed
+            assert.ok(client.lastRequest);
+            done();
+          });
+        });
+      });
+
+      it('should create node-style method with non-normalized name on Client.service.port.method style invocation', function (done) {
+        soap.createClient(__dirname + '/wsdl/non_identifier_chars_in_operation.wsdl', meta.options, function (err, client) {
+          assert.ok(client);
+          assert.ifError(err);
+          /*jshint -W069 */
+          assert.throws(function(){client.MyService.MyServicePort['prefixed_MyOperation']({});},TypeError);
+          /*jshint +W069 */
+          client.MyService.MyServicePort['prefixed-MyOperation']({},function(err, result){
+            // only need to check that a valid request is generated, response isn't needed
+            assert.ok(client.lastRequest);
+            done();
+          });
+        });
+      });
+
+      it('should create promise-style method with normalized name (a valid Javascript identifier)', function (done) {
+        soap.createClient(__dirname + '/wsdl/non_identifier_chars_in_operation.wsdl', _.assign({ normalizeNames: true }, meta.options), function (err, client) {
+          assert.ok(client);
+          assert.ifError(err);
+          client.prefixed_MyOperationAsync({})
+            .then(function(result){})
+            .catch(function(err){
+              // only need to check that a valid request is generated, response isn't needed
+              assert.ok(client.lastRequest);
+              done();
+            });
+        });
+      });
+
+      it('should not create methods with invalid Javascript identifier', function (done) {
+        soap.createClient(__dirname + '/wsdl/non_identifier_chars_in_operation.wsdl', _.assign({ normalizeNames: true }, meta.options), function (err, client) {
+          assert.ok(client);
+          assert.ifError(err);
+          assert.throws(function() {client['prefixed-MyOperationAsync']({});}, TypeError);
+          assert.throws(function() {client['prefixed-MyOperation']({});}, TypeError);
+          done();
+        });
+      });
+
+      it('should create node-style method with invalid Javascript identifier if option normalizeNames is not used', function (done) {
+        soap.createClient(__dirname + '/wsdl/non_identifier_chars_in_operation.wsdl', meta.options, function (err, client) {
+          assert.ok(client);
+          assert.ifError(err);
+          client['prefixed-MyOperation']({}, function(err, result){
+            // only need to check that a valid request is generated, response isn't needed
+            assert.ok(client.lastRequest);
+            done();
+          });
+        });
+      });
+
+      it('does not create a promise-style method with invalid Javascript identifier if option normalizeNames is not used', function (done) {
+        soap.createClient(__dirname + '/wsdl/non_identifier_chars_in_operation.wsdl', meta.options, function (err, client) {
+          assert.ok(client);
+          assert.ifError(err);
+          assert.throws(function() {client['prefixed-MyOperationAsync']({});}, TypeError);
+          done();
+        });
+      });
+    });
   });
 });
