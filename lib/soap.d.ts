@@ -159,7 +159,7 @@ export function listen(server: any, options: IServerOptions): Server;
 
 export class HttpClient {
     constructor(options?: IOptions);
-    buildRequest(rurl: string, data: any | string, exheaders?: { [key: string]: any }, exoptions?: { [key: string]: any }): any;
+    buildRequest(rurl: string, data: any | string, exheaders: { [key: string]: any }, exoptions: { [key: string]: any }): any;
     handleResponse(req: any, res: any, body: any | string): any | string;
     request(rurl: string, data: any | string, callback: (err: any, res: any, body: any | string) => void, exheaders?: { [key: string]: any }, exoptions?: { [key: string]: any }): any;
     requestStream(rurl: string, data: any | string, exheaders?: { [key: string]: any }, exoptions?: { [key: string]: any }): any;
