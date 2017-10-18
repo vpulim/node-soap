@@ -1,12 +1,20 @@
+0.23.0 / 2017-10-18
+===================
+* [FIX] Fixing tests broken by #979
+* [FEATURE] replace non identifier chars to underscore (#978)
+* [FEATURE] Pool keep alive connections if forever option is used (#979)
+* [MAINTENANCE] Use assert.ifError function in tests (#976)
+* [FEATURE] Add function support for server addSoapHeader (#977)
+
 0.22.0 / 2017-10-02
 ===================
 * [ENHANCEMENT] Added `forever` option to `ClientSSLSecurity` in order to allow `keep-alive` connections. (#974)
 * [ENHANCEMENT] Added `preserveWhitespace` option to prevent the client from trimming resolved `String` values. (#972)
 * [MAINTENANCE] Removed `compres` dependency in favor of `zlib`. (#971)
 * [MAINTENANCE] (Security) Updated `debug` dependency to avoid possible vulnerability. (#973)
-* [FIX] Updated `.travis.yml` to test against latest `node.js 4.8.x` release to avoid Travis CI error. 
+* [FIX] Updated `.travis.yml` to test against latest `node.js 4.8.x` release to avoid Travis CI error.
 * [FIX] Fix performance bug at POJO to XML conversion. (#968)
-* [ENHANCEMENT] Added possibility to override the `bluebird.js` suffix (default: "async"). (#961) 
+* [ENHANCEMENT] Added possibility to override the `bluebird.js` suffix (default: "async"). (#961)
 * [DOC] Updated the `Security` section by listing all available optional methods. (#966)
 
 0.21.0 / 2017-08-28
