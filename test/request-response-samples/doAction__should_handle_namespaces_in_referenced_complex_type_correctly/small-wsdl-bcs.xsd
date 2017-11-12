@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:bcs="http://cf.de/webservice/bcs"
+	xmlns:cis="http://cf.de/webservice/cis"
+	targetNamespace="http://cf.de/webservice/bcs">
+
+	<import namespace="http://cf.de/webservice/cis" schemaLocation="small-wsdl-cis.xsd"/>
+
+
+	<element name="doActionRequest">
+		<complexType>
+			<sequence>
+				<element name="Order" type="bcs:OrderType" maxOccurs="30" />
+			</sequence>
+		</complexType>
+	</element>
+
+
+	<element name="doActionResponse">
+		<complexType>
+			<sequence>
+				<element name="Field" type="xs:string" />
+			</sequence>
+		</complexType>
+	</element>
+
+
+	<complexType name="OrderType">
+		<sequence>
+			<element name="Item">
+				<complexType>
+					<sequence>
+						<element name="Person" type="bcs:PersonType" />
+					</sequence>
+				</complexType>
+			</element>
+		</sequence>
+	</complexType>
+
+
+	<complexType name="PersonType">
+		<complexContent>
+			<extension base="bcs:PersonTypeType"> </extension>
+		</complexContent>
+	</complexType>
+
+
+	<complexType name="PersonTypeType">
+		<sequence>
+            <element name="name" type="xs:string" />
+            <element name="Address" type="cis:PersonAddressType" />
+		</sequence>
+	</complexType>
+</schema>

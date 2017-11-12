@@ -6,7 +6,6 @@
 	<xs:complexType name="PersonAddressType">
 		<xs:sequence>
 			<xs:element ref="cis:name2" minOccurs="0"/>
-			<xs:element name="streetName" type="xs:string" />
 		</xs:sequence>
 	</xs:complexType>
 

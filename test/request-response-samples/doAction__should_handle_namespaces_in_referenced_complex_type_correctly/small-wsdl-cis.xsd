@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cis="http://cf.de/webservice/cis"
+	targetNamespace="http://cf.de/webservice/cis" elementFormDefault="qualified"
+	attributeFormDefault="unqualified">
+
+	<xs:complexType name="PersonAddressType">
+		<xs:sequence>
+			<xs:element name="streetName" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>
