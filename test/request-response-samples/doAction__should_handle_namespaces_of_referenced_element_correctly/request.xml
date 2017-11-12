@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cis="http://cf.de/webservice/cis" xmlns:bcs="http://cf.de/webservice/bcs">
+    <soap:Body>
+        <bcs:doActionRequest xmlns:bcs="http://cf.de/webservice/bcs">
+            <Order>
+                <Item>
+                    <Person>
+                        <cis:name1 xmlns:cis="http://cf.de/webservice/cis">My name</cis:name1>
+                        <Address xmlns:cis="http://cf.de/webservice/cis">
+                            <cis:name2>My second name</cis:name2>
+                            <cis:streetName>My street</cis:streetName>
+                        </Address>
+                    </Person>
+                </Item>
+            </Order>
+        </bcs:doActionRequest>
+    </soap:Body>
+</soap:Envelope>

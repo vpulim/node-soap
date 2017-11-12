@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions
+		targetNamespace="http://cf.de/webservice/bcs"
+		xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+		xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+		xmlns:xs="http://www.w3.org/2001/XMLSchema"
+		xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+		xmlns:cis="http://cf.de/webservice/cis"
+		xmlns:bcs="http://cf.de/webservice/bcs">
+
+	<wsdl:types>
+		<xs:schema attributeFormDefault="unqualified" elementFormDefault="unqualified">
+			<xs:import namespace="http://cf.de/webservice/cis"
+					   schemaLocation="small-wsdl-cis.xsd"/>
+			<xs:import namespace="http://cf.de/webservice/bcs"
+					   schemaLocation="small-wsdl-bcs.xsd"/>
+		</xs:schema>
+	</wsdl:types>
+
+
+
+	<wsdl:message name="doActionRequestMessage">
+		<wsdl:part name="part1" element="bcs:doActionRequest"> </wsdl:part>
+	</wsdl:message>
+
+	<wsdl:message name="doActionResponseMessage">
+		<wsdl:part name="part1" element="bcs:doActionResponse"> </wsdl:part>
+	</wsdl:message>
+
+
+
+
+	<wsdl:portType name="CFAPIPortType">
+		<wsdl:operation name="doAction">
+			<wsdl:input message="bcs:doActionRequestMessage" />
+			<wsdl:output message="bcs:doActionResponseMessage" />
+		</wsdl:operation>
+	</wsdl:portType>
+
+
+
+
+
+	<wsdl:binding name="CFAPIBinding" type="bcs:CFAPIPortType">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+		<wsdl:operation name="doAction">
+			<soap:operation soapAction="urn:doAction" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+
+
+
+
+
+	<wsdl:service name="CFAPI">
+		<wsdl:port name="CFAPIport0" binding="bcs:CFAPIBinding">
+			<soap:address location="https://cig.dhl.de/services/production/soap"/>
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

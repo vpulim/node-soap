@@ -1,0 +1,15 @@
+{
+  "Order":  [
+    {
+      "Item": {
+        "Person": {
+          "name1": "My name",
+          "Address": {
+            "name2": "My second name",
+            "streetName": "My street"
+          }
+        }
+      }
+    }
+  ]
+}
