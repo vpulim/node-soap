@@ -5,9 +5,9 @@
             <Order>
                 <Item>
                     <Person>
-                        <blissiname>My name</blissiname>
+                        <name>My name</name>
                         <Address>
-                            <cis:blissiname2 xmlns:cis="http://cf.de/webservice/cis">My street</cis:blissiname2>
+                            <cis:streetName xmlns:cis="http://cf.de/webservice/cis">My street</cis:streetName>
                         </Address>
                     </Person>
                 </Item>

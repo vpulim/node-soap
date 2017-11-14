@@ -3,9 +3,9 @@
     {
       "Item": {
         "Person": {
-          "blissiname": "My name",
+          "name": "My name",
           "Address": {
-            "blissiname2": "My street"
+            "streetName": "My street"
           }
         }
       }

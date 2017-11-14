@@ -5,7 +5,7 @@
 
 	<xs:complexType name="PersonAddressType">
 		<xs:sequence>
-			<xs:element name="blissiname2" type="xs:string" />
+			<xs:element name="streetName" type="xs:string" />
 		</xs:sequence>
 	</xs:complexType>
 </xs:schema>
