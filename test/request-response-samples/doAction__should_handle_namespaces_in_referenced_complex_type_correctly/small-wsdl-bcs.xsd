@@ -47,7 +47,7 @@
 
 	<complexType name="PersonTypeType">
 		<sequence>
-            <element name="name" type="xs:string" />
+            <element name="blissiname" type="xs:string" />
             <element name="Address" type="cis:PersonAddressType" />
 		</sequence>
 	</complexType>
