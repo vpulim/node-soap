@@ -455,7 +455,10 @@ Interesting properties might be:
 
 ``` javascript
   client.MyFunctionAsync({name: 'value'}).then((result) => {
+    // result is a javascript array containing result, raw and soapheader
     // result is a javascript object
+    // raw is the raw response
+    // soapHeader is the response soap header as a javascript object
   })
 ```
 
