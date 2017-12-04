@@ -36,6 +36,10 @@ This module lets you connect to web services using SOAP.  It also provides a ser
   - [Client.*lastRequest* - the property that contains last full soap request for client logging](#clientlastrequest---the-property-that-contains-last-full-soap-request-for-client-logging)
   - [Client.setEndpoint(url) - overwrite the SOAP service endpoint address](#clientsetendpointurl---overwrite-the-soap-service-endpoint-address)
   - [Client Events](#client-events)
+    - [request](#request)
+    - [message](#message)
+    - [soapError](#soapError)
+    - [response](#response)
 - [Security](#security)
   - [BasicAuthSecurity](#basicauthsecurity)
   - [BearerSecurity](#bearersecurity)
@@ -570,17 +574,29 @@ client.MyService.MyPort.MyFunction({name: 'value'}, options, extraHeaders, funct
 ### Client Events
 Client instances emit the following events:
 
-* request - Emitted before a request is sent. The event handler receives the
-entire Soap request (Envelope) including headers. The second parameter is the exchange id.
-* message - Emitted before a request is sent. The event handler receives the
-Soap body contents. Useful if you don't want to log /store Soap headers. The second parameter is the exchange id.
-* soapError - Emitted when an erroneous response is received.
-  Useful if you want to globally log errors.
-  The second parameter is the exchange id.
-* response - Emitted after a response is received. The event handler receives
-the SOAP response body as well as the entire `IncomingMessage` response object.
-The third parameter is the exchange id.
-This is emitted for all responses (both success and errors).
+### _request_
+Emitted before a request is sent. The event handler has the signature `(xml, eid)`.
+
+- _xml_ - The entire Soap request (Envelope) including headers.
+- _eid_ - The exchange id.
+
+### _message_
+Emitted before a request is sent, but only the body is passed to the event handler. Useful if you don't want to log /store Soap headers. The event handler has the signature `(message, eid)`.
+
+- _message_ - Soap body contents.
+- _eid_ - The exchange id.
+
+### _soapError_
+Emitted when an erroneous response is received. Useful if you want to globally log errors. The event handler has the signature `(error, eid)`.
+
+- _error_ - An error object which also contains the resoponse.
+- _eid_ - The exchange id.
+### _response_
+Emitted after a response is received. This is emitted for all responses (both success and errors). The event handler has the signature `(body, response, eid)`
+
+- _body_ - The SOAP response body.
+- _response_ - The entire `IncomingMessage` response object.
+- _eid_ - The exchange id.
 
 An 'exchange' is a request/response couple.
 Event handlers receive the exchange id in all events.
