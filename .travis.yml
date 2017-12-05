@@ -6,7 +6,7 @@ node_js:
   - 4.8.4
   - 6.9.4
   - 7.4.0
-  - node
+  - "lts/*"
 env:
   - CXX=g++-4.8
 addons:
