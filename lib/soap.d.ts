@@ -94,6 +94,115 @@ export interface IServerOptions extends IWsdlBaseOptions {
     [key: string]: any;
 }
 
+export interface Definitions {
+    descriptions: object;
+    ignoredNamespaces: string[];
+    messages: WsdlMessages;
+    portTypes: WsdlPortTypes;
+    bindings: WsdlBindings;
+    services: WsdlServices;
+    schemas: WsdlSchemas;
+    valueKey: string;
+    xmlKey: string;
+    xmlns: WsdlXmlns;
+    '$targetNamespace': string;
+    '$name': string;
+}
+
+export interface XsdTypeBase {
+    ignoredNamespaces: string[];
+    valueKey: string;
+    xmlKey: string;
+    xmlns?: WsdlXmlns,
+}
+
+
+export interface WsdlSchemas {
+    [prop: string]: WsdlSchema;
+}
+export interface WsdlSchema extends XsdTypeBase {
+    children: any[];
+    complexTypes?: WsdlElements;
+    elements?: WsdlElements;
+    includes: any[];
+    name: string;
+    nsName: string;
+    prefix: string;
+    types?: WsdlElements;
+    xmlns: WsdlXmlns;
+}
+export interface WsdlElements {
+    [prop: string]: XsdElement;
+}
+export type XsdElement = XsdElementType | XsdComplexType;
+
+export interface WsdlXmlns {
+    wsu?: string;
+    wsp?: string;
+    wsam?: string;
+    soap?: string;
+    tns?: string;
+    xsd?: string;
+    __tns__?: string;
+    [prop: string]: string | void;
+}
+
+export interface XsdComplexType extends XsdTypeBase {
+    children: XsdElement[] | void;
+    name: string;
+    nsName: string;
+    prefix: string;
+    '$name': string;
+    [prop: string]: any;
+}
+
+export interface XsdElementType extends XsdTypeBase {
+    children: XsdElement[] | void;
+    name: string;
+    nsName: string;
+    prefix: string;
+    targetNSAlias: string;
+    targetNamespace: string;
+    '$lookupType': string;
+    '$lookupTypes': any[];
+    '$name': string;
+    '$type': string;
+    [prop: string]: any;
+}
+
+export interface WsdlMessages {
+    [prop: string]: WsdlMessage;
+}
+export interface WsdlMessage extends XsdTypeBase {
+    element: XsdElement;
+    parts: { [prop: string]: any };
+    '$name': string;
+}
+
+export interface WsdlPortTypes {
+    [prop: string]: WsdlPortType;
+}
+export interface WsdlPortType extends XsdTypeBase {
+    methods: { [prop: string]: XsdElement }
+}
+
+export interface WsdlBindings {
+    [prop: string]: WsdlBinding;
+}
+export interface WsdlBinding extends XsdTypeBase {
+    methods: WsdlElements;
+    style: string;
+    transport: string;
+    topElements: {[prop: string]: any};
+}
+
+export interface WsdlServices {
+    [prop: string]: WsdlService;
+}
+export interface WsdlService extends XsdTypeBase {
+    ports: {[prop: string]: any};
+}
+
 export class WSDL {
     constructor(definition: any, uri: string, options?: IOptions);
     ignoredNamespaces: string[];
