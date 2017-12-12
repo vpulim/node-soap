@@ -224,6 +224,7 @@ export class WSDL {
     processAttributes(child: any, nsContext: any): string;
     findSchemaType(name: any, nsURI: any): any;
     findChildSchemaObject(parameterTypeObj: any, childName: any, backtrace?: any): any;
+    uri: string;
     definitions: Definitions;
 }
 
