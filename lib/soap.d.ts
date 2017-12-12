@@ -215,7 +215,7 @@ export class WSDL {
     describeServices(): { [k: string]: any };
     toXML(): string;
     xmlToObject(xml: any, callback?: (err:Error, result:any) => void): any;
-    findSchemaObject(nsURI: string, qname: string): any;
+    findSchemaObject(nsURI: string, qname: string): XsdElement | null | undefined;
     objectToDocumentXML(name: string, params: any, nsPrefix?: string, nsURI?: string, type?: string): any;
     objectToRpcXML(name: string, params: any, nsPrefix?: string, nsURI?: string, isParts?: any): string;
     isIgnoredNameSpace(ns: string): boolean;
