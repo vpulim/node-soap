@@ -44,6 +44,7 @@ This module lets you connect to web services using SOAP.  It also provides a ser
   - [BasicAuthSecurity](#basicauthsecurity)
   - [BearerSecurity](#bearersecurity)
   - [ClientSSLSecurity](#clientsslsecurity)
+  - [ClientSSLSecurityPFX](#clientsslsecuritypfx)
   - [WSSecurity](#wssecurity)
   - [WSSecurityCert](#wssecuritycert)
 - [Handling XML Attributes, Value and XML (wsdlOptions).](#handling-xml-attributes-value-and-xml-wsdloptions)
@@ -660,6 +661,31 @@ client.setSecurity(new soap.ClientSSLSecurity(
                 },
       ));
 ```
+
+### ClientSSLSecurityPFX
+
+_Note_: If you run into issues using this protocol, consider passing these options
+as default request options to the constructor:
+* `rejectUnauthorized: false`
+* `strictSSL: false`
+* `secureOptions: constants.SSL_OP_NO_TLSv1_2` (this is likely needed for node >= 10.0)
+
+If you want to reuse tls sessions, you can use the option `forever: true`. 
+
+``` javascript
+client.setSecurity(new soap.ClientSSLSecurity(
+                '/path/to/pfx/cert', // or a buffer: [fs.readFileSync('/path/to/pfx/cert', 'utf8'),
+                'path/to/optional/passphrase',
+                {   /*default request options like */
+                    // strictSSL: true,
+                    // rejectUnauthorized: false,
+                    // hostname: 'some-hostname'
+                    // secureOptions: constants.SSL_OP_NO_TLSv1_2,
+                    // forever: true,
+                },
+      ));
+```
+
 ### WSSecurity
 
 `WSSecurity` implements WS-Security. UsernameToken and PasswordText/PasswordDigest is supported.
