@@ -891,6 +891,37 @@ var fs = require('fs'),
         });
       });
 
+      it('shall generate correct payload for methods with array parameter when individual array elements are not namespaced', function (done) {
+        // used for servers that cannot aggregate individually namespaced array elements
+        soap.createClient(__dirname + '/wsdl/list_parameter.wsdl', {disableCache: true, namespaceArrayElements: false}, function(err, client) {
+          assert.ok(client);
+          var pathToArrayContainer = 'TimesheetV201511Mobile.TimesheetV201511MobileSoap.AddTimesheet.input.input.PeriodList';
+          var arrayParameter = _.get(client.describe(), pathToArrayContainer)['PeriodType[]'];
+          assert.ok(arrayParameter);
+          client.AddTimesheet({input: {PeriodList: {PeriodType: [{PeriodId: '1'}, {PeriodId: '2'}]}}}, function() {
+            var sentInputContent = client.lastRequest.substring(client.lastRequest.indexOf('<input>') + '<input>'.length, client.lastRequest.indexOf('</input>'));
+            assert.equal(sentInputContent, '<PeriodList><PeriodType><PeriodId>1</PeriodId><PeriodId>2</PeriodId></PeriodType></PeriodList>');
+            done();
+          });
+        });
+      });
+
+      it('shall generate correct payload for methods with array parameter when individual array elements are namespaced', function (done) {
+        // this is the default behavior for array element namespacing
+        soap.createClient(__dirname + '/wsdl/list_parameter.wsdl', {disableCache: true, namespaceArrayElements: true}, function(err, client) {
+          assert.ok(client);
+          assert.ok(client.wsdl.options.namespaceArrayElements === true);
+          var pathToArrayContainer = 'TimesheetV201511Mobile.TimesheetV201511MobileSoap.AddTimesheet.input.input.PeriodList';
+          var arrayParameter = _.get(client.describe(), pathToArrayContainer)['PeriodType[]'];
+          assert.ok(arrayParameter);
+          client.AddTimesheet({input: {PeriodList: {PeriodType: [{PeriodId: '1'}, {PeriodId: '2'}]}}}, function() {
+            var sentInputContent = client.lastRequest.substring(client.lastRequest.indexOf('<input>') + '<input>'.length, client.lastRequest.indexOf('</input>'));
+            assert.equal(sentInputContent, '<PeriodList><PeriodType><PeriodId>1</PeriodId></PeriodType><PeriodType><PeriodId>2</PeriodId></PeriodType></PeriodList>');
+            done();
+          });
+        });
+      });
+
       it('shall generate correct payload for recursively-defined types', function (done) {
         soap.createClient(__dirname + '/wsdl/recursive2.wsdl', function (err, client) {
           if (err) {
