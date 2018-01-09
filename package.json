@@ -33,7 +33,7 @@
   "scripts": {
     "toc": "./node_modules/.bin/doctoc Readme.md --github --maxlevel 3",
     "pretest": "jshint index.js lib test",
-    "cover": "istanbul cover _mocha -- --timeout 10000 test/*-test.js test/security/*.js",
+    "cover": "nyc --reporter=lcov --reporter=html --reporter=text mocha  test/*-test.js test/security/*.js",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js -v",
     "test": "mocha --timeout 10000 test/*-test.js test/security/*.js"
   },
@@ -50,9 +50,9 @@
     "duplexer": "~0.1.1",
     "express": "^4.14.0",
     "glob": "~3.2.8",
-    "istanbul": "^0.4.1",
     "jshint": "2.3.0",
     "mocha": "~1.17.0",
+    "nyc": "^11.4.1",
     "readable-stream": "~2.0.2",
     "semver": "~5.0.3",
     "should": "~3.3.0",
