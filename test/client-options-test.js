@@ -15,7 +15,8 @@ describe('SOAP Client', function() {
       'namespace': 'tns'
     },
     'overridePromiseSuffix': 'Test',
-    'request': 'customRequest'
+    'request': 'customRequest',
+    'namespaceArrayElements': true
   };
 
   it('should set WSDL options to those specified in createClient', function(done) {
@@ -27,6 +28,7 @@ describe('SOAP Client', function() {
       assert.ok(client.wsdl.options.overrideRootElement.namespace === 'tns');
       assert.ok(typeof client.MyOperationTest === 'function');
       assert.ok(client.wsdl.options.request, "customRequest");
+      assert.ok(client.wsdl.options.namespaceArrayElements === true);
       done();
     });
   });
