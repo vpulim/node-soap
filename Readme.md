@@ -436,10 +436,11 @@ An instance of `Client` is passed to the `soap.createClient` callback.  It is us
 ### Client.*method*(args, callback, options) - call *method* on the SOAP service.
 
 ``` javascript
-  client.MyFunction({name: 'value'}, function(err, result, raw, soapHeader) {
+  client.MyFunction({name: 'value'}, function(err, result, rawResponse, soapHeader, rawRequest) {
       // result is a javascript object
-      // raw is the raw response
+      // rawResponse is the raw xml response string
       // soapHeader is the response soap header as a javascript object
+      // rawRequest is the raw xml request string
   })
 ```
 
