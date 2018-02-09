@@ -38,7 +38,7 @@ This module lets you connect to web services using SOAP.  It also provides a ser
   - [Client Events](#client-events)
     - [request](#request)
     - [message](#message)
-    - [soapError](#soapError)
+    - [soapError](#soaperror)
     - [response](#response)
 - [Security](#security)
   - [BasicAuthSecurity](#basicauthsecurity)
