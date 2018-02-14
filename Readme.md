@@ -678,7 +678,7 @@ as default request options to the constructor:
 If you want to reuse tls sessions, you can use the option `forever: true`. 
 
 ``` javascript
-client.setSecurity(new soap.ClientSSLSecurity(
+client.setSecurity(new soap.ClientSSLSecurityPFX(
                 '/path/to/pfx/cert', // or a buffer: [fs.readFileSync('/path/to/pfx/cert', 'utf8'),
                 'path/to/optional/passphrase',
                 {   /*default request options like */
