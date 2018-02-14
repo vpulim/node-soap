@@ -879,7 +879,7 @@ Example :
 ```javascript
 
    var wsdlOptions = {
-     customDeserializer = {
+     customDeserializer: {
 
        // this function will be used to any date found in soap responses
        date: function (text, context) {
