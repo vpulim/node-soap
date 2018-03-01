@@ -305,6 +305,26 @@ To change the HTTP statusCode of the response include it on the fault.  The stat
 
 If `server.authenticate` is not defined then no authentication will take place.
 
+Asynchronous authentication:
+``` javascript
+  server = soap.listen(...)
+  server.authenticate = function(security, callback) {
+    var created, nonce, password, user, token;
+    token = security.UsernameToken, user = token.Username,
+            password = token.Password, nonce = token.Nonce, created = token.Created;
+
+    myDatabase.getUser(user, function (err, dbUser) {
+      if (err || !dbUser) {
+        callback(false);
+        return;
+      }
+
+      callback(password === soap.passwordDigest(nonce, created, dbUser.password));
+    });
+  };
+```
+
+Synchronous authentication:
 ``` javascript
   server = soap.listen(...)
   server.authenticate = function(security) {
