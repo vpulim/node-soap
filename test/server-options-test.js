@@ -330,4 +330,72 @@ describe('SOAP Server with Options', function() {
       );
     });
   });
+  it('should not return a SOAP 12 envelope when headers are not forced', function(done) {
+    test.server.listen(15099, null, null, function() {
+      test.soapServer = soap.listen(test.server, {
+        path: '/stockquote',
+        services: test.service,
+        xml: test.wsdl,
+        uri: __dirname + '/wsdl/strict/',
+        forceSoap12Headers: false
+      }, test.service, test.wsdl);
+      test.baseUrl = 'http://' + test.server.address().address + ":" + test.server.address().port;
+
+      //windows return 0.0.0.0 as address and that is not
+      //valid to use in a request
+      if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
+        test.baseUrl = 'http://127.0.0.1:' + test.server.address().port;
+      }
+      // console.log(test.baseUrl);
+      request.post({
+        url: test.baseUrl + '/stockquote',
+        body: '<soapenv:Envelope' +
+                  ' xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"' +
+                  ' xmlns:soap="http://service.applicationsnet.com/soap/">' +
+              '  <soapenv:Header/>' +
+              '  <soapenv:Body>' +
+              '</soapenv:Envelope>'
+      }, function(err, res, body) {
+        assert.ifError(err);
+        assert.ok(
+          body.indexOf('xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"') > -1
+        )
+        done();
+      });
+    });
+  });
+  it('should return a SOAP 12 envelope when headers are forced', function(done) {
+    test.server.listen(15099, null, null, function() {
+      test.soapServer = soap.listen(test.server, {
+        path: '/stockquote',
+        services: test.service,
+        xml: test.wsdl,
+        uri: __dirname + '/wsdl/strict/',
+        forceSoap12Headers: true
+      }, test.service, test.wsdl);
+      test.baseUrl = 'http://' + test.server.address().address + ":" + test.server.address().port;
+
+      //windows return 0.0.0.0 as address and that is not
+      //valid to use in a request
+      if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
+        test.baseUrl = 'http://127.0.0.1:' + test.server.address().port;
+      }
+      // console.log(test.baseUrl);
+      request.post({
+        url: test.baseUrl + '/stockquote',
+        body: '<soapenv:Envelope' +
+                  ' xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"' +
+                  ' xmlns:soap="http://service.applicationsnet.com/soap/">' +
+              '  <soapenv:Header/>' +
+              '  <soapenv:Body>' +
+              '</soapenv:Envelope>'
+      }, function(err, res, body) {
+        assert.ifError(err);
+        assert.ok(
+          body.indexOf('xmlns:soap="http://www.w3.org/2003/05/soap-envelope"') > -1
+        )
+        done();
+      });
+    });
+  });
 });
