@@ -20,6 +20,7 @@ This module lets you connect to web services using SOAP.  It also provides a ser
   - [Options](#options)
   - [Server Logging](#server-logging)
   - [Server Events](#server-events)
+  - [Server Response on one-way calls](#server-response-on-one-way-calls)
   - [SOAP Fault](#soap-fault)
   - [Server security example using PasswordDigest](#server-security-example-using-passworddigest)
   - [Server connection authorization](#server-connection-authorization)
@@ -257,6 +258,16 @@ Server instances emit the following events:
 
 The sequence order of the calls is `request`, `headers` and then the dedicated
 service method.
+
+### Server Response on one-way calls
+
+The so called one-way (or asynchronous) calls occur when an operation is called with no output defined in WSDL.
+The server sends a response (defaults to status code 200 with no body) to the client disregarding the result of the operation.
+
+You can configure the response to match the appropriate client expectation to the SOAP standard implementation.
+Pass in `oneWay` object in server options. Use the following keys:
+`emptyBody`: if true, returns an empty body, otherwise no content at all (default is false)
+`responseCode`: default statusCode is 200, override it with this options (for example 202 for SAP standard compliant response)
 
 ### SOAP Fault
 

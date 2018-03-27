@@ -85,12 +85,18 @@ export interface IOptions extends IWsdlBaseOptions {
     [key: string]: any;
 }
 
+export interface IOneWayOptions {
+    responseCode?: number;
+    emptyBody?: boolean;
+}
+
 export interface IServerOptions extends IWsdlBaseOptions {
     path: string;
     services: IServices;
     xml?: string;
     uri?: string;
     suppressStack?: boolean;
+    oneWay?: IOneWayOptions;
     [key: string]: any;
 }
 
