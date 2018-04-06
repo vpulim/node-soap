@@ -1,3 +1,22 @@
+0.24.0 / 2018-04-05
+===================
+* [DOC] Error on custom deserializer example (#1000)
+* [DOC] Fix broken link
+* [DOC] adding bullets to separate each option
+* [DOC] changed ClientSSLSecurity to ClientSSLSecurityPFX in the readme file
+* [DOC] clarify section on client events in Readme.md (#989)
+* [ENHANCEMENT] Added one-way response configuration options
+* [ENHANCEMENT] Adding support for SOAP 1.2 Envelope Headers in the server side (#1003)
+* [ENHANCEMENT] Enable multiArgs during promisification
+* [ENHANCEMENT] add Client.wsdl for accessing client.wsdl during soap.createClient() (#990)
+* [ENHANCEMENT] add option to remove element-by-element namespacing of json arrays (#994)
+* [ENHANCEMENT] add rawRequest to callback arguments (#992)
+* [FIX] Fixed checking for empty obj.Body before further actions (#986)
+* [FIX] Lookup definitions in child element first (#958)
+* [FIX] only detect xsi:nil if its value is `true` (#983)
+* [MAINTENANCE] Updating the coverage to use the new version of Istanbul framework, the nyc.
+* [MAINTENANCE] Upgrade Lodash to 4.17.5 (#1001)
+
 0.23.0 / 2017-10-18
 ===================
 * [FIX] Fixing tests broken by #979
