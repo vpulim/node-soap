@@ -9,7 +9,7 @@ var zlib = require('zlib');
 
 var path = 'test/request-response-samples/DefaultNamespace__no_xmlns_prefix_used_for_default_namespace/';
 
-var wsdl = path + 'soap.wsdl'
+var wsdl = path + 'soap.wsdl';
 
 var xml = fs.readFileSync(path + '/soap.wsdl', 'utf8');
 var json = fs.readFileSync(path + '/request.json', 'utf8');
@@ -40,7 +40,7 @@ describe('SOAP Server', function () {
         assert(a === b);
         done();
       }
-    }
+    };
 
     server.listen(8000);
     soap.listen(server, '/wsdl', service, xml);
