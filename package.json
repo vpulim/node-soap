@@ -1,11 +1,11 @@
 {
-  "name": "soap",
-  "version": "0.24.0",
+  "name": "node-wsdl",
+  "version": "1.0.0",
   "description": "A minimal node SOAP client",
   "engines": {
     "node": ">=4.0.0"
   },
-  "author": "Vinay Pulim <v@pulim.com>",
+  "author": "Shuhail <shuhail.alam@gmail.com>",
   "dependencies": {
     "bluebird": "^3.5.0",
     "concat-stream": "^1.5.1",
@@ -23,15 +23,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/milewise/node-soap.git"
+    "url": "git+https://github.com/shuhailshuvo/node-soap.git"
   },
   "main": "./index.js",
   "types": "./lib/soap.d.ts",
   "directories": {
-    "lib": "./lib"
+    "lib": "lib",
+    "test": "test"
   },
   "scripts": {
-    "toc": "./node_modules/.bin/doctoc Readme.md --github --maxlevel 3",
+    "toc": "doctoc Readme.md --github --maxlevel 3",
     "pretest": "jshint index.js lib test",
     "cover": "nyc --reporter=lcov --reporter=html --reporter=text mocha  test/*-test.js test/security/*.js",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js -v",
@@ -58,5 +59,9 @@
     "should": "~3.3.0",
     "sinon": "^1.17.5",
     "timekeeper": "~0.0.4"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/shuhailshuvo/node-soap/issues"
+  },
+  "homepage": "https://github.com/shuhailshuvo/node-soap#readme"
 }
