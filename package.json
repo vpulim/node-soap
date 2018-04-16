@@ -19,6 +19,7 @@
     "serve-static": "^1.11.1",
     "strip-bom": "~0.3.1",
     "uuid": "^3.1.0",
+    "wsse": "^2.4.0",
     "xml-crypto": "~0.8.0"
   },
   "repository": {
