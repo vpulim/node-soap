@@ -1,24 +1,24 @@
 {
   "name": "soap",
-  "version": "0.19.2",
+  "version": "0.24.0",
   "description": "A minimal node SOAP client",
   "engines": {
-    "node": ">=0.10.0"
+    "node": ">=4.0.0"
   },
   "author": "Vinay Pulim <v@pulim.com>",
   "dependencies": {
-    "compress": "^0.99.0",
+    "bluebird": "^3.5.0",
     "concat-stream": "^1.5.1",
-    "debug": "~0.7.4",
+    "debug": "^2.6.9",
     "ejs": "~2.5.5",
     "finalhandler": "^1.0.3",
-    "lodash": "^3.10.1",
+    "lodash": "^4.17.5",
     "request": ">=2.9.0",
     "sax": ">=0.6",
     "selectn": "^0.9.6",
     "serve-static": "^1.11.1",
     "strip-bom": "~0.3.1",
-    "uuid": "^3.0.1",
+    "uuid": "^3.1.0",
     "xml-crypto": "~0.8.0"
   },
   "repository": {
@@ -26,13 +26,14 @@
     "url": "https://github.com/milewise/node-soap.git"
   },
   "main": "./index.js",
+  "types": "./lib/soap.d.ts",
   "directories": {
     "lib": "./lib"
   },
   "scripts": {
     "toc": "./node_modules/.bin/doctoc Readme.md --github --maxlevel 3",
     "pretest": "jshint index.js lib test",
-    "cover": "istanbul cover _mocha -- --timeout 10000 test/*-test.js test/security/*.js",
+    "cover": "nyc --reporter=lcov --reporter=html --reporter=text mocha  test/*-test.js test/security/*.js",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js -v",
     "test": "mocha --timeout 10000 test/*-test.js test/security/*.js"
   },
@@ -49,9 +50,9 @@
     "duplexer": "~0.1.1",
     "express": "^4.14.0",
     "glob": "~3.2.8",
-    "istanbul": "^0.4.1",
     "jshint": "2.3.0",
     "mocha": "~1.17.0",
+    "nyc": "^11.4.1",
     "readable-stream": "~2.0.2",
     "semver": "~5.0.3",
     "should": "~3.3.0",

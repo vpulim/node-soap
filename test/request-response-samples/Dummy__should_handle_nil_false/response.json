@@ -1,0 +1,12 @@
+{
+  "DummyResult": {
+    "DummyList": {
+      "DummyElement": {
+        "attributes": {
+          "xsi:nil": "false"
+        },
+        "$value":"Dummy Element Entry"
+      }
+    }
+  }
+}

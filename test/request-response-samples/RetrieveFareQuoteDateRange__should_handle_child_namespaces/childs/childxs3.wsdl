@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/Service/Request"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://tempuri.org/Service/Request">
+    <xs:complexType name="CarrierInfo">
+        <xs:sequence>
+            <xs:element name="CarrierCodes" nillable="true" type="tns:ArrayOfCarrierCode" /></xs:sequence>
+    </xs:complexType>
+    <xs:element name="CarrierInfo" nillable="true" type="tns:CarrierInfo" />
+    <xs:complexType name="ArrayOfCarrierCode">
+        <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="CarrierCode" nillable="true" type="tns:CarrierCode" /></xs:sequence>
+    </xs:complexType>
+    <xs:element name="ArrayOfCarrierCode" nillable="true" type="tns:ArrayOfCarrierCode" />
+    <xs:complexType name="CarrierCode">
+        <xs:sequence>
+            <xs:element name="AccessibleCarrierCode" nillable="true" type="xs:string" /></xs:sequence>
+    </xs:complexType>
+    <xs:element name="CarrierCode" nillable="true" type="tns:CarrierCode" />
+    <xs:simpleType name="Enumerations.CurrencyCodeTypes">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="ARS" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="Enumerations.CurrencyCodeTypes" nillable="true" type="tns:Enumerations.CurrencyCodeTypes" />
+    <xs:complexType name="TransactionInfo">
+        <xs:sequence>
+            <xs:element name="CarrierCodes" nillable="true" type="tns:ArrayOfCarrierCode" />
+            <xs:element minOccurs="0" name="ClientIPAddress" nillable="true" type="xs:string" />
+            <xs:element minOccurs="0" name="HistoricUserName" nillable="true" type="xs:string" /></xs:sequence>
+    </xs:complexType>
+</xs:schema>
