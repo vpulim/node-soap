@@ -1,12 +1,39 @@
+0.24.0 / 2018-04-05
+===================
+* [DOC] Error on custom deserializer example (#1000)
+* [DOC] Fix broken link
+* [DOC] adding bullets to separate each option
+* [DOC] changed ClientSSLSecurity to ClientSSLSecurityPFX in the readme file
+* [DOC] clarify section on client events in Readme.md (#989)
+* [ENHANCEMENT] Added one-way response configuration options
+* [ENHANCEMENT] Adding support for SOAP 1.2 Envelope Headers in the server side (#1003)
+* [ENHANCEMENT] Enable multiArgs during promisification
+* [ENHANCEMENT] add Client.wsdl for accessing client.wsdl during soap.createClient() (#990)
+* [ENHANCEMENT] add option to remove element-by-element namespacing of json arrays (#994)
+* [ENHANCEMENT] add rawRequest to callback arguments (#992)
+* [FIX] Fixed checking for empty obj.Body before further actions (#986)
+* [FIX] Lookup definitions in child element first (#958)
+* [FIX] only detect xsi:nil if its value is `true` (#983)
+* [MAINTENANCE] Updating the coverage to use the new version of Istanbul framework, the nyc.
+* [MAINTENANCE] Upgrade Lodash to 4.17.5 (#1001)
+
+0.23.0 / 2017-10-18
+===================
+* [FIX] Fixing tests broken by #979
+* [FEATURE] replace non identifier chars to underscore (#978)
+* [FEATURE] Pool keep alive connections if forever option is used (#979)
+* [MAINTENANCE] Use assert.ifError function in tests (#976)
+* [FEATURE] Add function support for server addSoapHeader (#977)
+
 0.22.0 / 2017-10-02
 ===================
 * [ENHANCEMENT] Added `forever` option to `ClientSSLSecurity` in order to allow `keep-alive` connections. (#974)
 * [ENHANCEMENT] Added `preserveWhitespace` option to prevent the client from trimming resolved `String` values. (#972)
 * [MAINTENANCE] Removed `compres` dependency in favor of `zlib`. (#971)
 * [MAINTENANCE] (Security) Updated `debug` dependency to avoid possible vulnerability. (#973)
-* [FIX] Updated `.travis.yml` to test against latest `node.js 4.8.x` release to avoid Travis CI error. 
+* [FIX] Updated `.travis.yml` to test against latest `node.js 4.8.x` release to avoid Travis CI error.
 * [FIX] Fix performance bug at POJO to XML conversion. (#968)
-* [ENHANCEMENT] Added possibility to override the `bluebird.js` suffix (default: "async"). (#961) 
+* [ENHANCEMENT] Added possibility to override the `bluebird.js` suffix (default: "async"). (#961)
 * [DOC] Updated the `Security` section by listing all available optional methods. (#966)
 
 0.21.0 / 2017-08-28

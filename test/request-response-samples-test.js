@@ -120,10 +120,19 @@ tests.forEach(function(test){
   else if(fs.existsSync(wsdlJSOptionsFile)) wsdlOptions = require(wsdlJSOptionsFile);
   else wsdlOptions = {};
 
-  generateTest(name, methodName, wsdl, headerJSON, securityJSON, requestXML, requestJSON, responseXML, responseJSON, responseSoapHeaderJSON, wsdlOptions, options);
+  generateTest(name, methodName, wsdl, headerJSON, securityJSON, requestXML, requestJSON, responseXML, responseJSON, responseSoapHeaderJSON, wsdlOptions, options, false);
+  generateTest(name, methodName, wsdl, headerJSON, securityJSON, requestXML, requestJSON, responseXML, responseJSON, responseSoapHeaderJSON, wsdlOptions, options, true);
 });
 
-function generateTest(name, methodName, wsdlPath, headerJSON, securityJSON, requestXML, requestJSON, responseXML, responseJSON, responseSoapHeaderJSON, wsdlOptions, options){
+function generateTest(name, methodName, wsdlPath, headerJSON, securityJSON, requestXML, requestJSON, responseXML, responseJSON, responseSoapHeaderJSON, wsdlOptions, options, usePromises){
+  var methodCaller = cbCaller;
+
+  if (usePromises) {
+    name += ' (promisified)';
+    methodName += 'Async';
+    methodCaller = promiseCaller;
+  }
+
   suite[name] = function(done){
     if(requestXML) requestContext.expectedRequest = requestXML;
     if(responseXML) requestContext.responseToSend = responseXML;
@@ -143,23 +152,50 @@ function generateTest(name, methodName, wsdlPath, headerJSON, securityJSON, requ
         throw new Error('method ' + methodName + ' does not exists in wsdl specified in test wsdl: ' + wsdlPath);
       }
 
-      client[methodName](requestJSON, function(err, json, body, soapHeader){
-        if(requestJSON){
-          if (err) {
-            assert.notEqual('undefined: undefined', err.message);
-            assert.deepEqual(err.root, responseJSON);
-          } else {
-            // assert.deepEqual(json, responseJSON);
-            assert.equal(JSON.stringify(typeof json === 'undefined' ? null : json), JSON.stringify(responseJSON));
-            if(responseSoapHeaderJSON){
-              assert.equal(JSON.stringify(soapHeader), JSON.stringify(responseSoapHeaderJSON));
-            }
-          }
-        }
-        done();
-      }, options);
+      methodCaller(client, methodName, requestJSON, responseJSON, responseSoapHeaderJSON, options, done);
     }, 'http://localhost:'+port+'/Message/Message.dll?Handler=Default');
   };
+}
+
+function cbCaller(client, methodName, requestJSON, responseJSON, responseSoapHeaderJSON, options, done){
+  client[methodName](requestJSON, function(err, json, body, soapHeader){
+    if(requestJSON){
+      if (err) {
+        assert.notEqual('undefined: undefined', err.message);
+        assert.deepEqual(err.root, responseJSON);
+      } else {
+        // assert.deepEqual(json, responseJSON);
+        assert.equal(JSON.stringify(typeof json === 'undefined' ? null : json), JSON.stringify(responseJSON));
+        if(responseSoapHeaderJSON){
+          assert.equal(JSON.stringify(soapHeader), JSON.stringify(responseSoapHeaderJSON));
+        }
+      }
+    }
+    done();
+  }, options);
+}
+
+function promiseCaller(client, methodName, requestJSON, responseJSON, responseSoapHeaderJSON, options, done){
+  client[methodName](requestJSON).then(function(responseArr){
+    var json = responseArr[0];
+    var body = responseArr[1];
+    var soapHeader = responseArr[2];
+
+    if(requestJSON){
+      // assert.deepEqual(json, responseJSON);
+      assert.equal(JSON.stringify(typeof json === 'undefined' ? null : json), JSON.stringify(responseJSON));
+      if(responseSoapHeaderJSON){
+        assert.equal(JSON.stringify(soapHeader), JSON.stringify(responseSoapHeaderJSON));
+      }
+    }
+  }).catch(function(err) {
+    if(requestJSON){
+      assert.notEqual('undefined: undefined', err.message);
+      assert.deepEqual(err.root, responseJSON);
+    }
+  }).finally(function() {
+    done();
+  });
 }
 
 describe('Request Response Sampling', function() {

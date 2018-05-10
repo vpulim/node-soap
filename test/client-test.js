@@ -276,6 +276,20 @@ var fs = require('fs'),
         }, baseUrl);
       });
 
+      it('should have rawRequest available in the callback', function (done) {
+        soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
+          assert.ok(client);
+          assert.ifError(err);
+
+          client.MyOperation({}, function (err, result, rawResponse, headers, rawRequest) {
+            assert.ok(rawRequest);
+            assert.ok(typeof rawRequest === 'string');
+
+            done();
+          }, null, { 'test-header': 'test' });
+        }, baseUrl);
+      });
+
       it('should have lastElapsedTime after a call with the time option passed', function (done) {
         soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
           assert.ok(client);
@@ -891,6 +905,37 @@ var fs = require('fs'),
         });
       });
 
+      it('shall generate correct payload for methods with array parameter when individual array elements are not namespaced', function (done) {
+        // used for servers that cannot aggregate individually namespaced array elements
+        soap.createClient(__dirname + '/wsdl/list_parameter.wsdl', {disableCache: true, namespaceArrayElements: false}, function(err, client) {
+          assert.ok(client);
+          var pathToArrayContainer = 'TimesheetV201511Mobile.TimesheetV201511MobileSoap.AddTimesheet.input.input.PeriodList';
+          var arrayParameter = _.get(client.describe(), pathToArrayContainer)['PeriodType[]'];
+          assert.ok(arrayParameter);
+          client.AddTimesheet({input: {PeriodList: {PeriodType: [{PeriodId: '1'}, {PeriodId: '2'}]}}}, function() {
+            var sentInputContent = client.lastRequest.substring(client.lastRequest.indexOf('<input>') + '<input>'.length, client.lastRequest.indexOf('</input>'));
+            assert.equal(sentInputContent, '<PeriodList><PeriodType><PeriodId>1</PeriodId><PeriodId>2</PeriodId></PeriodType></PeriodList>');
+            done();
+          });
+        });
+      });
+
+      it('shall generate correct payload for methods with array parameter when individual array elements are namespaced', function (done) {
+        // this is the default behavior for array element namespacing
+        soap.createClient(__dirname + '/wsdl/list_parameter.wsdl', {disableCache: true, namespaceArrayElements: true}, function(err, client) {
+          assert.ok(client);
+          assert.ok(client.wsdl.options.namespaceArrayElements === true);
+          var pathToArrayContainer = 'TimesheetV201511Mobile.TimesheetV201511MobileSoap.AddTimesheet.input.input.PeriodList';
+          var arrayParameter = _.get(client.describe(), pathToArrayContainer)['PeriodType[]'];
+          assert.ok(arrayParameter);
+          client.AddTimesheet({input: {PeriodList: {PeriodType: [{PeriodId: '1'}, {PeriodId: '2'}]}}}, function() {
+            var sentInputContent = client.lastRequest.substring(client.lastRequest.indexOf('<input>') + '<input>'.length, client.lastRequest.indexOf('</input>'));
+            assert.equal(sentInputContent, '<PeriodList><PeriodType><PeriodId>1</PeriodId></PeriodType><PeriodType><PeriodId>2</PeriodId></PeriodType></PeriodList>');
+            done();
+          });
+        });
+      });
+
       it('shall generate correct payload for recursively-defined types', function (done) {
         soap.createClient(__dirname + '/wsdl/recursive2.wsdl', function (err, client) {
           if (err) {
@@ -1105,6 +1150,81 @@ var fs = require('fs'),
         });
       });
 
+    });
+
+    describe('Client created with option normalizeNames', function(){
+
+      it('should create node-style method with normalized name (a valid Javascript identifier)', function (done) {
+        soap.createClient(__dirname + '/wsdl/non_identifier_chars_in_operation.wsdl', _.assign({ normalizeNames: true }, meta.options), function (err, client) {
+          assert.ok(client);
+          assert.ifError(err);
+          client.prefixed_MyOperation({},function(err, result){
+            // only need to check that a valid request is generated, response isn't needed
+            assert.ok(client.lastRequest);
+            done();
+          });
+        });
+      });
+
+      it('should create node-style method with non-normalized name on Client.service.port.method style invocation', function (done) {
+        soap.createClient(__dirname + '/wsdl/non_identifier_chars_in_operation.wsdl', meta.options, function (err, client) {
+          assert.ok(client);
+          assert.ifError(err);
+          /*jshint -W069 */
+          assert.throws(function(){client.MyService.MyServicePort['prefixed_MyOperation']({});},TypeError);
+          /*jshint +W069 */
+          client.MyService.MyServicePort['prefixed-MyOperation']({},function(err, result){
+            // only need to check that a valid request is generated, response isn't needed
+            assert.ok(client.lastRequest);
+            done();
+          });
+        });
+      });
+
+      it('should create promise-style method with normalized name (a valid Javascript identifier)', function (done) {
+        soap.createClient(__dirname + '/wsdl/non_identifier_chars_in_operation.wsdl', _.assign({ normalizeNames: true }, meta.options), function (err, client) {
+          assert.ok(client);
+          assert.ifError(err);
+          client.prefixed_MyOperationAsync({})
+            .then(function(result){})
+            .catch(function(err){
+              // only need to check that a valid request is generated, response isn't needed
+              assert.ok(client.lastRequest);
+              done();
+            });
+        });
+      });
+
+      it('should not create methods with invalid Javascript identifier', function (done) {
+        soap.createClient(__dirname + '/wsdl/non_identifier_chars_in_operation.wsdl', _.assign({ normalizeNames: true }, meta.options), function (err, client) {
+          assert.ok(client);
+          assert.ifError(err);
+          assert.throws(function() {client['prefixed-MyOperationAsync']({});}, TypeError);
+          assert.throws(function() {client['prefixed-MyOperation']({});}, TypeError);
+          done();
+        });
+      });
+
+      it('should create node-style method with invalid Javascript identifier if option normalizeNames is not used', function (done) {
+        soap.createClient(__dirname + '/wsdl/non_identifier_chars_in_operation.wsdl', meta.options, function (err, client) {
+          assert.ok(client);
+          assert.ifError(err);
+          client['prefixed-MyOperation']({}, function(err, result){
+            // only need to check that a valid request is generated, response isn't needed
+            assert.ok(client.lastRequest);
+            done();
+          });
+        });
+      });
+
+      it('does not create a promise-style method with invalid Javascript identifier if option normalizeNames is not used', function (done) {
+        soap.createClient(__dirname + '/wsdl/non_identifier_chars_in_operation.wsdl', meta.options, function (err, client) {
+          assert.ok(client);
+          assert.ifError(err);
+          assert.throws(function() {client['prefixed-MyOperationAsync']({});}, TypeError);
+          done();
+        });
+      });
     });
   });
 });

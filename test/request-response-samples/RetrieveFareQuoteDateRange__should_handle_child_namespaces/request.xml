@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:tns="http://tempuri.org/"
+    xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract">
+    <soap:Body>
+        <RetrieveFareQuoteDateRange xmlns="http://tempuri.org/">
+            <RetrieveFareQuoteDateRangeRequest>
+                <ns1:CarrierCodes xmlns:ns1="http://tempuri.org/Service/Request">
+                    <ns1:CarrierCode>
+                        <ns1:AccessibleCarrierCode>DUMMY</ns1:AccessibleCarrierCode>
+                    </ns1:CarrierCode>
+                </ns1:CarrierCodes>
+                <ns1:ClientIPAddress xmlns:ns1="http://tempuri.org/Service/Request">?</ns1:ClientIPAddress>
+                <ns1:HistoricUserName xmlns:ns1="http://tempuri.org/Service/Request">?</ns1:HistoricUserName>
+                    <q5:CurrencyOfFareQuote xmlns:ns1="http://tempuri.org/Service/Request"
+                        xmlns:q5="http://tempuri.org/Service/Pricing.Request.FareQuote">ARS</q5:CurrencyOfFareQuote>
+                    <q5:PromotionalCode xmlns:ns1="http://tempuri.org/Service/Request"
+                        xmlns:q5="http://tempuri.org/Service/Pricing.Request.FareQuote" xsi:nil="true"></q5:PromotionalCode>
+                    <q5:IataNumberOfRequestor xmlns:ns1="http://tempuri.org/Service/Request"
+                        xmlns:q5="http://tempuri.org/Service/Pricing.Request.FareQuote" xsi:nil="true"></q5:IataNumberOfRequestor>
+                    <q5:CorporationID xmlns:ns1="http://tempuri.org/Service/Request"
+                        xmlns:q5="http://tempuri.org/Service/Pricing.Request.FareQuote">1</q5:CorporationID>
+                    <q5:FareFilterMethod xmlns:ns1="http://tempuri.org/Service/Request"
+                        xmlns:q5="http://tempuri.org/Service/Pricing.Request.FareQuote">NoComb</q5:FareFilterMethod>
+                    <q5:FareGroupMethod xmlns:ns1="http://tempuri.org/Service/Request"
+                        xmlns:q5="http://tempuri.org/Service/Pricing.Request.FareQuote">FareType</q5:FareGroupMethod>
+                    <q5:InventoryFilterMethod xmlns:ns1="http://tempuri.org/Service/Request"
+                        xmlns:q5="http://tempuri.org/Service/Pricing.Request.FareQuote">Available</q5:InventoryFilterMethod>
+                    <q5:FareQuoteDetails xmlns:ns1="http://tempuri.org/Service/Request"
+                        xmlns:q5="http://tempuri.org/Service/Pricing.Request.FareQuote">
+                        <q5:FareQuoteDetailDateRange>
+                            <q5:Origin>A</q5:Origin>
+                            <q5:Destination>B</q5:Destination>
+                            <q5:UseAirportsNotMetroGroups>false</q5:UseAirportsNotMetroGroups>
+                            <q5:UseAirportsNotMetroGroupsAsRule>false</q5:UseAirportsNotMetroGroupsAsRule>
+                            <q5:UseAirportsNotMetroGroupsForFrom>false</q5:UseAirportsNotMetroGroupsForFrom>
+                            <q5:UseAirportsNotMetroGroupsForTo>false</q5:UseAirportsNotMetroGroupsForTo>
+                            <q5:DateOfDepartureStart>2017-10-27</q5:DateOfDepartureStart>
+                            <q5:DateOfDepartureEnd>2017-10-27</q5:DateOfDepartureEnd>
+                            <q5:FareTypeCategory>1</q5:FareTypeCategory>
+                            <q5:FareClass xsi:nil="true"></q5:FareClass>
+                            <q5:FareBasisCode xsi:nil="true"></q5:FareBasisCode>
+                            <q5:Cabin xsi:nil="true"></q5:Cabin>
+                            <q5:LFID>0</q5:LFID>
+                            <q5:OperatingCarrierCode xsi:nil="true"></q5:OperatingCarrierCode>
+                            <q5:MarketingCarrierCode xsi:nil="true"></q5:MarketingCarrierCode>
+                            <q5:LanguageCode>en</q5:LanguageCode>
+                            <q5:TicketPackageID>1</q5:TicketPackageID>
+                            <q5:FareQuoteRequestInfos>
+                                <q5:FareQuoteRequestInfo>
+                                    <q5:PassengerTypeID>1</q5:PassengerTypeID>
+                                    <q5:TotalSeatsRequired>1</q5:TotalSeatsRequired>
+                                </q5:FareQuoteRequestInfo>
+                            </q5:FareQuoteRequestInfos>
+                        </q5:FareQuoteDetailDateRange>
+                    </q5:FareQuoteDetails>
+            </RetrieveFareQuoteDateRangeRequest>
+        </RetrieveFareQuoteDateRange>
+    </soap:Body>
+</soap:Envelope>
