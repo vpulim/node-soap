@@ -48,6 +48,7 @@ This module lets you connect to web services using SOAP.  It also provides a ser
   - [ClientSSLSecurityPFX](#clientsslsecuritypfx)
   - [WSSecurity](#wssecurity)
   - [WSSecurityCert](#wssecuritycert)
+  - [NTLMSecurity](#ntlmsecurity)
 - [Handling XML Attributes, Value and XML (wsdlOptions).](#handling-xml-attributes-value-and-xml-wsdloptions)
   - [Overriding the `value` key](#overriding-the-value-key)
   - [Overriding the `xml` key](#overriding-the-xml-key)
@@ -305,6 +306,26 @@ To change the HTTP statusCode of the response include it on the fault.  The stat
 
 If `server.authenticate` is not defined then no authentication will take place.
 
+Asynchronous authentication:
+``` javascript
+  server = soap.listen(...)
+  server.authenticate = function(security, callback) {
+    var created, nonce, password, user, token;
+    token = security.UsernameToken, user = token.Username,
+            password = token.Password, nonce = token.Nonce, created = token.Created;
+
+    myDatabase.getUser(user, function (err, dbUser) {
+      if (err || !dbUser) {
+        callback(false);
+        return;
+      }
+
+      callback(password === soap.passwordDigest(nonce, created, dbUser.password));
+    });
+  };
+```
+
+Synchronous authentication:
 ``` javascript
   server = soap.listen(...)
   server.authenticate = function(security) {
@@ -732,6 +753,18 @@ WS-Security X509 Certificate support.
   var password = ''; // optional password
   var wsSecurity = new soap.WSSecurityCert(privateKey, publicKey, password);
   client.setSecurity(wsSecurity);
+```
+
+### NTLMSecurity
+
+Parameter invocation:
+``` javascript
+  client.setSecurity(new soap.NTLMSecurity('username', 'password', 'domain', 'workstation'));
+```
+This can also be set up with a JSON object, substituting values as appropriate, for example:
+``` javascript
+  var loginData = {username: 'username', password: 'password', domain: 'domain', workstation: 'workstation'};
+  client.setSecurity(new soap.NTLMSecurity(loginData));
 ```
 
 ## Handling XML Attributes, Value and XML (wsdlOptions).
