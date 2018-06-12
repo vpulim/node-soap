@@ -42,6 +42,7 @@
   ],
   "license": "MIT",
   "devDependencies": {
+    "@types/bluebird": "^3.5.1",
     "body-parser": "^1.15.2",
     "colors": "^1.1.2",
     "coveralls": "^2.11.6",
