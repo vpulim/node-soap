@@ -128,7 +128,7 @@ This client has a built in WSDL cache. You can use the `disableCache` option to 
 The `options` argument allows you to customize the client with the following properties:
 
 - endpoint: to override the SOAP service's host specified in the `.wsdl` file.
-- envelopeKey: to set specific key instead of `<pre><<b>soap</b>:Body></<b>soap</b>:Body></pre>`.
+- envelopeKey: to set specific key instead of `<pre><soap:Body></soap:Body></pre>`.
 - preserveWhitespace: to preserve leading and trailing whitespace characters in text and cdata.
 - escapeXML: escape special XML characters in SOAP message (e.g. `&`, `>`, `<` etc), default: `true`.
 - suppressStack: suppress the full stack trace for error messages.
