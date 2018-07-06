@@ -1,3 +1,113 @@
+0.24.0 / 2018-04-05
+===================
+* [DOC] Error on custom deserializer example (#1000)
+* [DOC] Fix broken link
+* [DOC] adding bullets to separate each option
+* [DOC] changed ClientSSLSecurity to ClientSSLSecurityPFX in the readme file
+* [DOC] clarify section on client events in Readme.md (#989)
+* [ENHANCEMENT] Added one-way response configuration options
+* [ENHANCEMENT] Adding support for SOAP 1.2 Envelope Headers in the server side (#1003)
+* [ENHANCEMENT] Enable multiArgs during promisification
+* [ENHANCEMENT] add Client.wsdl for accessing client.wsdl during soap.createClient() (#990)
+* [ENHANCEMENT] add option to remove element-by-element namespacing of json arrays (#994)
+* [ENHANCEMENT] add rawRequest to callback arguments (#992)
+* [FIX] Fixed checking for empty obj.Body before further actions (#986)
+* [FIX] Lookup definitions in child element first (#958)
+* [FIX] only detect xsi:nil if its value is `true` (#983)
+* [MAINTENANCE] Updating the coverage to use the new version of Istanbul framework, the nyc.
+* [MAINTENANCE] Upgrade Lodash to 4.17.5 (#1001)
+
+0.23.0 / 2017-10-18
+===================
+* [FIX] Fixing tests broken by #979
+* [FEATURE] replace non identifier chars to underscore (#978)
+* [FEATURE] Pool keep alive connections if forever option is used (#979)
+* [MAINTENANCE] Use assert.ifError function in tests (#976)
+* [FEATURE] Add function support for server addSoapHeader (#977)
+
+0.22.0 / 2017-10-02
+===================
+* [ENHANCEMENT] Added `forever` option to `ClientSSLSecurity` in order to allow `keep-alive` connections. (#974)
+* [ENHANCEMENT] Added `preserveWhitespace` option to prevent the client from trimming resolved `String` values. (#972)
+* [MAINTENANCE] Removed `compres` dependency in favor of `zlib`. (#971)
+* [MAINTENANCE] (Security) Updated `debug` dependency to avoid possible vulnerability. (#973)
+* [FIX] Updated `.travis.yml` to test against latest `node.js 4.8.x` release to avoid Travis CI error.
+* [FIX] Fix performance bug at POJO to XML conversion. (#968)
+* [ENHANCEMENT] Added possibility to override the `bluebird.js` suffix (default: "async"). (#961)
+* [DOC] Updated the `Security` section by listing all available optional methods. (#966)
+
+0.21.0 / 2017-08-28
+===================
+* [DOC] Removed issues from Contributing Readme (#963)
+* [DOC] Add server option details to readme.md (#965)
+* [DOC] Added details to clientSSLSecurity (#960)
+* [ENHANCEMENT] Added 'useEmptyTag' wsdlOption, which if set, creates <Tag /> instead of <Tag></Tag> if no body is present (#962)
+* [ENHANCEMENT] Add typescript support (#955)
+* [FIX] `path.resolve` cannot resolve a null path (#959)
+* [MAINTENANCE] Updated minimum node version to 4.0.0 (#964)
+* [MAINTENANCE] Update `uuid` library to latest release (`3.1.0`) and use their newly introduced "modules" instead of the outdated/deprecated direct method calls.
+* [MAINTENANCE] Fixed JSHint indentation errors in `test/client-test.js`.
+
+0.20.0 / 2017-08-08
+===================
+* [ENHANCEMENT] Added `bluebird.js` promise library in order to provide `[methodName]Asyc` in `Client` (#956)
+* [ENHANCEMENT] Added `option` to handle `nilAsNull` in `SOAP` responses (#952)
+* [ENHANCEMENT] Added `option` to return a `SOAP Fault` instead of `stack` (error) on bad request (#951)
+* [MAINTENANCE] Removed uneccessary variable declaration in `http.js` (#948)
+* [ENHANCEMENT] Added possibiltiy to alter `XML` before it is sent (#943)
+* [FIX] Updated vulnerable module `finalhandler` to version `^1.0.3` (#946)
+* [ENHANCEMENT] Added possibility to submit `XML`-Strings to SOAP Client API (#918)
+
+0.19.2 / 2017-06-12
+===================
+* [FIX] Recursive types cause infinite loop (#940)
+* [DOC] Adding a note about consulting in the README. (#939)
+* [MAINTENANCE] Add yarn.lock to gitignore (#938)
+* [MAINTENANCE] Remove dependency to ursa (#928)
+
+0.19.1 / 2017-05-30
+===================
+* [FIX] Reverting #914.  It broke existing behavior and prevented array type arguments. (#937)
+* [FIX] Add test for accepting array as parameter based on wsdl (#933)
+* [DOC] readme.md clarifications, examples and typos (#930)
+* [MAINTENANCE] Fix build by satisfying jshint indentation (#931)
+* [MAINTENANCE] Drop `travis-ci` test support for `node.js` < `4.x` (LTS) (#932)
+* [DOC] Update CONTRIBUTING.md
+* [DOC] typo in server example (#925)
+
+0.19.0 / 2017-03-16
+===================
+
+* [FIX] Fixed missing namespace declaration on `Array` if the namespace is already declared with another prefix. (#923)
+* [DOC] Fix spelling error (#917)
+* [FIX] Add `sequence` to field if it's defined within the `complextType` (#914)
+* [MAINTENANCE] Drop deprecated `node-uuid` package and use the `uuid` (successor) instead (#913)
+* [FIX] Only add references for the soap:Body and wsse:Security/Timestamp elements in WSSecurityCert (#911)
+* [MAINTENANCE] Updated `ejs` package version in `package.json` (#908)
+* [ENHANCEMENT] Added possiblity to pass your own "custom deserializer" within the `wsdlOptions` in `createClient()` method (#901)
+* [ENHANCEMENT] Added possibility to use your own "exchange ID" (#907)
+* [ENHANCEMENT] Added "exchange ID" (`eid`) in emitted client events (#903)
+* [ENHANCEMENT] Added option to suppress error stack in server response (#904)
+* [FIX] Set namespace prefix for first element if `elementFormDefault=unqualified` (#905)
+* [FIX] Fixed test (use `assert` instead of `should()` chain) in `test/server-test.js` (#906)
+* [DOC] Fix documentation in `test/request-response-samples/README.md` (#900)
+
+0.18.0 / 2016-11-25
+=================
+
+* [DOC] Added documentation for adding custom http header (#890)
+* [DOC] Update soap stub example (#883)
+* [ENHANCEMENT] Add body parameter to soap responding stub. (#897)
+* [ENHANCEMENT] Added Stream support. (#837)
+* [ENHANCEMENT] Avoid matching <x:Envelope> tags inside comments (#877)
+* [FIX] Ensure that supplied request-object is passed through. (#894)
+* [FIX] Fix exception 'Parameter 'url' must be a string, not object' (#870)
+* [FIX] Handle empty SOAP Body properly. (#891)
+* [FIX] Set lodash dependency version to ^3.10.1 (#895)
+* [MAINTENANCE] Fix test case description (#886)
+* [MAINTENANCE] Fixed request-response-samples-test so that tests with only request.xml and request.json actually get run (#878)
+* [MAINTENANCE] Fixing minor jshint issues. (#884)
+
 0.17.0 / 2016-06-23
 =================
 

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:tns="http://tempuri.org/">
+    <xs:element name="RetrieveFareQuoteDateRange">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" name="RetrieveFareQuoteDateRangeRequest" nillable="true" type="q5:RetrieveFareQuoteByDateRange"
+                    xmlns:q5="http://tempuri.org/Service/Pricing.Request.FareQuote" /></xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="RetrieveFareQuoteDateRangeResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" name="RetrieveFareQuoteDateRangeResult" nillable="true" type="q6:ViewFareQuote" xmlns:q6="http://tempuri.org/Service/Pricing.Response"
+                /></xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

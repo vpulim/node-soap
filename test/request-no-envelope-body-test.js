@@ -20,7 +20,7 @@ describe('No envelope and body elements', function() {
             sayHello: function(args){
               return {
                 greeting: args.firstName
-              }
+              };
             }
           }
         }

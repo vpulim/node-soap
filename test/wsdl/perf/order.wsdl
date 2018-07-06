@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="orderDef"
+                  targetNamespace="http://example.org/wsdl"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:ns1="http://example.org/ns1"
+                  xmlns:tns="http://example.org/wsdl"
+                  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+    <wsdl:types>
+        <xsd:schema>
+            <xsd:import
+                    namespace="http://example.org/ns1"
+                    schemaLocation="ns1.xsd"/>
+    <xsd:element name="orderRq">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="thing" type="OptionalThing"/>
+                <xsd:element name="item" type="xsd:string"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:complexType name="OptionalThing">
+        <xsd:sequence>
+            <xsd:element name="rabbitHole" type="RabbitHole"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="RabbitHole" type="xsd:string"/>
+    <xsd:element name="orderRs" type="xsd:string"/>
+        </xsd:schema>
+    </wsdl:types>
+    <wsdl:message name="orderRs">
+        <wsdl:part name="orderRs" element="ns1:orderRs">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="orderRq">
+        <wsdl:part name="orderRq" element="ns1:orderRq">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:portType name="order_PortType">
+        <wsdl:operation name="order">
+            <wsdl:input message="tns:orderRq">
+            </wsdl:input>
+            <wsdl:output message="tns:orderRs">
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="order_Binding" type="tns:order_PortType">
+        <soap:binding style="document"
+                      transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="order">
+            <soap:operation soapAction="order"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="order_Service">
+        <wsdl:port name="order_SoapPort"
+                   binding="tns:order_Binding">
+            <soap:address
+                    location="http://localhost:8888/mock_Order_Binding"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
