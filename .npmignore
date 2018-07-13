@@ -1,2 +1,7 @@
-/test/
-.idea
+coverage
+node_modules
+test
+CONTRIBUTING.md
+History.md
+PUBLISHING.md
+.*
