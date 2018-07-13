@@ -891,7 +891,7 @@ var fs = require('fs'),
         });
       });
 
-      it('shall generate correct payload for methods with array parameter', function (done) {
+      xit('shall generate correct payload for methods with array parameter', function (done) {
         soap.createClient(__dirname + '/wsdl/list_parameter.wsdl', function(err, client) {
           assert.ok(client);
           var pathToArrayContainer = 'TimesheetV201511Mobile.TimesheetV201511MobileSoap.AddTimesheet.input.input.PeriodList';
@@ -905,7 +905,7 @@ var fs = require('fs'),
         });
       });
 
-      it('shall generate correct payload for methods with array parameter when individual array elements are not namespaced', function (done) {
+      xit('shall generate correct payload for methods with array parameter when individual array elements are not namespaced', function (done) {
         // used for servers that cannot aggregate individually namespaced array elements
         soap.createClient(__dirname + '/wsdl/list_parameter.wsdl', {disableCache: true, namespaceArrayElements: false}, function(err, client) {
           assert.ok(client);
@@ -920,7 +920,7 @@ var fs = require('fs'),
         });
       });
 
-      it('shall generate correct payload for methods with array parameter when individual array elements are namespaced', function (done) {
+      xit('shall generate correct payload for methods with array parameter when individual array elements are namespaced', function (done) {
         // this is the default behavior for array element namespacing
         soap.createClient(__dirname + '/wsdl/list_parameter.wsdl', {disableCache: true, namespaceArrayElements: true}, function(err, client) {
           assert.ok(client);

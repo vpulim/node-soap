@@ -359,7 +359,7 @@ describe('SOAP Server with Options', function() {
         assert.ifError(err);
         assert.ok(
           body.indexOf('xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"') > -1
-        )
+        );
         done();
       });
     });
@@ -393,7 +393,7 @@ describe('SOAP Server with Options', function() {
         assert.ifError(err);
         assert.ok(
           body.indexOf('xmlns:soap="http://www.w3.org/2003/05/soap-envelope"') > -1
-        )
+        );
         done();
       });
     });

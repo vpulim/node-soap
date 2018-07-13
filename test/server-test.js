@@ -5,6 +5,7 @@ var fs = require('fs'),
     assert = require('assert'),
     request = require('request'),
     http = require('http'),
+    path = require('path'),
     lastReqAddress;
 
 var test = {};
@@ -480,6 +481,16 @@ describe('SOAP Server', function() {
         assert.equal(result,null);
         done();
       });
+    });
+  });
+
+  it('should return correct result for attributes in complextTypeElement', function(done) {
+    soap.createClient(path.resolve(__dirname, 'wsdl', 'fileWithAttributes.xsd'), function(err,client){
+      assert.ifError(err);
+      var description = client.describe(),
+        expected = { input: { tickerSymbol: "string", $attributes: { AttributeInOne: "s:boolean", AttributeInTwo: "s:boolean" } }, output: { $attributes: { AttributeOut: "s:boolean" } } };
+      assert.deepEqual(expected , description.StockQuoteService.StockQuotePort.GetLastTradePrice);
+      done();
     });
   });
 
