@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://services.ws2.example.it" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Service" targetNamespace="http://services.ws2.example.it">
+   <wsdl:types>
+      <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://services.ws2.example.it" xmlns:tns="http://response.ws2.example.it" elementFormDefault="qualified" targetNamespace="http://response.ws2.example.it" version="1.0">
+         <xs:import namespace="http://services.ws2.example.it" />
+         <xs:complexType name="CrossReferencedType">
+            <xs:sequence>
+               <xs:element name="result" nillable="true" type="xs:string" />
+            </xs:sequence>
+         </xs:complexType>
+      </xs:schema>
+      <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://response.ws2.example.it" elementFormDefault="qualified" targetNamespace="http://services.ws2.example.it" version="1.0">
+         <xs:import namespace="http://response.ws2.example.it" />
+         <xs:element name="OperationResponse">
+            <xs:complexType>
+               <xs:sequence>
+                  <xs:element name="OperationReturn" type="ns1:CrossReferencedType" />
+               </xs:sequence>
+            </xs:complexType>
+         </xs:element>
+      </xs:schema>
+   </wsdl:types>
+   <wsdl:message name="OperationResponse">
+      <wsdl:part element="tns:OperationResponse" name="parameters" />
+   </wsdl:message>
+   <wsdl:portType name="Service">
+      <wsdl:operation name="Operation">
+         <wsdl:output message="tns:OperationResponse" name="OperationResponse" />
+      </wsdl:operation>
+   </wsdl:portType>
+   <wsdl:binding name="ServiceSoapBinding" type="tns:Service">
+      <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+      <wsdl:operation name="Operation">
+         <soap:operation soapAction="" style="document" />
+         <wsdl:output name="OperationResponse">
+            <soap:body use="literal" />
+         </wsdl:output>
+      </wsdl:operation>
+   </wsdl:binding>
+   <wsdl:service name="Service">
+      <wsdl:port binding="tns:ServiceSoapBinding" name="Service">
+         <soap:address location="http://example.org/Service" />
+      </wsdl:port>
+   </wsdl:service>
+</wsdl:definitions>
