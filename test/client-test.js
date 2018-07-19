@@ -987,12 +987,14 @@ var fs = require('fs'),
         });
       });
 
-      it.skip('should resolve cross schema references', function () {
+      it('should resolve cross schema references', function () {
         return soap.createClientAsync(__dirname + '/wsdl/cross_schema.wsdl')
           .then(function (client) {
             return assert.deepStrictEqual(client.describe().Service.Service.Operation.output, {
               OperationReturn: {
-                result: 'xs:string'
+                result: 'xs:string',
+                targetNSAlias: 'ns1',
+                targetNamespace: 'http://response.ws2.example.it'
               }
             });
           });
