@@ -1,0 +1,20 @@
+<soap:Envelope
+  xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+  xmlns:tns="http://www.Dummy.com"
+  xmlns:n="http://www.Dummy.com/Name/Types"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <soap:Header></soap:Header>
+  <soap:Body>
+    <n:DummyResponse>
+      <n:SimpleBoolean>true</n:SimpleBoolean>
+      <n:InlineBoolean>true</n:InlineBoolean>
+      <n:SimpleInt>4</n:SimpleInt>
+      <n:InlineInt>4</n:InlineInt>
+      <n:SimpleDate>2018-07-21</n:SimpleDate>
+      <n:SimpleDateTime>2018-07-21</n:SimpleDateTime>
+      <n:SimpleTimeHourMinute>02:30</n:SimpleTimeHourMinute>
+      <n:NamedNestedSimpleType>04:00</n:NamedNestedSimpleType>
+      <n:SimpleEnum>2</n:SimpleEnum>
+    </n:DummyResponse>
+  </soap:Body>
+</soap:Envelope>
