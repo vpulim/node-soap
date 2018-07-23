@@ -986,7 +986,21 @@ var fs = require('fs'),
           });
         });
       });
+
+      it('should resolve cross schema references', function () {
+        return soap.createClientAsync(__dirname + '/wsdl/cross_schema.wsdl')
+          .then(function (client) {
+            return assert.deepStrictEqual(client.describe().Service.Service.Operation.output, {
+              OperationReturn: {
+                result: 'xs:string',
+                targetNSAlias: 'ns1',
+                targetNamespace: 'http://response.ws2.example.it'
+              }
+            });
+          });
+      });
     });
+
     
     describe('Client created with createClientAsync', function () {
       it('should error on invalid host', function (done) {
