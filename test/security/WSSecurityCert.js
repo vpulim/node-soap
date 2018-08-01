@@ -90,13 +90,13 @@ describe('WSSecurityCert', function() {
   });
 
   it('should only add one Reference elements, for Soap Body wsse:Security element when addTimestamp is false', function() {
-    var instance = new WSSecurityCert(key, cert, '', {addTimestamp: false});
+    var instance = new WSSecurityCert(key, cert, '', {hasTimeStamp: false});
     var xml = instance.postProcess('<soap:Header></soap:Header><soap:Body><Body></Body><Timestamp></Timestamp></soap:Body>', 'soap');
     xml.match(/<Reference URI="#/g).should.have.length(1);
   });
 
   it('should have no timestamp when addTimestamp is false', function() {
-    var instance = new WSSecurityCert(key, cert, '', {addTimestamp: false});
+    var instance = new WSSecurityCert(key, cert, '', {hasTimeStamp: false});
     var xml = instance.postProcess('<soap:Header></soap:Header><soap:Body><Body></Body><Timestamp></Timestamp></soap:Body>', 'soap');
     xml.should.not.containEql('<Timestamp xmlns="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" Id="_1">');
     xml.should.not.containEql('<Created>' + instance.created);
