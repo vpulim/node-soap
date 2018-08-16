@@ -95,6 +95,13 @@ describe('WSSecurityCert', function() {
     xml.match(/<Reference URI="#/g).should.have.length(1);
   });
 
+  it('double post process should not add extra alments', function() {
+    var instance = new WSSecurityCert(key, cert, '');
+    var _ = instance.postProcess('<soap:Header></soap:Header><soap:Body><Body></Body><Timestamp></Timestamp></soap:Body>', 'soap');
+    var xml = instance.postProcess('<soap:Header></soap:Header><soap:Body><Body></Body><Timestamp></Timestamp></soap:Body>', 'soap');
+    xml.match(/<Reference URI="#/g).should.have.length(2);
+  });
+
   it('should have no timestamp when addTimestamp is false', function() {
     var instance = new WSSecurityCert(key, cert, '', {hasTimeStamp: false});
     var xml = instance.postProcess('<soap:Header></soap:Header><soap:Body><Body></Body><Timestamp></Timestamp></soap:Body>', 'soap');
