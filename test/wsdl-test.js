@@ -186,6 +186,36 @@ wsdlNonStrictTests['should all attributes to root elements'] = function(done) {
   });
 };
 
+wsdlNonStrictTests['should merge schema with attributes'] = function(done) {
+  var expectedMsg =
+    '<peatdef:AskPeat xmlns:peatdef="urn:peat.def" xmlns="urn:peat.def">' +
+      '<peatdef:Question>How are you?</peatdef:Question>' +
+    '</peatdef:AskPeat>';
+
+  soap.createClient(__dirname + '/wsdl/mergeWithAttributes/main.wsdl', {}, function(err, client) {
+    assert.ok(!err);
+    client.AskPeat({ Question: 'How are you?' }, function(err, result) {
+      assert.equal(client.lastMessage, expectedMsg);
+      done();
+    });
+  });
+};
+
+wsdlStrictTests['should merge schema with attributes'] = function(done) {
+  var expectedMsg =
+    '<peatdef:AskPeat xmlns:peatdef="urn:peat.def" xmlns="urn:peat.def">' +
+      '<peatdef:Question>How are you?</peatdef:Question>' +
+    '</peatdef:AskPeat>';
+
+  soap.createClient(__dirname + '/wsdl/mergeWithAttributes/main.wsdl', {}, function(err, client) {
+    assert.ok(!err);
+    client.AskPeat({ Question: 'How are you?' }, function(err, result) {
+      assert.equal(client.lastMessage, expectedMsg);
+      done();
+    });
+  });
+};
+
 module.exports = {
   'WSDL Parser (strict)': wsdlStrictTests,
   'WSDL Parser (non-strict)': wsdlNonStrictTests
