@@ -1,5 +1,5 @@
 {
-  "name": "soap",
+  "name": "@briggybros/soap",
   "version": "0.25.0",
   "description": "A minimal node SOAP client",
   "engines": {
