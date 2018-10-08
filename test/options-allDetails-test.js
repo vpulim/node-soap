@@ -21,7 +21,7 @@ it('output should contain other details apart from name and type', function(done
                     targetNamespace: 'http://thomas-bayer.com/blz/' }
                     
       assert.deepEqual(client.describe().BLZService.BLZServiceSOAP11port_http
-      .getBank.output.getBankResponseType.details.detailsType.bic === bic);
+      .getBank.output.getBankResponseType.details.detailsType.bic, bic);
 
       done();
     });
