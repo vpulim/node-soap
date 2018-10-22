@@ -579,7 +579,10 @@ var fs = require('fs'),
       });
     });
 
-    describe('Handle non-success http status codes', function () {
+    // TODO:
+    // It seems to be an invalid test case that should be removed.
+    // It verifies that error should be returned on incorrect server response and it's irrelevant to http status code.
+    describe('Handle non-success http status codes with invalid response', function () {
       var server = null;
       var hostname = '127.0.0.1';
       var port = 15099;
@@ -587,7 +590,7 @@ var fs = require('fs'),
 
       before(function (done) {
         server = http.createServer(function (req, res) {
-          res.statusCode = 401;
+          res.statusCode = 401;  // This test case is nothing to do with status code. Set to 200 doesn't break test.
           res.write(JSON.stringify({ tempResponse: 'temp' }), 'utf8');
           res.end();
         }).listen(port, hostname, done);
@@ -605,6 +608,47 @@ var fs = require('fs'),
             assert.ok(err);
             assert.ok(err.response);
             assert.ok(err.body);
+            done();
+          });
+        }, baseUrl);
+      });
+
+      it('should emit a \'soapError\' event', function (done) {
+        soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
+          client.on('soapError', function (err) {
+            assert.ok(err);
+          });
+          client.MyOperation({}, function (err, result) {
+            done();
+          });
+        }, baseUrl);
+      });
+    });
+
+    describe('Handle non-success http status codes without response body', function () {
+      var server = null;
+      var hostname = '127.0.0.1';
+      var port = 15099;
+      var baseUrl = 'http://' + hostname + ':' + port;
+
+      before(function (done) {
+        server = http.createServer(function (req, res) {
+          res.statusCode = 404;
+          res.end();
+        }).listen(port, hostname, done);
+      });
+
+      after(function (done) {
+        server.close();
+        server = null;
+        done();
+      });
+
+      it('should return an error', function (done) {
+        soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
+          client.MyOperation({}, function (err, result) {
+            assert.ok(err);
+            assert.ok(err.response);
             done();
           });
         }, baseUrl);
