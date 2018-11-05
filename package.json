@@ -7,6 +7,7 @@
   },
   "author": "Vinay Pulim <v@pulim.com>",
   "dependencies": {
+    "@types/bluebird": "^3.5.24",
     "bluebird": "^3.5.0",
     "concat-stream": "^1.5.1",
     "debug": "^2.6.9",
