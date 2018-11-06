@@ -297,6 +297,14 @@ export class BearerSecurity implements ISecurity {
     toXML(): string;
 }
 
+export class NTLMSecurity implements ISecurity {
+    constructor(username: string, password: string, domain: string, workstation: string);
+    constructor(username: any);
+    addHeaders(headers: any): void;
+    addOptions(options: any): void;
+    toXML(): string;
+}
+
 export class WSSecurity implements ISecurity {
     constructor(username: string, password: string, options?: any);
     addOptions(options: any): void;
