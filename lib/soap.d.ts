@@ -1,7 +1,6 @@
 /// <reference types="node" />
 
 import { EventEmitter } from 'events';
-import * as BluebirdPromise from 'bluebird';
 
 export interface ISoapMethod {
     (args: any, callback: (err: any, result: any, raw: any, soapHeader: any) => void, options?: any, extraHeaders?: any): void;
@@ -38,6 +37,8 @@ export interface ISoapFault12 {
 
 export interface ISecurity {
     addOptions(options: any): void;
+    addHeaders?(headers: any): void;
+    postProcess?(xml: string, envelopeKey: string): string;
     toXML(): string;
 }
 
@@ -66,10 +67,15 @@ export interface IWsdlBaseOptions {
     ignoredNamespaces?: boolean | string[] | { namespaces?: string[]; override?: boolean; };
     ignoreBaseNameSpaces?: boolean;
     escapeXML?: boolean;
+    preserveWhitespace?: boolean;
     returnFault?: boolean;
     handleNilAsNull?: boolean;
     wsdl_headers?: { [key: string]: any };
     wsdl_options?: { [key: string]: any };
+    useEmptyTag?: boolean;
+    namespaceArrayElements?: boolean;
+    strict?: boolean;
+    customDeserializer?: { [name: string]: (text: string, top: any) => string };
 }
 
 export interface IOptions extends IWsdlBaseOptions {
@@ -79,13 +85,15 @@ export interface IOptions extends IWsdlBaseOptions {
     httpClient?: HttpClient;
     request?: (options: any, callback?: (error: any, res: any, body: any) => void) => void;
     stream?: boolean;
-    // wsdl options that only work for client
+    // options that only work for client
     forceSoap12Headers?: boolean;
-    customDeserializer?: any;
+    overridePromiseSuffix?: string;
+    normalizeNames?: boolean;
     [key: string]: any;
 }
 
 export interface IOneWayOptions {
+    statusCode?: number;
     responseCode?: number;
     emptyBody?: boolean;
 }
@@ -199,14 +207,14 @@ export interface WsdlBinding extends XsdTypeBase {
     methods: WsdlElements;
     style: string;
     transport: string;
-    topElements: {[prop: string]: any};
+    topElements: { [prop: string]: any };
 }
 
 export interface WsdlServices {
     [prop: string]: WsdlService;
 }
 export interface WsdlService extends XsdTypeBase {
-    ports: {[prop: string]: any};
+    ports: { [prop: string]: any };
 }
 
 export class WSDL {
@@ -216,11 +224,11 @@ export class WSDL {
     valueKey: string;
     xmlKey: string;
     xmlnsInEnvelope: string;
-    onReady(callback: (err:Error) => void): void;
-    processIncludes(callback: (err:Error) => void): void;
+    onReady(callback: (err: Error) => void): void;
+    processIncludes(callback: (err: Error) => void): void;
     describeServices(): { [k: string]: any };
     toXML(): string;
-    xmlToObject(xml: any, callback?: (err:Error, result:any) => void): any;
+    xmlToObject(xml: any, callback?: (err: Error, result: any) => void): any;
     findSchemaObject(nsURI: string, qname: string): XsdElement | null | undefined;
     objectToDocumentXML(name: string, params: any, nsPrefix?: string, nsURI?: string, type?: string): any;
     objectToRpcXML(name: string, params: any, nsPrefix?: string, nsURI?: string, isParts?: any): string;
@@ -250,19 +258,33 @@ export class Client extends EventEmitter {
     setEndpoint(endpoint: string): void;
     setSOAPAction(action: string): void;
     setSecurity(security: ISecurity): void;
+    security: ISecurity;
+    httpClient: HttpClient;
+    lastMessage: string;
+    lastRequest: string;
+    lastRequestHeaders: any;
+    lastEndpoint: string;
+    lastResponse: string;
+    lastResponseHeaders: string;
+    lastElapsedTime: number;
     wsdl: WSDL;
-    [method: string]: ISoapMethod | WSDL | Function;
+    // Instead of types `ISoapMethod | WSDL | Function`, we allow any so that
+    // class can be freely extended.
+    [key: string]: any;
 }
 
 export function createClient(url: string, callback: (err: any, client: Client) => void): void;
 export function createClient(url: string, options: IOptions, callback: (err: any, client: Client) => void): void;
-export function createClientAsync(url: string, options?: IOptions, endpoint?: string): BluebirdPromise<Client>;
+export function createClientAsync(url: string, options?: IOptions, endpoint?: string): Promise<Client>;
 
 export class Server extends EventEmitter {
     constructor(server: any, path: string, services: IServices, wsdl: WSDL, options: IServerOptions);
     path: string;
     services: IServices;
     wsdl: WSDL;
+    suppressStack: boolean;
+    returnFault: boolean;
+    onewayOptions: IOneWayOptions | {};
     addSoapHeader(soapHeader: any, name?: string, namespace?: any, xmlns?: string): number;
     changeSoapHeader(index: any, soapHeader: any, name?: any, namespace?: any, xmlns?: any): void;
     getSoapHeaders(): string[];
@@ -270,6 +292,7 @@ export class Server extends EventEmitter {
     log(type: string, data: any): any;
     authorizeConnection(req: any): boolean;
     authenticate(security: ISecurity): boolean;
+    [key: string]: any;
 }
 
 export function listen(server: any, path: string, service: any, wsdl: string): Server;
@@ -304,7 +327,7 @@ export class WSSecurity implements ISecurity {
 }
 
 export class WSSecurityCert implements ISecurity {
-    constructor(privatePEM: any, publicP12PEM: any, password: any, options?: any);
+    constructor(privatePEM: any, publicP12PEM: any, password: any);
     addOptions(options: any): void;
     toXML(): string;
 }
@@ -320,6 +343,20 @@ export class ClientSSLSecurityPFX implements ISecurity {
     constructor(pfx: string | Buffer, passphrase: string, defaults?: any);
     constructor(pfx: string | Buffer, defaults?: any);
     addOptions(options: any): void;
+    toXML(): string;
+}
+
+export interface INTLMSecurityOptions {
+    username: string;
+    password: string;
+    domain: string;
+    workstation: string;
+}
+export class NTLMSecurity implements ISecurity {
+    constructor(options?: INTLMSecurityOptions);
+    constructor(username: string, password: string, domain?: string, workstation?: string);
+    addHeaders(headers: any): void;
+    addOptions(options: INTLMSecurityOptions): void;
     toXML(): string;
 }
 
