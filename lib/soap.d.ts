@@ -304,7 +304,7 @@ export class WSSecurity implements ISecurity {
 }
 
 export class WSSecurityCert implements ISecurity {
-    constructor(privatePEM: any, publicP12PEM: any, password: any);
+    constructor(privatePEM: any, publicP12PEM: any, password: any, options?: any);
     addOptions(options: any): void;
     toXML(): string;
 }
