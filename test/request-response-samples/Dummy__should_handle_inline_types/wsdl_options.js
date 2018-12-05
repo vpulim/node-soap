@@ -1,13 +1,16 @@
-exports.customDeserializer = {
-  DateTime: (text) => new Date(text),
-  TimeHourMinute: (text) => {
+"use strict";
+var customDeserializer = {
+  DateTime: function (text) { return new Date(text); },
+  TimeHourMinute: function (text) {
     // Return number of minutes since midnight
-    const results = text.split(':').map(t => parseInt(t, 10));
+    var results = text.split(':').map(function (t) { return parseInt(t, 10); });
     return results[0] * 60 + results[1];
   },
-  NestedSimpleType: (text) => {
+  NestedSimpleType: function (text) {
     // Return number of minutes since midnight
-    const results = text.split(':').map(t => parseInt(t, 10));
+    var results = text.split(':').map(function (t) { return parseInt(t, 10); });
     return results[0] * 60 + results[1];
   }
 };
+
+module.exports = customDeserializer;
