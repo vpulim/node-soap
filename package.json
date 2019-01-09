@@ -3,7 +3,7 @@
   "version": "0.26.0",
   "description": "A minimal node SOAP client",
   "engines": {
-    "node": ">=4.0.0"
+    "node": ">=6.0.0"
   },
   "author": "Vinay Pulim <v@pulim.com>",
   "dependencies": {
@@ -50,7 +50,7 @@
     "duplexer": "~0.1.1",
     "express": "^4.14.0",
     "glob": "~3.2.8",
-    "jshint": "2.3.0",
+    "jshint": "2.9.7",
     "mocha": "~5.2.0",
     "nyc": "^11.4.1",
     "readable-stream": "~2.0.2",

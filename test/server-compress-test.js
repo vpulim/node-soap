@@ -36,14 +36,14 @@ describe('SOAP Server', function () {
 		server.listen(8000);
 		soap.listen(server, '/wsdl', service, xml);
 	  });
-	
+
 	  after(function () {
 		server.close();
 	  });
 
 
 	it('should properly handle compression', function (done) {
-		
+
 		var clientResponse,
 		gzipResponse;
 

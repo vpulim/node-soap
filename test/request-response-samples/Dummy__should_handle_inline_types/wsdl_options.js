@@ -1,3 +1,5 @@
+"use strict";
+
 exports.customDeserializer = {
   DateTime: (text) => new Date(text),
   TimeHourMinute: (text) => {
