@@ -20,6 +20,7 @@ This module lets you connect to web services using SOAP.  It also provides a ser
   - [Options](#options)
   - [Server Logging](#server-logging)
   - [Server Events](#server-events)
+  - [Server Response on one-way calls](#server-response-on-one-way-calls)
   - [SOAP Fault](#soap-fault)
   - [Server security example using PasswordDigest](#server-security-example-using-passworddigest)
   - [Server connection authorization](#server-connection-authorization)
@@ -38,7 +39,7 @@ This module lets you connect to web services using SOAP.  It also provides a ser
   - [Client Events](#client-events)
     - [request](#request)
     - [message](#message)
-    - [soapError](#soapError)
+    - [soapError](#soaperror)
     - [response](#response)
 - [Security](#security)
   - [BasicAuthSecurity](#basicauthsecurity)
@@ -47,6 +48,7 @@ This module lets you connect to web services using SOAP.  It also provides a ser
   - [ClientSSLSecurityPFX](#clientsslsecuritypfx)
   - [WSSecurity](#wssecurity)
   - [WSSecurityCert](#wssecuritycert)
+  - [NTLMSecurity](#ntlmsecurity)
 - [Handling XML Attributes, Value and XML (wsdlOptions).](#handling-xml-attributes-value-and-xml-wsdloptions)
   - [Overriding the `value` key](#overriding-the-value-key)
   - [Overriding the `xml` key](#overriding-the-xml-key)
@@ -126,7 +128,7 @@ This client has a built in WSDL cache. You can use the `disableCache` option to 
 The `options` argument allows you to customize the client with the following properties:
 
 - endpoint: to override the SOAP service's host specified in the `.wsdl` file.
-- envelopeKey: to set specific key instead of `<pre><<b>soap</b>:Body></<b>soap</b>:Body></pre>`.
+- envelopeKey: to set specific key instead of `<pre><soap:Body></soap:Body></pre>`.
 - preserveWhitespace: to preserve leading and trailing whitespace characters in text and cdata.
 - escapeXML: escape special XML characters in SOAP message (e.g. `&`, `>`, `<` etc), default: `true`.
 - suppressStack: suppress the full stack trace for error messages.
@@ -210,13 +212,13 @@ You can pass in server and [WSDL Options](#handling-xml-attributes-value-and-xml
 using an options hash.
 
 Server options include the below:
-`pfx`: A string or Buffer containing the private key, certificate and CA certs of the server in PFX or PKCS12 format. (Mutually exclusive with the key, cert and ca options.)
-`key`: A string or Buffer containing the private key of the server in PEM format. (Could be an array of keys). (Required)
-`passphrase`: A string of passphrase for the private key or pfx.
-`cert`: A string or Buffer containing the certificate key of the server in PEM format. (Could be an array of certs). (Required)
-`ca`: An array of strings or Buffers of trusted certificates in PEM format. If this is omitted several well known "root" CAs will be used, like VeriSign. These are used to authorize connections.
-`crl` : Either a string or list of strings of PEM encoded CRLs (Certificate Revocation List)
-`ciphers`: A string describing the ciphers to use or exclude, separated by  :. The default cipher suite is:
+- `pfx`: A string or Buffer containing the private key, certificate and CA certs of the server in PFX or PKCS12 format. (Mutually exclusive with the key, cert and ca options.)
+- `key`: A string or Buffer containing the private key of the server in PEM format. (Could be an array of keys). (Required)
+- `passphrase`: A string of passphrase for the private key or pfx.
+- `cert`: A string or Buffer containing the certificate key of the server in PEM format. (Could be an array of certs). (Required)
+- `ca`: An array of strings or Buffers of trusted certificates in PEM format. If this is omitted several well known "root" CAs will be used, like VeriSign. These are used to authorize connections.
+- `crl` : Either a string or list of strings of PEM encoded CRLs (Certificate Revocation List)
+- `ciphers`: A string describing the ciphers to use or exclude, separated by  :. The default cipher suite is:
 
 ``` javascript
 var xml = require('fs').readFileSync('myservice.wsdl', 'utf8');
@@ -258,6 +260,16 @@ Server instances emit the following events:
 The sequence order of the calls is `request`, `headers` and then the dedicated
 service method.
 
+### Server Response on one-way calls
+
+The so called one-way (or asynchronous) calls occur when an operation is called with no output defined in WSDL.
+The server sends a response (defaults to status code 200 with no body) to the client disregarding the result of the operation.
+
+You can configure the response to match the appropriate client expectation to the SOAP standard implementation.
+Pass in `oneWay` object in server options. Use the following keys:
+`emptyBody`: if true, returns an empty body, otherwise no content at all (default is false)
+`responseCode`: default statusCode is 200, override it with this options (for example 202 for SAP standard compliant response)
+
 ### SOAP Fault
 
 A service method can reply with a SOAP Fault to a client by `throw`ing an
@@ -294,6 +306,26 @@ To change the HTTP statusCode of the response include it on the fault.  The stat
 
 If `server.authenticate` is not defined then no authentication will take place.
 
+Asynchronous authentication:
+``` javascript
+  server = soap.listen(...)
+  server.authenticate = function(security, callback) {
+    var created, nonce, password, user, token;
+    token = security.UsernameToken, user = token.Username,
+            password = token.Password, nonce = token.Nonce, created = token.Created;
+
+    myDatabase.getUser(user, function (err, dbUser) {
+      if (err || !dbUser) {
+        callback(false);
+        return;
+      }
+
+      callback(password === soap.passwordDigest(nonce, created, dbUser.password));
+    });
+  };
+```
+
+Synchronous authentication:
 ``` javascript
   server = soap.listen(...)
   server.authenticate = function(security) {
@@ -455,10 +487,11 @@ Interesting properties might be:
 
 ``` javascript
   client.MyFunctionAsync({name: 'value'}).then((result) => {
-    // result is a javascript array containing result, raw and soapheader
+    // result is a javascript array containing result, rawResponse, soapheader, and rawRequest
     // result is a javascript object
-    // raw is the raw response
+    // rawResponse is the raw xml response string
     // soapHeader is the response soap header as a javascript object
+    // rawRequest is the raw xml request string
   })
 ```
 
@@ -678,7 +711,7 @@ as default request options to the constructor:
 If you want to reuse tls sessions, you can use the option `forever: true`. 
 
 ``` javascript
-client.setSecurity(new soap.ClientSSLSecurity(
+client.setSecurity(new soap.ClientSSLSecurityPFX(
                 '/path/to/pfx/cert', // or a buffer: [fs.readFileSync('/path/to/pfx/cert', 'utf8'),
                 'path/to/optional/passphrase',
                 {   /*default request options like */
@@ -721,6 +754,18 @@ WS-Security X509 Certificate support.
   var password = ''; // optional password
   var wsSecurity = new soap.WSSecurityCert(privateKey, publicKey, password);
   client.setSecurity(wsSecurity);
+```
+
+### NTLMSecurity
+
+Parameter invocation:
+``` javascript
+  client.setSecurity(new soap.NTLMSecurity('username', 'password', 'domain', 'workstation'));
+```
+This can also be set up with a JSON object, substituting values as appropriate, for example:
+``` javascript
+  var loginData = {username: 'username', password: 'password', domain: 'domain', workstation: 'workstation'};
+  client.setSecurity(new soap.NTLMSecurity(loginData));
 ```
 
 ## Handling XML Attributes, Value and XML (wsdlOptions).
@@ -879,7 +924,7 @@ Example :
 ```javascript
 
    var wsdlOptions = {
-     customDeserializer = {
+     customDeserializer: {
 
        // this function will be used to any date found in soap responses
        date: function (text, context) {

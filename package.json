@@ -1,6 +1,6 @@
 {
   "name": "soap",
-  "version": "0.23.0",
+  "version": "0.25.0",
   "description": "A minimal node SOAP client",
   "engines": {
     "node": ">=4.0.0"
@@ -12,10 +12,10 @@
     "debug": "^2.6.9",
     "ejs": "~2.5.5",
     "finalhandler": "^1.0.3",
-    "lodash": "^3.10.1",
+    "lodash": "^4.17.5",
+    "httpntlm": "^1.5.2",
     "request": ">=2.9.0",
     "sax": ">=0.6",
-    "selectn": "^0.9.6",
     "serve-static": "^1.11.1",
     "strip-bom": "~0.3.1",
     "uuid": "^3.1.0",
@@ -23,7 +23,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/milewise/node-soap.git"
+    "url": "https://github.com/vpulim/node-soap.git"
   },
   "main": "./index.js",
   "types": "./lib/soap.d.ts",
@@ -32,26 +32,26 @@
   },
   "scripts": {
     "toc": "./node_modules/.bin/doctoc Readme.md --github --maxlevel 3",
-    "pretest": "jshint index.js lib test",
-    "cover": "nyc --reporter=lcov --reporter=html --reporter=text mocha  test/*-test.js test/security/*.js",
+    "cover": "nyc --reporter=lcov --reporter=html --reporter=text mocha --exit test/*-test.js test/security/*.js",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js -v",
-    "test": "mocha --timeout 10000 test/*-test.js test/security/*.js"
+    "test": "mocha --timeout 10000 --bail --exit test/*-test.js test/security/*.js"
   },
   "keywords": [
     "soap"
   ],
   "license": "MIT",
   "devDependencies": {
+    "@types/bluebird": "^3.5.1",
     "body-parser": "^1.15.2",
     "colors": "^1.1.2",
-    "coveralls": "^2.11.6",
+    "coveralls": "^3.0.1",
     "diff": "^2.2.1",
     "doctoc": "^1.0.0",
     "duplexer": "~0.1.1",
     "express": "^4.14.0",
     "glob": "~3.2.8",
     "jshint": "2.3.0",
-    "mocha": "~1.17.0",
+    "mocha": "~5.2.0",
     "nyc": "^11.4.1",
     "readable-stream": "~2.0.2",
     "semver": "~5.0.3",

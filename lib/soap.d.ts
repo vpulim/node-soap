@@ -85,13 +85,128 @@ export interface IOptions extends IWsdlBaseOptions {
     [key: string]: any;
 }
 
+export interface IOneWayOptions {
+    responseCode?: number;
+    emptyBody?: boolean;
+}
+
 export interface IServerOptions extends IWsdlBaseOptions {
     path: string;
     services: IServices;
     xml?: string;
     uri?: string;
     suppressStack?: boolean;
+    oneWay?: IOneWayOptions;
     [key: string]: any;
+}
+
+export interface Definitions {
+    descriptions: object;
+    ignoredNamespaces: string[];
+    messages: WsdlMessages;
+    portTypes: WsdlPortTypes;
+    bindings: WsdlBindings;
+    services: WsdlServices;
+    schemas: WsdlSchemas;
+    valueKey: string;
+    xmlKey: string;
+    xmlns: WsdlXmlns;
+    '$targetNamespace': string;
+    '$name': string;
+}
+
+export interface XsdTypeBase {
+    ignoredNamespaces: string[];
+    valueKey: string;
+    xmlKey: string;
+    xmlns?: WsdlXmlns,
+}
+
+
+export interface WsdlSchemas {
+    [prop: string]: WsdlSchema;
+}
+export interface WsdlSchema extends XsdTypeBase {
+    children: any[];
+    complexTypes?: WsdlElements;
+    elements?: WsdlElements;
+    includes: any[];
+    name: string;
+    nsName: string;
+    prefix: string;
+    types?: WsdlElements;
+    xmlns: WsdlXmlns;
+}
+export interface WsdlElements {
+    [prop: string]: XsdElement;
+}
+export type XsdElement = XsdElementType | XsdComplexType;
+
+export interface WsdlXmlns {
+    wsu?: string;
+    wsp?: string;
+    wsam?: string;
+    soap?: string;
+    tns?: string;
+    xsd?: string;
+    __tns__?: string;
+    [prop: string]: string | void;
+}
+
+export interface XsdComplexType extends XsdTypeBase {
+    children: XsdElement[] | void;
+    name: string;
+    nsName: string;
+    prefix: string;
+    '$name': string;
+    [prop: string]: any;
+}
+
+export interface XsdElementType extends XsdTypeBase {
+    children: XsdElement[] | void;
+    name: string;
+    nsName: string;
+    prefix: string;
+    targetNSAlias: string;
+    targetNamespace: string;
+    '$lookupType': string;
+    '$lookupTypes': any[];
+    '$name': string;
+    '$type': string;
+    [prop: string]: any;
+}
+
+export interface WsdlMessages {
+    [prop: string]: WsdlMessage;
+}
+export interface WsdlMessage extends XsdTypeBase {
+    element: XsdElement;
+    parts: { [prop: string]: any };
+    '$name': string;
+}
+
+export interface WsdlPortTypes {
+    [prop: string]: WsdlPortType;
+}
+export interface WsdlPortType extends XsdTypeBase {
+    methods: { [prop: string]: XsdElement }
+}
+
+export interface WsdlBindings {
+    [prop: string]: WsdlBinding;
+}
+export interface WsdlBinding extends XsdTypeBase {
+    methods: WsdlElements;
+    style: string;
+    transport: string;
+    topElements: {[prop: string]: any};
+}
+
+export interface WsdlServices {
+    [prop: string]: WsdlService;
+}
+export interface WsdlService extends XsdTypeBase {
+    ports: {[prop: string]: any};
 }
 
 export class WSDL {
@@ -106,7 +221,7 @@ export class WSDL {
     describeServices(): { [k: string]: any };
     toXML(): string;
     xmlToObject(xml: any, callback?: (err:Error, result:any) => void): any;
-    findSchemaObject(nsURI: string, qname: string): any;
+    findSchemaObject(nsURI: string, qname: string): XsdElement | null | undefined;
     objectToDocumentXML(name: string, params: any, nsPrefix?: string, nsURI?: string, type?: string): any;
     objectToRpcXML(name: string, params: any, nsPrefix?: string, nsURI?: string, isParts?: any): string;
     isIgnoredNameSpace(ns: string): boolean;
@@ -115,6 +230,8 @@ export class WSDL {
     processAttributes(child: any, nsContext: any): string;
     findSchemaType(name: any, nsURI: any): any;
     findChildSchemaObject(parameterTypeObj: any, childName: any, backtrace?: any): any;
+    uri: string;
+    definitions: Definitions;
 }
 
 export class Client extends EventEmitter {
@@ -187,7 +304,7 @@ export class WSSecurity implements ISecurity {
 }
 
 export class WSSecurityCert implements ISecurity {
-    constructor(privatePEM: any, publicP12PEM: any, password: any);
+    constructor(privatePEM: any, publicP12PEM: any, password: any, options?: any);
     addOptions(options: any): void;
     toXML(): string;
 }

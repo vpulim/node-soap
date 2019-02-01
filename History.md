@@ -1,3 +1,39 @@
+0.25.0 / 2018-08-19
+===================
+* [FIX] Improved deserialization on inline `simpleType` declarations (#1015)
+* [ENHANCEMENT] Added option to allow the user to dis-/enable the timestamp in `WSSecurtityCert` (defaults to "enabled" to maintain current behaviour) (#1017)
+* [DOC] Updated the "*Async" result description (#1016)
+* [ENHANCEMENT] Added ability to resolve Schema-cross-reference namespaces in `client.describe()` (#1014)
+* [FIX] Fixed `.npmignore` patterns in order to publish only the necessary files (#1012)
+* [DOC] Removed formatting in code (#1011)
+* [ENHANCEMENT] Added initial NTLM support (#887)
+* [ENHANCEMENT] Added optional async authentication for the server (#1002)
+* [MAINTENANCE] End of support for `node < 6.x` in our Travis CI config!
+* [MAINTENANCE] Removed unnecessary `selectn` dependency (#975)
+* [ENHANCEMNET] Added support for attributes in root elements (#910)
+* [ENHANCEMENT] Added/updated TypeScript definitions (#991)
+* [ENHANCEMENT] Change signature of `server.authorizeConnection()` to include also the `res`ponse param. (#1006)
+* [FIX] WSSE Template - fix behaviour for template compilation in `__dirname` "unsafe" environments (e.g. `webpack` with target `node`) (#1008)
+
+0.24.0 / 2018-04-05
+===================
+* [DOC] Error on custom deserializer example (#1000)
+* [DOC] Fix broken link
+* [DOC] adding bullets to separate each option
+* [DOC] changed ClientSSLSecurity to ClientSSLSecurityPFX in the readme file
+* [DOC] clarify section on client events in Readme.md (#989)
+* [ENHANCEMENT] Added one-way response configuration options
+* [ENHANCEMENT] Adding support for SOAP 1.2 Envelope Headers in the server side (#1003)
+* [ENHANCEMENT] Enable multiArgs during promisification
+* [ENHANCEMENT] add Client.wsdl for accessing client.wsdl during soap.createClient() (#990)
+* [ENHANCEMENT] add option to remove element-by-element namespacing of json arrays (#994)
+* [ENHANCEMENT] add rawRequest to callback arguments (#992)
+* [FIX] Fixed checking for empty obj.Body before further actions (#986)
+* [FIX] Lookup definitions in child element first (#958)
+* [FIX] only detect xsi:nil if its value is `true` (#983)
+* [MAINTENANCE] Updating the coverage to use the new version of Istanbul framework, the nyc.
+* [MAINTENANCE] Upgrade Lodash to 4.17.5 (#1001)
+
 0.23.0 / 2017-10-18
 ===================
 * [FIX] Fixing tests broken by #979
