@@ -22,7 +22,6 @@ describe('post data concat test', function () {
             MyService: {
                 MyServicePort: {
                     MyOperation: function (arg) {
-                        console.log(arg);
                         check(arg, postdata);
                         return "0";
                     }
