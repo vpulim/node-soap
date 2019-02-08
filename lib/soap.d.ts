@@ -97,6 +97,7 @@ export interface IServerOptions extends IWsdlBaseOptions {
     uri?: string;
     suppressStack?: boolean;
     oneWay?: IOneWayOptions;
+    enableChunkedEncoding?: boolean;
     [key: string]: any;
 }
 
