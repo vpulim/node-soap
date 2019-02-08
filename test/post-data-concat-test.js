@@ -7,6 +7,16 @@ var http = require('http');
 
 
 describe('post data concat test', function () {
+    var server = http.createServer(function (req, res) { });
+
+    before(function () {
+        server.listen(51515);
+    });
+
+    after(function () {
+        server.close();
+    });
+
     it('should consider the situation about multi-byte character between two tcp packets', function (done) {
         var check = function (a, b) {
             if (a && b) {
@@ -16,7 +26,6 @@ describe('post data concat test', function () {
         };
 
         var wsdl = 'test/wsdl/default_namespace.wsdl';
-        var server = http.createServer(function (req, res) { });
         var xml = fs.readFileSync(wsdl, 'utf8');
         var service = {
             MyService: {
@@ -29,7 +38,6 @@ describe('post data concat test', function () {
             }
         };
 
-        server.listen(51515);
         soap.listen(server, '/wsdl', service, xml);
 
         var postdata = "";
@@ -42,7 +50,7 @@ describe('post data concat test', function () {
         }, function (error, client) {
             assert(!error);
             client.MyOperation(postdata, function (error, response) {
-                server.close();
+                assert(!error);
             });
         });
 
