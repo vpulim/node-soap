@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions
+  targetNamespace="urn:peat"
+  xmlns:tns="urn:peat"
+  xmlns:peatdef="urn:peat.def"
+  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+>
+
+  <!-- Notice that namespace below matchs targetNamespace in def.xsd, triggering merge. -->
+  <wsdl:import namespace="urn:peat.def" location="def.xsd" />
+
+  <wsdl:message name="AskPeatInput">
+    <wsdl:part name="body" element="peatdef:AskPeat"/>
+  </wsdl:message>
+
+  <wsdl:message name="AskPeatOutput">
+    <wsdl:part name="body" element="peatdef:AskPeatResponse"/>
+  </wsdl:message>
+
+  <wsdl:portType name="AskPeatPortType">
+    <wsdl:operation name="AskPeat">
+      <wsdl:input message="tns:AskPeatInput"/>
+      <wsdl:output message="tns:AskPeatOutput"/>
+    </wsdl:operation>
+  </wsdl:portType>
+
+  <wsdl:binding name="AskPeatSoapBinding" type="tns:AskPeatPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="AskPeat">
+      <soap:operation soapAction="urn:peat/AskPeat"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+
+  <wsdl:service name="AskPeatService">
+    <wsdl:port name="AskPeatPort" binding="tns:AskPeatSoapBinding">
+      <soap:address location="http://localhost:15099/peat"/>
+    </wsdl:port>
+  </wsdl:service>
+
+</wsdl:definitions>
