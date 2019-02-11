@@ -219,6 +219,7 @@ Server options include the below:
 - `ca`: An array of strings or Buffers of trusted certificates in PEM format. If this is omitted several well known "root" CAs will be used, like VeriSign. These are used to authorize connections.
 - `crl` : Either a string or list of strings of PEM encoded CRLs (Certificate Revocation List)
 - `ciphers`: A string describing the ciphers to use or exclude, separated by  :. The default cipher suite is:
+- `enableChunkedEncoding`: A boolean for controlling chunked transfer encoding in response. Some client (such as Windows 10's MDM enrollment SOAP client) is sensitive to transfer-encoding mode and can't accept chunked response. This option let user disable chunked transfer encoding for such a client. Default to `true` for backward compatibility.
 
 ``` javascript
 var xml = require('fs').readFileSync('myservice.wsdl', 'utf8');
