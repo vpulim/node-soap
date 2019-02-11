@@ -1,8 +1,21 @@
+0.26.0 / 2019-02-11
+===================
+
+* [FIX] WSDL: make merging external schema works correctly (#1023)
+* [FIX] WSDL: pass error from parsing XML as-is, not only its message (#1022)
+* [ENHANCEMENT] server: add option enableChunkedEncoding (#1043)
+* [FIX] fix a problem about Multi-Byte character (#1042)
+* [FIX] fix double transformationentries in WSSecCert
+* [MAINTENANCE] Add bodyParser.json middleware test
+* [FIX] processRequestXml only if req.body is not empty object
+* [MAINTENANCE] Fixing v10 ssl tests and removing jshint since it sucks and doesn't support es6.  (we need to migrate to eslint).
+* [FIX] Arrays deserve namespace override too
+
 0.25.0 / 2018-08-19
 ===================
 * [FIX] Improved deserialization on inline `simpleType` declarations (#1015)
 * [ENHANCEMENT] Added option to allow the user to dis-/enable the timestamp in `WSSecurtityCert` (defaults to "enabled" to maintain current behaviour) (#1017)
-* [DOC] Updated the "*Async" result description (#1016)
+* [DOC] Updated the "\*Async" result description (#1016)
 * [ENHANCEMENT] Added ability to resolve Schema-cross-reference namespaces in `client.describe()` (#1014)
 * [FIX] Fixed `.npmignore` patterns in order to publish only the necessary files (#1012)
 * [DOC] Removed formatting in code (#1011)
