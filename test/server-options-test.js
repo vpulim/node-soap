@@ -460,4 +460,99 @@ describe('SOAP Server with Options', function() {
       });
     });
   });
+  it('should use chunked transfer encoding by default', function (done) {
+    test.server.listen(15099, null, null, function() {
+      test.soapServer = soap.listen(test.server, {
+        path: '/stockquote',
+        services: test.service,
+        xml: test.wsdl,
+      }, test.service, test.wsdl);
+      test.baseUrl = 'http://' + test.server.address().address + ":" + test.server.address().port;
+
+      //windows return 0.0.0.0 as address and that is not
+      //valid to use in a request
+      if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
+        test.baseUrl = 'http://127.0.0.1:' + test.server.address().port;
+      }
+
+      soap.createClient(test.baseUrl + '/stockquote?wsdl', function(err, client) {
+        assert.ifError(err);
+
+        client.on('response', function(body, response, eid) {
+          var headers = response.headers;
+          assert.strictEqual(headers['transfer-encoding'], 'chunked');
+          assert.equal(headers['content-length'], undefined);
+        })
+
+        client.SetTradePrice({ tickerSymbol: 'GOOG' }, function(err, result, body) {
+          assert.ifError(err);
+          done();
+        });
+      });
+    });
+  });
+  it('should use chunked transfer encoding when enabled in options', function (done) {
+    test.server.listen(15099, null, null, function() {
+      test.soapServer = soap.listen(test.server, {
+        path: '/stockquote',
+        services: test.service,
+        xml: test.wsdl,
+        enableChunkedEncoding: true,
+      }, test.service, test.wsdl);
+      test.baseUrl = 'http://' + test.server.address().address + ":" + test.server.address().port;
+
+      //windows return 0.0.0.0 as address and that is not
+      //valid to use in a request
+      if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
+        test.baseUrl = 'http://127.0.0.1:' + test.server.address().port;
+      }
+
+      soap.createClient(test.baseUrl + '/stockquote?wsdl', function(err, client) {
+        assert.ifError(err);
+
+        client.on('response', function(body, response, eid) {
+          var headers = response.headers;
+          assert.strictEqual(headers['transfer-encoding'], 'chunked');
+          assert.equal(headers['content-length'], undefined);
+        })
+
+        client.SetTradePrice({ tickerSymbol: 'GOOG' }, function(err, result, body) {
+          assert.ifError(err);
+          done();
+        });
+      });
+    });
+  });
+  it('should not use chunked transfer encoding when disabled in options', function (done) {
+    test.server.listen(15099, null, null, function() {
+      test.soapServer = soap.listen(test.server, {
+        path: '/stockquote',
+        services: test.service,
+        xml: test.wsdl,
+        enableChunkedEncoding: false,
+      }, test.service, test.wsdl);
+      test.baseUrl = 'http://' + test.server.address().address + ":" + test.server.address().port;
+
+      //windows return 0.0.0.0 as address and that is not
+      //valid to use in a request
+      if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
+        test.baseUrl = 'http://127.0.0.1:' + test.server.address().port;
+      }
+
+      soap.createClient(test.baseUrl + '/stockquote?wsdl', function(err, client) {
+        assert.ifError(err);
+
+        client.on('response', function(body, response, eid) {
+          var headers = response.headers;
+          assert.notEqual(headers['content-length'], undefined);
+          assert.equal(headers['transfer-encoding'], undefined);
+        })
+
+        client.SetTradePrice({ tickerSymbol: 'GOOG' }, function(err, result, body) {
+          assert.ifError(err);
+          done();
+        });
+      });
+    });
+  });
 });

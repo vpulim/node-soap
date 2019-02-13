@@ -51,6 +51,20 @@ wsdlStrictTests['should catch parse error'] = function(done) {
   });
 };
 
+wsdlNonStrictTests['should not give error as string'] = function(done) {
+  soap.createClient(__dirname+'/wsdl/bad.txt', function(err) {
+    assert.notEqual(typeof err, 'string');
+    done();
+  });
+};
+
+wsdlStrictTests['should not give error as string'] = function(done) {
+  soap.createClient(__dirname+'/wsdl/bad.txt', function(err) {
+    assert.notEqual(typeof err, 'string');
+    done();
+  });
+};
+
 wsdlStrictTests['should parse external wsdl'] = function(done) {
   soap.createClient(__dirname+'/wsdl/wsdlImport/main.wsdl', {strict: true}, function(err, client){
     assert.ifError(err);
@@ -180,6 +194,36 @@ wsdlNonStrictTests['should all attributes to root elements'] = function(done) {
   soap.createClient(__dirname + '/wsdl/elementref/foo.wsdl', {}, function(err, client) {
     assert.ok(!err);
     client.fooOp({paymentRq: { attributes: {'bar1:test': 'attr'}, bankSvcRq: {':requestUID': '001'}}}, function(err, result) {
+      assert.equal(client.lastMessage, expectedMsg);
+      done();
+    });
+  });
+};
+
+wsdlNonStrictTests['should merge schema with attributes'] = function(done) {
+  var expectedMsg =
+    '<peatdef:AskPeat xmlns:peatdef="urn:peat.def" xmlns="urn:peat.def">' +
+      '<peatdef:Question>How are you?</peatdef:Question>' +
+    '</peatdef:AskPeat>';
+
+  soap.createClient(__dirname + '/wsdl/mergeWithAttributes/main.wsdl', {}, function(err, client) {
+    assert.ok(!err);
+    client.AskPeat({ Question: 'How are you?' }, function(err, result) {
+      assert.equal(client.lastMessage, expectedMsg);
+      done();
+    });
+  });
+};
+
+wsdlStrictTests['should merge schema with attributes'] = function(done) {
+  var expectedMsg =
+    '<peatdef:AskPeat xmlns:peatdef="urn:peat.def" xmlns="urn:peat.def">' +
+      '<peatdef:Question>How are you?</peatdef:Question>' +
+    '</peatdef:AskPeat>';
+
+  soap.createClient(__dirname + '/wsdl/mergeWithAttributes/main.wsdl', {}, function(err, client) {
+    assert.ok(!err);
+    client.AskPeat({ Question: 'How are you?' }, function(err, result) {
       assert.equal(client.lastMessage, expectedMsg);
       done();
     });
