@@ -1,0 +1,17 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "target": "es3",
+    "module": "commonjs",
+    "outDir": "lib",
+    "sourceMap": true,
+    "declaration": true,
+    "stripInternal": true
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

@@ -19,5 +19,6 @@ addons:
 before_install:
   - npm -g install npm@latest
 script:
+  - npm run build
   - npm run cover
   - npm run coveralls
