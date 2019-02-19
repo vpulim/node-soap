@@ -9,7 +9,7 @@ var timekeeper = require('timekeeper');
 var jsdiff = require('diff');
 require('colors');
 var soap = require('../');
-var WSSecurity = require('../lib/security/WSSecurity');
+var WSSecurity = require('../lib/security').WSSecurity;
 var server;
 var port;
 var tests = glob.sync('./request-response-samples/*', {cwd:__dirname})

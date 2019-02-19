@@ -2,6 +2,7 @@
 
 var fs = require('fs'),
     soap = require('..'),
+    WSDL = require('../lib/wsdl').WSDL,
     assert = require('assert'),
     sinon = require('sinon');
 
@@ -128,7 +129,7 @@ wsdlStrictTests['should handle type ref'] = function(done) {
 wsdlStrictTests['should parse POJO into xml without making unnecessary recursion'] = function(done) {
   var expectedMsg = require('./wsdl/perf/request.xml.js');
   var reqJson = require('./wsdl/perf/request.json');
-  var spy = sinon.spy(soap.WSDL.prototype, "findChildSchemaObject");
+  var spy = sinon.spy(WSDL.prototype, "findChildSchemaObject");
 
   soap.createClient(__dirname + '/wsdl/perf/order.wsdl', {strict: true}, function(err, client) {
     var i, spyCall;

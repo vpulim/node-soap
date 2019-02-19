@@ -11,7 +11,6 @@
     "concat-stream": "^1.5.1",
     "debug": "^2.6.9",
     "ejs": "~2.5.5",
-    "finalhandler": "^1.0.3",
     "lodash": "^4.17.5",
     "httpntlm": "^1.5.2",
     "request": ">=2.9.0",
@@ -31,9 +30,13 @@
     "lib": "./lib"
   },
   "scripts": {
+    "build": "tsc -p .",
+    "clean": "rm -rf lib",
+    "watch": "tsc -w -p .",
     "toc": "./node_modules/.bin/doctoc Readme.md --github --maxlevel 3",
     "cover": "nyc --reporter=lcov --reporter=html --reporter=text mocha --exit test/*-test.js test/security/*.js",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js -v",
+    "docs": "typedoc --out docs",
     "test": "mocha --timeout 10000 --bail --exit test/*-test.js test/security/*.js"
   },
   "keywords": [
@@ -42,6 +45,13 @@
   "license": "MIT",
   "devDependencies": {
     "@types/bluebird": "^3.5.1",
+    "@types/debug": "^4.1.1",
+    "@types/express": "^4.16.1",
+    "@types/lodash": "^4.14.121",
+    "@types/node": "^11.9.4",
+    "@types/request": "^2.48.1",
+    "@types/sax": "^1.0.1",
+    "@types/uuid": "^3.4.4",
     "body-parser": "^1.15.2",
     "colors": "^1.1.2",
     "coveralls": "^3.0.1",
@@ -49,6 +59,7 @@
     "doctoc": "^1.0.0",
     "duplexer": "~0.1.1",
     "express": "^4.14.0",
+    "finalhandler": "^1.1.1",
     "glob": "~3.2.8",
     "jshint": "2.3.0",
     "mocha": "~5.2.0",
@@ -57,6 +68,9 @@
     "semver": "~5.0.3",
     "should": "~3.3.0",
     "sinon": "^1.17.5",
-    "timekeeper": "~0.0.4"
+    "timekeeper": "~0.0.4",
+    "tslint": "^5.12.1",
+    "typedoc": "^0.14.2",
+    "typescript": "^3.3.3"
   }
 }
