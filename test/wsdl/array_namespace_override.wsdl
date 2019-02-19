@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="SampleArrayServiceImplService" targetNamespace="http://service.dummy.com" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://service.dummy.com" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns3="http://schemas.xmlsoap.org/soap/http" xmlns:ns2="http://response.dummy.com" xmlns:ns1="http://request.dummy.com">
+  <wsdl:types>
+    <xs:schema targetNamespace="http://service.dummy.com" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:element name="CreateOrderResponseVO" type="tns:CreateOrderResponseVO"/>
+      <xs:complexType name="ABaseServiceRequestVO">
+        <xs:sequence>
+          <xs:element name="ClientId" nillable="true" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ABaseServiceResponseVO">
+        <xs:sequence>
+          <xs:element name="message" nillable="true" type="xs:string"/>
+          <xs:element name="code" type="xs:int"/>
+          <xs:element name="subCode" type="xs:int"/>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="errors" nillable="true" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="createWebOrderRequest">
+        <xs:sequence>
+          <xs:element name="clientId" type="xs:string"/>
+          <xs:element name="order" type="tns:order"/>
+          <xs:element minOccurs="0" name="salesNo" nillable="true" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="CreateOrderResponseVO">
+        <xs:sequence>
+          <xs:element name="orderNumber" nillable="true" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="order">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" name="orderDetails" type="tns:orderDetail"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="orderDetail">
+        <xs:sequence>
+          <xs:element name="unitNo" type="xs:string"/>
+          <xs:element maxOccurs="unbounded" name="items" type="tns:itemDetail"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="itemDetail">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="markdowns" nillable="true" type="tns:markdown"/>
+          <xs:element name="itemDesc" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="markdown">
+        <xs:sequence>
+          <xs:element name="discountPercent" type="xs:double"/>
+          <xs:element minOccurs="0" name="couponNo" type="xs:string"/>
+          <xs:element name="markdownAmt" type="xs:double"/>
+        </xs:sequence>
+      </xs:complexType>
+    </xs:schema>
+    <xs:schema attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="com.dummy.request" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://service.dummy.com" xmlns="com.dummy.request">
+      <xs:import namespace="http://service.dummy.com"/>
+      <xs:element name="createWebOrderRequest" type="ns1:createWebOrderRequest"/>
+    </xs:schema>
+    <xsd:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://request.dummy.com" xmlns="http://request.dummy.com">
+      <xsd:import namespace="http://service.dummy.com"/>
+      <xsd:element name="CreateWebOrderRequest" nillable="true" type="tns:createWebOrderRequest"/>
+    </xsd:schema>
+    <xsd:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://response.dummy.com" xmlns="http://response.dummy.com">
+      <xsd:import namespace="http://service.dummy.com"/>
+      <xsd:element name="CreateWebOrderResponse" nillable="true" type="tns:CreateOrderResponseVO"/>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="createWebOrderResponse">
+    <wsdl:part element="ns2:CreateWebOrderResponse" name="CreateWebOrderResponse"/>
+  </wsdl:message>
+  <wsdl:message name="createWebOrder">
+    <wsdl:part element="ns1:CreateWebOrderRequest" name="CreateWebOrderRequest"/>
+  </wsdl:message>
+  <wsdl:portType name="SampleArraySoapService">
+    <wsdl:operation name="createWebOrder">
+      <wsdl:input message="tns:createWebOrder" name="createWebOrder"/>
+      <wsdl:output message="tns:createWebOrderResponse" name="createWebOrderResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="SampleArrayServiceImplServiceSoapBinding" type="tns:SampleArraySoapService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="createWebOrder">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="createWebOrder">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="createWebOrderResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="SampleArrayServiceImplService">
+    <wsdl:port binding="tns:SampleArrayServiceImplServiceSoapBinding" name="SampleArrayServiceImplPort">
+      <soap:address location="http://www.dummy.com"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

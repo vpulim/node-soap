@@ -689,10 +689,14 @@ export class WSDL {
     // start building out XML string.
     if (Array.isArray(obj)) {
       var nonSubNameSpace = '';
+      var emptyNonSubNameSpaceForArray = false;
       var nameWithNsRegex = /^([^:]+):([^:]+)$/.exec(name);
       if (nameWithNsRegex) {
         nonSubNameSpace = nameWithNsRegex[1];
         name = nameWithNsRegex[2];
+      } else if (name[0] === ':') {
+        emptyNonSubNameSpaceForArray = true;
+        name = name.substr(1);
       }
 
       for (i = 0, n = obj.length; i < n; i++) {
@@ -702,7 +706,10 @@ export class WSDL {
 
         var body = self.objectToXML(item, name, nsPrefix, nsURI, false, null, schemaObject, nsContext);
 
-        var openingTagParts = ['<', appendColon(correctOuterNsPrefix), name, arrayAttr, xmlnsAttrib];
+        var openingTagParts = ['<', name, arrayAttr, xmlnsAttrib];
+        if (!emptyNonSubNameSpaceForArray) {
+          openingTagParts = ['<', appendColon(correctOuterNsPrefix), name, arrayAttr, xmlnsAttrib];
+        }
 
         if (body === '' && self.options.useEmptyTag) {
           // Use empty (self-closing) tags if no contents
@@ -715,7 +722,11 @@ export class WSDL {
           }
           parts.push(body);
           if (self.options.namespaceArrayElements || i === n - 1) {
-            parts.push(['</', appendColon(correctOuterNsPrefix), name, '>'].join(''));
+            if (emptyNonSubNameSpaceForArray) {
+              parts.push(['</', name, '>'].join(''));
+            } else {
+              parts.push(['</', appendColon(correctOuterNsPrefix), name, '>'].join(''));
+            }
           }
         }
       }
@@ -874,7 +885,11 @@ export class WSDL {
                   obj[self.options.attributesKey].xsi_type.xmlns, false, null, null, nsContext);
               } else {
                 if (Array.isArray(child)) {
-                  name = nonSubNameSpace + name;
+                  if(emptyNonSubNameSpace) {
+                    name = ':' + name;
+                  } else {
+                    name = nonSubNameSpace + name;
+                  }
                 }
 
                 value = self.objectToXML(child, name, nsPrefix, nsURI, false, null, null, nsContext);
