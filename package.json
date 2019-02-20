@@ -36,7 +36,7 @@
     "cover": "nyc --reporter=lcov --reporter=html --reporter=text mocha --exit test/*-test.js test/security/*.js",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js -v",
     "docs": "typedoc --out docs",
-    "test": "mocha --timeout 10000 --bail --exit test/*-test.js test/security/*.js"
+    "test": "mocha --timeout 15000 --bail --exit test/*-test.js test/security/*.js"
   },
   "keywords": [
     "soap"

@@ -94,12 +94,12 @@ var fs = require('fs'),
       });
     });
 
-    
+
     it('should allow passing in XML strings', function (done) {
       soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', _.assign({ envelopeKey: 'soapenv' }, meta.options), function (err, client) {
         assert.ok(client);
         assert.ifError(err);
-        
+
         var xmlStr = '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">\n\t<head>\n\t\t<title>404 - Not Found</title>\n\t</head>\n\t<body>\n\t\t<h1>404 - Not Found</h1>\n\t\t<script type="text/javascript" src="http://gp1.wpc.edgecastcdn.net/00222B/beluga/pilot_rtm/beluga_beacon.js"></script>\n\t</body>\n</html>';
         client.MyOperation({_xml: xmlStr}, function (err, result, raw, soapHeader) {
             assert.ok(err);
@@ -210,7 +210,7 @@ var fs = require('fs'),
         }, 'https://127.0.0.1:443');
       });
 
-      
+
       it('should have xml request modified', function (done) {
           soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function(err, client) {
               assert.ok(client);
@@ -230,7 +230,7 @@ var fs = require('fs'),
               );
             }, baseUrl);
         });
-      
+
       it('should have the correct extra header in the request', function (done) {
         soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
           assert.ok(client);
@@ -905,6 +905,52 @@ var fs = require('fs'),
         });
       });
 
+      it('shall generate correct payload for methods with array parameter with colon override', function (done) {
+        soap.createClient(__dirname + '/wsdl/array_namespace_override.wsdl', function(err, client) {
+          assert.ok(client);
+          var pathToArrayContainer = 'SampleArrayServiceImplService.SampleArrayServiceImplPort.createWebOrder.input.order';
+          var arrayParameter = _.get(client.describe(), pathToArrayContainer)['orderDetails[]'];
+          assert.ok(arrayParameter);
+          const input = {
+            ':clientId': 'test',
+            ':order': {
+              ':orderDetails': {
+                ':unitNo': 1234,
+                ':items':[{ ':itemDesc': 'item1'}, { ':itemDesc': 'item2'}]
+              },
+            },
+          };
+          client.createWebOrder(input, function() {
+            var sentInputContent = client.lastRequest.substring(client.lastRequest.indexOf('<items>'), client.lastRequest.lastIndexOf('</items>') + '</items>'.length);
+            assert.equal(sentInputContent, '<items><itemDesc>item1</itemDesc></items><items><itemDesc>item2</itemDesc></items>');
+            done();
+          });
+        });
+      });
+
+      it('shall generate correct payload for methods with array parameter with parent namespace', function (done) {
+        soap.createClient(__dirname + '/wsdl/array_namespace_override.wsdl', function(err, client) {
+          assert.ok(client);
+          var pathToArrayContainer = 'SampleArrayServiceImplService.SampleArrayServiceImplPort.createWebOrder.input.order';
+          var arrayParameter = _.get(client.describe(), pathToArrayContainer)['orderDetails[]'];
+          assert.ok(arrayParameter);
+          const input = {
+            ':clientId': 'test',
+            ':order': {
+              'orderDetails': {
+                ':unitNo': 1234,
+                'items':[{ ':itemDesc': 'item1'}, { ':itemDesc': 'item2'}]
+              },
+            },
+          };
+          client.createWebOrder(input, function() {
+            var sentInputContent = client.lastRequest.substring(client.lastRequest.indexOf('<ns1:items>'), client.lastRequest.lastIndexOf('</ns1:items>') + '</ns1:items>'.length);
+            assert.equal(sentInputContent, '<ns1:items><itemDesc>item1</itemDesc></ns1:items><ns1:items><itemDesc>item2</itemDesc></ns1:items>');
+            done();
+          });
+        });
+      });
+
       it('shall generate correct payload for methods with array parameter when individual array elements are not namespaced', function (done) {
         // used for servers that cannot aggregate individually namespaced array elements
         soap.createClient(__dirname + '/wsdl/list_parameter.wsdl', {disableCache: true, namespaceArrayElements: false}, function(err, client) {
@@ -1001,7 +1047,7 @@ var fs = require('fs'),
       });
     });
 
-    
+
     describe('Client created with createClientAsync', function () {
       it('should error on invalid host', function (done) {
         soap.createClientAsync('http://localhost:1', meta.options)
@@ -1057,7 +1103,7 @@ var fs = require('fs'),
             done();
           });
       });
-      
+
       it('should allow customization of request for http client', function (done) {
         var myRequest = function () {
         };
