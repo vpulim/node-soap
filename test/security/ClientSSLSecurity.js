@@ -44,6 +44,48 @@ describe('ClientSSLSecurity', function() {
     instance.should.have.property("key", keyBuffer);
   });
 
+  it('should accept a String as argument for the key or cert', function () {
+    var certString = join(__dirname, '..', 'certs', 'agent2-cert.pem'),
+      keyString = join(__dirname, '..', 'certs', 'agent2-key.pem'),
+      certBuffer = fs.readFileSync(join(__dirname, '..', 'certs', 'agent2-cert.pem')),
+      keyBuffer = fs.readFileSync(join(__dirname, '..', 'certs', 'agent2-key.pem')),
+      instance;
+
+    instance = new ClientSSLSecurity(keyString, certString, certString);
+    instance.should.have.property("ca", certBuffer);
+    instance.should.have.property("cert", certBuffer);
+    instance.should.have.property("key", keyBuffer);
+  });
+
+  it('should not accept a integer as argument for the key', function () {
+    var instance;
+    try {
+      instance = new ClientSSLSecurity(10);
+    } catch(error) {
+      // do nothing
+    }
+    should(instance).not.be.ok();
+  });
+
+  it('should not accept a integer as argument for the key', function () {
+    var instance;
+    try {
+      instance = new ClientSSLSecurity(null, 10);
+    } catch(error) {
+      // do nothing
+    }
+    should(instance).not.be.ok();
+  });
+
+  it('should return blank string when call toXml', function () {
+    var certBuffer = fs.readFileSync(join(__dirname, '..', 'certs', 'agent2-cert.pem')),
+      keyBuffer = fs.readFileSync(join(__dirname, '..', 'certs', 'agent2-key.pem')),
+      instance;
+
+    instance = new ClientSSLSecurity(keyBuffer, certBuffer, certBuffer);
+    var xml = instance.toXML();
+    xml.should.be.exactly('');
+  });
   it('should accept a Array as argument for the ca', function () {
     var caList = [];
     var instance = new ClientSSLSecurity(null, null, caList);

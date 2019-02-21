@@ -97,4 +97,33 @@ describe('ClientSSLSecurityPFX', function() {
     instance = new ClientSSLSecurityPFX(pfkBuffer);
     instance.should.have.property("pfx", pfkBuffer);
   });
+
+  it('should return a blank when toXML is called', function () {
+    var pfkBuffer = fs.readFileSync(join(__dirname, '..', 'certs', 'pfk-buffer.pfx')),
+      instance;
+
+    instance = new ClientSSLSecurityPFX(pfkBuffer);
+    var xml = instance.toXML();
+    xml.should.be.exactly('');
+  });
+
+  it('should accept a String as argument for the pfx cert', function () {
+    var pfkBuffer = fs.readFileSync(join(__dirname, '..', 'certs', 'pfk-buffer.pfx')),
+      instance;
+
+    instance = new ClientSSLSecurityPFX(join(__dirname, '..', 'certs', 'pfk-buffer.pfx'));
+    instance.should.have.property("pfx", pfkBuffer);
+  });
+
+  it('should have an options with addOptions', function () {
+    var pfkBuffer = fs.readFileSync(join(__dirname, '..', 'certs', 'client-password.pfx')),
+      instance;
+
+    instance = new ClientSSLSecurityPFX(pfkBuffer, 'test2est');
+    var options = { foo: 5 };
+    instance.addOptions(options);
+    options.should.have.property("pfx", pfkBuffer);
+    options.should.have.property("passphrase", 'test2est');
+    options.should.have.property("foo", 5);
+  });
 });

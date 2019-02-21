@@ -14,6 +14,13 @@ describe('BasicAuthSecurity', function() {
       new BasicAuthSecurity(username, password, {});
     });
 
+    it('Should have Authorization header when addHeaders is invoked', function() {
+      var security = new BasicAuthSecurity(username, password, {});
+      var headers = {};
+      security.addHeaders(headers);
+      headers.should.have.property('Authorization');
+    });
+
     it('is used in addOptions', function() {
       var options = {};
       var defaultOptions = { foo: 3 };
