@@ -20,5 +20,12 @@ describe('BearerSecurity', function() {
       instance.addOptions(options);
       options.should.have.property("foo", 2);
     });
+
+    it('should return the authoriation header on calling addHeader', () => {
+      const security = new BearerSecurity(token, {});
+      let headers = {};
+      security.addHeaders(headers);
+      headers.should.have.property('Authorization', "Bearer token");
+    });
   });
 });

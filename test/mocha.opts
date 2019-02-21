@@ -1,4 +1,4 @@
 --reporter spec
---ui exports
+--ui bdd
 --require should
 --require source-map-support/register
