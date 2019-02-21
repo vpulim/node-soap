@@ -26,17 +26,21 @@
   "main": "./index.js",
   "types": "./lib/soap.d.ts",
   "directories": {
-    "lib": "./lib"
+    "lib": "./lib",
+    "test": "./test",
+    "example": "./src/examples"
   },
   "scripts": {
+    "prepare": "npm run build",
     "build": "tsc -p .",
     "clean": "rm -rf lib",
     "watch": "tsc -w -p .",
+    "lint": "tslint -p tsconfig.json",
     "toc": "./node_modules/.bin/doctoc Readme.md --github --maxlevel 3",
-    "cover": "nyc --reporter=lcov --reporter=html --reporter=text mocha --exit test/*-test.js test/security/*.js",
+    "cover": "nyc --reporter=lcov --reporter=html --reporter=text mocha --timeout 15000 --exit test/*-test.js test/security/*.js",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js -v",
     "docs": "typedoc --out docs",
-    "test": "mocha --timeout 15000 --bail --exit test/*-test.js test/security/*.js"
+    "test": "mocha -r source-map-support/register --timeout 15000 --bail --exit test/*-test.js test/security/*.js"
   },
   "keywords": [
     "soap"
@@ -67,6 +71,7 @@
     "semver": "~5.0.3",
     "should": "~3.3.0",
     "sinon": "^1.17.5",
+    "source-map-support": "^0.5.10",
     "timekeeper": "~0.0.4",
     "tslint": "^5.12.1",
     "typedoc": "^0.14.2",

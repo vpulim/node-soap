@@ -65,7 +65,7 @@ export class ClientSSLSecurity implements ISecurity  {
   }
 
   public addOptions(options: any): void {
-    var httpsAgent = null;
+    let httpsAgent = null;
 
     options.key = this.key;
     options.cert = this.cert;

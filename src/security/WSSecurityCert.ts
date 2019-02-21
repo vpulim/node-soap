@@ -9,8 +9,8 @@ function addMinutes(date: Date, minutes: number) {
 
 function dateStringForSOAP(date: Date): string {
   return date.getUTCFullYear() + '-' + ('0' + (date.getUTCMonth() + 1)).slice(-2) + '-' +
-    ('0' + date.getUTCDate()).slice(-2) + 'T' + ('0' + date.getUTCHours()).slice(-2) + ":" +
-    ('0' + date.getUTCMinutes()).slice(-2) + ":" + ('0' + date.getUTCSeconds()).slice(-2) + "Z";
+    ('0' + date.getUTCDate()).slice(-2) + 'T' + ('0' + date.getUTCHours()).slice(-2) + ':' +
+    ('0' + date.getUTCMinutes()).slice(-2) + ':' + ('0' + date.getUTCSeconds()).slice(-2) + 'Z';
 }
 
 function generateCreated(): string {
@@ -94,16 +94,16 @@ export class WSSecurityCert implements ISecurity {
       timestampStr +
       `</wsse:Security>`;
 
-    var xmlWithSec = insertStr(secHeader, xml, xml.indexOf('</soap:Header>'));
+    const xmlWithSec = insertStr(secHeader, xml, xml.indexOf('</soap:Header>'));
 
-    var references = this.signatureTransformations;
+    const references = this.signatureTransformations;
 
-    var bodyXpath = `//*[name(.)='${envelopeKey}:Body']`;
+    const bodyXpath = `//*[name(.)='${envelopeKey}:Body']`;
     if (!(this.signer.references.filter((ref) => (ref.xpath === bodyXpath)).length > 0)) {
       this.signer.addReference(bodyXpath, references);
     }
 
-    var timestampXpath = `//*[name(.)='wsse:Security']/*[local-name(.)='Timestamp']`;
+    const timestampXpath = `//*[name(.)='wsse:Security']/*[local-name(.)='Timestamp']`;
     if (this.hasTimeStamp && !(this.signer.references.filter((ref) => (ref.xpath === timestampXpath)).length > 0)) {
       this.signer.addReference(timestampXpath, references);
     }
