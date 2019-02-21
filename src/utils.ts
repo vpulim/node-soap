@@ -3,12 +3,12 @@ import * as crypto from 'crypto';
 
 export function passwordDigest(nonce: string, created: string, password: string): string {
   // digest = base64 ( sha1 ( nonce + created + password ) )
-  var pwHash = crypto.createHash('sha1');
+  const pwHash = crypto.createHash('sha1');
 
-  var NonceBytes = Buffer.from(nonce || '', 'base64');
-  var CreatedBytes = Buffer.from(created || '', 'utf8');
-  var PasswordBytes = Buffer.from(password || '', 'utf8');
-  var FullBytes = Buffer.concat([NonceBytes, CreatedBytes, PasswordBytes ]);
+  const NonceBytes = Buffer.from(nonce || '', 'base64');
+  const CreatedBytes = Buffer.from(created || '', 'utf8');
+  const PasswordBytes = Buffer.from(password || '', 'utf8');
+  const FullBytes = Buffer.concat([NonceBytes, CreatedBytes, PasswordBytes ]);
 
   pwHash.update(FullBytes);
   return pwHash.digest('base64');
@@ -23,8 +23,8 @@ export const TNS_PREFIX = '__tns__'; // Prefix for targetNamespace
  * @returns {String} The matching key
  */
 export function findPrefix(xmlnsMapping, nsURI) {
-  for (var n in xmlnsMapping) {
-    if (n === TNS_PREFIX) continue;
+  for (const n in xmlnsMapping) {
+    if (n === TNS_PREFIX) { continue; }
     if (xmlnsMapping[n] === nsURI) {
       return n;
     }

@@ -13,7 +13,7 @@ export class BearerSecurity implements ISecurity {
   }
 
   public addHeaders(headers: IHeaders): void {
-    headers.Authorization = "Bearer " + this._token;
+    headers.Authorization = 'Bearer ' + this._token;
   }
 
   public toXML(): string {

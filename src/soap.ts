@@ -24,12 +24,12 @@ export * from './types';
 type WSDLCallback = (error: any, result?: WSDL) => any;
 
 function createCache() {
-  var cache: {
+  const cache: {
     [key: string]: WSDL,
   } = {};
-  return function (key: string, load: (cb: WSDLCallback) => any, callback: WSDLCallback) {
+  return (key: string, load: (cb: WSDLCallback) => any, callback: WSDLCallback) => {
     if (!cache[key]) {
-      load(function (err, result) {
+      load((err, result) => {
         if (err) {
           return callback(err);
         }
@@ -37,20 +37,20 @@ function createCache() {
         callback(null, result);
       });
     } else {
-      process.nextTick(function () {
+      process.nextTick(() => {
         callback(null, cache[key]);
       });
     }
   };
 }
-var getFromCache = createCache();
+const getFromCache = createCache();
 
 function _requestWSDL(url: string, options: IOptions, callback: WSDLCallback) {
   if (typeof options === 'function') {
     callback = options;
     options = {};
   }
-  var openWsdl = function(callback: WSDLCallback) {
+  const openWsdl = (callback: WSDLCallback) => {
     open_wsdl(url, options, callback);
   };
 
@@ -79,7 +79,7 @@ export function createClient(url: string, p2: CreateClientCallback | IOptions, p
     endpoint = p4;
   }
   endpoint = options.endpoint || endpoint;
-  _requestWSDL(url, options, function(err, wsdl) {
+  _requestWSDL(url, options, (err, wsdl) => {
     callback(err, wsdl && new Client(wsdl, endpoint, options));
   });
 }
@@ -88,8 +88,8 @@ export function createClientAsync(url: string, options: IOptions, endpoint?: str
   if (typeof options === 'undefined') {
     options = {};
   }
-  return new BluebirdPromise(function(resolve, reject) {
-    createClient(url, options, function(err, client) {
+  return new BluebirdPromise((resolve, reject) => {
+    createClient(url, options, (err, client) => {
       if (err) {
         reject(err);
       }
@@ -123,6 +123,6 @@ export function listen(server: ServerType, p2: string | IServerOptions, services
     };
   }
 
-  var wsdl = new WSDL(xml || services, uri, options);
+  const wsdl = new WSDL(xml || services, uri, options);
   return new Server(server, path, services, wsdl, options);
 }

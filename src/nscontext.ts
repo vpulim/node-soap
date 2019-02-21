@@ -33,7 +33,7 @@ class NamespaceScope {
       case 'xmlns':
         return 'http://www.w3.org/2000/xmlns/';
       default:
-        var nsUri = this.namespaces[prefix];
+        const nsUri = this.namespaces[prefix];
         /*jshint -W116 */
         if (nsUri != null) {
           return nsUri.uri;
@@ -60,7 +60,7 @@ class NamespaceScope {
           declared: true,
         };
       default:
-        var mapping = this.namespaces[prefix];
+        const mapping = this.namespaces[prefix];
         /*jshint -W116 */
         if (mapping != null) {
           return mapping;
@@ -85,7 +85,7 @@ class NamespaceScope {
       case 'http://www.w3.org/2000/xmlns/':
         return 'xmlns';
       default:
-        for (var p in this.namespaces) {
+        for (const p in this.namespaces) {
           if (this.namespaces[p].uri === nsUri) {
             return p;
           }
@@ -143,7 +143,7 @@ export class NamespaceContext {
    * @returns {NamespaceScope} The current scope
    */
   public pushContext(): NamespaceScope {
-    var scope = new NamespaceScope(this.currentScope);
+    const scope = new NamespaceScope(this.currentScope);
     this.scopes.push(scope);
     this.currentScope = scope;
     return scope;
@@ -154,7 +154,7 @@ export class NamespaceContext {
    * @returns {NamespaceScope} The removed scope
    */
   public popContext(): NamespaceScope {
-    var scope = this.scopes.pop();
+    const scope = this.scopes.pop();
     if (scope) {
       this.currentScope = scope.parent;
     } else {
@@ -189,7 +189,7 @@ export class NamespaceContext {
    * @returns {String} The matching or generated namespace prefix
    */
   public registerNamespace(nsUri: string): string {
-    var prefix = this.getPrefix(nsUri);
+    let prefix = this.getPrefix(nsUri);
     if (prefix) {
       // If the namespace has already mapped to a prefix
       return prefix;
@@ -215,7 +215,7 @@ export class NamespaceContext {
    */
   public declareNamespace(prefix: string, nsUri: string): boolean {
     if (this.currentScope) {
-      var mapping = this.currentScope.getNamespaceMapping(prefix);
+      const mapping = this.currentScope.getNamespaceMapping(prefix);
       if (mapping && mapping.uri === nsUri && mapping.declared) {
         return false;
       }

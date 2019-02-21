@@ -6,14 +6,14 @@
 import { EventEmitter } from 'events';
 import * as http from 'http';
 import * as url from 'url';
-import { IOneWayOptions, ISecurity, IServerOptions, IServices, ISoapFault, ISoapServiceMethod } from "./types";
+import { IOneWayOptions, ISecurity, IServerOptions, IServices, ISoapFault, ISoapServiceMethod } from './types';
 import { findPrefix } from './utils';
 import { WSDL } from './wsdl';
 import { BindingElement, IPort } from './wsdl/elements';
 
 let zlib;
 try {
-  zlib = require("zlib");
+  zlib = require('zlib');
 } catch (error) {
 }
 
@@ -80,7 +80,6 @@ export class Server extends EventEmitter {
 
   constructor(server: ServerType, path: string, services: IServices, wsdl: WSDL, options?: IServerOptions) {
     super();
-    var self = this;
 
     options = options || {
       path: path,
@@ -95,38 +94,39 @@ export class Server extends EventEmitter {
     this.enableChunkedEncoding =
       options.enableChunkedEncoding === undefined ? true : !!options.enableChunkedEncoding;
 
-    if (path[path.length - 1] !== '/')
+    if (path[path.length - 1] !== '/') {
       path += '/';
-    wsdl.onReady(function (err) {
+    }
+    wsdl.onReady((err) => {
       if (isExpress(server)) {
         // handle only the required URL path for express server
-        server.route(path).all(function (req, res) {
-          if (typeof self.authorizeConnection === 'function') {
-            if (!self.authorizeConnection(req, res)) {
+        server.route(path).all((req, res) => {
+          if (typeof this.authorizeConnection === 'function') {
+            if (!this.authorizeConnection(req, res)) {
               res.end();
               return;
             }
           }
-          self._requestListener(req, res);
+          this._requestListener(req, res);
         });
       } else {
-        var listeners = server.listeners('request').slice();
+        const listeners = server.listeners('request').slice();
         server.removeAllListeners('request');
-        server.addListener('request', function(req, res) {
-          if (typeof self.authorizeConnection === 'function') {
-            if (!self.authorizeConnection(req, res)) {
+        server.addListener('request', (req, res) => {
+          if (typeof this.authorizeConnection === 'function') {
+            if (!this.authorizeConnection(req, res)) {
               res.end();
               return;
             }
           }
-          var reqPath = url.parse(req.url).pathname;
+          let reqPath = url.parse(req.url).pathname;
           if (reqPath[reqPath.length - 1] !== '/') {
             reqPath += '/';
           }
           if (path === reqPath) {
-            self._requestListener(req, res);
+            this._requestListener(req, res);
           } else {
-            for (var i = 0, len = listeners.length; i < len; i++) {
+            for (let i = 0, len = listeners.length; i < len; i++) {
               listeners[i].call(this, req, res);
             }
           }
@@ -162,17 +162,18 @@ export class Server extends EventEmitter {
   }
 
   private _processSoapHeader(soapHeader, name, namespace, xmlns) {
-    var self = this;
-
     switch (typeof soapHeader) {
     case 'object':
       return this.wsdl.objectToXML(soapHeader, name, namespace, xmlns, true);
     case 'function':
+      const _this = this;
+      // arrow function does not support arguments variable
+      // tslint:disable-next-line
       return function() {
-        var result = soapHeader.apply(null, arguments);
+        const result = soapHeader.apply(null, arguments);
 
         if (typeof result === 'object') {
-          return self.wsdl.objectToXML(result, name, namespace, xmlns, true);
+          return _this.wsdl.objectToXML(result, name, namespace, xmlns, true);
         } else {
           return result;
         }
@@ -189,107 +190,102 @@ export class Server extends EventEmitter {
   }
 
   private _processRequestXml(req: Request, res: Response, xml) {
-    var self = this;
-    var result;
-    var error;
+    let error;
     try {
-      if (typeof self.log === 'function') {
-        self.log("received", xml);
+      if (typeof this.log === 'function') {
+        this.log('received', xml);
       }
-      self._process(xml, req, function(result, statusCode) {
-        self._sendHttpResponse(res, statusCode, result);
-        if (typeof self.log === 'function') {
-          self.log("replied", result);
+      this._process(xml, req, (result, statusCode) => {
+        this._sendHttpResponse(res, statusCode, result);
+        if (typeof this.log === 'function') {
+          this.log('replied', result);
         }
       });
     } catch (err) {
       if (err.Fault !== undefined) {
-        return self._sendError(err.Fault, function(result, statusCode) {
-          self._sendHttpResponse(res, statusCode || 500, result);
-          if (typeof self.log === 'function') {
-            self.log("error", err);
+        return this._sendError(err.Fault, (result, statusCode) => {
+          this._sendHttpResponse(res, statusCode || 500, result);
+          if (typeof this.log === 'function') {
+            this.log('error', err);
           }
         }, new Date().toISOString());
       } else {
-        error = err.stack ? (self.suppressStack === true ? err.message : err.stack) : err;
-        self._sendHttpResponse(res, /* statusCode */ 500, error);
-        if (typeof self.log === 'function') {
-          self.log("error", error);
+        error = err.stack ? (this.suppressStack === true ? err.message : err.stack) : err;
+        this._sendHttpResponse(res, /* statusCode */ 500, error);
+        if (typeof this.log === 'function') {
+          this.log('error', error);
         }
       }
     }
   }
 
   private _requestListener(req: Request, res: Response) {
-    var self = this;
-    var reqParse = url.parse(req.url);
-    var reqPath = reqParse.pathname;
-    var reqQuery = reqParse.search;
+    const reqParse = url.parse(req.url);
+    const reqPath = reqParse.pathname;
+    const reqQuery = reqParse.search;
 
-    if (typeof self.log === 'function') {
-      self.log("info", "Handling " + req.method + " on " + req.url);
+    if (typeof this.log === 'function') {
+      this.log('info', 'Handling ' + req.method + ' on ' + req.url);
     }
 
     if (req.method === 'GET') {
       if (reqQuery && reqQuery.toLowerCase() === '?wsdl') {
-        if (typeof self.log === 'function') {
-          self.log("info", "Wants the WSDL");
+        if (typeof this.log === 'function') {
+          this.log('info', 'Wants the WSDL');
         }
-        res.setHeader("Content-Type", "application/xml");
-        res.write(self.wsdl.toXML());
+        res.setHeader('Content-Type', 'application/xml');
+        res.write(this.wsdl.toXML());
       }
       res.end();
     } else if (req.method === 'POST') {
-      if (typeof req.headers['content-type'] !== "undefined") {
+      if (typeof req.headers['content-type'] !== 'undefined') {
         res.setHeader('Content-Type', req.headers['content-type']);
       } else {
-        res.setHeader('Content-Type', "application/xml");
+        res.setHeader('Content-Type', 'application/xml');
       }
 
       // request body is already provided by an express middleware
       // in this case unzipping should also be done by the express middleware itself
       if (req.body && Object.keys(req.body).length > 0) {
-        return self._processRequestXml(req, res, req.body.toString());
+        return this._processRequestXml(req, res, req.body.toString());
       }
 
-      var chunks = [], gunzip, source = req;
-      if (req.headers["content-encoding"] === "gzip") {
+      const chunks = [];
+      let gunzip;
+      let source = req;
+      if (req.headers['content-encoding'] === 'gzip') {
         gunzip = zlib.createGunzip();
         req.pipe(gunzip);
         source = gunzip;
       }
-      source.on('data', function (chunk) {
+      source.on('data', (chunk) => {
         chunks.push(chunk);
       });
-      source.on('end', function () {
-        var xml = Buffer.concat(chunks).toString();
-        var result;
-        var error;
-        self._processRequestXml(req, res, xml);
+      source.on('end', () => {
+        const xml = Buffer.concat(chunks).toString();
+        this._processRequestXml(req, res, xml);
       });
-    }
-    else {
+    } else {
       res.end();
     }
   }
 
   private _process(input, req: Request, callback: (result: any, statusCode?: number) => any) {
-    var self = this,
-      pathname = url.parse(req.url).pathname.replace(/\/$/, ''),
-      obj = this.wsdl.xmlToObject(input),
-      body = obj.Body,
-      headers = obj.Header,
-      binding: BindingElement,
-      methodName: string,
-      serviceName: string,
-      portName: string,
-      includeTimestamp = obj.Header && obj.Header.Security && obj.Header.Security.Timestamp,
-      authenticate = self.authenticate || function defaultAuthenticate() { return true; };
+    const pathname = url.parse(req.url).pathname.replace(/\/$/, '');
+    const obj = this.wsdl.xmlToObject(input);
+    const body = obj.Body;
+    const headers = obj.Header;
+    let binding: BindingElement;
+    let methodName: string;
+    let serviceName: string;
+    let portName: string;
+    const includeTimestamp = obj.Header && obj.Header.Security && obj.Header.Security.Timestamp;
+    const authenticate = this.authenticate || function defaultAuthenticate() { return true; };
 
-    function process() {
+    const process = () => {
 
-      if (typeof self.log === 'function') {
-        self.log("info", "Attempting to bind to " + pathname);
+      if (typeof this.log === 'function') {
+        this.log('info', 'Attempting to bind to ' + pathname);
       }
 
       // Avoid Cannot convert undefined or null to object due to Object.keys(body)
@@ -299,25 +295,26 @@ export class Server extends EventEmitter {
       }
 
       // use port.location and current url to find the right binding
-      binding = (function () {
-        var services = self.wsdl.definitions.services;
-        var firstPort: IPort;
-        var name;
+      binding = (() => {
+        const services = this.wsdl.definitions.services;
+        let firstPort: IPort;
+        let name;
         for (name in services) {
           serviceName = name;
-          var service = services[serviceName];
-          var ports = service.ports;
+          const service = services[serviceName];
+          const ports = service.ports;
           for (name in ports) {
             portName = name;
-            var port = ports[portName];
-            var portPathname = url.parse(port.location).pathname.replace(/\/$/, '');
+            const port = ports[portName];
+            const portPathname = url.parse(port.location).pathname.replace(/\/$/, '');
 
-            if (typeof self.log === 'function') {
-              self.log("info", "Trying " + portName + " from path " + portPathname);
+            if (typeof this.log === 'function') {
+              this.log('info', 'Trying ' + portName + ' from path ' + portPathname);
             }
 
-            if (portPathname === pathname)
+            if (portPathname === pathname) {
               return port.binding;
+            }
 
             // The port path is almost always wrong for generated WSDLs
             if (!firstPort) {
@@ -336,11 +333,12 @@ export class Server extends EventEmitter {
         if (binding.style === 'rpc') {
           methodName = Object.keys(body)[0];
 
-          self.emit('request', obj, methodName);
-          if (headers)
-            self.emit('headers', headers, methodName);
+          this.emit('request', obj, methodName);
+          if (headers) {
+            this.emit('headers', headers, methodName);
+          }
 
-          self._executeMethod({
+          this._executeMethod({
             serviceName: serviceName,
             portName: portName,
             methodName: methodName,
@@ -350,14 +348,15 @@ export class Server extends EventEmitter {
             style: 'rpc',
           }, req, callback);
         } else {
-          var messageElemName = (Object.keys(body)[0] === 'attributes' ? Object.keys(body)[1] : Object.keys(body)[0]);
-          var pair = binding.topElements[messageElemName];
+          const messageElemName = (Object.keys(body)[0] === 'attributes' ? Object.keys(body)[1] : Object.keys(body)[0]);
+          const pair = binding.topElements[messageElemName];
 
-          self.emit('request', obj, pair.methodName);
-          if (headers)
-            self.emit('headers', headers, pair.methodName);
+          this.emit('request', obj, pair.methodName);
+          if (headers) {
+            this.emit('headers', headers, pair.methodName);
+          }
 
-          self._executeMethod({
+          this._executeMethod({
             serviceName: serviceName,
             portName: portName,
             methodName: pair.methodName,
@@ -367,63 +366,51 @@ export class Server extends EventEmitter {
             style: 'document',
           }, req, callback, includeTimestamp);
         }
-      }
-      catch (error) {
+      } catch (error) {
         if (error.Fault !== undefined) {
-          return self._sendError(error.Fault, callback, includeTimestamp);
+          return this._sendError(error.Fault, callback, includeTimestamp);
         }
 
         throw error;
       }
-    }
+    };
 
     // Authentication
-
     if (typeof authenticate === 'function') {
-
-      var authResultProcessed = false,
-        processAuthResult = function(authResult) {
-
-          if (!authResultProcessed && (authResult || authResult === false)) {
-
-            authResultProcessed = true;
-
-            if (authResult) {
-
-              try {
-                process();
-              } catch (error) {
-
-                if (error.Fault !== undefined) {
-                  return self._sendError(error.Fault, callback, includeTimestamp);
-                }
-
-                return self._sendError({
-                  Code: {
-                    Value: 'SOAP-ENV:Server',
-                    Subcode: { value: 'InternalServerError' },
-                  },
-                  Reason: { Text: error.toString() },
-                  statusCode: 500,
-                }, callback, includeTimestamp);
+      let authResultProcessed = false;
+      const processAuthResult = (authResult) => {
+        if (!authResultProcessed && (authResult || authResult === false)) {
+          authResultProcessed = true;
+          if (authResult) {
+            try {
+              process();
+            } catch (error) {
+              if (error.Fault !== undefined) {
+                return this._sendError(error.Fault, callback, includeTimestamp);
               }
-
-            } else {
-
-              return self._sendError({
+              return this._sendError({
                 Code: {
-                  Value: 'SOAP-ENV:Client',
-                  Subcode: { value: 'AuthenticationFailure' },
+                  Value: 'SOAP-ENV:Server',
+                  Subcode: { value: 'InternalServerError' },
                 },
-                Reason: { Text: 'Invalid username or password' },
-                statusCode: 401,
+                Reason: { Text: error.toString() },
+                statusCode: 500,
               }, callback, includeTimestamp);
             }
+          } else {
+            return this._sendError({
+              Code: {
+                Value: 'SOAP-ENV:Client',
+                Subcode: { value: 'AuthenticationFailure' },
+              },
+              Reason: { Text: 'Invalid username or password' },
+              statusCode: 401,
+            }, callback, includeTimestamp);
           }
-        };
+        }
+      };
 
       processAuthResult(authenticate(obj.Header && obj.Header.Security, processAuthResult));
-
     } else {
       throw new Error('Invalid authenticate function (not a function)');
     }
@@ -436,25 +423,24 @@ export class Server extends EventEmitter {
     includeTimestamp?,
   ) {
     options = options || {};
-    var self = this,
-      method: ISoapServiceMethod,
-      body, headers,
-      serviceName = options.serviceName,
-      portName = options.portName,
-      methodName = options.methodName,
-      outputName = options.outputName,
-      args = options.args,
-      style = options.style,
-      handled = false;
+    let method: ISoapServiceMethod;
+    let body;
+    let headers;
+    const serviceName = options.serviceName;
+    const portName = options.portName;
+    const methodName = options.methodName;
+    const outputName = options.outputName;
+    const args = options.args;
+    const style = options.style;
 
     if (this.soapHeaders) {
-      headers = this.soapHeaders.map(function(header) {
+      headers = this.soapHeaders.map((header) => {
         if (typeof header === 'function') {
           return header(methodName, args, options.headers, req);
         } else {
           return header;
         }
-      }).join("\n");
+      }).join('\n');
     }
 
     try {
@@ -463,93 +449,91 @@ export class Server extends EventEmitter {
       return callback(this._envelope('', headers, includeTimestamp));
     }
 
-    function handleResult(error, result?);
-    function handleResult(result);
-    function handleResult(error, result?) {
-      if (handled)
+    let handled = false;
+    const handleResult = (error, result?) => {
+      if (handled) {
         return;
+      }
       handled = true;
 
       if (error && error.Fault !== undefined) {
-        return self._sendError(error.Fault, callback, includeTimestamp);
-      }
-      else if (result === undefined) {
+        return this._sendError(error.Fault, callback, includeTimestamp);
+      } else if (result === undefined) {
         // Backward compatibility to support one argument callback style
         result = error;
       }
 
       if (style === 'rpc') {
-        body = self.wsdl.objectToRpcXML(outputName, result, '', self.wsdl.definitions.$targetNamespace);
+        body = this.wsdl.objectToRpcXML(outputName, result, '', this.wsdl.definitions.$targetNamespace);
       } else {
-        var element = self.wsdl.definitions.services[serviceName].ports[portName].binding.methods[methodName].output;
-        body = self.wsdl.objectToDocumentXML(outputName, result, element.targetNSAlias, element.targetNamespace);
+        const element = this.wsdl.definitions.services[serviceName].ports[portName].binding.methods[methodName].output;
+        body = this.wsdl.objectToDocumentXML(outputName, result, element.targetNSAlias, element.targetNamespace);
       }
-      callback(self._envelope(body, headers, includeTimestamp));
-    }
+      callback(this._envelope(body, headers, includeTimestamp));
+    };
 
-    if (!self.wsdl.definitions.services[serviceName].ports[portName].binding.methods[methodName].output) {
+    if (!this.wsdl.definitions.services[serviceName].ports[portName].binding.methods[methodName].output) {
       // no output defined = one-way operation so return empty response
       handled = true;
       body = '';
       if (this.onewayOptions.emptyBody) {
-        body = self._envelope('', headers, includeTimestamp);
+        body = this._envelope('', headers, includeTimestamp);
       }
       callback(body, this.onewayOptions.responseCode);
     }
 
-    var result = method(args, handleResult, options.headers, req);
+    const result = method(args, handleResult, options.headers, req);
     if (typeof result !== 'undefined') {
       handleResult(result);
     }
   }
 
   private _envelope(body, headers, includeTimestamp) {
-    var defs = this.wsdl.definitions,
-      ns = defs.$targetNamespace,
-      encoding = '',
-      alias = findPrefix(defs.xmlns, ns);
+    const defs = this.wsdl.definitions;
+    const ns = defs.$targetNamespace;
+    const encoding = '';
+    const alias = findPrefix(defs.xmlns, ns);
 
-    var envelopeDefinition = this.wsdl.options.forceSoap12Headers
-      ? "http://www.w3.org/2003/05/soap-envelope"
-      : "http://schemas.xmlsoap.org/soap/envelope/";
+    const envelopeDefinition = this.wsdl.options.forceSoap12Headers
+      ? 'http://www.w3.org/2003/05/soap-envelope'
+      : 'http://schemas.xmlsoap.org/soap/envelope/';
 
-    var xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
-      "<soap:Envelope xmlns:soap=\"" + envelopeDefinition + "\" " +
+    let xml = '<?xml version="1.0" encoding="utf-8"?>' +
+      '<soap:Envelope xmlns:soap="' + envelopeDefinition + '" ' +
       encoding +
       this.wsdl.xmlnsInEnvelope + '>';
 
     headers = headers || '';
 
     if (includeTimestamp) {
-      var now = new Date();
-      var created = getDateString(now);
-      var expires = getDateString(new Date(now.getTime() + (1000 * 600)));
+      const now = new Date();
+      const created = getDateString(now);
+      const expires = getDateString(new Date(now.getTime() + (1000 * 600)));
 
-      headers += "<o:Security soap:mustUnderstand=\"1\" " +
-        "xmlns:o=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\" " +
-        "xmlns:u=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\">" +
-        "    <u:Timestamp u:Id=\"_0\">" +
-        "      <u:Created>" + created + "</u:Created>" +
-        "      <u:Expires>" + expires + "</u:Expires>" +
-        "    </u:Timestamp>" +
-        "  </o:Security>\n";
+      headers += '<o:Security soap:mustUnderstand="1" ' +
+        'xmlns:o="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" ' +
+        'xmlns:u="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">' +
+        '    <u:Timestamp u:Id="_0">' +
+        '      <u:Created>' + created + '</u:Created>' +
+        '      <u:Expires>' + expires + '</u:Expires>' +
+        '    </u:Timestamp>' +
+        '  </o:Security>\n';
     }
 
     if (headers !== '') {
-      xml += "<soap:Header>" + headers + "</soap:Header>";
+      xml += '<soap:Header>' + headers + '</soap:Header>';
     }
 
-    xml += body ? "<soap:Body>" + body + "</soap:Body>" : "<soap:Body/>";
+    xml += body ? '<soap:Body>' + body + '</soap:Body>' : '<soap:Body/>';
 
-    xml += "</soap:Envelope>";
+    xml += '</soap:Envelope>';
     return xml;
   }
 
   private _sendError(soapFault: ISoapFault, callback: (result: any, statusCode?: number) => any, includeTimestamp) {
-    var self = this,
-      fault;
+    let fault;
 
-    var statusCode: number;
+    let statusCode: number;
     if (soapFault.statusCode) {
       statusCode = soapFault.statusCode;
       soapFault.statusCode = undefined;
@@ -559,16 +543,15 @@ export class Server extends EventEmitter {
       // Soap 1.1 error style
       // Root element will be prependend with the soap NS
       // It must match the NS defined in the Envelope (set by the _envelope method)
-      fault = self.wsdl.objectToDocumentXML("soap:Fault", soapFault, undefined);
-    }
-    else {
+      fault = this.wsdl.objectToDocumentXML('soap:Fault', soapFault, undefined);
+    } else {
       // Soap 1.2 error style.
       // 3rd param is the NS prepended to all elements
       // It must match the NS defined in the Envelope (set by the _envelope method)
-      fault = self.wsdl.objectToDocumentXML("Fault", soapFault, "soap");
+      fault = this.wsdl.objectToDocumentXML('Fault', soapFault, 'soap');
     }
 
-    return callback(self._envelope(fault, '', includeTimestamp), statusCode);
+    return callback(this._envelope(fault, '', includeTimestamp), statusCode);
   }
 
   private _sendHttpResponse(res: Response, statusCode: number, result) {
@@ -586,8 +569,7 @@ export class Server extends EventEmitter {
     if (this.enableChunkedEncoding) {
       res.write(result);
       res.end();
-    }
-    else {
+    } else {
       res.end(result);
     }
   }

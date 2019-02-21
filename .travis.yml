@@ -3,10 +3,10 @@ language: node_js
 notifications:
   email: false
 node_js:
-  - 9
-  - 8
-  - 7
-  - 6
+  - "9"
+  - "8"
+  - "7"
+  - "6"
   - "lts/*"
 env:
   - CXX=g++-4.8
@@ -19,6 +19,6 @@ addons:
 before_install:
   - npm -g install npm@latest
 script:
-  - npm run build
+  - npm run lint
   - npm run cover
   - npm run coveralls
