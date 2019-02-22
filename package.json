@@ -27,8 +27,7 @@
   "types": "./lib/soap.d.ts",
   "directories": {
     "lib": "./lib",
-    "test": "./test",
-    "example": "./src/examples"
+    "test": "./test"
   },
   "scripts": {
     "prepare": "npm run build",
