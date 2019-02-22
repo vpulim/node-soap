@@ -8,7 +8,9 @@ import * as BluebirdPromise from 'bluebird';
 import * as concatStream from 'concat-stream';
 import * as debugBuilder from 'debug';
 import { EventEmitter } from 'events';
+import { IncomingHttpHeaders } from 'http';
 import * as _ from 'lodash';
+import * as request from 'request';
 import { v4 as uuid4 } from 'uuid';
 import { HttpClient, Request } from './http';
 import { IHeaders, IOptions, ISecurity, SoapMethod } from './types';
@@ -46,7 +48,13 @@ export interface Client {
 export class Client extends EventEmitter {
   [method: string]: any;
   /** contains last full soap request for client logging */
-  public lastRequest: string;
+  public lastRequest?: string;
+  public lastMessage?: string;
+  public lastEndpoint?: string;
+  public lastRequestHeaders?: request.Headers;
+  public lastResponse?: any;
+  public lastResponseHeaders?: IncomingHttpHeaders;
+  public lastElapsedTime?: number;
 
   private wsdl: WSDL;
   private httpClient: HttpClient;
@@ -58,12 +66,6 @@ export class Client extends EventEmitter {
   private SOAPAction: string;
   private streamAllowed: boolean;
   private normalizeNames: boolean;
-  private lastMessage: string;
-  private lastEndpoint: string;
-  private lastRequestHeaders;
-  private lastResponse;
-  private lastResponseHeaders;
-  private lastElapsedTime: number;
 
   constructor(wsdl: WSDL, endpoint?: string, options?: IOptions) {
     super();
