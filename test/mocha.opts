@@ -1,3 +1,4 @@
--R spec
--u exports
--r should
+--reporter spec
+--ui exports
+--require should
+--require source-map-support/register
