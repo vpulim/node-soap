@@ -159,11 +159,21 @@ Note: for versions of node >0.10.X, you may need to specify `{connection: 'keep-
                   };
               },
 
-              // This is how to define an asynchronous function.
+              // This is how to define an asynchronous function with a callback.
               MyAsyncFunction: function(args, callback) {
                   // do some work
                   callback({
                       name: args.name
+                  });
+              },
+
+              // This is how to define an asynchronous function with a Promise.
+              MyPromiseFunction: function(args) {
+                  return new Promise((resolve) => {
+                    // do some work
+                    resolve({
+                      name: args.name
+                    });
                   });
               },
 

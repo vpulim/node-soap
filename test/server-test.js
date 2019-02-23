@@ -19,6 +19,14 @@ test.service = {
           throw new Error('triggered server error');
         } else if (args.tickerSymbol === 'Async') {
           return cb({ price: 19.56 });
+        } else if (args.tickerSymbol === 'Promise Error') {
+          return new Promise((resolve, reject) => {
+            reject(new Error('triggered server error'));
+          });
+        } else if (args.tickerSymbol === 'Promise') {
+          return new Promise((resolve) => {
+            resolve({ price: 13.76 });
+          });
         } else if (args.tickerSymbol === 'SOAP Fault v1.2') {
           throw {
             Fault: {
@@ -283,6 +291,29 @@ describe('SOAP Server', function() {
       client.IsValidPrice({ price: 50000 }, function(err, result) {
         assert.ifError(err);
         assert.equal(true, !!(result.valid));
+        done();
+      });
+    });
+  });
+
+  it('should support Promise return result', function(done) {
+    soap.createClient(test.baseUrl + '/stockquote?wsdl', function(err, client) {
+      assert.ifError(err);
+      client.GetLastTradePrice({ tickerSymbol: 'Promise'}, function(err, result) {
+        assert.ifError(err);
+        assert.equal(13.76, parseFloat(result.price));
+        done();
+      });
+    });
+  });
+
+  it('should support Promise rejection (error)', function(done) {
+    soap.createClient(test.baseUrl + '/stockquote?wsdl', function(err, client) {
+      assert.ifError(err);
+      client.GetLastTradePrice({ tickerSymbol: 'Promise Error'}, function(err, response, body) {
+        assert.ok(err);
+        assert.strictEqual(err.response, response);
+        assert.strictEqual(err.body, body);
         done();
       });
     });

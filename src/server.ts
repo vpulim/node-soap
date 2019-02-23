@@ -30,6 +30,10 @@ function isExpress(server): server is IExpressApp {
   return (typeof server.route === 'function' && typeof server.use === 'function');
 }
 
+function isPromiseLike<T>(obj): obj is PromiseLike<T> {
+  return (!!obj && typeof obj.then === 'function');
+}
+
 function getDateString(d) {
   function pad(n) {
     return n < 10 ? '0' + n : n;
@@ -456,11 +460,19 @@ export class Server extends EventEmitter {
       }
       handled = true;
 
-      if (error && error.Fault !== undefined) {
-        return this._sendError(error.Fault, callback, includeTimestamp);
-      } else if (result === undefined) {
-        // Backward compatibility to support one argument callback style
-        result = error;
+      if (error) {
+        if (error.Fault !== undefined) {
+          return this._sendError(error.Fault, callback, includeTimestamp);
+        } else {
+          return this._sendError({
+            Code: {
+              Value: 'SOAP-ENV:Server',
+              Subcode: { value: 'InternalServerError' },
+            },
+            Reason: { Text: error.toString() },
+            statusCode: 500,
+          }, callback, includeTimestamp);
+        }
       }
 
       if (style === 'rpc') {
@@ -482,9 +494,28 @@ export class Server extends EventEmitter {
       callback(body, this.onewayOptions.responseCode);
     }
 
-    const result = method(args, handleResult, options.headers, req);
+    const methodCallback = (error, result?) => {
+      if (error && error.Fault !== undefined) {
+        // do nothing
+      } else if (result === undefined) {
+        // Backward compatibility to support one argument callback style
+        result = error;
+        error = null;
+      }
+      handleResult(error, result);
+    };
+
+    const result = method(args, methodCallback, options.headers, req);
     if (typeof result !== 'undefined') {
-      handleResult(result);
+      if (isPromiseLike<any>(result)) {
+        result.then((value) => {
+          handleResult(null, value);
+        }, (err) => {
+          handleResult(err);
+        });
+      } else {
+        handleResult(null, result);
+      }
     }
   }
 
