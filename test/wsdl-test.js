@@ -20,14 +20,14 @@ describe('WSDL Parser (strict)', () => {
 
   it('should catch parse error', (done) => {
     soap.createClient(__dirname+'/wsdl/bad.txt', {strict: true}, function(err) {
-      assert.notEqual(err, null);
+      assert.notStrictEqual(err, null);
       done();
     });
   });
 
   it('should not give error as string', (done) => {
     soap.createClient(__dirname+'/wsdl/bad.txt', function(err) {
-      assert.notEqual(typeof err, 'string');
+      assert.notStrictEqual(typeof err, 'string');
       done();
     });
   });
@@ -35,9 +35,9 @@ describe('WSDL Parser (strict)', () => {
   it('should parse external wsdl', (done) => {
     soap.createClient(__dirname+'/wsdl/wsdlImport/main.wsdl', {strict: true}, function(err, client){
       assert.ifError(err);
-      assert.deepEqual(Object.keys(client.wsdl.definitions.schemas),
+      assert.deepStrictEqual(Object.keys(client.wsdl.definitions.schemas),
         ['http://example.com/', 'http://schemas.microsoft.com/2003/10/Serialization/Arrays']);
-      assert.equal(typeof client.getLatestVersion, 'function');
+      assert.strictEqual(typeof client.getLatestVersion, 'function');
       done();
     });
   });
@@ -59,7 +59,7 @@ describe('WSDL Parser (strict)', () => {
     var expected = '{"DummyService":{"DummyPortType":{"Dummy":{"input":{"DummyRequest":{"DummyField1":"xs:string","DummyField2":"xs:string"},"ExtendedDummyField":"xs:string"},"output":{"DummyResult":"c:DummyResult"}}}}}';
     soap.createClient(__dirname+'/wsdl/extended_element.wsdl', function(err, client){
       assert.ifError(err);
-      assert.equal(JSON.stringify(client.describe()), expected);
+      assert.strictEqual(JSON.stringify(client.describe()), expected);
       done();
     });
   });
@@ -74,7 +74,7 @@ describe('WSDL Parser (strict)', () => {
     soap.createClient(__dirname + '/wsdl/elementref/foo.wsdl', {strict: true}, function(err, client) {
       assert.ifError(err);
       client.fooOp({paymentRq: {bankSvcRq: {requestUID: '001'}}}, function(err, result) {
-        assert.equal(client.lastMessage, expectedMsg);
+        assert.strictEqual(client.lastMessage, expectedMsg);
         done();
       });
     });
@@ -86,7 +86,7 @@ describe('WSDL Parser (strict)', () => {
     soap.createClient(__dirname + '/wsdl/typeref/order.wsdl', {strict: true}, function(err, client) {
       assert.ifError(err);
       client.order(reqJson, function(err, result) {
-        assert.equal(client.lastMessage, expectedMsg);
+        assert.strictEqual(client.lastMessage, expectedMsg);
         done();
       });
     });
@@ -102,7 +102,7 @@ describe('WSDL Parser (strict)', () => {
 
       assert.ifError(err);
       client.order(reqJson, function(err, result) {
-        assert.equal(client.lastMessage, expectedMsg);
+        assert.strictEqual(client.lastMessage, expectedMsg);
 
         // since the reqJson does not use the element named "thing", then findChildSchemaObject should never get to the type named RabbitHole
         // see perf/ns1.xsd
@@ -112,7 +112,7 @@ describe('WSDL Parser (strict)', () => {
         for (i = 0; i < spy.callCount; i++) {
           spyCall = spy.getCall(i);
           if (spyCall.args[0]) {
-            assert.notEqual(spyCall.args[0].$type, "RabbitHole");
+            assert.notStrictEqual(spyCall.args[0].$type, "RabbitHole");
           }
         }
 
@@ -134,7 +134,7 @@ describe('WSDL Parser (strict)', () => {
     soap.createClient(__dirname + '/wsdl/elementref/foo.wsdl', {strict: true}, function(err, client) {
       assert.ifError(err);
       client.fooOp({paymentRq: {bankSvcRq: {':requestUID': '001'}}}, function(err, result) {
-        assert.equal(client.lastMessage, expectedMsg);
+        assert.strictEqual(client.lastMessage, expectedMsg);
         done();
       });
     });
@@ -149,7 +149,7 @@ describe('WSDL Parser (strict)', () => {
     soap.createClient(__dirname + '/wsdl/mergeWithAttributes/main.wsdl', {}, function(err, client) {
       assert.ok(!err);
       client.AskPeat({ Question: 'How are you?' }, function(err, result) {
-        assert.equal(client.lastMessage, expectedMsg);
+        assert.strictEqual(client.lastMessage, expectedMsg);
         done();
       });
     });
@@ -178,14 +178,14 @@ describe('WSDL Parser (non-strict)', () => {
 
   it('should catch parse error', (done) => {
     soap.createClient(__dirname+'/wsdl/bad.txt', function(err) {
-      assert.notEqual(err, null);
+      assert.notStrictEqual(err, null);
       done();
     });
   });
 
   it('should not give error as string', (done) => {
     soap.createClient(__dirname+'/wsdl/bad.txt', function(err) {
-      assert.notEqual(typeof err, 'string');
+      assert.notStrictEqual(typeof err, 'string');
       done();
     });
   });
@@ -194,7 +194,7 @@ describe('WSDL Parser (non-strict)', () => {
     var expected = '{"DummyService":{"DummyPortType":{"Dummy":{"input":{"ID":"IdType|xs:string|pattern","Name":"NameType|xs:string|minLength,maxLength"},"output":{"Result":"dummy:DummyList"}}}}}';
     soap.createClient(__dirname + '/wsdl/xsdinclude/xsd_include.wsdl', function(err, client) {
       assert.ifError(err);
-      assert.equal(JSON.stringify(client.describe()), expected);
+      assert.strictEqual(JSON.stringify(client.describe()), expected);
       done();
     });
   });
@@ -211,7 +211,7 @@ describe('WSDL Parser (non-strict)', () => {
     soap.createClient(__dirname + '/wsdl/elementref/foo.wsdl', {}, function(err, client) {
       assert.ok(!err);
       client.fooOp({paymentRq: { attributes: {'bar1:test': 'attr'}, bankSvcRq: {':requestUID': '001'}}}, function(err, result) {
-        assert.equal(client.lastMessage, expectedMsg);
+        assert.strictEqual(client.lastMessage, expectedMsg);
         done();
       });
     });
@@ -226,7 +226,7 @@ describe('WSDL Parser (non-strict)', () => {
     soap.createClient(__dirname + '/wsdl/mergeWithAttributes/main.wsdl', {}, function(err, client) {
       assert.ok(!err);
       client.AskPeat({ Question: 'How are you?' }, function(err, result) {
-        assert.equal(client.lastMessage, expectedMsg);
+        assert.strictEqual(client.lastMessage, expectedMsg);
         done();
       });
     });

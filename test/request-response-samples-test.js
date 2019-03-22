@@ -54,7 +54,7 @@ var requestContext = {
         console.log(comparison);
       }
 
-      assert.equal(actualRequest, expectedRequest);
+      assert.strictEqual(actualRequest, expectedRequest);
 
       if(!requestContext.responseToSend)return requestContext.doneHandler();
       res.end(requestContext.responseToSend);
@@ -161,13 +161,13 @@ function cbCaller(client, methodName, requestJSON, responseJSON, responseSoapHea
   client[methodName](requestJSON, function(err, json, body, soapHeader){
     if(requestJSON){
       if (err) {
-        assert.notEqual('undefined: undefined', err.message);
-        assert.deepEqual(err.root, responseJSON);
+        assert.notStrictEqual('undefined: undefined', err.message);
+        assert.deepStrictEqual(err.root, responseJSON);
       } else {
-        // assert.deepEqual(json, responseJSON);
-        assert.equal(JSON.stringify(typeof json === 'undefined' ? null : json), JSON.stringify(responseJSON));
+        // assert.deepStrictEqual(json, responseJSON);
+        assert.strictEqual(JSON.stringify(typeof json === 'undefined' ? null : json), JSON.stringify(responseJSON));
         if(responseSoapHeaderJSON){
-          assert.equal(JSON.stringify(soapHeader), JSON.stringify(responseSoapHeaderJSON));
+          assert.strictEqual(JSON.stringify(soapHeader), JSON.stringify(responseSoapHeaderJSON));
         }
       }
     }
@@ -182,16 +182,16 @@ function promiseCaller(client, methodName, requestJSON, responseJSON, responseSo
     var soapHeader = responseArr[2];
 
     if(requestJSON){
-      // assert.deepEqual(json, responseJSON);
-      assert.equal(JSON.stringify(typeof json === 'undefined' ? null : json), JSON.stringify(responseJSON));
+      // assert.deepStrictEqual(json, responseJSON);
+      assert.strictEqual(JSON.stringify(typeof json === 'undefined' ? null : json), JSON.stringify(responseJSON));
       if(responseSoapHeaderJSON){
-        assert.equal(JSON.stringify(soapHeader), JSON.stringify(responseSoapHeaderJSON));
+        assert.strictEqual(JSON.stringify(soapHeader), JSON.stringify(responseSoapHeaderJSON));
       }
     }
   }).catch(function(err) {
     if(requestJSON){
-      assert.notEqual('undefined: undefined', err.message);
-      assert.deepEqual(err.root, responseJSON);
+      assert.notStrictEqual('undefined: undefined', err.message);
+      assert.deepStrictEqual(err.root, responseJSON);
     }
   }).finally(function() {
     done();

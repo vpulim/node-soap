@@ -244,7 +244,7 @@ describe('SOAP Server with Options', function() {
         headers: {'Content-Type': 'text/xml'}
       }, function(err, res, body) {
         assert.ifError(err);
-        assert.equal(res.statusCode, 500);
+        assert.strictEqual(res.statusCode, 500);
         assert.ok(body.indexOf('\n    at') !== -1);
         done();
       }
@@ -283,8 +283,8 @@ describe('SOAP Server with Options', function() {
         headers: {'Content-Type': 'text/xml'}
       }, function(err, res, body) {
         assert.ifError(err);
-        assert.equal(res.statusCode, 500);
-        assert.equal(body.indexOf('\n    at'), -1);
+        assert.strictEqual(res.statusCode, 500);
+        assert.strictEqual(body.indexOf('\n    at'), -1);
         done();
       }
       );
@@ -322,7 +322,7 @@ describe('SOAP Server with Options', function() {
         headers: {'Content-Type': 'text/xml'}
       }, function(err, res, body) {
         assert.ifError(err);
-        assert.equal(res.statusCode, 500);
+        assert.strictEqual(res.statusCode, 500);
         assert.ok(body.match(/<faultcode>.*<\/faultcode>/g),
           "Invalid XML");
         done();
@@ -419,14 +419,14 @@ describe('SOAP Server with Options', function() {
       soap.createClient(test.baseUrl + '/stockquote?wsdl', function(err, client) {
         assert.ifError(err);
         client.on('response', function (xml, response) {
-          assert.equal(response.statusCode, 202);
+          assert.strictEqual(response.statusCode, 202);
           done();
         });
 
         client.SetTradePrice({ tickerSymbol: 'GOOG' }, function(err, result, body) {
           assert.ifError(err);
-          assert.equal(result,null);
-          assert.equal(body,'');
+          assert.strictEqual(result,null);
+          assert.strictEqual(body,'');
         });
       });
     });
@@ -481,7 +481,7 @@ describe('SOAP Server with Options', function() {
         client.on('response', function(body, response, eid) {
           var headers = response.headers;
           assert.strictEqual(headers['transfer-encoding'], 'chunked');
-          assert.equal(headers['content-length'], undefined);
+          assert.strictEqual(headers['content-length'], undefined);
         })
 
         client.SetTradePrice({ tickerSymbol: 'GOOG' }, function(err, result, body) {
@@ -513,7 +513,7 @@ describe('SOAP Server with Options', function() {
         client.on('response', function(body, response, eid) {
           var headers = response.headers;
           assert.strictEqual(headers['transfer-encoding'], 'chunked');
-          assert.equal(headers['content-length'], undefined);
+          assert.strictEqual(headers['content-length'], undefined);
         })
 
         client.SetTradePrice({ tickerSymbol: 'GOOG' }, function(err, result, body) {
@@ -544,8 +544,8 @@ describe('SOAP Server with Options', function() {
 
         client.on('response', function(body, response, eid) {
           var headers = response.headers;
-          assert.notEqual(headers['content-length'], undefined);
-          assert.equal(headers['transfer-encoding'], undefined);
+          assert.notStrictEqual(headers['content-length'], undefined);
+          assert.strictEqual(headers['transfer-encoding'], undefined);
         })
 
         client.SetTradePrice({ tickerSymbol: 'GOOG' }, function(err, result, body) {

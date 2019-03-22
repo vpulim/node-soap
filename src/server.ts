@@ -102,6 +102,10 @@ export class Server extends EventEmitter {
       path += '/';
     }
     wsdl.onReady((err) => {
+      if (err) {
+        throw err;
+      }
+
       if (isExpress(server)) {
         // handle only the required URL path for express server
         server.route(path).all((req, res) => {

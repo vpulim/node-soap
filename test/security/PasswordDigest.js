@@ -17,6 +17,6 @@ describe('PasswordDigest', function () {
 	it('should calculate a valid passworddigest ', function () {
 		
 		var result = Utils.passwordDigest(nonce, created, password);
-		assert.equal(result, expected);
+		assert.strictEqual(result, expected);
 	});
 });

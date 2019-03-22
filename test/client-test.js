@@ -63,7 +63,7 @@ var fs = require('fs'),
         function (err, client) {
           assert.ok(client);
           assert.ifError(err);
-          assert.equal(client.httpClient, myHttpClient);
+          assert.strictEqual(client.httpClient, myHttpClient);
           done();
         });
     });
@@ -76,7 +76,7 @@ var fs = require('fs'),
         function (err, client) {
           assert.ok(client);
           assert.ifError(err);
-          assert.equal(client.httpClient._request, myRequest);
+          assert.strictEqual(client.httpClient._request, myRequest);
           done();
         });
     });
@@ -88,7 +88,7 @@ var fs = require('fs'),
         assert.ifError(err);
 
         client.MyOperation({}, function (err, result) {
-          assert.notEqual(client.lastRequest.indexOf('xmlns:soapenv='), -1);
+          assert.notStrictEqual(client.lastRequest.indexOf('xmlns:soapenv='), -1);
           done();
         });
       });
@@ -103,7 +103,7 @@ var fs = require('fs'),
         var xmlStr = '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">\n\t<head>\n\t\t<title>404 - Not Found</title>\n\t</head>\n\t<body>\n\t\t<h1>404 - Not Found</h1>\n\t\t<script type="text/javascript" src="http://gp1.wpc.edgecastcdn.net/00222B/beluga/pilot_rtm/beluga_beacon.js"></script>\n\t</body>\n</html>';
         client.MyOperation({_xml: xmlStr}, function (err, result, raw, soapHeader) {
             assert.ok(err);
-            assert.notEqual(raw.indexOf('html'), -1);
+            assert.notStrictEqual(raw.indexOf('html'), -1);
             done();
           });
       });
@@ -166,7 +166,7 @@ var fs = require('fs'),
           assert.ifError(err);
 
           client.MyOperation({}, function (err, result) {
-            assert.notEqual(client.lastRequestHeaders.Host.indexOf(':' + port), -1);
+            assert.notStrictEqual(client.lastRequestHeaders.Host.indexOf(':' + port), -1);
 
             done();
           }, null, { 'test-header': 'test' });
@@ -179,7 +179,7 @@ var fs = require('fs'),
           assert.ifError(err);
 
           client.MyOperation({}, function (err, result) {
-            assert.equal(client.lastRequestHeaders.Host.indexOf(':80'), -1);
+            assert.strictEqual(client.lastRequestHeaders.Host.indexOf(':80'), -1);
 
             done();
           }, null, { 'test-header': 'test' });
@@ -192,7 +192,7 @@ var fs = require('fs'),
           assert.ifError(err);
 
           client.MyOperation({}, function () {
-            assert.equal(client.lastRequestHeaders.Host.indexOf(':443'), -1);
+            assert.strictEqual(client.lastRequestHeaders.Host.indexOf(':443'), -1);
             done();
           }, null, { 'test-header': 'test' });
         }, 'https://127.0.0.1');
@@ -239,7 +239,7 @@ var fs = require('fs'),
           client.MyOperation({}, function (err, result) {
             assert.ok(result);
             assert.ok(client.lastResponseHeaders);
-            assert.equal(client.lastResponseHeaders.status, 'pass');
+            assert.strictEqual(client.lastResponseHeaders.status, 'pass');
 
             done();
           }, null, { 'test-header': 'test' });
@@ -254,7 +254,7 @@ var fs = require('fs'),
           client.MyOperation({}, function (err, result) {
             assert.ok(result);
             assert.ok(client.lastResponseHeaders);
-            assert.equal(client.lastResponseHeaders.status, 'fail');
+            assert.strictEqual(client.lastResponseHeaders.status, 'fail');
 
             done();
           }, null, { 'test-header': 'testBad' });
@@ -344,8 +344,8 @@ var fs = require('fs'),
             assert.ok(result);
             assert.ok(client.lastRequestHeaders);
             assert.ok(client.lastRequest);
-            assert.equal(client.lastRequestHeaders['Content-Type'], 'application/soap+xml; charset=utf-8');
-            assert.notEqual(client.lastRequest.indexOf('xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\"'), -1);
+            assert.strictEqual(client.lastRequestHeaders['Content-Type'], 'application/soap+xml; charset=utf-8');
+            assert.notStrictEqual(client.lastRequest.indexOf('xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\"'), -1);
             assert(!client.lastRequestHeaders.SOAPAction);
             done();
           }, null, { 'test-header': 'test' });
@@ -467,10 +467,10 @@ var fs = require('fs'),
         client.addHttpHeader('foo', 'bar');
 
         assert.ok(client.getHttpHeaders());
-        assert.equal(client.getHttpHeaders().foo, 'bar');
+        assert.strictEqual(client.getHttpHeaders().foo, 'bar');
 
         client.clearHttpHeaders();
-        assert.equal(Object.keys(client.getHttpHeaders()).length, 0);
+        assert.strictEqual(Object.keys(client.getHttpHeaders()).length, 0);
         done();
       });
     });
@@ -513,14 +513,14 @@ var fs = require('fs'),
             assert.ok(client.lastRequest);
             assert.ok(client.lastMessage);
             assert.ok(client.lastEndpoint);
-            assert.equal(client.lastMessage, message);
+            assert.strictEqual(client.lastMessage, message);
 
             delete data.attributes.xsi_type.namespace;
             client.MyOperation(data, function (err, result) {
               assert.ok(client.lastRequest);
               assert.ok(client.lastMessage);
               assert.ok(client.lastEndpoint);
-              assert.equal(client.lastMessage, message);
+              assert.strictEqual(client.lastMessage, message);
 
               done();
             });
@@ -572,7 +572,7 @@ var fs = require('fs'),
           client.MyOperation({}, function (err, result) {
             assert.ok(err);
             assert.ok(err.response);
-            assert.equal(err.body, '{"tempResponse":"temp"}');
+            assert.strictEqual(err.body, '{"tempResponse":"temp"}');
             done();
           });
         }, baseUrl);
@@ -724,8 +724,8 @@ var fs = require('fs'),
           client.on('message', function (xml, eid) {
             didEmitEvent = true;
             // Should contain only message body
-            assert.equal(typeof xml, 'string');
-            assert.equal(xml.indexOf('soap:Envelope'), -1);
+            assert.strictEqual(typeof xml, 'string');
+            assert.strictEqual(xml.indexOf('soap:Envelope'), -1);
             assert.ok(eid);
           });
 
@@ -742,8 +742,8 @@ var fs = require('fs'),
           client.on('request', function (xml, eid) {
             didEmitEvent = true;
             // Should contain entire soap message
-            assert.equal(typeof xml, 'string');
-            assert.notEqual(xml.indexOf('soap:Envelope'), -1);
+            assert.strictEqual(typeof xml, 'string');
+            assert.notStrictEqual(xml.indexOf('soap:Envelope'), -1);
             assert.ok(eid);
           });
 
@@ -760,8 +760,8 @@ var fs = require('fs'),
           client.on('response', function (xml, response, eid) {
             didEmitEvent = true;
             // Should contain entire soap message
-            assert.equal(typeof xml, 'string');
-            assert.equal(xml.indexOf('soap:Envelope'), -1);
+            assert.strictEqual(typeof xml, 'string');
+            assert.strictEqual(xml.indexOf('soap:Envelope'), -1);
             assert.ok(response);
             assert.ok(eid);
           });
@@ -794,7 +794,7 @@ var fs = require('fs'),
           client.MyOperation({}, function () {
             assert.ok(didEmitRequestEvent);
             assert.ok(didEmitResponseEvent);
-            assert.equal(responseEid, requestEid);
+            assert.strictEqual(responseEid, requestEid);
             done();
           });
         }, baseUrl);
@@ -821,8 +821,8 @@ var fs = require('fs'),
           client.MyOperation({}, function () {
             assert.ok(didEmitRequestEvent);
             assert.ok(didEmitResponseEvent);
-            assert.equal('unit', requestEid);
-            assert.equal(responseEid, requestEid);
+            assert.strictEqual('unit', requestEid);
+            assert.strictEqual(responseEid, requestEid);
             done();
           }, {exchangeId : 'unit'});
         }, baseUrl);
@@ -943,7 +943,7 @@ var fs = require('fs'),
           assert.ok(arrayParameter);
           client.AddTimesheet({input: {PeriodList: {PeriodType: [{PeriodId: '1'}]}}}, function() {
             var sentInputContent = client.lastRequest.substring(client.lastRequest.indexOf('<input>') + '<input>'.length, client.lastRequest.indexOf('</input>'));
-            assert.equal(sentInputContent, '<PeriodList><PeriodType><PeriodId>1</PeriodId></PeriodType></PeriodList>');
+            assert.strictEqual(sentInputContent, '<PeriodList><PeriodType><PeriodId>1</PeriodId></PeriodType></PeriodList>');
             done();
           });
         });
@@ -966,7 +966,7 @@ var fs = require('fs'),
           };
           client.createWebOrder(input, function() {
             var sentInputContent = client.lastRequest.substring(client.lastRequest.indexOf('<items>'), client.lastRequest.lastIndexOf('</items>') + '</items>'.length);
-            assert.equal(sentInputContent, '<items><itemDesc>item1</itemDesc></items><items><itemDesc>item2</itemDesc></items>');
+            assert.strictEqual(sentInputContent, '<items><itemDesc>item1</itemDesc></items><items><itemDesc>item2</itemDesc></items>');
             done();
           });
         });
@@ -989,7 +989,7 @@ var fs = require('fs'),
           };
           client.createWebOrder(input, function() {
             var sentInputContent = client.lastRequest.substring(client.lastRequest.indexOf('<ns1:items>'), client.lastRequest.lastIndexOf('</ns1:items>') + '</ns1:items>'.length);
-            assert.equal(sentInputContent, '<ns1:items><itemDesc>item1</itemDesc></ns1:items><ns1:items><itemDesc>item2</itemDesc></ns1:items>');
+            assert.strictEqual(sentInputContent, '<ns1:items><itemDesc>item1</itemDesc></ns1:items><ns1:items><itemDesc>item2</itemDesc></ns1:items>');
             done();
           });
         });
@@ -1004,7 +1004,7 @@ var fs = require('fs'),
           assert.ok(arrayParameter);
           client.AddTimesheet({input: {PeriodList: {PeriodType: [{PeriodId: '1'}, {PeriodId: '2'}]}}}, function() {
             var sentInputContent = client.lastRequest.substring(client.lastRequest.indexOf('<input>') + '<input>'.length, client.lastRequest.indexOf('</input>'));
-            assert.equal(sentInputContent, '<PeriodList><PeriodType><PeriodId>1</PeriodId><PeriodId>2</PeriodId></PeriodType></PeriodList>');
+            assert.strictEqual(sentInputContent, '<PeriodList><PeriodType><PeriodId>1</PeriodId><PeriodId>2</PeriodId></PeriodType></PeriodList>');
             done();
           });
         });
@@ -1020,7 +1020,7 @@ var fs = require('fs'),
           assert.ok(arrayParameter);
           client.AddTimesheet({input: {PeriodList: {PeriodType: [{PeriodId: '1'}, {PeriodId: '2'}]}}}, function() {
             var sentInputContent = client.lastRequest.substring(client.lastRequest.indexOf('<input>') + '<input>'.length, client.lastRequest.indexOf('</input>'));
-            assert.equal(sentInputContent, '<PeriodList><PeriodType><PeriodId>1</PeriodId></PeriodType><PeriodType><PeriodId>2</PeriodId></PeriodType></PeriodList>');
+            assert.strictEqual(sentInputContent, '<PeriodList><PeriodType><PeriodId>1</PeriodId></PeriodType><PeriodType><PeriodId>2</PeriodId></PeriodType></PeriodList>');
             done();
           });
         });
@@ -1069,7 +1069,7 @@ var fs = require('fs'),
             }
           }, function () {
             var sentInputContent = client.lastRequest.substring(client.lastRequest.indexOf('<Requests>') + '<Requests>'.length, client.lastRequest.indexOf('</Requests>'));
-            assert.equal(
+            assert.strictEqual(
               sentInputContent,
               '<AddAttributeRequest><RequestIdx>1</RequestIdx><Identifier><SystemNamespace>bugrepro</SystemNamespace><ResellerId>1</ResellerId><CustomerNum>860692</CustomerNum><AccountUid>80a6e559-4d65-11e7-bd5b-0050569a12d7</AccountUid></Identifier><Attr><AttributeId>716</AttributeId><IsTemplateAttribute>0</IsTemplateAttribute><ReadOnly>0</ReadOnly><CanBeModified>1</CanBeModified><Name>domain</Name><AccountElements><AccountElement><ElementId>1693</ElementId><Name>domain</Name><Value>foo</Value><ReadOnly>0</ReadOnly><CanBeModified>1</CanBeModified></AccountElement></AccountElements></Attr><RequestedBy>blah</RequestedBy><RequestedByLogin>system</RequestedByLogin></AddAttributeRequest>');
             done();
@@ -1143,7 +1143,7 @@ var fs = require('fs'),
           _.assign({ httpClient: myHttpClient }, meta.options))
           .then(function (client) {
             assert.ok(client);
-            assert.equal(client.httpClient, myHttpClient);
+            assert.strictEqual(client.httpClient, myHttpClient);
             done();
           });
       });
@@ -1155,7 +1155,7 @@ var fs = require('fs'),
           _.assign({ request: myRequest }, meta.options))
           .then(function (client) {
             assert.ok(client);
-            assert.equal(client.httpClient._request, myRequest);
+            assert.strictEqual(client.httpClient._request, myRequest);
             done();
           });
       });
@@ -1192,7 +1192,7 @@ var fs = require('fs'),
         })
         .then(function (response) {})
         .catch(function (err) {
-          assert.notEqual(client.lastRequest.indexOf('xmlns:soapenv='), -1);
+          assert.notStrictEqual(client.lastRequest.indexOf('xmlns:soapenv='), -1);
           done();
         });
       });
@@ -1246,10 +1246,10 @@ var fs = require('fs'),
           client.addHttpHeader('foo', 'bar');
 
           assert.ok(client.getHttpHeaders());
-          assert.equal(client.getHttpHeaders().foo, 'bar');
+          assert.strictEqual(client.getHttpHeaders().foo, 'bar');
 
           client.clearHttpHeaders();
-          assert.equal(Object.keys(client.getHttpHeaders()).length, 0);
+          assert.strictEqual(Object.keys(client.getHttpHeaders()).length, 0);
           done();
         });
       });

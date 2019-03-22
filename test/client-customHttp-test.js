@@ -101,9 +101,9 @@ it('should allow customization of httpClient and the wsdl file download should p
     function(err, client) {
       assert.ok(client);
       assert.ifError(err);
-      assert.equal(client.httpClient, httpCustomClient);
+      assert.strictEqual(client.httpClient, httpCustomClient);
       var description = (client.describe());
-      assert.deepEqual(client.describe(), {
+      assert.deepStrictEqual(client.describe(), {
         MyService: {
           MyServicePort: {
             MyOperation: {

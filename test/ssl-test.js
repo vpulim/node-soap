@@ -79,7 +79,7 @@ describe('SOAP Client(SSL)', function() {
 
       client.GetLastTradePrice({ tickerSymbol: 'AAPL'}, function(err, result) {
         assert.ifError(err);
-        assert.equal(19.56, parseFloat(result.price));
+        assert.strictEqual(19.56, parseFloat(result.price));
         done();
       });
     });

@@ -53,7 +53,7 @@ describe('No envelope and body elements', function() {
         if(err){
           throw err;
         }
-        assert.equal(body.indexOf('Failed to parse the SOAP Message body') !== -1, true);
+        assert.strictEqual(body.indexOf('Failed to parse the SOAP Message body') !== -1, true);
         done();
       });
     });

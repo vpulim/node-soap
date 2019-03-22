@@ -78,7 +78,7 @@ describe('SOAP Server', function() {
 
       client.GetLastTradePrice({ tickerSymbol: 'AAPL'}, function(err, result) {
         assert.ifError(err);
-        assert.equal(19.56, parseFloat(result.price));
+        assert.strictEqual(19.56, parseFloat(result.price));
         done();
       });
     });
@@ -97,7 +97,7 @@ describe('SOAP Server', function() {
 
       client.GetLastTradePrice({ tickerSymbol: 'AAPL'}, function(err, result) {
         assert.ifError(err);
-        assert.equal(19.56, parseFloat(result.price));
+        assert.strictEqual(19.56, parseFloat(result.price));
         done();
       });
     });
@@ -117,9 +117,9 @@ describe('SOAP Server', function() {
       client.GetLastTradePrice({ tickerSymbol: 'AAPL'}, function (err, result) {
         assert.ok(err);
         assert.ok(err.root.Envelope.Body.Fault.Code.Value);
-        assert.equal(err.root.Envelope.Body.Fault.Code.Value, 'SOAP-ENV:Client');
+        assert.strictEqual(err.root.Envelope.Body.Fault.Code.Value, 'SOAP-ENV:Client');
         assert.ok(err.root.Envelope.Body.Fault.Code.Subcode.value);
-        assert.equal(err.root.Envelope.Body.Fault.Code.Subcode.value, 'AuthenticationFailure');
+        assert.strictEqual(err.root.Envelope.Body.Fault.Code.Subcode.value, 'AuthenticationFailure');
         done();
       });
     });
@@ -138,9 +138,9 @@ describe('SOAP Server', function() {
       client.GetLastTradePrice({ tickerSymbol: 'AAPL'}, function (err, result) {
         assert.ok(err);
         assert.ok(err.root.Envelope.Body.Fault.Code.Value);
-        assert.equal(err.root.Envelope.Body.Fault.Code.Value, 'SOAP-ENV:Client');
+        assert.strictEqual(err.root.Envelope.Body.Fault.Code.Value, 'SOAP-ENV:Client');
         assert.ok(err.root.Envelope.Body.Fault.Code.Subcode.value);
-        assert.equal(err.root.Envelope.Body.Fault.Code.Subcode.value, 'AuthenticationFailure');
+        assert.strictEqual(err.root.Envelope.Body.Fault.Code.Subcode.value, 'AuthenticationFailure');
         done();
       });
     });

@@ -7,9 +7,9 @@ var assert = require('assert');
 describe(__filename, function () {
   it('should parse recursive elements', function (done) {
     open_wsdl(path.resolve(__dirname, 'wsdl/recursive.wsdl'), function (err, def) {
-      assert.equal(def.definitions.messages.operationRequest.parts['constraint[]'].expression,
+      assert.strictEqual(def.definitions.messages.operationRequest.parts['constraint[]'].expression,
           def.definitions.messages.operationRequest.parts['constraint[]'].expression.expression);
-      assert.equal(def.definitions.messages.operationRequest.parts['constraint[]'].expression,
+      assert.strictEqual(def.definitions.messages.operationRequest.parts['constraint[]'].expression,
           def.definitions.messages.operationRequest.parts['constraint[]'].expression.expression['constraint[]'].expression);
       done();
     });
@@ -29,7 +29,7 @@ describe(__filename, function () {
       }
 
       def._includesWsdl.forEach(function(currentWsdl) {
-        assert.deepEqual(def.options, currentWsdl.options);
+        assert.deepStrictEqual(def.options, currentWsdl.options);
       });
 
       done();
@@ -48,7 +48,7 @@ describe(__filename, function () {
       }
 
       def._includesWsdl.forEach(function(currentWsdl, index) {
-        assert.deepEqual(def.options, currentWsdl.options);
+        assert.deepStrictEqual(def.options, currentWsdl.options);
       });
 
       done();

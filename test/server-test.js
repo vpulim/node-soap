@@ -155,15 +155,15 @@ describe('SOAP Server', function() {
 
       client.addSoapHeader({ headerFromClient: 'FOUR' });
       test.soapServer.changeSoapHeader(3, function(methodName, args, headers, req) {
-        assert.equal(methodName, 'GetLastTradePrice');
-        assert.deepEqual(clientArgs, args);
-        assert.deepEqual(headers, { headerFromClient: 'FOUR' });
+        assert.strictEqual(methodName, 'GetLastTradePrice');
+        assert.deepStrictEqual(clientArgs, args);
+        assert.deepStrictEqual(headers, { headerFromClient: 'FOUR' });
         return { header4: headers.headerFromClient };
       });
 
       client.GetLastTradePrice(clientArgs, function(err, result, raw, headers) {
         assert.ifError(err);
-        assert.deepEqual(headers, {
+        assert.deepStrictEqual(headers, {
           header1: 'ONE',
           header2: 'TWO',
           header3: 'THREE',
@@ -184,7 +184,7 @@ describe('SOAP Server', function() {
   it('should 404 on non-WSDL path', function(done) {
     request(test.baseUrl, function(err, res, body) {
       assert.ifError(err);
-      assert.equal(res.statusCode, 404);
+      assert.strictEqual(res.statusCode, 404);
       done();
     });
   });
@@ -203,7 +203,7 @@ describe('SOAP Server', function() {
         headers: {'Content-Type': 'text/xml'}
       }, function(err, res, body) {
         assert.ifError(err);
-        assert.equal(res.statusCode, 500);
+        assert.strictEqual(res.statusCode, 500);
         assert.ok(body.length);
         done();
       }
@@ -217,7 +217,7 @@ describe('SOAP Server', function() {
         headers: {'Content-Type': undefined}
       }, function(err, res, body) {
         assert.ifError(err);
-        assert.equal(res.statusCode, 500);
+        assert.strictEqual(res.statusCode, 500);
         assert.ok(body.length);
         done();
       }
@@ -236,7 +236,7 @@ describe('SOAP Server', function() {
         headers: {'Content-Type': 'text/xml'}
       }, function(err, res, body) {
         assert.ifError(err);
-        assert.equal(res.statusCode, 500);
+        assert.strictEqual(res.statusCode, 500);
         assert.ok(body.length);
         done();
       }
@@ -246,7 +246,7 @@ describe('SOAP Server', function() {
   it('should server up WSDL', function(done) {
     request(test.baseUrl + '/stockquote?wsdl', function(err, res, body) {
       assert.ifError(err);
-      assert.equal(res.statusCode, 200);
+      assert.strictEqual(res.statusCode, 200);
       assert.ok(body.length);
       done();
     });
@@ -257,7 +257,7 @@ describe('SOAP Server', function() {
       assert.ifError(err);
       var description = client.describe(),
           expected = { input: { tickerSymbol: "string" }, output:{ price: "float" } };
-      assert.deepEqual(expected , description.StockQuoteService.StockQuotePort.GetLastTradePrice);
+      assert.deepStrictEqual(expected , description.StockQuoteService.StockQuotePort.GetLastTradePrice);
       done();
     });
   });
@@ -267,7 +267,7 @@ describe('SOAP Server', function() {
       assert.ifError(err);
       client.GetLastTradePrice({ tickerSymbol: 'AAPL'}, function(err, result) {
         assert.ifError(err);
-        assert.equal(19.56, parseFloat(result.price));
+        assert.strictEqual(19.56, parseFloat(result.price));
         done();
       });
     });
@@ -278,7 +278,7 @@ describe('SOAP Server', function() {
       assert.ifError(err);
       client.GetLastTradePrice({ tickerSymbol: 'Async'}, function(err, result) {
         assert.ifError(err);
-        assert.equal(19.56, parseFloat(result.price));
+        assert.strictEqual(19.56, parseFloat(result.price));
         done();
       });
     });
@@ -290,7 +290,7 @@ describe('SOAP Server', function() {
       assert.ifError(err);
       client.IsValidPrice({ price: 50000 }, function(err, result) {
         assert.ifError(err);
-        assert.equal(true, !!(result.valid));
+        assert.strictEqual(true, !!(result.valid));
         done();
       });
     });
@@ -301,7 +301,7 @@ describe('SOAP Server', function() {
       assert.ifError(err);
       client.GetLastTradePrice({ tickerSymbol: 'Promise'}, function(err, result) {
         assert.ifError(err);
-        assert.equal(13.76, parseFloat(result.price));
+        assert.strictEqual(13.76, parseFloat(result.price));
         done();
       });
     });
@@ -325,7 +325,7 @@ describe('SOAP Server', function() {
       client.IsValidPrice({ price: 50000 }, function(err, result) {
         // node V3.x+ reports addresses as IPV6
         var addressParts = lastReqAddress.split(':');
-        assert.equal(addressParts[(addressParts.length - 1)], '127.0.0.1');
+        assert.strictEqual(addressParts[(addressParts.length - 1)], '127.0.0.1');
         done();
       });
     });
@@ -337,7 +337,7 @@ describe('SOAP Server', function() {
       client.IsValidPrice({ price: "invalid_price"}, function(err, result) {
         assert.ok(err);
         assert.ok(err.root.Envelope.Body.Fault);
-        assert.equal(err.response.statusCode, 500);
+        assert.strictEqual(err.response.statusCode, 500);
         done();
       });
     });
@@ -349,7 +349,7 @@ describe('SOAP Server', function() {
       client.addSoapHeader('<SomeToken>123.45</SomeToken>');
       client.GetLastTradePrice({ tickerSymbol: 'AAPL'}, function(err, result) {
         assert.ifError(err);
-        assert.equal(123.45, parseFloat(result.price));
+        assert.strictEqual(123.45, parseFloat(result.price));
         done();
       });
     });
@@ -369,7 +369,7 @@ describe('SOAP Server', function() {
 
   it('should emit \'request\' event', function(done) {
     test.soapServer.on('request', function requestManager(request, methodName) {
-      assert.equal(methodName, 'GetLastTradePrice');
+      assert.strictEqual(methodName, 'GetLastTradePrice');
       done();
     });
     soap.createClient(test.baseUrl + '/stockquote?wsdl', function(err, client) {
@@ -380,7 +380,7 @@ describe('SOAP Server', function() {
 
   it('should emit \'headers\' event', function(done) {
     test.soapServer.on('headers', function headersManager(headers, methodName) {
-      assert.equal(methodName, 'GetLastTradePrice');
+      assert.strictEqual(methodName, 'GetLastTradePrice');
       headers.SomeToken = 0;
     });
     soap.createClient(test.baseUrl + '/stockquote?wsdl', function(err, client) {
@@ -388,7 +388,7 @@ describe('SOAP Server', function() {
       client.addSoapHeader('<SomeToken>123.45</SomeToken>');
       client.GetLastTradePrice({ tickerSymbol: 'AAPL'}, function(err, result) {
         assert.ifError(err);
-        assert.equal(0, parseFloat(result.price));
+        assert.strictEqual(0, parseFloat(result.price));
         done();
       });
     });
@@ -425,15 +425,15 @@ describe('SOAP Server', function() {
       client.GetLastTradePrice({ tickerSymbol: 'SOAP Fault v1.2' }, function(err, response, body) {
         assert.ok(err);
         var fault = err.root.Envelope.Body.Fault;
-        assert.equal(err.message, fault.faultcode + ': ' + fault.faultstring);
-        assert.equal(fault.Code.Value, "soap:Sender");
-        assert.equal(fault.Reason.Text, "Processing Error");
+        assert.strictEqual(err.message, fault.faultcode + ': ' + fault.faultstring);
+        assert.strictEqual(fault.Code.Value, "soap:Sender");
+        assert.strictEqual(fault.Reason.Text, "Processing Error");
         // Verify namespace on elements set according to fault spec 1.2
         assert.ok(body.match(/<soap:Code>.*<\/soap:Code>/g),
           "Body should contain Code-element with namespace");
         assert.ok(body.match(/<soap:Reason>.*<\/soap:Reason>/g),
           "Body should contain Reason-element with namespace");
-        assert.equal(err.response.statusCode, 200);
+        assert.strictEqual(err.response.statusCode, 200);
         done();
       });
     });
@@ -445,9 +445,9 @@ describe('SOAP Server', function() {
       client.GetLastTradePrice({ tickerSymbol: 'SOAP Fault v1.1' }, function(err, response, body) {
         assert.ok(err);
         var fault = err.root.Envelope.Body.Fault;
-        assert.equal(err.message, fault.faultcode + ': ' + fault.faultstring);
-        assert.equal(fault.faultcode, "soap:Client.BadArguments");
-        assert.equal(fault.faultstring, "Error while processing arguments");
+        assert.strictEqual(err.message, fault.faultcode + ': ' + fault.faultstring);
+        assert.strictEqual(fault.faultcode, "soap:Client.BadArguments");
+        assert.strictEqual(fault.faultstring, "Error while processing arguments");
         // Verify namespace on elements set according to fault spec 1.1
         assert.ok(body.match(/<faultcode>.*<\/faultcode>/g),
           "Body should contain faultcode-element without namespace");
@@ -508,7 +508,7 @@ describe('SOAP Server', function() {
       assert.ifError(err);
       client.SetTradePrice({ tickerSymbol: 'GOOG', price: 575.33 }, function(err, result) {
         assert.ifError(err);
-        assert.equal(result,null);
+        assert.strictEqual(result,null);
         done();
       });
     });
