@@ -55,7 +55,7 @@ export class WSSecurityCert implements ISecurity {
 
     this.signer = new SignedXml();
     if (options.signatureAlgorithm === 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256') {
-      this.signer.signatureAlgorithm = 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256';
+      this.signer.signatureAlgorithm = options.signatureAlgorithm;
       this.signer.addReference(
           "//*[name(.)='soap:Body']",
           ['http://www.w3.org/2001/10/xml-exc-c14n#'], 
