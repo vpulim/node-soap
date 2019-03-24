@@ -59,7 +59,7 @@ export class WSSecurityCert implements ISecurity {
       this.signer.addReference(
         "//*[name(.)='soap:Body']",
         ['http://www.w3.org/2001/10/xml-exc-c14n#'],
-        'http://www.w3.org/2001/04/xmlenc#sha256'
+        'http://www.w3.org/2001/04/xmlenc#sha256',
       );
     }
     this.signer.signingKey = {
