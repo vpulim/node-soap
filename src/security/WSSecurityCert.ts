@@ -34,7 +34,6 @@ const oasisBaseUri = 'http://docs.oasis-open.org/wss/2004/01';
 export interface IWSSecurityCertOptions {
   hasTimeStamp?: boolean;
   signatureTransformations?: string[];
-  signatureAlgorithm?: string;
 }
 
 export class WSSecurityCert implements ISecurity {
@@ -54,14 +53,6 @@ export class WSSecurityCert implements ISecurity {
       .replace(/(\r\n|\n|\r)/gm, '');
 
     this.signer = new SignedXml();
-    if (options.signatureAlgorithm === 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256') {
-      this.signer.signatureAlgorithm = options.signatureAlgorithm;
-      this.signer.addReference(
-          "//*[name(.)='soap:Body']",
-          ['http://www.w3.org/2001/10/xml-exc-c14n#'], 
-          'http://www.w3.org/2001/04/xmlenc#sha256'
-      );
-    }
     this.signer.signingKey = {
       key: privatePEM,
       passphrase: password,
