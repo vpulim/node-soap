@@ -109,4 +109,10 @@ describe('WSSecurityCert', function() {
     xml.should.not.containEql('<Created>' + instance.created);
     xml.should.not.containEql('<Expires>' + instance.expires);
   });
+
+  it('should use rsa-sha256 signature method when the signatureAlgorithm option is set to WSSecurityCert', function() {
+    var instance = new WSSecurityCert(key, cert, '', { hasTimeStamp: false, signatureAlgorithm: 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256' });
+    var xml = instance.postProcess('<soap:Header></soap:Header><soap:Body><Body></Body></soap:Body>', 'soap');
+    xml.should.containEql('SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"');
+  });
 });
