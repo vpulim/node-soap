@@ -89,11 +89,9 @@ export class HttpClient {
       const start = uuid();
       headers['Content-Type'] =
         'multipart/related; type="application/xop+xml"; start="<' + start + '>"; start-info="text/xml"; boundary=' + uuid();
-      const multipart = [{
+      const multipart: Array<any> = [{
         'Content-Type': 'application/xop+xml; charset=UTF-8; type="text/xml"',
-        'Content-Transfer-Encoding': '8bit',
         'Content-ID': '<' + start + '>',
-        'Content-Disposition' : null,
         body: data
       }];
       attachments.forEach(function (attachment) {
