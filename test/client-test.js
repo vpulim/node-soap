@@ -136,6 +136,84 @@ var fs = require('fs'),
       });
     });
 
+    describe('Binary attachments handling', function () {
+      var server = null;
+      var hostname = '127.0.0.1';
+      var port = 15099;
+      var baseUrl = 'http://' + hostname + ':' + port;
+      var attachment = {
+        mimetype: 'image/png',
+        contentId: 'file_0',
+        name: 'nodejs.png',
+        body: fs.createReadStream(__dirname + '/static/nodejs.png')
+      };
+
+      function parsePartHeaders(part) {
+        const headersAndBody = part.split(/\r\n\r\n/);
+        const headersParts = headersAndBody[0].split(/\r\n/);
+        const headers = {};
+        headersParts.forEach(header => {
+          let index;
+          if ((index = header.indexOf(':')) > -1) {
+            headers[header.substring(0, index)] = header.substring(index + 1).trim();
+          }
+        });
+        return headers;
+      }
+
+      it('should send binary attachments using XOP + MTOM', function (done) {
+        server = http.createServer((req, res) => {
+          const bufs = [];
+          req.on('data', function (chunk) {
+            bufs.push(chunk);
+          });
+          req.on('end', function () {
+            const body = Buffer.concat(bufs).toString().trim();
+            const headers = req.headers;
+            const boundary = headers['content-type'].match(/boundary="?([^"]*"?)/)[1];
+            const parts = body.split(new RegExp('--' + boundary + '-{0,2}'))
+              .filter(part => part)
+              .map(parsePartHeaders);
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ contentType: headers['content-type'], parts: parts }), 'utf8');
+          });
+        }).listen(port, hostname, function () {
+
+          soap.createClient(__dirname + '/wsdl/attachments.wsdl', meta.options, function (initError, client) {
+            assert.ifError(initError);
+
+            client.MyOperation({}, function (error, response, body) {
+              assert.ifError(error);
+              const contentType = {};
+              body.contentType.split(/;\s?/).forEach(dir => {
+                const keyValue = dir.match(/(.*)="?([^"]*)?/);
+                if (keyValue && keyValue.length > 2) {
+                  contentType[keyValue[1].trim()] = keyValue[2].trim();
+                } else {
+                  contentType.rootType = dir;
+                }
+              });
+              assert.equal(contentType.rootType, 'multipart/related');
+              assert.equal(body.parts.length, 2);
+
+              const dataHeaders = body.parts[0];
+              assert(dataHeaders['Content-Type'].indexOf('application/xop+xml') > -1);
+              assert.equal(dataHeaders['Content-ID'], contentType.start);
+
+              const attachmentHeaders = body.parts[1];
+              assert.equal(attachmentHeaders['Content-Type'], attachment.mimetype);
+              assert.equal(attachmentHeaders['Content-Transfer-Encoding'], 'binary');
+              assert.equal(attachmentHeaders['Content-ID'], '<' + attachment.contentId + '>');
+              assert(attachmentHeaders['Content-Disposition'].indexOf(attachment.name) > -1);
+
+              server.close();
+              done();
+            }, { attachments: [attachment] });
+          }, baseUrl);
+        });
+      });
+    });
+
 
     describe('Headers in request and last response', function () {
       var server = null;

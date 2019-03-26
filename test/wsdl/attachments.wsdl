@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="MyService" targetNamespace="http://www.example.com/v1" xmlns="http://www.example.com/v1" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+	<types>
+		<schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://www.example.com/v1" xmlns="http://www.example.com/v1">
+			<element name="Request">
+				<complexType>
+					<sequence>
+						<element type="string" name="field1" minOccurs="1" maxOccurs="1" />
+						<element type="string" name="field2" minOccurs="1" maxOccurs="1" />
+						<element type="attachments" name="attachments" minOccurs="0" maxOccurs="1" />
+					</sequence>
+				</complexType>
+				<complexType name="attachments">
+					<sequence>
+						<element name="data" type="xsd:base64Binary" xmime:expectedContentTypes="application/octet-stream" minOccurs="0" maxOccurs="unbounded" />
+					</sequence>
+				</complexType>
+			</element>
+		</schema>
+	</types>
+	<message name="InputMessage">
+		<part name="parameter" element="Request">
+		</part>
+	</message>
+	<message name="OutputMessage" />
+	<portType name="MyServicePortType">
+		<operation name="MyOperation">
+			<input message="InputMessage">
+			</input>
+			<output message="OutputMessage">
+			</output>
+		</operation>
+	</portType>
+	<binding name="MyServiceBinding" type="MyServicePortType">
+		<binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+		<operation name="MyOperation">
+			<operation soapAction="MyOperation" />
+			<input>
+				<body use="literal" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+			</input>
+			<output>
+				<body use="literal" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+			</output>
+		</operation>
+	</binding>
+	<service name="MyService">
+		<port name="MyServicePort" binding="MyServiceBinding">
+			<address location="http://www.example.com/v1" />
+		</port>
+	</service>
+</definitions>
