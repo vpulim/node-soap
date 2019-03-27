@@ -66,7 +66,7 @@ export class HttpClient {
       'Host': host + (isNaN(port) ? '' : ':' + port),
     };
     const mergeOptions = ['headers'];
-    const attachments: Array<IAttachment> = exoptions.attachments || [];
+    const attachments: IAttachment[] = exoptions.attachments || [];
 
     if (typeof data === 'string' && attachments.length === 0) {
       headers['Content-Length'] = Buffer.byteLength(data, 'utf8');
@@ -89,18 +89,18 @@ export class HttpClient {
       const start = uuid();
       headers['Content-Type'] =
         'multipart/related; type="application/xop+xml"; start="<' + start + '>"; start-info="text/xml"; boundary=' + uuid();
-      const multipart: Array<any> = [{
+      const multipart: any[] = [{
         'Content-Type': 'application/xop+xml; charset=UTF-8; type="text/xml"',
         'Content-ID': '<' + start + '>',
-        body: data
+        'body': data,
       }];
-      attachments.forEach(function (attachment) {
+      attachments.forEach((attachment) => {
         multipart.push({
           'Content-Type': attachment.mimetype,
           'Content-Transfer-Encoding': 'binary',
           'Content-ID': '<' + attachment.contentId + '>',
           'Content-Disposition': 'attachment; filename="' + attachment.name + '"',
-          body: attachment.body
+          'body': attachment.body,
         });
       });
       options.multipart = multipart;
