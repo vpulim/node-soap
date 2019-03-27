@@ -104,6 +104,37 @@ describe('SOAP Server with Options', function() {
     });
   });
 
+  it('should start server with callback in options parameter', function(done) {
+    test.server.listen(15099, null, null, function() {
+      test.soapServer = soap.listen(test.server, {
+        path: '/stockquote',
+        services: test.service,
+        xml: test.wsdl,
+        uri: __dirname + '/wsdl/strict/',
+        escapeXML: false,
+        callback: function (err) {
+          assert.ifError(err);
+          done();
+        }
+      }, test.service, test.wsdl);
+    });
+  });
+
+  it('should start server with callback as normal parameter', function(done) {
+    test.server.listen(15099, null, null, function () {
+      test.soapServer = soap.listen(
+        test.server,
+        "/stockquote",
+        test.service,
+        test.wsdl,
+        function (err) {
+          assert.ifError(err);
+          done();
+        }
+      );
+    });
+  });
+
   it('should be running with escapeXML false', function(done) {
     test.server.listen(15099, null, null, function() {
       test.soapServer = soap.listen(test.server, {
