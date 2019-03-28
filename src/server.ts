@@ -103,10 +103,6 @@ export class Server extends EventEmitter {
       path += '/';
     }
     wsdl.onReady((err) => {
-      if (err) {
-        this.callback(err, this);
-        return;
-      }
       if (isExpress(server)) {
         // handle only the required URL path for express server
         server.route(path).all((req, res) => {
@@ -118,7 +114,7 @@ export class Server extends EventEmitter {
           }
           this._requestListener(req, res);
         });
-        this.callback(null, this);
+        this.callback(err, this);
       } else {
         const listeners = server.listeners('request').slice();
         server.removeAllListeners('request');
@@ -141,7 +137,7 @@ export class Server extends EventEmitter {
             }
           }
         });
-        this.callback(null, this);
+        this.callback(err, this);
       }
     });
 
