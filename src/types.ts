@@ -128,6 +128,7 @@ export interface IServerOptions extends IWsdlBaseOptions {
   services: IServices;
   xml?: string;
   uri?: string;
+  callback?: (err: any, res: any) => void;
   /** suppress the full stack trace for error messages. */
   suppressStack?: boolean;
   oneWay?: IOneWayOptions;

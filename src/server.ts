@@ -81,6 +81,7 @@ export class Server extends EventEmitter {
   private onewayOptions: IOneWayOptions & { statusCode?: number; };
   private enableChunkedEncoding: boolean;
   private soapHeaders: any[];
+  private callback?: (err: any, res: any) => void;
 
   constructor(server: ServerType, path: string, services: IServices, wsdl: WSDL, options?: IServerOptions) {
     super();
@@ -97,7 +98,7 @@ export class Server extends EventEmitter {
     this.onewayOptions = options && options.oneWay || {};
     this.enableChunkedEncoding =
       options.enableChunkedEncoding === undefined ? true : !!options.enableChunkedEncoding;
-
+    this.callback = options.callback ? options.callback : () => { };
     if (path[path.length - 1] !== '/') {
       path += '/';
     }
@@ -113,6 +114,7 @@ export class Server extends EventEmitter {
           }
           this._requestListener(req, res);
         });
+        this.callback(err, this);
       } else {
         const listeners = server.listeners('request').slice();
         server.removeAllListeners('request');
@@ -135,6 +137,7 @@ export class Server extends EventEmitter {
             }
           }
         });
+        this.callback(err, this);
       }
     });
 

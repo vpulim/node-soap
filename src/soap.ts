@@ -98,9 +98,9 @@ export function createClientAsync(url: string, options: IOptions, endpoint?: str
   });
 }
 
-export function listen(server: ServerType, path: string, services: IServices, wsdl: string): Server;
+export function listen(server: ServerType, path: string, services: IServices, wsdl: string, callback?: (err: any, res: any) => void): Server;
 export function listen(server: ServerType, options: IServerOptions): Server;
-export function listen(server: ServerType, p2: string | IServerOptions, services?: IServices, xml?: string): Server {
+export function listen(server: ServerType, p2: string | IServerOptions, services?: IServices, xml?: string, callback?: (err: any, res: any) => void): Server {
   let options: IServerOptions;
   let path: string;
   let uri = '';
@@ -120,6 +120,7 @@ export function listen(server: ServerType, p2: string | IServerOptions, services
     options = {
       path: p2,
       services: services,
+      callback: callback,
     };
   }
 
