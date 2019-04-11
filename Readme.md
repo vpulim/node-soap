@@ -639,7 +639,7 @@ Emitted before a request is sent, but only the body is passed to the event handl
 ### _soapError_
 Emitted when an erroneous response is received. Useful if you want to globally log errors. The event handler has the signature `(error, eid)`.
 
-- _error_ - An error object which also contains the resoponse.
+- _error_ - An error object which also contains the response.
 - _eid_ - The exchange id.
 ### _response_
 Emitted after a response is received. This is emitted for all responses (both success and errors). The event handler has the signature `(body, response, eid)`
