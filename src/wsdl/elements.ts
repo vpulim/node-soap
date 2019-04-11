@@ -210,7 +210,7 @@ export class ElementElement extends Element {
       type = splitQName(type);
       const typeName: string = type.name;
       const ns: string = xmlns && xmlns[type.prefix] ||
-          (definitions.xmlns[type.prefix] !== undefined && this.schemaXmlns[type.prefix]) ||
+          (definitions.xmlns[type.prefix] === undefined && this.schemaXmlns[type.prefix]) ||
           definitions.xmlns[type.prefix];
       const schema = definitions.schemas[ns];
       const typeElement = schema && ( this.$type ? schema.complexTypes[typeName] || schema.types[typeName] : schema.elements[typeName] );
@@ -408,7 +408,7 @@ export class ExtensionElement extends Element {
 
         if (typeElement) {
           const base = typeElement.description(definitions, schema.xmlns);
-          desc = _.defaultsDeep(base, desc);
+          desc = typeof base === 'string' ? base : _.defaultsDeep(base, desc);
         }
       }
     }
