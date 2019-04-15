@@ -1263,11 +1263,17 @@ export class WSDL {
   private _xmlnsMap(): string {
     const xmlns = this.definitions.xmlns;
     let str = '';
+    const existingNamespaces = {};
     for (const alias in xmlns) {
       if (alias === '' || alias === TNS_PREFIX) {
         continue;
       }
       const ns = xmlns[alias];
+      if (existingNamespaces[ns]) {
+        continue;
+      }
+
+      existingNamespaces[ns] = true;
       switch (ns) {
         case 'http://xml.apache.org/xml-soap' : // apachesoap
         case 'http://schemas.xmlsoap.org/wsdl/' : // wsdl
