@@ -1,3 +1,21 @@
+0.27.0 / 2019-04-18
+===================
+
+* [ENHANCEMENT] Added MTOM support for binary data (#1054)
+* [ENHANCEMENT] Added callback for soap.listen (#1055)
+* [ENHANCEMENT] add rsa-sha256 support for WSSecurityCert (#1052)
+* [ENHANCEMENT] adding promise support for server method handlers.
+* [FIX] Fixed PasswordDigest Generation (#1039)
+* [FIX] Fixed some issues with xsd elements (#1057)
+* [FIX] Handle response with error status code and without response body (#1053)
+* [FIX] Stringify wsdl-related error messages to avoid non-descriptive [object Object] output. (#1037)
+* [FIX] fix(compliance): updated the npm packages
+* [FIX] fix(wsdl): array namespace override with colon(:) (#1045)
+* [MAINTENANCE] adding source-map-support for ts mapping in stack trace; enabling tslint rules; added linting to travis; removing unnecessary self variables (#1047)
+* [MAINTENANCE] converting the project to TypeScript (#1044)
+* [MAINTENANCE] npm upgrade;  removing ejs and external template files (#1046)
+* [MAINTENANCE] npmignore cleanup; adding some types to Client (#1049)
+
 0.26.0 / 2019-02-11
 ===================
 
