@@ -16,6 +16,7 @@
     "sax": ">=0.6",
     "serve-static": "^1.11.1",
     "strip-bom": "^3.0.0",
+    "@types/request": "^2.48.1",
     "uuid": "^3.1.0",
     "xml-crypto": "^1.2.0"
   },
@@ -51,7 +52,6 @@
     "@types/express": "^4.16.1",
     "@types/lodash": "^4.14.122",
     "@types/node": "^11.11.0",
-    "@types/request": "^2.48.1",
     "@types/sax": "^1.0.1",
     "@types/uuid": "^3.4.4",
     "body-parser": "^1.15.2",
