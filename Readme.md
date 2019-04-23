@@ -145,7 +145,7 @@ The `options` argument allows you to customize the client with the following pro
 
 Note: for versions of node >0.10.X, you may need to specify `{connection: 'keep-alive'}` in SOAP headers to avoid truncation of longer chunked responses.
 
-### soap.listen(*server*, *path*, *services*, *wsdl*, *calback*) - create a new SOAP server that listens on *path* and provides *services*.
+### soap.listen(*server*, *path*, *services*, *wsdl*, *callback*) - create a new SOAP server that listens on *path* and provides *services*.
 *server* can be a [http](https://nodejs.org/api/http.html) Server or [express](http://expressjs.com/) framework based server
 *wsdl* is an xml string that defines the service.
 *callback* a function to run after the server has been initialized.
