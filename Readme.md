@@ -16,7 +16,7 @@ This module lets you connect to web services using SOAP.  It also provides a ser
 - [Module](#module)
   - [soap.createClient(url[, options], callback) - create a new SOAP client from a WSDL url. Also supports a local filesystem path.](#soapcreateclienturl-options-callback---create-a-new-soap-client-from-a-wsdl-url-also-supports-a-local-filesystem-path)
   - [soap.createClientAsync(url[, options]) - create a new SOAP client from a WSDL url. Also supports a local filesystem path.](#soapcreateclientasyncurl-options---create-a-new-soap-client-from-a-wsdl-url-also-supports-a-local-filesystem-path)
-  - [soap.listen(*server*, *path*, *services*, *wsdl*) - create a new SOAP server that listens on *path* and provides *services*.](#soaplistenserver-path-services-wsdl---create-a-new-soap-server-that-listens-on-path-and-provides-services)
+  - [soap.listen(*server*, *path*, *services*, *wsdl*, *callback*) - create a new SOAP server that listens on *path* and provides *services*.](#soaplistenserver-path-services-wsdl-callback---create-a-new-soap-server-that-listens-on-path-and-provides-services)
   - [Options](#options)
   - [Server Logging](#server-logging)
   - [Server Events](#server-events)
@@ -145,9 +145,10 @@ The `options` argument allows you to customize the client with the following pro
 
 Note: for versions of node >0.10.X, you may need to specify `{connection: 'keep-alive'}` in SOAP headers to avoid truncation of longer chunked responses.
 
-### soap.listen(*server*, *path*, *services*, *wsdl*) - create a new SOAP server that listens on *path* and provides *services*.
+### soap.listen(*server*, *path*, *services*, *wsdl*, *callback*) - create a new SOAP server that listens on *path* and provides *services*.
 *server* can be a [http](https://nodejs.org/api/http.html) Server or [express](http://expressjs.com/) framework based server
 *wsdl* is an xml string that defines the service.
+*callback* a function to run after the server has been initialized.
 
 ``` javascript
   var myService = {
@@ -203,7 +204,9 @@ Note: for versions of node >0.10.X, you may need to specify `{connection: 'keep-
   });
 
   server.listen(8000);
-  soap.listen(server, '/wsdl', myService, xml);
+  soap.listen(server, '/wsdl', myService, xml, function(){
+    console.log('server initialized');
+  });
 
   //express server example
   var app = express();
@@ -212,7 +215,9 @@ Note: for versions of node >0.10.X, you may need to specify `{connection: 'keep-
   app.listen(8001, function(){
       //Note: /wsdl route will be handled by soap module
       //and all other routes & middleware will continue to work
-      soap.listen(app, '/wsdl', myService, xml);
+      soap.listen(app, '/wsdl', myService, xml, function(){
+        console.log('server initialized');
+      });
   });
 
 ```
