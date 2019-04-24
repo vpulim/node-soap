@@ -482,7 +482,7 @@ export class Server extends EventEmitter {
         body = this.wsdl.objectToRpcXML(outputName, result, '', this.wsdl.definitions.$targetNamespace);
       } else {
         const element = this.wsdl.definitions.services[serviceName].ports[portName].binding.methods[methodName].output;
-        body = this.wsdl.objectToDocumentXML(outputName, result, element.targetNSAlias, element.targetNamespace);
+        body = this.wsdl.objectToDocumentXML(outputName, result, element.targetNSAlias, element.targetNamespace, outputName);
       }
       callback(this._envelope(body, headers, includeTimestamp));
     };
