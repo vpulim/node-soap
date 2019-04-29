@@ -521,6 +521,31 @@ var fs = require('fs'),
       });
     });
 
+    it('should add dynamic soap headers', function (done) {
+      soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
+        assert.ok(client);
+        assert.ok(!client.getSoapHeaders());
+        let random;
+        function dynamicHeader(method, location, soapAction, args) {
+          random = Math.floor(Math.random() * 65536);
+          return {
+            TeSt_location: location,
+            TeSt_action: soapAction,
+            TeSt_random: random
+          };
+        }
+
+        client.addSoapHeader(dynamicHeader);
+        assert.ok(typeof client.getSoapHeaders()[0] === 'function');
+        client.MyOperation({}, function (err, result) {
+          assert.notEqual(client.lastRequest.indexOf('<TeSt_location>http://www.example.com/v1</TeSt_location>'), -1);
+          assert.notEqual(client.lastRequest.indexOf('<TeSt_action>MyOperation</TeSt_action>'), -1);
+          assert.notEqual(client.lastRequest.indexOf(`<TeSt_random>${random}</TeSt_random>`), -1);
+          done();
+        });
+      });
+    });
+
     it('should add soap headers with a namespace', function (done) {
       soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
         assert.ok(client);
