@@ -793,7 +793,7 @@ export class WSDL {
                     // Local element
                     childNsURI = childSchemaObject.$targetNamespace;
                     childNsPrefix = nsContext.registerNamespace(childNsURI);
-                    if (this.isIgnoredNameSpace(childNsPrefix)) {
+                    if (this.isIgnoredNameSpace(childNsPrefix) || !childNsURI) {
                       childNsPrefix = nsPrefix;
                     }
                   } else {
