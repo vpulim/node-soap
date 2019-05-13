@@ -432,6 +432,8 @@ export class WSDL {
       } else {
         if (name === 'int' || name === 'integer') {
           value = parseInt(text, 10);
+        } else if (name === 'double' || name === 'float') {
+          value = Number(text);
         } else if (name === 'bool' || name === 'boolean') {
           value = text.toLowerCase() === 'true' || text === '1';
         } else if (name === 'dateTime' || name === 'date') {
