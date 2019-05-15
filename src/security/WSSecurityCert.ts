@@ -89,7 +89,7 @@ export class WSSecurityCert implements ISecurity {
         `</wsse:SecurityTokenReference>`;
     };
 
-    this.signerOptions = { existingPrefixes: { 'wsse': `${oasisBaseUri}/oasis-200401-wss-wssecurity-secext-1.0.xsd` } };
+    this.signerOptions = { existingPrefixes: { wsse: `${oasisBaseUri}/oasis-200401-wss-wssecurity-secext-1.0.xsd` } };
   }
 
   public postProcess(xml, envelopeKey) {
