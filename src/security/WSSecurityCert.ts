@@ -35,6 +35,7 @@ export interface IWSSecurityCertOptions {
   hasTimeStamp?: boolean;
   signatureTransformations?: string[];
   signatureAlgorithm?: string;
+  signerOptions?: IXmlSignerOptions;
 }
 
 export interface IXmlSignerOptions {
@@ -57,8 +58,7 @@ export class WSSecurityCert implements ISecurity {
   private created: string;
   private expires: string;
 
-  constructor(privatePEM: any, publicP12PEM: any, password: any, options?: IWSSecurityCertOptions) {
-    options = options || {};
+  constructor(privatePEM: any, publicP12PEM: any, password: any, options: IWSSecurityCertOptions = {}) {
     this.publicP12PEM = publicP12PEM.toString()
       .replace('-----BEGIN CERTIFICATE-----', '')
       .replace('-----END CERTIFICATE-----', '')
@@ -73,6 +73,10 @@ export class WSSecurityCert implements ISecurity {
         'http://www.w3.org/2001/04/xmlenc#sha256',
       );
     }
+
+    this.signerOptions = (options.signerOptions) ? this.signerOptions = options.signerOptions
+      : this.signerOptions = { existingPrefixes: { wsse: `${oasisBaseUri}/oasis-200401-wss-wssecurity-secext-1.0.xsd` } };
+
     this.signer.signingKey = {
       key: privatePEM,
       passphrase: password,
@@ -88,8 +92,6 @@ export class WSSecurityCert implements ISecurity {
         `<wsse:Reference URI="#${this.x509Id}" ValueType="${oasisBaseUri}/oasis-200401-wss-x509-token-profile-1.0#X509v3"/>` +
         `</wsse:SecurityTokenReference>`;
     };
-
-    this.signerOptions = { existingPrefixes: { wsse: `${oasisBaseUri}/oasis-200401-wss-wssecurity-secext-1.0.xsd` } };
   }
 
   public postProcess(xml, envelopeKey) {
@@ -134,10 +136,4 @@ export class WSSecurityCert implements ISecurity {
 
     return insertStr(this.signer.getSignatureXml(), xmlWithSec, xmlWithSec.indexOf('</wsse:Security>'));
   }
-
-  public setSignerOptions = (options: IXmlSignerOptions): void => {
-    this.signerOptions = options;
-  }
-
-  public getSignerOptions = () => this.signerOptions;
 }
