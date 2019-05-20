@@ -1435,3 +1435,10 @@ var fs = require('fs'),
     });
   });
 });
+
+it('should create async client without options', function (done) {
+  soap.createClientAsync(__dirname + '/wsdl/default_namespace.wsdl').then(function (client) {
+    assert.ok(client);
+    done();
+  });
+});
