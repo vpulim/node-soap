@@ -73,7 +73,7 @@ export class Server extends EventEmitter {
   public services: IServices;
   public log: (type: string, data: any) => any;
   public authorizeConnection: (req: Request, res?: Response) => boolean;
-  public authenticate: (security: ISecurity, processAuthResult?) => boolean;
+  public authenticate: (security: any, processAuthResult?: (result: boolean) => void, req?: Request, obj?: any) => boolean | void | Promise<boolean>;
 
   private wsdl: WSDL;
   private suppressStack: boolean;
@@ -385,10 +385,27 @@ export class Server extends EventEmitter {
     // Authentication
     if (typeof authenticate === 'function') {
       let authResultProcessed = false;
-      const processAuthResult = (authResult) => {
-        if (!authResultProcessed && (authResult || authResult === false)) {
-          authResultProcessed = true;
-          if (authResult) {
+      const processAuthResult = (authResult: boolean | Error) => {
+        if (authResultProcessed) {
+          return;
+        }
+
+        authResultProcessed = true;
+        // Handle errors
+        if (authResult instanceof Error) {
+          return this._sendError({
+            Code: {
+              Value: 'SOAP-ENV:Server',
+              Subcode: { value: 'InternalServerError' },
+            },
+            Reason: { Text: authResult.toString() },
+            statusCode: 500,
+          }, callback, includeTimestamp);
+        }
+
+        // Handle actual results
+        if (typeof authResult === 'boolean') {
+          if (authResult === true) {
             try {
               process();
             } catch (error) {
@@ -417,7 +434,17 @@ export class Server extends EventEmitter {
         }
       };
 
-      processAuthResult(authenticate(obj.Header && obj.Header.Security, processAuthResult));
+      const functionResult = authenticate(obj.Header && obj.Header.Security, processAuthResult, req, obj);
+      if (isPromiseLike<boolean>(functionResult)) {
+        functionResult.then((result: boolean) => {
+          processAuthResult(result);
+        }, (err: any) => {
+          processAuthResult(err);
+        });
+      }
+      if (typeof functionResult === 'boolean') {
+        processAuthResult(functionResult);
+      }
     } else {
       throw new Error('Invalid authenticate function (not a function)');
     }
