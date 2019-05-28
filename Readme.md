@@ -270,6 +270,8 @@ Server instances emit the following events:
 
 * request - Emitted for every received messages.
   The signature of the callback is `function(request, methodName)`.
+* response - Emitted before sending SOAP response.
+  The signature of the callback is `function(response, methodName)`.
 * headers - Emitted when the SOAP Headers are not empty.
   The signature of the callback is `function(headers, methodName)`.
 
