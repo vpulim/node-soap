@@ -51,11 +51,14 @@ function getDateString(d) {
 export interface Server {
   emit(event: 'request', request: any, methodName: string): boolean;
   emit(event: 'headers', headers: any, methodName: string): boolean;
+  emit(event: 'response', headers: any, methodName: string): boolean;
 
   /** Emitted for every received messages. */
   on(event: 'request', listener: (request: any, methodName: string) => void): this;
   /** Emitted when the SOAP Headers are not empty. */
   on(event: 'headers', listener: (headers: any, methodName: string) => void): this;
+  /** Emitted before sending SOAP response. */
+  on(event: 'response', listener: (response: any, methodName: string) => void): this;
 }
 
 interface IExecuteMethodOptions {
@@ -277,7 +280,7 @@ export class Server extends EventEmitter {
     }
   }
 
-  private _process(input, req: Request, callback: (result: any, statusCode?: number) => any) {
+  private _process(input, req: Request, cb: (result: any, statusCode?: number) => any) {
     const pathname = url.parse(req.url).pathname.replace(/\/$/, '');
     const obj = this.wsdl.xmlToObject(input);
     const body = obj.Body;
@@ -288,6 +291,12 @@ export class Server extends EventEmitter {
     let portName: string;
     const includeTimestamp = obj.Header && obj.Header.Security && obj.Header.Security.Timestamp;
     const authenticate = this.authenticate || function defaultAuthenticate() { return true; };
+
+    const callback = (result, statusCode) => {
+      const response = { result: result };
+      this.emit('response', response, methodName);
+      cb(response.result, statusCode);
+    };
 
     const process = () => {
 
