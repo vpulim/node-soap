@@ -365,7 +365,7 @@ export class Client extends EventEmitter {
     }
 
     if (!this.wsdl.options.forceSoap12Headers) {
-      headers.SOAPAction = '"' + soapAction + '"';
+      headers.SOAPAction = soapAction;
     }
 
     options = options || {};
