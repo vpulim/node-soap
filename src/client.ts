@@ -194,6 +194,7 @@ export class Client extends EventEmitter {
       this.wsdl.options.overrideRootElement = options.overrideRootElement;
     }
     this.wsdl.options.forceSoap12Headers = !!options.forceSoap12Headers;
+    this.wsdl.options.addHeadersAction = !!options.addHeadersAction;
   }
 
   private _defineService(service: ServiceElement, endpoint?: string) {
@@ -351,11 +352,6 @@ export class Client extends EventEmitter {
       return finish(obj, body, response);
     };
 
-    if (this.wsdl.options.forceSoap12Headers) {
-      headers['Content-Type'] = 'application/soap+xml; charset=utf-8';
-      xmlnsSoap = 'xmlns:' + envelopeKey + '="http://www.w3.org/2003/05/soap-envelope"';
-    }
-
     if (this.SOAPAction) {
       soapAction = this.SOAPAction;
     } else if (method.soapAction !== undefined && method.soapAction !== null) {
@@ -364,7 +360,13 @@ export class Client extends EventEmitter {
       soapAction = ((ns.lastIndexOf('/') !== ns.length - 1) ? ns + '/' : ns) + name;
     }
 
-    if (!this.wsdl.options.forceSoap12Headers) {
+    if (this.wsdl.options.forceSoap12Headers) {
+      headers['Content-Type'] = 'application/soap+xml; charset=utf-8';
+      if (this.wsdl.options.addHeadersAction) {
+        headers['Content-Type'] += '; action=' + soapAction;
+      }
+      xmlnsSoap = 'xmlns:' + envelopeKey + '="http://www.w3.org/2003/05/soap-envelope"';
+    } else {
       headers.SOAPAction = '"' + soapAction + '"';
     }
 
