@@ -134,6 +134,7 @@ The `options` argument allows you to customize the client with the following pro
 - suppressStack: suppress the full stack trace for error messages.
 - returnFault: return an `Invalid XML` SOAP fault on a bad request, default: `false`.
 - forceSoap12Headers: to set proper headers for SOAP v1.2.
+- addHeadersAction: set soapAction in Content-Type header. Works for SOAP 1.2.
 - httpClient: to provide your own http client that implements `request(rurl, data, callback, exheaders, exoptions)`.
 - request: to override the [request](https://github.com/request/request) module.
 - wsdl_headers: custom HTTP headers to be sent on WSDL requests.

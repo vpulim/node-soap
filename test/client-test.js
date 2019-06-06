@@ -439,7 +439,7 @@ var fs = require('fs'),
             assert.ok(result);
             assert.ok(client.lastRequestHeaders);
             assert.ok(client.lastRequest);
-            assert.equal(client.lastRequestHeaders['Content-Type'], 'application/soap+xml; charset=utf-8; action=MyOperation');
+            assert.equal(client.lastRequestHeaders['Content-Type'], 'application/soap+xml; charset=utf-8; action="MyOperation"');
             assert.notEqual(client.lastRequest.indexOf('xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\"'), -1);
             assert(!client.lastRequestHeaders.SOAPAction);
             done();

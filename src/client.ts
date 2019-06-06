@@ -363,7 +363,7 @@ export class Client extends EventEmitter {
     if (this.wsdl.options.forceSoap12Headers) {
       headers['Content-Type'] = 'application/soap+xml; charset=utf-8';
       if (this.wsdl.options.addHeadersAction) {
-        headers['Content-Type'] += '; action=' + soapAction;
+        headers['Content-Type'] += `; action="${soapAction}"`;
       }
       xmlnsSoap = 'xmlns:' + envelopeKey + '="http://www.w3.org/2003/05/soap-envelope"';
     } else {
