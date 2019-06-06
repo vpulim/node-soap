@@ -194,7 +194,6 @@ export class Client extends EventEmitter {
       this.wsdl.options.overrideRootElement = options.overrideRootElement;
     }
     this.wsdl.options.forceSoap12Headers = !!options.forceSoap12Headers;
-    this.wsdl.options.addHeadersAction = !!options.addHeadersAction;
   }
 
   private _defineService(service: ServiceElement, endpoint?: string) {
@@ -361,10 +360,7 @@ export class Client extends EventEmitter {
     }
 
     if (this.wsdl.options.forceSoap12Headers) {
-      headers['Content-Type'] = 'application/soap+xml; charset=utf-8';
-      if (this.wsdl.options.addHeadersAction) {
-        headers['Content-Type'] += '; action=' + soapAction;
-      }
+      headers['Content-Type'] = `application/soap+xml; charset=utf-8; action="${soapAction}"`;
       xmlnsSoap = 'xmlns:' + envelopeKey + '="http://www.w3.org/2003/05/soap-envelope"';
     } else {
       headers.SOAPAction = '"' + soapAction + '"';

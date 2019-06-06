@@ -1142,7 +1142,6 @@ export class WSDL {
 
     // Works only in client
     this.options.forceSoap12Headers = options.forceSoap12Headers;
-    this.options.addHeadersAction = options.addHeadersAction;
     this.options.customDeserializer = options.customDeserializer;
 
     if (options.overrideRootElement !== undefined) {
