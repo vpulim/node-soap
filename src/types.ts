@@ -94,8 +94,6 @@ export interface IWsdlBaseOptions {
   wsdl_options?: { [key: string]: any };
   /** set proper headers for SOAP v1.2. */
   forceSoap12Headers?: boolean;
-  /** set content type header action for SOAP v1.2 */
-  addHeadersAction?: boolean;
 }
 
 /** @deprecated use IOptions */

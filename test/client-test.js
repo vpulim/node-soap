@@ -422,24 +422,7 @@ var fs = require('fs'),
             assert.ok(result);
             assert.ok(client.lastRequestHeaders);
             assert.ok(client.lastRequest);
-            assert.equal(client.lastRequestHeaders['Content-Type'], 'application/soap+xml; charset=utf-8');
-            assert.notEqual(client.lastRequest.indexOf('xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\"'), -1);
-            assert(!client.lastRequestHeaders.SOAPAction);
-            done();
-          }, null, { 'test-header': 'test' });
-        }, baseUrl);
-      });
-
-      it('should add proper headers for soap12 with action in content type', function (done) {
-        soap.createClient(__dirname + '/wsdl/default_namespace_soap12.wsdl', _.assign({ forceSoap12Headers: true, addHeadersAction: true}, meta.options), function (err, client) {
-          assert.ok(client);
-          assert.ifError(err);
-
-          client.MyOperation({}, function (err, result) {
-            assert.ok(result);
-            assert.ok(client.lastRequestHeaders);
-            assert.ok(client.lastRequest);
-            assert.equal(client.lastRequestHeaders['Content-Type'], 'application/soap+xml; charset=utf-8; action=MyOperation');
+            assert.equal(client.lastRequestHeaders['Content-Type'], 'application/soap+xml; charset=utf-8; action="MyOperation"');
             assert.notEqual(client.lastRequest.indexOf('xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\"'), -1);
             assert(!client.lastRequestHeaders.SOAPAction);
             done();
