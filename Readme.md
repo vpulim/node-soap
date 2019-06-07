@@ -670,6 +670,87 @@ Example :
   }, {exchangeId: myExchangeId})
 ```
 
+## WSDL
+
+A WSDL instance can also be instantiated directly when you want to (un)marshal
+messages without doing SOAP calls. This can be used when a WSDL does not contain
+bindings for services (e.g. some Windows Communication Foundation SOAP web
+services).
+
+## WSDL.constructor(wsdl, baseURL, options):
+
+Construct a WSDL instance from either the WSDL content or the URL to the WSDL.
+#### Parameters
+
+  - wsdl: A string wSDL or an URL to the WSDL
+  - baseURL: base URL for the SOAP API
+  - options: options (see source for details), use `{}` as default.
+
+### wsdl.xmlToObject(xml):
+
+Unmarshal XML to object.
+
+#### Parameters:
+  - xml: SOAP response (XML) to unmarshal
+
+#### Returns:
+
+Object containing the object types from the xml as keys.
+
+### wsdl.objectToXML(object, typeName, namespacePrefix, namespaceURI, ...):
+
+Marshal an object to XML
+
+#### Parameters:
+  - object: Object to marshal
+  - typeName: type (as per the wsdl) of the object
+  - namespacePrefix: namespace prefix
+  - namespaceURI: URI of the namespace
+
+#### Returns:
+
+XML representation of object.
+
+#### Example:
+```typescript
+// Abstracted from a real use case
+import { AxiosInstance } from 'axios';
+import { WSDL } from 'soap';
+import { IProspectType } from './types';
+
+// A WSDL in a string.
+const WSSDL_CONTENT = "...";
+
+const httpClient: AxiosInstance = /* ... instantiate ... */;
+const url = 'http://example.org/SoapService.svc';
+
+const wsdl = new WSDL(WSDL_CONTENT, baseURL, {});
+
+async function sampleGetCall(): IProspectType | undefined {
+    const res = await httpClient.get(`${baseURL}/GetProspect`);
+
+    const object = wsdl.xmlToObject(res.data);
+
+    if (!object.ProspectType) {
+      // Response did not contain the expected type
+      return undefined;
+    }
+    // Optionally, unwrap and set defaults for some fields
+    // Ensure that the object meets the expected prototype
+    // Finally cast and return the result.
+    return object.ProspectType as IProspectType;
+}
+
+async function samplePostCall(prospect: IProspectType) {
+  // objectToXML(object, typeName, namespacePrefix, namespaceURI, ...)
+  const objectBody = wsdl.objectToXML(obj, 'ProspectType', '', '');
+  const data = `<?xml version="1.0" ?>${body}`;
+
+  const res = await httpClient.post(`${baseURL}/ProcessProspect`, data);
+  // Optionally, deserialize request and return response status.
+}
+```
+
 
 ## Security
 
