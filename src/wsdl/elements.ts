@@ -665,8 +665,11 @@ export class MessageElement extends Element {
     if (this.element) {
       return this.element && this.element.description(definitions);
     }
-    const desc = {};
-    desc[this.$name] = this.parts;
+    var desc = {};
+    desc[this.$name] = {}
+    for (const part of Object.keys(this.parts)) {
+      desc[this.$name][part] = this.parts[part].description(definitions, this.parts[part].xmlns);
+    }
     return desc;
   }
 
