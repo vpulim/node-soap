@@ -20,6 +20,7 @@ export { BasicAuthSecurity, BearerSecurity, ClientSSLSecurity, ClientSSLSecurity
 export { Server } from './server';
 export { passwordDigest } from './utils';
 export * from './types';
+export { WSDL } from './wsdl';
 
 type WSDLCallback = (error: any, result?: WSDL) => any;
 
