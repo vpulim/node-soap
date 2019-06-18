@@ -231,4 +231,14 @@ describe('WSDL Parser (non-strict)', () => {
       });
     });
   });
+  
+  it('should describe recursive wsdl with extended elements', (done) => {
+    soap.createClient(__dirname+'/wsdl/extended_recursive.wsdl', function(err, client) {
+      assert.ifError(err);
+      var desc = client.describe();		
+      var personDescription = desc.Service1.BasicHttpBinding_IService1.GetPerson.output.GetPersonResult;
+      assert.equal(personDescription, personDescription.Department.HeadOfDepartment);
+      done();
+    });
+  });  
 });

@@ -408,7 +408,7 @@ export class ExtensionElement extends Element {
 
         if (typeElement) {
           const base = typeElement.description(definitions, schema.xmlns);
-          desc = typeof base === 'string' ? base : _.defaultsDeep(base, desc);
+          desc = typeof base === 'string' ? base : _.defaults(base, desc);
         }
       }
     }
