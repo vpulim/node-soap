@@ -21,6 +21,8 @@ import * as elements from './elements';
 
 const debug = debugBuilder('node-soap');
 
+const XSI_URI = 'http://www.w3.org/2001/XMLSchema-instance';
+
 function xmlEscape(obj) {
   if (typeof (obj) === 'string') {
     if (obj.substr(0, 9) === '<![CDATA[' && obj.substr(-3) === ']]>') {
@@ -305,7 +307,7 @@ export class WSDL {
 
       for (attributeName in elementAttributes) {
         const res = splitQName(attributeName);
-        if (res.name === 'nil' && xmlns[res.prefix] === 'http://www.w3.org/2001/XMLSchema-instance' && elementAttributes[attributeName] &&
+        if (res.name === 'nil' && xmlns[res.prefix] === XSI_URI && elementAttributes[attributeName] &&
             (elementAttributes[attributeName].toLowerCase() === 'true' || elementAttributes[attributeName] === '1')
           ) {
           hasNilAttribute = true;
@@ -319,7 +321,15 @@ export class WSDL {
 
       // Pick up the schema for the type specified in element's xsi:type attribute.
       let xsiTypeSchema;
-      const xsiType = elementAttributes['xsi:type'];
+      let xsiType;
+
+      for (const prefix in xmlns) {
+        if (xmlns[prefix] === XSI_URI && (`${prefix}:type` in elementAttributes)) {
+          xsiType = elementAttributes[`${prefix}:type`];
+          break;
+        }
+      }
+
       if (xsiType) {
         const type = splitQName(xsiType);
         let typeURI;
