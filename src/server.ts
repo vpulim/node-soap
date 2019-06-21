@@ -347,7 +347,7 @@ export class Server extends EventEmitter {
 
       try {
         if (binding.style === 'rpc') {
-          methodName = Object.keys(body)[0];
+          methodName = (Object.keys(body)[0] === 'attributes' ? Object.keys(body)[1] : Object.keys(body)[0]);
 
           this.emit('request', obj, methodName);
           if (headers) {
