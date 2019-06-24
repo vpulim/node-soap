@@ -1,3 +1,20 @@
+0.28.0 / 2019-06-20
+===================
+
+* [ENHANCEMENT] Added support for parsing of doubles and floats. (#1065)
+* [ENHANCEMENT] Adds promise server authentication (#1069)
+* [ENHANCEMENT] Expose the WSDL class (#1071)
+* [ENHANCEMENT] Now supporting XSI namespace overrides (#1079)
+* [ENHANCEMENT] added possibility to add action to content-type header (#1073)
+* [ENHANCEMENT] client.addSoapHeader() dynamic SOAP header (#1062)
+* [ENHANCEMENT] emit response events allowing user override on response XML (#1070)
+* [FIX] Fix description for recursive wsdl with extended element (#1078)
+* [FIX] Fixes issue with unknown ReadableStream type (#1076)
+* [FIX] Update types to make `options` optional for createClientAsync (#1068)
+* [FIX] fix for soap 1.2 content-type header, missing action key (#1075)
+* [FIX] types: move forceSoap12Headers to IWsdlBaseOptions (#1063)
+* [MAINTENANCE] Updated read me to reflect changes in soap.listen (#1060)
+
 0.27.1 / 2019-04-19
 ===================
 

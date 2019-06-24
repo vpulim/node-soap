@@ -103,6 +103,26 @@ describe('SOAP Server', function() {
     });
   });
 
+  it('should succeed on valid promise authentication', function(done) {
+    test.authenticate = function(security) {
+      return new Promise((resolve) => {
+        setTimeout(function delayed() {
+          resolve(true);
+        }, 10);
+      })
+    };
+
+    soap.createClient(test.baseUrl + '/stockquote?wsdl', function(err, client) {
+      assert.ifError(err);
+
+      client.GetLastTradePrice({ tickerSymbol: 'AAPL'}, function(err, result) {
+        assert.ifError(err);
+        assert.equal(19.56, parseFloat(result.price));
+        done();
+      });
+    });
+  });
+
   it('should fail on invalid synchronous authentication', function(done) {
     test.authenticate = function(security, callback) {
       setTimeout(function delayed() {
@@ -141,6 +161,71 @@ describe('SOAP Server', function() {
         assert.equal(err.root.Envelope.Body.Fault.Code.Value, 'SOAP-ENV:Client');
         assert.ok(err.root.Envelope.Body.Fault.Code.Subcode.value);
         assert.equal(err.root.Envelope.Body.Fault.Code.Subcode.value, 'AuthenticationFailure');
+        done();
+      });
+    });
+  });
+
+  it('should fail on invalid promise authentication', function(done) {
+    test.authenticate = function(security) {
+      return new Promise((resolve) => {
+        setTimeout(function delayed() {
+          resolve(false);
+        }, 10);
+      })
+    };
+
+    soap.createClient(test.baseUrl + '/stockquote?wsdl', function(err, client) {
+      assert.ifError(err);
+
+      client.GetLastTradePrice({ tickerSymbol: 'AAPL'}, function (err, result) {
+        assert.ok(err);
+        assert.ok(err.root.Envelope.Body.Fault.Code.Value);
+        assert.equal(err.root.Envelope.Body.Fault.Code.Value, 'SOAP-ENV:Client');
+        assert.ok(err.root.Envelope.Body.Fault.Code.Subcode.value);
+        assert.equal(err.root.Envelope.Body.Fault.Code.Subcode.value, 'AuthenticationFailure');
+        done();
+      });
+    });
+  });
+
+  it('should return an internal error on asynchronous authentication returning an error object', function(done) {
+    test.authenticate = function(security, callback) {
+      setTimeout(function delayed() {
+        callback(new Error('test'));
+      }, 10);
+    };
+
+    soap.createClient(test.baseUrl + '/stockquote?wsdl', function(err, client) {
+      assert.ifError(err);
+
+      client.GetLastTradePrice({ tickerSymbol: 'AAPL'}, function (err, result) {
+        assert.ok(err);
+        assert.ok(err.root.Envelope.Body.Fault.Code.Value);
+        assert.equal(err.root.Envelope.Body.Fault.Code.Value, 'SOAP-ENV:Server');
+        assert.ok(err.root.Envelope.Body.Fault.Code.Subcode.value);
+        assert.equal(err.root.Envelope.Body.Fault.Code.Subcode.value, 'InternalServerError');
+        done();
+      });
+    });
+  });
+
+  it('should return an internal error on promise authentication throwing an error', function(done) {
+    test.authenticate = function(security) {
+      return new Promise((resolve) => {
+        throw new Error('test');
+      });
+    };
+
+    soap.createClient(test.baseUrl + '/stockquote?wsdl', function(err, client) {
+      assert.ifError(err);
+
+      client.GetLastTradePrice({ tickerSymbol: 'AAPL'}, function (err, result) {
+        assert.ok(err);
+        assert.ok(err.root.Envelope.Body.Fault.Code.Value);
+        assert.equal(err.root.Envelope.Body.Fault.Code.Value, 'SOAP-ENV:Server');
+        assert.ok(err.root.Envelope.Body.Fault.Code.Subcode.value);
+        assert.equal(err.root.Envelope.Body.Fault.Code.Subcode.value, 'InternalServerError');
         done();
       });
     });

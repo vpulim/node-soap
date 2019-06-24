@@ -20,6 +20,7 @@ export { BasicAuthSecurity, BearerSecurity, ClientSSLSecurity, ClientSSLSecurity
 export { Server } from './server';
 export { passwordDigest } from './utils';
 export * from './types';
+export { WSDL } from './wsdl';
 
 type WSDLCallback = (error: any, result?: WSDL) => any;
 
@@ -84,7 +85,7 @@ export function createClient(url: string, p2: CreateClientCallback | IOptions, p
   });
 }
 
-export function createClientAsync(url: string, options: IOptions, endpoint?: string): BluebirdPromise<Client> {
+export function createClientAsync(url: string, options?: IOptions, endpoint?: string): BluebirdPromise<Client> {
   if (typeof options === 'undefined') {
     options = {};
   }

@@ -22,7 +22,7 @@ export interface IAttachment {
   name: string;
   contentId: string;
   mimetype: string;
-  body: ReadableStream;
+  body: NodeJS.ReadableStream;
 }
 
 export type Request = req.Request;

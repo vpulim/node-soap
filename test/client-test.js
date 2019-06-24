@@ -422,7 +422,7 @@ var fs = require('fs'),
             assert.ok(result);
             assert.ok(client.lastRequestHeaders);
             assert.ok(client.lastRequest);
-            assert.equal(client.lastRequestHeaders['Content-Type'], 'application/soap+xml; charset=utf-8');
+            assert.equal(client.lastRequestHeaders['Content-Type'], 'application/soap+xml; charset=utf-8; action="MyOperation"');
             assert.notEqual(client.lastRequest.indexOf('xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\"'), -1);
             assert(!client.lastRequestHeaders.SOAPAction);
             done();
@@ -1433,5 +1433,12 @@ var fs = require('fs'),
         });
       });
     });
+  });
+});
+
+it('should create async client without options', function (done) {
+  soap.createClientAsync(__dirname + '/wsdl/default_namespace.wsdl').then(function (client) {
+    assert.ok(client);
+    done();
   });
 });
