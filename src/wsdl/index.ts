@@ -1169,7 +1169,7 @@ export class WSDL {
     }
 
     let includePath: string;
-    if (!/^https?:/.test(this.uri) && !/^https?:/.test(include.location)) {
+    if (!/^https?:/i.test(this.uri) && !/^https?:/i.test(include.location)) {
       includePath = path.resolve(path.dirname(this.uri), include.location);
     } else {
       includePath = url.resolve(this.uri || '', include.location);
@@ -1368,7 +1368,7 @@ export function open_wsdl(uri: any, p2: WSDLCallback | IOptions, p3?: WSDLCallba
   const request_options = options.wsdl_options;
 
   let wsdl: WSDL;
-  if (!/^https?:/.test(uri)) {
+  if (!/^https?:/i.test(uri)) {
     debug('Reading file: %s', uri);
     fs.readFile(uri, 'utf8', (err, definition) => {
       if (err) {
