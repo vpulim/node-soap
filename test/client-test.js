@@ -20,6 +20,18 @@ var fs = require('fs'),
       });
     });
 
+    it('should detect uppercase schemas as urls', function(done) {
+      soap.createClient('HTTP://localhost:1', function(err, client) {
+        assert.ok(err)
+        // ECONNREFUSED indicates that the WSDL path is being evaluated as a URL
+        // If instead ENOENT is returned, the WSDL path is being evaluated (incorrectly)
+        // as a file system path
+        assert.equal(err.code, 'ECONNREFUSED');
+
+        done();
+      });
+    });
+
     it('should add and clear soap headers', function (done) {
       soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
         assert.ok(client);
