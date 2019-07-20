@@ -860,11 +860,7 @@ the `options` object is optional and can contain the following properties:
 * `signatureTransformations`: sets the Reference Transforms Algorithm (default ['http://www.w3.org/2000/09/xmldsig#enveloped-signature', 'http://www.w3.org/2001/10/xml-exc-c14n#']). Type is a string array
 * `signatureAlgorithm`: set to `http://www.w3.org/2001/04/xmldsig-more#rsa-sha256` to use sha256
 * `signerOptions`: passed options to the XML Signer package - from (https://github.com/yaronn/xml-crypto) 
-  * `prefix`: adds this value as a prefix for the generated signature tags
-  * `attrs`: a hash of attributes and values attrName: value to add to the signature root node
-  * `location`: customize the location of the signature, pass an object with a reference key which should contain a XPath expression to a reference node, an action key which should contain one of the following values: `append`, `prepend`, `before`, `after`
   * `existingPrefixes`: A hash of prefixes and namespaces prefix: namespace that shouldn't be in the signature because they already exist in the xml (default: `{ 'wsse': 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd' }`)
-
 
 ### NTLMSecurity
 

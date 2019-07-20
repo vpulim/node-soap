@@ -39,12 +39,6 @@ export interface IWSSecurityCertOptions {
 }
 
 export interface IXmlSignerOptions {
-  prefix?: string;
-  attrs?: { [key: string]: string };
-  location?: {
-    action: string;
-    reference: string;
-  };
   existingPrefixes?: { [key: string]: string };
 }
 
