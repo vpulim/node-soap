@@ -7,6 +7,7 @@
   },
   "author": "Vinay Pulim <v@pulim.com>",
   "dependencies": {
+    "@types/request": "^2.48.1",
     "bluebird": "^3.5.0",
     "concat-stream": "^2.0.0",
     "debug": "^4.1.1",
@@ -16,9 +17,8 @@
     "sax": ">=0.6",
     "serve-static": "^1.11.1",
     "strip-bom": "^3.0.0",
-    "@types/request": "^2.48.1",
     "uuid": "^3.1.0",
-    "xml-crypto": "^1.2.0"
+    "xml-crypto": "^1.4.0"
   },
   "repository": {
     "type": "git",
