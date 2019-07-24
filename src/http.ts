@@ -87,8 +87,19 @@ export class HttpClient {
 
     if (attachments.length > 0) {
       const start = uuid();
+      let action = null;
+      if (headers['Content-Type'].indexOf("action") > -1) {
+           for (let ct of headers['Content-Type'].split("; ")){
+               if (ct.indexOf("action") > -1){
+                    action = ct;
+               }
+           }
+      }
       headers['Content-Type'] =
         'multipart/related; type="application/xop+xml"; start="<' + start + '>"; start-info="text/xml"; boundary=' + uuid();
+      if (action){
+          headers['Content-Type'] = headers['Content-Type'] + "; " + action;
+      }
       const multipart: any[] = [{
         'Content-Type': 'application/xop+xml; charset=UTF-8; type="text/xml"',
         'Content-ID': '<' + start + '>',
