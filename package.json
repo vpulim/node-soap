@@ -12,7 +12,7 @@
     "concat-stream": "^2.0.0",
     "debug": "^4.1.1",
     "httpntlm": "^1.5.2",
-    "lodash": "^4.17.14",
+    "lodash": "^4.17.15",
     "request": ">=2.9.0",
     "sax": ">=0.6",
     "serve-static": "^1.11.1",
