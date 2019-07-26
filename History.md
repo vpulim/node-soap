@@ -1,3 +1,12 @@
+0.29.0 / 2019-07-26
+===================
+
+* [ENHANCEMENT] Added Options object for signer.computeSignature (#1066)
+* [FIX] Prototype pollution in lodash versions <=4.17.11. Hence, updating lodash version to ^4.17.15 in package.json and package-lock.json (#1085)
+* [FIX] Fix known vulnerabilities found by  `npm audit` (#1083)
+* [FIX] Adjusts URL detection to be case insensitive (#1082)
+* [FIX] Fixed issue causing error message, "TypeError: Cannot read property &apos;output&apos; of undefined" (#1081)
+
 0.28.0 / 2019-06-20
 ===================
 
