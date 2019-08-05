@@ -226,6 +226,71 @@ var fs = require('fs'),
       });
     });
 
+    describe('SOAP 1.2 and MTOM binary data', function (){
+      var server = null;
+      var hostname = '127.0.0.1';
+      var port = 15099;
+      var baseUrl = 'http://' + hostname + ':' + port;
+
+      var attachment = {
+        mimetype: 'image/png',
+        contentId: 'file_0',
+        name: 'nodejs.png',
+        body: fs.createReadStream(__dirname + '/static/nodejs.png')
+      };
+
+      function parsePartHeaders(part) {
+        const headersAndBody = part.split(/\r\n\r\n/);
+        const headersParts = headersAndBody[0].split(/\r\n/);
+        const headers = {};
+        headersParts.forEach(header => {
+          let index;
+          if ((index = header.indexOf(':')) > -1) {
+            headers[header.substring(0, index)] = header.substring(index + 1).trim();
+          }
+        });
+        return headers;
+      }
+
+      before(function (done) {
+        server = http.createServer(function (req, res) {
+          var bufs = [];
+          req.on('data', function (chunk) {
+            bufs.push(chunk);
+          });
+          req.on('end', function () {
+            const body = Buffer.concat(bufs).toString().trim();
+            console.log(body);
+            const headers = req.headers;
+            const boundary = headers['content-type'].match(/boundary="?([^"]*"?)/)[1];
+            const parts = body.split(new RegExp('--' + boundary + '-{0,2}'))
+              .filter(part => part)
+              .map(parsePartHeaders);
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ contentType: headers['content-type'], parts: parts }), 'utf8');
+          });
+        }).listen(port, hostname, done);
+      });
+
+      after(function (done) {
+        server.close();
+        server = null;
+        done();
+      });
+
+      it('Should preserve SOAP 1.2 "action" header when sending MTOM request', function (done) {
+        soap.createClient(__dirname + '/wsdl/attachments.wsdl', _.assign({ forceSoap12Headers: true }, meta.options), function (initError, client) {
+          assert.ifError(initError);
+
+          client.MyOperation({}, function (error, response, body, soapHeader, rawRequest) {
+            assert.ifError(error);
+            assert(body.contentType.indexOf('action') > -1);
+            done();
+          }, { attachments: [attachment] })
+        }, baseUrl)
+      })
+
+    })
 
     describe('Headers in request and last response', function () {
       var server = null;
