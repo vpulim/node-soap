@@ -1,6 +1,6 @@
 {
   "name": "soap",
-  "version": "0.28.0",
+  "version": "0.29.0",
   "description": "A minimal node SOAP client",
   "engines": {
     "node": ">=4.0.0"
@@ -12,7 +12,7 @@
     "concat-stream": "^2.0.0",
     "debug": "^4.1.1",
     "httpntlm": "^1.5.2",
-    "lodash": "^4.17.14",
+    "lodash": "^4.17.15",
     "request": ">=2.9.0",
     "sax": ">=0.6",
     "serve-static": "^1.11.1",

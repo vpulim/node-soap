@@ -314,7 +314,6 @@ var fs = require('fs'),
           }, { forceMTOM: true })
         }, baseUrl)
       })
-
     })
 
     describe('Headers in request and last response', function () {
