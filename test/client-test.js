@@ -260,7 +260,6 @@ var fs = require('fs'),
           });
           req.on('end', function () {
             const body = Buffer.concat(bufs).toString().trim();
-            console.log(body);
             const headers = req.headers;
             const boundary = headers['content-type'].match(/boundary="?([^"]*"?)/)[1];
             const parts = body.split(new RegExp('--' + boundary + '-{0,2}'))
@@ -287,6 +286,32 @@ var fs = require('fs'),
             assert(body.contentType.indexOf('action') > -1);
             done();
           }, { attachments: [attachment] })
+        }, baseUrl)
+      })
+
+      it('Should send MTOM request even without attachment', function (done) {
+        soap.createClient(__dirname + '/wsdl/attachments.wsdl', _.assign({ forceSoap12Headers: true }, meta.options), function (initError, client) {
+          assert.ifError(initError);
+
+          client.MyOperation({}, function (error, response, body, soapHeader, rawRequest) {
+            assert.ifError(error);
+            const contentType = {};
+            body.contentType.split(/;\s?/).forEach(dir => {
+              const keyValue = dir.match(/(.*)="?([^"]*)?/);
+              if (keyValue && keyValue.length > 2) {
+                contentType[keyValue[1].trim()] = keyValue[2].trim();
+              } else {
+                contentType.rootType = dir;
+              }
+            });
+            assert.equal(contentType.rootType, 'multipart/related');
+            assert.equal(body.parts.length, 1);
+
+            const dataHeaders = body.parts[0];
+            assert(dataHeaders['Content-Type'].indexOf('application/xop+xml') > -1);
+            assert.equal(dataHeaders['Content-ID'], contentType.start);
+            done();
+          }, { forceMTOM: true })
         }, baseUrl)
       })
 

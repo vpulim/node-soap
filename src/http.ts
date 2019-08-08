@@ -68,7 +68,7 @@ export class HttpClient {
     const mergeOptions = ['headers'];
     const attachments: IAttachment[] = exoptions.attachments || [];
 
-    if (typeof data === 'string' && attachments.length === 0) {
+    if (typeof data === 'string' && attachments.length === 0 && !exoptions.forceMTOM) {
       headers['Content-Length'] = Buffer.byteLength(data, 'utf8');
       headers['Content-Type'] = 'application/x-www-form-urlencoded';
     }
@@ -85,7 +85,7 @@ export class HttpClient {
       followAllRedirects: true,
     };
 
-    if (exoptions.alwaysMTOM || attachments.length > 0) {
+    if (exoptions.forceMTOM || attachments.length > 0) {
       const start = uuid();
       let action = null;
       if (headers['Content-Type'].indexOf('action') > -1) {
@@ -105,6 +105,7 @@ export class HttpClient {
         'Content-ID': '<' + start + '>',
         'body': data,
       }];
+
       attachments.forEach((attachment) => {
         multipart.push({
           'Content-Type': attachment.mimetype,
@@ -163,7 +164,6 @@ export class HttpClient {
   ) {
     const options = this.buildRequest(rurl, data, exheaders, exoptions);
     let req: req.Request;
-
     if (exoptions !== undefined && exoptions.hasOwnProperty('ntlm')) {
       // sadly when using ntlm nothing to return
       // Not sure if this can be handled in a cleaner way rather than an if/else,
