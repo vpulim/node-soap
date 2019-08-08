@@ -372,6 +372,8 @@ export class Server extends EventEmitter {
             this.emit('headers', headers, pair.methodName);
           }
 
+          methodName = pair.methodName;
+
           this._executeMethod({
             serviceName: serviceName,
             portName: portName,
