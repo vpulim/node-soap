@@ -500,6 +500,19 @@ The `options` object is optional and is passed to the `request`-module.
 Interesting properties might be:
 * `timeout`: Timeout in milliseconds
 * `forever`: Enables keep-alive connections and pools them
+* `attachments`: array of attachment objects. This converts the request into MTOM: _headers['Content-Type']='multipart/related; type="application/xop+xml"; start= ... '_
+  ```
+  [{
+        mimetype: content mimetype,
+        contentId: part id,
+        name: file name,
+        body: binary data
+   },
+    ...
+  ]
+  ```
+* `forceMTOM`: set to True if you want to send the request as MTOM even if you don't have attachments
+    
 
 ### Client.*method*Async(args) - call *method* on the SOAP service.
 
