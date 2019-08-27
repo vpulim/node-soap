@@ -1011,6 +1011,23 @@ soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', wsdlOptions, funct
   });
 });
 ```
+
+### Overriding imports relative paths
+
+By default, WSDL and schema files import other schemas and types using relative paths.
+
+However in some systems (i.e. NetSuite) when the wsdl is downloaded for offline caching, all files are flattened under a single directory and all the imports fail.
+Passing this option allows `node-soap` to correctly load all files.  
+
+```javascript
+var options ={
+    wsdl_options = { fixedPath: true }
+};
+soap.createClient(__dirname+'/wsdl/fixedPath/netsuite.wsdl', options, function(err, client) {
+    // your code  
+});
+```
+
 ### Specifying the exact namespace definition of the root element
 In rare cases, you may want to precisely control the namespace definition that is included in the root element.
 

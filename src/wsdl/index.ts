@@ -1170,7 +1170,12 @@ export class WSDL {
 
     let includePath: string;
     if (!/^https?:/i.test(this.uri) && !/^https?:/i.test(include.location)) {
-      includePath = path.resolve(path.dirname(this.uri), include.location);
+      const isFixed = (this.options.wsdl_options !== undefined && this.options.wsdl_options.hasOwnProperty('fixedPath')) ? this.options.wsdl_options.fixedPath : false;
+      if (isFixed) {
+        includePath = path.resolve(path.dirname(this.uri), path.parse(include.location).base);
+      } else {
+        includePath = path.resolve(path.dirname(this.uri), include.location);
+      }
     } else {
       includePath = url.resolve(this.uri || '', include.location);
     }
