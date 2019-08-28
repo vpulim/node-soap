@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns:tns="urn:platform_2019_1.webservices.netsuite.com" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns="http://schemas.xmlsoap.org/wsdl/" targetNamespace="urn:platform_2019_1.webservices.netsuite.com">
+	<documentation>
+		Release Status: Generally Available
+	</documentation>
+	<types>
+		<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+			<xsd:import namespace="urn:core_2019_1.platform.webservices.netsuite.com" schemaLocation="../../xsd/platform.core.xsd"/>
+		</xsd:schema>
+	</types>
+	<portType name="NetSuitePortType">
+	</portType>
+	<binding name="NetSuiteBinding" type="tns:NetSuitePortType">
+	</binding>
+	<service name="NetSuiteService">
+		<port name="NetSuitePort" binding="tns:NetSuiteBinding">
+			<soap:address location="https://webservices.netsuite.com/services/NetSuitePort_2019_1"/>
+		</port>
+	</service>
+</definitions>
