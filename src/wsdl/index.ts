@@ -943,7 +943,7 @@ export class WSDL {
   public processAttributes(child: any, nsContext: NamespaceContext): string {
     let attr = '';
 
-    if (child === null) {
+    if (child === null || child === undefined) {
       child = [];
     }
 
