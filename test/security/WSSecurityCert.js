@@ -121,12 +121,12 @@ describe('WSSecurityCert', function () {
 
   it('should use default xmlns:wsse if no signerOptions.existingPrefixes is provided', function () {
     var instance = new WSSecurityCert(key, cert, '');
-    var xml = instance.postProcess('<soap:Header></soap:Header><soap:Body><Body></Body><Timestamp></Timestamp></soap:Body>', 'soap')
+    var xml = instance.postProcess('<soap:Header></soap:Header><soap:Body><Body></Body></soap:Body>', 'soap')
     xml.should.containEql('xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"');
   });
   it('should still add wsse if another signerOption attribute is passed through ', function(){
     var instance = new WSSecurityCert(key, cert, '', { signerOptions: { prefix: 'ds'} });
-    var xml = instance.postProcess('<soap:Header></soap:Header><soap:Body><Body></Body><Timestamp></Timestamp></soap:Body>', 'soap')
+    var xml = instance.postProcess('<soap:Header></soap:Header><soap:Body><Body></Body></soap:Body>', 'soap')
     xml.should.containEql('xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"');
     xml.should.containEql('<ds:SignedInfo>');
   });
@@ -137,7 +137,7 @@ describe('WSSecurityCert', function () {
         existingPrefixes: { wsse: 'https://localhost/node-soap.xsd' }
       }
     });
-    var xml = instance.postProcess('<soap:Header></soap:Header><soap:Body><Body></Body><Timestamp></Timestamp></soap:Body>', 'soap')
+    var xml = instance.postProcess('<soap:Header></soap:Header><soap:Body><Body></Body></soap:Body>', 'soap')
     xml.should.containEql('<wsse:SecurityTokenReference xmlns:wsse="https://localhost/node-soap.xsd">');
   });
   it('should contain the prefix to the generated Signature tags', function () {
@@ -146,7 +146,7 @@ describe('WSSecurityCert', function () {
         prefix: 'ds',
       }
     });
-    var xml = instance.postProcess('<soap:Header></soap:Header><soap:Body><Body></Body><Timestamp></Timestamp></soap:Body>', 'soap');
+    var xml = instance.postProcess('<soap:Header></soap:Header><soap:Body><Body></Body></soap:Body>', 'soap');
     xml.should.containEql('<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">');
     xml.should.containEql('<ds:SignedInfo>');
     xml.should.containEql('<ds:CanonicalizationMethod');
@@ -164,7 +164,7 @@ describe('WSSecurityCert', function () {
         attrs: { Id: 'security_123' },
       }
     });
-    var xml = instance.postProcess('<soap:Header></soap:Header><soap:Body><Body></Body><Timestamp></Timestamp></soap:Body>', 'soap');
+    var xml = instance.postProcess('<soap:Header></soap:Header><soap:Body><Body></Body></soap:Body>', 'soap');
     xml.should.containEql('<Signature Id="security_123" xmlns="http://www.w3.org/2000/09/xmldsig#">');
   });
   it('should sign additional headers that are added via additionalReferences', function () {
@@ -174,7 +174,7 @@ describe('WSSecurityCert', function () {
         'Action'
       ],
     });
-    var xml = instance.postProcess('<soap:Header><To Id="To">localhost.com</To><Action Id="action-1234">testing</Action></soap:Header><soap:Body><Body></Body><Timestamp></Timestamp></soap:Body>', 'soap');
+    var xml = instance.postProcess('<soap:Header><To Id="To">localhost.com</To><Action Id="action-1234">testing</Action></soap:Header><soap:Body><Body></Body></soap:Body>', 'soap');
     xml.should.containEql('<Reference URI="#To">');
     xml.should.containEql('<Reference URI="#action-1234">');
   });
