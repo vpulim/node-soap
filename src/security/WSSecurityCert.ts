@@ -103,7 +103,7 @@ export class WSSecurityCert implements ISecurity {
         `<wsse:Reference URI="#${this.x509Id}" ValueType="${oasisBaseUri}/oasis-200401-wss-x509-token-profile-1.0#X509v3"/>` +
         `</wsse:SecurityTokenReference>`;
     };
-  };
+  }
 
   public postProcess(xml, envelopeKey) {
     this.created = generateCreated();
