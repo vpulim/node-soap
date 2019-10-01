@@ -864,6 +864,20 @@ WS-Security X509 Certificate support.
   var privateKey = fs.readFileSync(privateKeyPath);
   var publicKey = fs.readFileSync(publicKeyPath);
   var password = ''; // optional password
+  var options = {
+    hasTimeStamp: true,
+    additionalReferences: [
+        'wsa:Action',
+        'wsa:ReplyTo',
+        'wsa:To',
+    ],
+    signerOptions: {
+        prefix: 'ds',
+        attrs: { Id: 'Signature' },
+        existingPrefixes: {
+            wsse: 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd',
+        }
+  }
   var wsSecurity = new soap.WSSecurityCert(privateKey, publicKey, password, options);
   client.setSecurity(wsSecurity);
 ```
@@ -872,8 +886,12 @@ the `options` object is optional and can contain the following properties:
 * `hasTimeStamp`: adds Timestamp element (default: `true`)
 * `signatureTransformations`: sets the Reference Transforms Algorithm (default ['http://www.w3.org/2000/09/xmldsig#enveloped-signature', 'http://www.w3.org/2001/10/xml-exc-c14n#']). Type is a string array
 * `signatureAlgorithm`: set to `http://www.w3.org/2001/04/xmldsig-more#rsa-sha256` to use sha256
-* `signerOptions`: passed options to the XML Signer package - from (https://github.com/yaronn/xml-crypto) 
+* `additionalReferences` : Array of Soap headers that need to be signed.  This need to be added using `client.addSoapHeader('header')`
+* `signerOptions`: passes options to the XML Signer package - from (https://github.com/yaronn/xml-crypto) 
   * `existingPrefixes`: A hash of prefixes and namespaces prefix: namespace that shouldn't be in the signature because they already exist in the xml (default: `{ 'wsse': 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd' }`)
+  * `prefix`: Adds this value as a prefix for the generated signature tags.
+  * `attrs`: A hash of attributes and values attrName: value to add to the signature root node 
+  
 
 ### NTLMSecurity
 

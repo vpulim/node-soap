@@ -398,7 +398,7 @@ export class Client extends EventEmitter {
         } else {
           return header;
         }
-      }).join('\n');
+      }).join(' ');
     }
 
     xml = '<?xml version="1.0" encoding="utf-8"?>' +
