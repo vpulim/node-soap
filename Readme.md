@@ -864,16 +864,162 @@ WS-Security X509 Certificate support.
   var privateKey = fs.readFileSync(privateKeyPath);
   var publicKey = fs.readFileSync(publicKeyPath);
   var password = ''; // optional password
+  var options = {
+    hasTimeStamp: true,
+    additionalReferences: [
+        'wsa:Action',
+        'wsa:ReplyTo',
+        'wsa:To',
+    ],
+    signerOptions: {
+        prefix: 'ds',
+        attrs: { Id: 'Signature' },
+        existingPrefixes: {
+            wsse: 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd',
+        }
+  }
   var wsSecurity = new soap.WSSecurityCert(privateKey, publicKey, password, options);
   client.setSecurity(wsSecurity);
 ```
 
-the `options` object is optional and can contain the following properties:
-* `hasTimeStamp`: adds Timestamp element (default: `true`)
+The `options` object is optional and can contain the following properties:
+* `hasTimeStamp`: Includes Timestamp tags (default: `true`)
 * `signatureTransformations`: sets the Reference Transforms Algorithm (default ['http://www.w3.org/2000/09/xmldsig#enveloped-signature', 'http://www.w3.org/2001/10/xml-exc-c14n#']). Type is a string array
 * `signatureAlgorithm`: set to `http://www.w3.org/2001/04/xmldsig-more#rsa-sha256` to use sha256
-* `signerOptions`: passed options to the XML Signer package - from (https://github.com/yaronn/xml-crypto) 
-  * `existingPrefixes`: A hash of prefixes and namespaces prefix: namespace that shouldn't be in the signature because they already exist in the xml (default: `{ 'wsse': 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd' }`)
+* `additionalReferences` : (optional) Array of Soap headers that need to be signed.  This need to be added using `client.addSoapHeader('header')`
+* `signerOptions`: (optional) passes options to the XML Signer package - from (https://github.com/yaronn/xml-crypto) 
+  * `existingPrefixes`: (optional) A hash of prefixes and namespaces prefix: namespace that shouldn't be in the signature because they already exist in the xml (default: `{ 'wsse': 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd' }`)
+  * `prefix`: (optional) Adds this value as a prefix for the generated signature tags.
+  * `attrs`: (optional) A hash of attributes and values attrName: value to add to the signature root node 
+  
+#### Option examples
+
+`hasTimeStamp:true` 
+  
+``` xml
+<soap:Header>
+    <wsse:Security soap:mustUnderstand="1">
+        <wsse:BinarySecurityToken>XXX</wsse:BinarySecurityToken>
+        <!-- The Timestamp group of tags are added and signed --> 
+        <Timestamp xmlns="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" Id="Timestamp">
+            <Created>2019-10-01T08:17:50Z</Created>
+            <Expires>2019-10-01T08:27:50Z</Expires>
+        </Timestamp>
+        <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+            <SignedInfo>
+                ...
+                <Reference URI="#Timestamp">
+                    <Transforms>
+                        <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+                        <Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+                    </Transforms>
+                    <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+                    <DigestValue>XyZ=</DigestValue>
+                </Reference>
+            </SignedInfo>
+        </Signature>
+    </wsse:Security>
+</soap:Header>
+```
+
+`additionalReferences: ['To']`
+``` XML
+<soap:Header>
+    <To Id="To">localhost.com</To>
+    <wsse:Security soap:mustUnderstand="1">
+        <wsse:BinarySecurityToken>XXX</wsse:BinarySecurityToken>
+        <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+            <SignedInfo>
+                <CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+                <SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+                <!-- The "To" tag is signed and added as a reference --> 
+                <Reference URI="#To">
+                    <Transforms>
+                        <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+                        <Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+                    </Transforms>
+                    <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+                    <DigestValue>XYZ</DigestValue>
+                </Reference>
+            </SignedInfo>
+            <SignatureValue>
+                Rf6M4F4puQuQHJIPtJz1CZIVvF3qOdpEEcuAiooWkX5ecnAHSf3RW3sOIzFUWW7VOOncJcts/3xr8DuN4+8Wm9hx1MoOcWJ6kyRIdVNbQWLseIcAhxYCntRY57T2TBXzpb0UPA56pry1+TEcnIQXhdIzG5YT+tTVTp+SZHHcnlP5Y+yqnIOH9wzgRvAovbydTYPCODF7Ana9K/7CSGDe7vpVT85CUYUcJE4DfTxaRa9gKkKrBdPN9vFVi0WfxtMF4kv23cZRCZzS5+CoLfPlx3mq65gVXsqH01RLbktNJq9VaQKcZUgapmUCMzrYhqyzUQJ8HrSHqe+ya2GsjlB0VQ==
+            </SignatureValue>
+            <KeyInfo>
+                <wsse:SecurityTokenReference
+                        xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+                    <wsse:Reference URI="#x509-c5c0d213676f4a6ba5e6fa58074eb57a"
+                                    ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3"/>
+                </wsse:SecurityTokenReference>
+            </KeyInfo>
+        </Signature>
+    </wsse:Security>
+</soap:Header>
+```
+
+`signerOptions.prefix:'ds'` 
+
+``` XML
+<soap:Header>
+    <To Id="To">localhost.com</To>
+    <wsse:Security soap:mustUnderstand="1">
+        <wsse:BinarySecurityToken>XXX</wsse:BinarySecurityToken>
+        <!-- Signature and children tags are given the prefix defined. -->
+        <ds:Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+            <ds:SignedInfo>
+                <ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+                <ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+                <ds:Reference URI="#To">
+                    <ds:Transforms>
+                        <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+                        <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+                    </ds:Transforms>
+                    <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+                    <ds:DigestValue>XYZ</DigestValue>
+                </ds:Reference>
+            </ds:SignedInfo>
+            <ds:SignatureValue>
+                Rf6M4F4puQuQHJIPtJz1CZIVvF3qOdpEEcuAiooWkX5ecnAHSf3RW3sOIzFUWW7VOOncJcts/3xr8DuN4+8Wm9hx1MoOcWJ6kyRIdVNbQWLseIcAhxYCntRY57T2TBXzpb0UPA56pry1+TEcnIQXhdIzG5YT+tTVTp+SZHHcnlP5Y+yqnIOH9wzgRvAovbydTYPCODF7Ana9K/7CSGDe7vpVT85CUYUcJE4DfTxaRa9gKkKrBdPN9vFVi0WfxtMF4kv23cZRCZzS5+CoLfPlx3mq65gVXsqH01RLbktNJq9VaQKcZUgapmUCMzrYhqyzUQJ8HrSHqe+ya2GsjlB0VQ==
+            </ds:SignatureValue>
+            <ds:KeyInfo>
+                <wsse:SecurityTokenReference
+                        xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+                    <wsse:Reference URI="#x509-c5c0d213676f4a6ba5e6fa58074eb57a"
+                                    ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3"/>
+                </wsse:SecurityTokenReference>
+            </ds:KeyInfo>
+        </ds:Signature>
+    </wsse:Security>
+</soap:Header>
+```
+
+`signerOptions.attrs:{ Id: 'signature-100', foo:'bar'}` 
+  
+``` xml
+<soap:Header>
+    <wsse:Security soap:mustUnderstand="1">
+        <wsse:BinarySecurityToken>XXX</wsse:BinarySecurityToken>
+        <!-- The Timestamp group of tags are added and signed --> 
+        <Timestamp xmlns="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" Id="Timestamp">
+            <Created>2019-10-01T08:17:50Z</Created>
+            <Expires>2019-10-01T08:27:50Z</Expires>
+        </Timestamp>
+        <Signature Id="signature-100" foo="bar" xmlns="http://www.w3.org/2000/09/xmldsig#">
+            <SignedInfo>
+                ...
+                <Reference URI="#Timestamp">
+                    <Transforms>
+                        <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+                        <Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+                    </Transforms>
+                    <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+                    <DigestValue>XyZ=</DigestValue>
+                </Reference>
+            </SignedInfo>
+        </Signature>
+    </wsse:Security>
+</soap:Header>
+```
 
 ### NTLMSecurity
 
