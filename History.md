@@ -1,3 +1,13 @@
+0.30.0 / 2019-10-16
+===================
+
+* [ENHANCEMENT] Allow a fixed file path for local includes (#1089)
+* [ENHANCEMENT] New XML Signing Options, extra tags to sign and small bug fix (#1091)
+* [ENHANCEMENT] added forceMTOM option and updated the Readme (#1086)
+* [FIX] Added undefined check in WSDL.processAttributes (#1090)
+* [FIX] Fixes bug where methodName would not be included in the response event (#1087)
+* [FIX] fixed MTOM removing soap12header (#1084)
+
 0.29.0 / 2019-07-26
 ===================
 
