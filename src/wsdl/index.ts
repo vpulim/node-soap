@@ -70,6 +70,7 @@ export class WSDL {
   public valueKey = '$value';
   public xmlKey = '$xml';
   public xmlnsInEnvelope: string;
+  public xmlnsInHeader: string;
   public uri: string;
   public definitions: elements.DefinitionsElement;
   public options: IInitializedOptions;

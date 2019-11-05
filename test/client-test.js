@@ -1537,6 +1537,20 @@ var fs = require('fs'),
   });
 });
 
+it('shall generate correct header for custom defined header arguments', function(done) {
+  soap.createClientAsync(__dirname + '/wsdl/default_namespace.wsdl').then(function (client) {
+    client.addSoapHeader('test-header-namespace')
+    client.wsdl.xmlnsInHeader = 'xmlns="https://example.com/v1"';
+    var expectedDefinedHeader = '<soap:Header xmlns="https://example.com/v1">';
+
+    client.MyOperation(function(err, result, rawResponse, soapHeader, rawRequest) {
+      var definedSoapHeader = client.lastRequest.match(/<soap:Header xmlns=("(.*?)">)/)[0];
+      assert.ok(definedSoapHeader === expectedDefinedHeader);
+      done();
+    });
+  });
+});
+
 it('should create async client without options', function (done) {
   soap.createClientAsync(__dirname + '/wsdl/default_namespace.wsdl').then(function (client) {
     assert.ok(client);
