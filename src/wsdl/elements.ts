@@ -802,10 +802,11 @@ export class TypesElement extends Element {
   // fix#325
   public addChild(child) {
     assert(child instanceof SchemaElement);
+    const childInclude = child.includes.find((e) => {
+      return e.hasOwnProperty('namespace');
+    });
     const targetNamespace = child.$targetNamespace ||
-      child.includes.find(e => {
-        return e.hasOwnProperty("namespace");
-      }).namespace;
+      typeof childInclude !== 'undefined' ? childInclude.namespace : childInclude;
 
     if (!this.schemas.hasOwnProperty(targetNamespace)) {
       this.schemas[targetNamespace] = child;
