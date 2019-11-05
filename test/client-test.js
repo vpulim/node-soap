@@ -1544,8 +1544,8 @@ it('shall generate correct header for custom defined header arguments', function
     var expectedDefinedHeader = '<soap:Header xmlns="https://example.com/v1">';
 
     client.MyOperation(function(err, result, rawResponse, soapHeader, rawRequest) {
-      var soapHeader = client.lastRequest.match(/<soap:Header xmlns=("(.*?)">)/)[0];
-      assert.ok(soapHeader === expectedDefinedHeader);
+      var definedSoapHeader = client.lastRequest.match(/<soap:Header xmlns=("(.*?)">)/)[0];
+      assert.ok(definedSoapHeader === expectedDefinedHeader);
       done();
     });
   });
