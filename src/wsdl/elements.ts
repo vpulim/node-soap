@@ -903,12 +903,25 @@ export class TypesElement extends Element {
   public addChild(child) {
     assert(child instanceof SchemaElement);
 
-    const targetNamespace = child.$targetNamespace || child.includes[0]?.namespace;
+    const childInclude = child.includes.find((e: object) => {
+      return e.hasOwnProperty('namespace');
+    });
+    const childIncludeNs: string = (
+      (typeof childInclude !== 'undefined' &&
+        childInclude.hasOwnProperty('namespace') &&
+        child instanceof SchemaElement) ?
+        childInclude.namespace :
+        undefined);
+    const targetNamespace = child.$targetNamespace || child.includes[0]?.namespace || childIncludeNs;
 
     if (!this.schemas.hasOwnProperty(targetNamespace)) {
       this.schemas[targetNamespace] = child;
     } else {
-      console.error('Target-Namespace "' + targetNamespace + '" already in use by another Schema!');
+      if (targetNamespace === child.$targetNamespace) {
+        this.schemas[targetNamespace] = child;
+      } else {
+        console.error('Target-Namespace "' + targetNamespace + '" already in use by another Schema!');
+      }
     }
   }
 }
