@@ -252,5 +252,16 @@ describe('WSDL Parser (non-strict)', () => {
       )
       done();
     });
+  });
+
+  it('should not return both schemas when targetNamespace is undefined (no imports)', (done) => {
+    soap.createClient(
+      __dirname + "/wsdl/schemas_without_targetnamespace.wsdl",
+      function(err, client) {
+        assert.ifError(err);
+        assert.equal(Object.keys(client.wsdl.definitions.schemas).length, 1);
+        done();
+      }
+    );
   })
 });
