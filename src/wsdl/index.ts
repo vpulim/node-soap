@@ -567,13 +567,20 @@ export class WSDL {
    * @param {String} nsURI
    * @param {String} type
    */
-  public objectToDocumentXML(name: string, params, nsPrefix: string, nsURI?: string, type?: string) {
+  public objectToDocumentXML(name: string, params, nsPrefix: string, nsURI?: string, type?: string, options?: any) {
     // If user supplies XML already, just use that.  XML Declaration should not be present.
     if (params && params._xml) {
       return params._xml;
     }
     const args = {};
-    args[name] = params;
+    const opts = options || {};
+    if (opts.overrideBaseElement) {
+      Object.keys(params).forEach((k: string) => {
+        args[k] = params[k];
+      });
+    } else {
+      args[name] = params;
+    }
     const parameterTypeObj = type ? this.findSchemaObject(nsURI, type) : null;
     return this.objectToXML(args, null, nsPrefix, nsURI, true, null, parameterTypeObj);
   }
