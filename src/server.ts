@@ -452,7 +452,7 @@ export class Server extends EventEmitter {
                 Value: _this_1.wsdl.options.forceSoap12Headers
                     ? 'soap:Sender'
                     : 'soap:Client',
-                Subcode: { value: 'AuthenticationFailure' },
+                Subcode: { Value: 'AuthenticationFailure' },
               },
               Reason: { 
                 Text: {
@@ -531,7 +531,7 @@ export class Server extends EventEmitter {
               Value: _this_1.wsdl.options.forceSoap12Headers
                 ? 'soap:Receiver'
                 : 'soap:Server',
-              Subcode: { value: 'InternalServerError' },
+              Subcode: { Value: 'InternalServerError' },
             },
             Reason: {
               Text: {
