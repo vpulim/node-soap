@@ -406,10 +406,15 @@ export class Server extends EventEmitter {
         if (authResult instanceof Error) {
           return this._sendError({
             Code: {
-              Value: 'SOAP-ENV:Server',
-              Subcode: { value: 'InternalServerError' },
+              Value: 'soap:Receiver',
+              Subcode: { Value: 'InternalServerError' },
             },
-            Reason: { Text: authResult.toString() },
+            Reason: {
+              Text: {
+                attributes: { "xml:lang": 'en' },
+                $value: authResult.toString()
+              }
+            },
             statusCode: 500,
           }, callback, includeTimestamp);
         }
@@ -425,20 +430,30 @@ export class Server extends EventEmitter {
               }
               return this._sendError({
                 Code: {
-                  Value: 'SOAP-ENV:Server',
-                  Subcode: { value: 'InternalServerError' },
+                  Value: 'soap:Receiver',
+                  Subcode: { Value: 'InternalServerError' }
                 },
-                Reason: { Text: error.toString() },
+                Reason: {
+                  Text: {
+                    attributes: { "xml:lang": 'en' },
+                    $value: authResult.toString()
+                  }
+                },
                 statusCode: 500,
               }, callback, includeTimestamp);
             }
           } else {
             return this._sendError({
               Code: {
-                Value: 'SOAP-ENV:Client',
-                Subcode: { value: 'AuthenticationFailure' },
+                Value: 'soap:Sender',
+                Subcode: { Value: 'AuthenticationFailure' },
               },
-              Reason: { Text: 'Invalid username or password' },
+              Reason: {
+                Text: {
+                  attributes: { "xml:lang": 'en' },
+                  $value: 'Invalid username or password'
+                }
+              },
               statusCode: 401,
             }, callback, includeTimestamp);
           }
@@ -507,10 +522,15 @@ export class Server extends EventEmitter {
         } else {
           return this._sendError({
             Code: {
-              Value: 'SOAP-ENV:Server',
-              Subcode: { value: 'InternalServerError' },
+              Value: 'soap:Receiver',
+              Subcode: { Value: 'InternalServerError' },
             },
-            Reason: { Text: error.toString() },
+            Reason: {
+              Text: {
+                attributes: { "xml:lang": 'en' },
+                $value: error.toString()
+              }
+            },
             statusCode: 500,
           }, callback, includeTimestamp);
         }
