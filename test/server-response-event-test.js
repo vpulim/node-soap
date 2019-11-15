@@ -49,15 +49,16 @@ var responseXMLChanged = '<?xml version="1.0" encoding="utf-8"?>' +
 describe('server response event test', function () {
 
   before(function (done) {
-    
 
     server = http.createServer(function(request,response) {
       response.end('404: Not Found: ' + request.url);
     });
-    
+
     server.listen(51515, function () {
       var soapServer = soap.listen(server, '/SayHello', service, wsdl);
-      
+
+      soapServer.log = function(type, data) { };
+
       soapServer.on('response', function(response, methodName){
         assert.equal(response.result, responseXML);
         assert.equal(methodName, 'sayHello');

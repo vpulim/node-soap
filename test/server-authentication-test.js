@@ -123,6 +123,30 @@ describe('SOAP Server', function() {
     });
   });
 
+  it('should succeed on valid authorization', function(done) {
+    test.authenticate = function(security, callback) {
+      setTimeout(function delayed() {
+        callback(false); // Ignored
+      }, 10);
+      return true;
+    };
+
+    test.authorizeConnection = function(req, res) {
+      setTimeout(function delayed() { }, 10);
+      return true;
+    };
+
+    soap.createClient(test.baseUrl + '/stockquote?wsdl', function(err, client) {
+      assert.ifError(err);
+
+      client.GetLastTradePrice({ tickerSymbol: 'AAPL'}, function(err, result) {
+        assert.ifError(err);
+        assert.equal(19.56, parseFloat(result.price));
+        done();
+      });
+    });
+  });  
+
   it('should fail on invalid synchronous authentication', function(done) {
     test.authenticate = function(security, callback) {
       setTimeout(function delayed() {
@@ -137,9 +161,9 @@ describe('SOAP Server', function() {
       client.GetLastTradePrice({ tickerSymbol: 'AAPL'}, function (err, result) {
         assert.ok(err);
         assert.ok(err.root.Envelope.Body.Fault.Code.Value);
-        assert.equal(err.root.Envelope.Body.Fault.Code.Value, 'SOAP-ENV:Client');
-        assert.ok(err.root.Envelope.Body.Fault.Code.Subcode.value);
-        assert.equal(err.root.Envelope.Body.Fault.Code.Subcode.value, 'AuthenticationFailure');
+        assert.equal(err.root.Envelope.Body.Fault.Code.Value, 'soap:Sender');
+        assert.ok(err.root.Envelope.Body.Fault.Code.Subcode.Value);
+        assert.equal(err.root.Envelope.Body.Fault.Code.Subcode.Value, 'AuthenticationFailure');
         done();
       });
     });
@@ -158,9 +182,9 @@ describe('SOAP Server', function() {
       client.GetLastTradePrice({ tickerSymbol: 'AAPL'}, function (err, result) {
         assert.ok(err);
         assert.ok(err.root.Envelope.Body.Fault.Code.Value);
-        assert.equal(err.root.Envelope.Body.Fault.Code.Value, 'SOAP-ENV:Client');
-        assert.ok(err.root.Envelope.Body.Fault.Code.Subcode.value);
-        assert.equal(err.root.Envelope.Body.Fault.Code.Subcode.value, 'AuthenticationFailure');
+        assert.equal(err.root.Envelope.Body.Fault.Code.Value, 'soap:Sender');
+        assert.ok(err.root.Envelope.Body.Fault.Code.Subcode.Value);
+        assert.equal(err.root.Envelope.Body.Fault.Code.Subcode.Value, 'AuthenticationFailure');
         done();
       });
     });
@@ -181,9 +205,32 @@ describe('SOAP Server', function() {
       client.GetLastTradePrice({ tickerSymbol: 'AAPL'}, function (err, result) {
         assert.ok(err);
         assert.ok(err.root.Envelope.Body.Fault.Code.Value);
-        assert.equal(err.root.Envelope.Body.Fault.Code.Value, 'SOAP-ENV:Client');
-        assert.ok(err.root.Envelope.Body.Fault.Code.Subcode.value);
-        assert.equal(err.root.Envelope.Body.Fault.Code.Subcode.value, 'AuthenticationFailure');
+        assert.equal(err.root.Envelope.Body.Fault.Code.Value, 'soap:Sender');
+        assert.ok(err.root.Envelope.Body.Fault.Code.Subcode.Value);
+        assert.equal(err.root.Envelope.Body.Fault.Code.Subcode.Value, 'AuthenticationFailure');
+        done();
+      });
+    });
+  });
+
+  it('should fail on invalid authorization', function(done) {
+    test.authenticate = function(security, callback) {
+      setTimeout(function delayed() {
+        callback(false); // Ignored
+      }, 10);
+      return true;
+    };
+
+    test.soapServer.authorizeConnection = function(req, res) {
+      setTimeout(function delayed() { }, 10);
+      return false;
+    };
+
+    soap.createClient(test.baseUrl + '/stockquote?wsdl', function(err, client) {
+      assert.ifError(err);
+
+      client.GetLastTradePrice({ tickerSymbol: 'AAPL'}, function(err, result) {
+        assert.deepStrictEqual(result, {});
         done();
       });
     });
@@ -202,9 +249,9 @@ describe('SOAP Server', function() {
       client.GetLastTradePrice({ tickerSymbol: 'AAPL'}, function (err, result) {
         assert.ok(err);
         assert.ok(err.root.Envelope.Body.Fault.Code.Value);
-        assert.equal(err.root.Envelope.Body.Fault.Code.Value, 'SOAP-ENV:Server');
-        assert.ok(err.root.Envelope.Body.Fault.Code.Subcode.value);
-        assert.equal(err.root.Envelope.Body.Fault.Code.Subcode.value, 'InternalServerError');
+        assert.equal(err.root.Envelope.Body.Fault.Code.Value, 'soap:Receiver');
+        assert.ok(err.root.Envelope.Body.Fault.Code.Subcode.Value);
+        assert.equal(err.root.Envelope.Body.Fault.Code.Subcode.Value, 'InternalServerError');
         done();
       });
     });
@@ -223,9 +270,9 @@ describe('SOAP Server', function() {
       client.GetLastTradePrice({ tickerSymbol: 'AAPL'}, function (err, result) {
         assert.ok(err);
         assert.ok(err.root.Envelope.Body.Fault.Code.Value);
-        assert.equal(err.root.Envelope.Body.Fault.Code.Value, 'SOAP-ENV:Server');
-        assert.ok(err.root.Envelope.Body.Fault.Code.Subcode.value);
-        assert.equal(err.root.Envelope.Body.Fault.Code.Subcode.value, 'InternalServerError');
+        assert.equal(err.root.Envelope.Body.Fault.Code.Value, 'soap:Receiver');
+        assert.ok(err.root.Envelope.Body.Fault.Code.Subcode.Value);
+        assert.equal(err.root.Envelope.Body.Fault.Code.Subcode.Value, 'InternalServerError');
         done();
       });
     });
