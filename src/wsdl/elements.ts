@@ -185,8 +185,8 @@ export class ElementElement extends Element {
     'complexType',
     'simpleType',
   ]);
-  public $minOccurs?: number | string;
-  public $maxOccurs?: number | string;
+  public $minOccurs?: string;
+  public $maxOccurs?: string;
   public $type?: string;
   public $ref?: string;
   public targetNSAlias?: string;
@@ -197,8 +197,25 @@ export class ElementElement extends Element {
   public description(definitions: DefinitionsElement, xmlns?: IXmlNs) {
     let element = {};
     let name = this.$name;
-    const isMany = !this.$maxOccurs ? false : (typeof this.$maxOccurs === 'string' ? (this.$maxOccurs === 'unbounded') : (this.$maxOccurs > 1));
-    if (this.$minOccurs !== this.$maxOccurs && isMany) {
+
+    // Check minOccurs / maxOccurs attributes to see if this element is a list
+    // These are default values for an element
+    let minOccurs = 1;
+    let maxOccurs = 1;
+
+    if (this.$maxOccurs === 'unbounded') {
+      maxOccurs = Infinity;
+    } else if (Boolean(this.$maxOccurs)) {
+      maxOccurs = parseInt(this.$maxOccurs, 10);
+    }
+
+    if (Boolean(this.$minOccurs)) {
+      minOccurs = parseInt(this.$minOccurs, 10);
+    }
+
+    const isMany = maxOccurs > 1;
+
+    if (isMany) {
       name += '[]';
     }
 
