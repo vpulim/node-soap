@@ -241,4 +241,22 @@ describe('WSDL Parser (non-strict)', () => {
       done();
     });
   });  
+
+  it('should describe referenced elements with type of the same name', (done) => {
+    soap.createClient(__dirname+'/wsdl/ref_element_same_as_type.wsdl', function(err, client) {
+      assert.ifError(err);
+      var desc = client.describe();		
+      assert.equal(desc.MyService.MyPort.MyOperation.input.ExampleContent.MyID, 'xsd:string');
+      done();
+    });
+  });  
+
+  it('should describe port type', (done) => {
+    soap.createClient(__dirname+'/wsdl/ref_element_same_as_type.wsdl', function(err, client) {
+      assert.ifError(err);
+      var desc = client.wsdl.definitions.portTypes.MyPortType.description(client.wsdl.definitions);		
+      assert.equal(desc.MyOperation.input.ExampleContent.MyID, 'xsd:string');
+      done();
+    });
+  });  
 });
