@@ -1,0 +1,14 @@
+{
+  "DummyList_MaxUnbounded": [
+    {
+      "DummyFirst": "foo",
+      "DummySecond": "foo"
+    }
+  ],
+  "DummyList_MaxInt": [
+    {
+      "DummyFirst": "foo",
+      "DummySecond": "foo"
+    }
+  ]
+}
