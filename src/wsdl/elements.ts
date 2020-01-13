@@ -224,7 +224,10 @@ export class ElementElement extends Element {
         if (!(typeName in definitions.descriptions.types)) {
 
           let elem: any = {};
-          definitions.descriptions.types[typeName] = elem;
+          if (!this.$ref) {
+            definitions.descriptions.types[typeName] = elem;
+          }
+
           const description = typeElement.description(definitions, xmlns);
           if (typeof description === 'string') {
             elem = description;
