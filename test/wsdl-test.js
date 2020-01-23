@@ -26,7 +26,7 @@ describe('WSDL Parser (strict)', () => {
   });
 
   it("should catch incorrect wsdl", done => {
-    soap.createClient(__dirname + "/wsdl/bad2.wsdl", { strict: true }, function(
+    soap.createClient(__dirname + "/wsdl/bad2.txt", { strict: true }, function(
       err
     ) {
       assert.notEqual(err, null);
