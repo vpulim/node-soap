@@ -120,48 +120,52 @@ export class WSDL {
           return this.callback(err);
         }
 
-        this.definitions.deleteFixedAttrs();
-        const services = this.services = this.definitions.services;
-        if (services) {
-          for (name in services) {
-            services[name].postProcess(this.definitions);
-          }
-        }
-        const complexTypes = this.definitions.complexTypes;
-        if (complexTypes) {
-          for (name in complexTypes) {
-            complexTypes[name].deleteFixedAttrs();
-          }
-        }
-
-        // for document style, for every binding, prepare input message element name to (methodName, output message element name) mapping
-        const bindings = this.definitions.bindings;
-        for (const bindingName in bindings) {
-          const binding = bindings[bindingName];
-          if (typeof binding.style === 'undefined') {
-            binding.style = 'document';
-          }
-          if (binding.style !== 'document') {
-            continue;
-          }
-          const methods = binding.methods;
-          const topEls: elements.ITopElements = binding.topElements = {};
-          for (const methodName in methods) {
-            if (methods[methodName].input) {
-              const inputName = methods[methodName].input.$name;
-              let outputName = '';
-              if (methods[methodName].output ) {
-                outputName = methods[methodName].output.$name;
-              }
-              topEls[inputName] = {methodName: methodName, outputName: outputName};
+        try {
+          this.definitions.deleteFixedAttrs();
+          const services = this.services = this.definitions.services;
+          if (services) {
+            for (name in services) {
+              services[name].postProcess(this.definitions);
             }
           }
+          const complexTypes = this.definitions.complexTypes;
+          if (complexTypes) {
+            for (name in complexTypes) {
+              complexTypes[name].deleteFixedAttrs();
+            }
+          }
+
+          // for document style, for every binding, prepare input message element name to (methodName, output message element name) mapping
+          const bindings = this.definitions.bindings;
+          for (const bindingName in bindings) {
+            const binding = bindings[bindingName];
+            if (typeof binding.style === 'undefined') {
+              binding.style = 'document';
+            }
+            if (binding.style !== 'document') {
+              continue;
+            }
+            const methods = binding.methods;
+            const topEls: elements.ITopElements = binding.topElements = {};
+            for (const methodName in methods) {
+              if (methods[methodName].input) {
+                const inputName = methods[methodName].input.$name;
+                let outputName = '';
+                if (methods[methodName].output ) {
+                  outputName = methods[methodName].output.$name;
+                }
+                topEls[inputName] = {methodName: methodName, outputName: outputName};
+              }
+            }
+          }
+
+          // prepare soap envelope xmlns definition string
+          this.xmlnsInEnvelope = this._xmlnsMap();
+
+          this.callback(err, this);
+        } catch (e) {
+          this.callback(e);
         }
-
-        // prepare soap envelope xmlns definition string
-        this.xmlnsInEnvelope = this._xmlnsMap();
-
-        this.callback(err, this);
       });
 
     });
