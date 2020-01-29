@@ -455,6 +455,26 @@ var fs = require('fs'),
         }, baseUrl);
       });
 
+      it ('should remove add httpHeaders after the call', function (done) {
+        soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
+          assert.ok(client);
+          assert.ifError(err);
+
+          client.addHttpHeader('foo', 'bar');
+          assert.equal(client.getHttpHeaders().foo, 'bar');
+  
+          client.clearHttpHeaders();
+          assert.equal(client.getHttpHeaders(), null);
+
+          client.MyOperation({}, function (err, result) {
+            assert.ok(result);
+            assert.equal(client.lastRequestHeaders.foo, undefined);
+
+            done();
+          });
+        }, baseUrl);
+      });
+
       it('should have rawRequest available in the callback', function (done) {
         soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
           assert.ok(client);
@@ -674,7 +694,7 @@ var fs = require('fs'),
         assert.equal(client.getHttpHeaders().foo, 'bar');
 
         client.clearHttpHeaders();
-        assert.equal(Object.keys(client.getHttpHeaders()).length, 0);
+        assert.equal(client.getHttpHeaders(), null);
         done();
       });
     });
@@ -1453,7 +1473,7 @@ var fs = require('fs'),
           assert.equal(client.getHttpHeaders().foo, 'bar');
 
           client.clearHttpHeaders();
-          assert.equal(Object.keys(client.getHttpHeaders()).length, 0);
+          assert.equal(client.getHttpHeaders(), null);
           done();
         });
       });

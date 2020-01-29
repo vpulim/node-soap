@@ -370,9 +370,9 @@ export class Client extends EventEmitter {
 
     // Add extra headers
     if (this.httpHeaders === null) {
-      headers = {}
+      headers = {};
     } else {
-      for (const header in this.httpHeaders ) { headers[header] = this.httpHeaders[header];  }
+      for (const header in this.httpHeaders) { headers[header] = this.httpHeaders[header];  }
       for (const attr in extraHeaders) { headers[attr] = extraHeaders[attr]; }
     }
 
