@@ -514,7 +514,7 @@ Interesting properties might be:
 * `forceMTOM`: set to True if you want to send the request as MTOM even if you don't have attachments
     
 
-### Client.*method*Async(args) - call *method* on the SOAP service.
+### Client.*method*Async(args, options) - call *method* on the SOAP service.
 
 ``` javascript
   client.MyFunctionAsync({name: 'value'}).then((result) => {
@@ -527,6 +527,23 @@ Interesting properties might be:
 ```
 
 The `args` argument allows you to supply arguments that generate an XML document inside of the SOAP Body section.
+
+The `options` object is optional and is passed to the `request`-module.
+Interesting properties might be:
+* `timeout`: Timeout in milliseconds
+* `forever`: Enables keep-alive connections and pools them
+* `attachments`: array of attachment objects. This converts the request into MTOM: _headers['Content-Type']='multipart/related; type="application/xop+xml"; start= ... '_
+  ```
+  [{
+        mimetype: content mimetype,
+        contentId: part id,
+        name: file name,
+        body: binary data
+   },
+    ...
+  ]
+  ```
+* `forceMTOM`: set to True if you want to send the request as MTOM even if you don't have attachments
 
 ##### Example with JSON for the `args`
 The example above uses `{name: 'value'}` as the args. This may generate a SOAP messages such as:
