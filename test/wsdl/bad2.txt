@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://examole.com/OVOWEB" name="ExampleWebServices" targetNamespace="http://example.com/OVOWEB">
+  <wsdl:service name="AccountAddress">
+    <wsdl:port name="AccountAddressPort" binding="tns:AccountAddress">
+      <soap:address location="http://example.com/MOD/SOA/OVOWEB/LATEST" />
+    </wsdl:port>
+  </wsdl:service>
+  <wsdl:portType name="AccountAddressPortType">
+    <wsdl:operation name="getBasic">
+      <wsdl:input message="tns:AccountAddress_getBasicInputMessage" />
+      <wsdl:output message="tns:AccountAddress_getBasicOutputMessage" />
+      <wsdl:fault name="getBasicException" message="tns:ExampleExceptionMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="AccountAddress" type="tns:AccountAddressPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="getBasic">
+      <soap:operation soapAction="http://example.com/edition/3" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="getBasicException">
+        <soap:fault name="getBasicException" use="literal" />
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:message name="AccountAddress_getBasicInputMessage">
+    <wsdl:part name="parameters" element="tns:ACCOUNT.ADDRESS_BASIC_GET_INPUT" />
+  </wsdl:message>
+  <wsdl:message name="AccountAddress_getBasicOutputMessage">
+    <wsdl:part name="parameters" element="tns:ACCOUNT.ADDRESS_BASIC_GET_OUTPUT" />
+  </wsdl:message>
+  <wsdl:types>
+
+  </wsdl:types>
+</wsdl:definitions>
