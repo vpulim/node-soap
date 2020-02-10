@@ -732,7 +732,7 @@ import { WSDL } from 'soap';
 import { IProspectType } from './types';
 
 // A WSDL in a string.
-const WSSDL_CONTENT = "...";
+const WSDL_CONTENT = "...";
 
 const httpClient: AxiosInstance = /* ... instantiate ... */;
 const url = 'http://example.org/SoapService.svc';
