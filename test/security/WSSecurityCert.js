@@ -178,4 +178,19 @@ describe('WSSecurityCert', function () {
     xml.should.containEql('<Reference URI="#To">');
     xml.should.containEql('<Reference URI="#action-1234">');
   });
+  it('should add a WSSecurity signing block when valid envelopeKey is passed', function () {
+    var instance = new WSSecurityCert(key, cert, '');
+    var xml = instance.postProcess('<soapenv:Header></soapenv:Header><soapenv:Body></soapenv:Body>', 'soapenv');
+    xml.should.containEql('<wsse:Security');
+  });
+  it('should not accept envelopeKey not set in envelope', function () {
+    var xml;
+    try {
+      var instance = new WSSecurityCert(key, cert, '');
+      xml = instance.postProcess('<soapenv:Header></soapenv:Header><soapenv:Body></soapenv:Body>', 'soap');
+    } catch (e) {
+      // do nothing
+    }
+    should(xml).not.be.ok();
+  });
 });
