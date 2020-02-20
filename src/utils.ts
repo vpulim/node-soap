@@ -48,3 +48,19 @@ export function splitQName<T>(nsName: T) {
     name: topLevelName.substring(prefixOffset + 1),
   };
 }
+
+export function xmlEscape(obj) {
+  if (typeof (obj) === 'string') {
+    if (obj.substr(0, 9) === '<![CDATA[' && obj.substr(-3) === ']]>') {
+      return obj;
+    }
+    return obj
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&apos;');
+  }
+
+  return obj;
+}
