@@ -129,7 +129,7 @@ export class WSSecurityCert implements ISecurity {
       timestampStr +
       `</wsse:Security>`;
 
-    const xmlWithSec = insertStr(secHeader, xml, xml.indexOf('</soap:Header>'));
+    const xmlWithSec = insertStr(secHeader, xml, xml.indexOf(`</${envelopeKey}:Header>`));
 
     const references = this.signatureTransformations;
 
