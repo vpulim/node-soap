@@ -1,3 +1,15 @@
+0.31.0 / 2020-02-21
+===================
+
+* [DOC] Update Readme.md (#1105)
+* [ENHANCEMENT] Client.*method*Async can have options as the second argument (#1104)
+* [FIX] Add WSDL xmlns header attribute (#1093)
+* [FIX] Catch errors when parsing WSDL (#1102)
+* [FIX] Fix min/maxOccurs parsing and handling (#1100)
+* [FIX] Fixes bug when envelopeKey is changed and WSSecurityCert is set (#1106)
+* [FIX] fix for circular descriptions (#1101)
+
+
 0.30.0 / 2019-10-16
 ===================
 
