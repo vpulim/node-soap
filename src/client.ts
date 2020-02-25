@@ -120,7 +120,7 @@ export class Client extends EventEmitter {
   }
 
   public clearHttpHeaders(): void {
-    this.httpHeaders = {};
+    this.httpHeaders = null;
   }
 
   public addBodyAttribute(bodyAttribute: any, name?: string, namespace?: string, xmlns?: string): void {
@@ -278,7 +278,7 @@ export class Client extends EventEmitter {
     let req: Request;
     let soapAction: string;
     const alias = findPrefix(defs.xmlns, ns);
-    const headers: any = {
+    let headers: any = {
       'Content-Type': 'text/xml; charset=utf-8',
     };
     let xmlnsSoap = 'xmlns:' + envelopeKey + '="http://schemas.xmlsoap.org/soap/envelope/"';
@@ -369,8 +369,12 @@ export class Client extends EventEmitter {
     options = options || {};
 
     // Add extra headers
-    for (const header in this.httpHeaders ) { headers[header] = this.httpHeaders[header];  }
-    for (const attr in extraHeaders) { headers[attr] = extraHeaders[attr]; }
+    if (this.httpHeaders === null) {
+      headers = {};
+    } else {
+      for (const header in this.httpHeaders) { headers[header] = this.httpHeaders[header];  }
+      for (const attr in extraHeaders) { headers[attr] = extraHeaders[attr]; }
+    }
 
     // Allow the security object to add headers
     if (this.security && this.security.addHeaders) {
