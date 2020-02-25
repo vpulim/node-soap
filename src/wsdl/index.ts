@@ -16,28 +16,12 @@ import * as url from 'url';
 import { HttpClient } from '../http';
 import { NamespaceContext } from '../nscontext';
 import { IOptions } from '../types';
-import { findPrefix, splitQName, TNS_PREFIX } from '../utils';
+import { findPrefix, splitQName, TNS_PREFIX, xmlEscape } from '../utils';
 import * as elements from './elements';
 
 const debug = debugBuilder('node-soap');
 
 const XSI_URI = 'http://www.w3.org/2001/XMLSchema-instance';
-
-function xmlEscape(obj) {
-  if (typeof (obj) === 'string') {
-    if (obj.substr(0, 9) === '<![CDATA[' && obj.substr(-3) === ']]>') {
-      return obj;
-    }
-    return obj
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&apos;');
-  }
-
-  return obj;
-}
 
 const trimLeft = /^[\s\xA0]+/;
 const trimRight = /[\s\xA0]+$/;
