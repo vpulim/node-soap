@@ -637,10 +637,12 @@ export class MessageElement extends Element {
           } else {
             // first check local mapping of ns alias to namespace
             schema = definitions.schemas[typeNs];
-            const ctype = schema.complexTypes[type.name] || schema.types[type.name] || schema.elements[type.name];
+            if (schema) {
+              const ctype = schema.complexTypes[type.name] || schema.types[type.name] || schema.elements[type.name];
 
-            if (ctype) {
-              this.parts = ctype.description(definitions, schema.xmlns);
+              if (ctype) {
+                this.parts = ctype.description(definitions, schema.xmlns);
+              }
             }
           }
         }
