@@ -3,7 +3,6 @@
 var request = require('request');
 var assert = require('assert');
 var express = require('express');
-var bodyParser = require('body-parser');
 var soap = require('../');
 var expressServer;
 var server;
@@ -142,7 +141,7 @@ describe('Express server with middleware', function () {
     };
     expressServer = express();
     expressServer.use(
-      bodyParser.raw({
+      express.raw({
         type: function () {
           return true;
         },
@@ -188,7 +187,7 @@ describe('Express server with middleware', function () {
   });
 });
 
-describe('Express server with bodyParser.json middleware', function () {
+describe('Express server with express.json middleware', function () {
   before(function (done) {
     var wsdl =
       '<definitions name="HelloService" targetNamespace="http://www.examples.com/wsdl/HelloService.wsdl" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.examples.com/wsdl/HelloService.wsdl" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><message name="SayHelloRequest"><part name="firstName" type="xsd:string"/></message><message name="SayHelloResponse"><part name="greeting" type="xsd:string"/></message><portType name="Hello_PortType"><operation name="sayHello"><input message="tns:SayHelloRequest"/><output message="tns:SayHelloResponse"/></operation></portType><binding name="Hello_Binding" type="tns:Hello_PortType"><soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/><operation name="sayHello"><soap:operation soapAction="sayHello"/><input><soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:examples:helloservice" use="encoded"/></input><output><soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:examples:helloservice" use="encoded"/></output></operation></binding><service name="Hello_Service"><documentation>WSDL File for HelloService</documentation><port binding="tns:Hello_Binding" name="Hello_Port"><soap:address location="http://localhost:51515/SayHello/" /></port></service></definitions>';
@@ -204,7 +203,7 @@ describe('Express server with bodyParser.json middleware', function () {
       },
     };
     expressServer = express();
-    expressServer.use(bodyParser.json());
+    expressServer.use(express.json());
 
     server = expressServer.listen(51515, function () {
       var soapServer = soap.listen(expressServer, '/SayHello', service, wsdl);
@@ -222,7 +221,7 @@ describe('Express server with bodyParser.json middleware', function () {
     server.close();
   });
 
-  it('should not parse body on bodyParser.json middleware', function (done) {
+  it('should not parse body on express.json middleware', function (done) {
     request(
       {
         url: url + '/SayHello',
