@@ -80,7 +80,7 @@
     "sinon": "^1.17.7",
     "source-map-support": "^0.5.10",
     "timekeeper": "^2.1.2",
-    "typedoc": "^0.14.2",
+    "typedoc": "^0.17.3",
     "typescript": "^3.3.3333"
   }
 }
