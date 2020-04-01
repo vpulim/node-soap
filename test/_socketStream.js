@@ -2,7 +2,6 @@
 
 var fs = require('fs'),
   duplexer = require('duplexer'),
-  semver = require('semver'),
   should = require('should'),
   // stream = require('stream'),
   stream = require('readable-stream');
@@ -35,13 +34,6 @@ module.exports = function createSocketStream(file, length) {
       length +
       '\r\n\r\n';
 
-    //This is for compatibility with old node releases <= 0.10
-    //Hackish
-    if (semver.lt(process.version, '0.11.0')) {
-      socketStream.on('data', function (data) {
-        socketStream.ondata(data, 0, length + header.length);
-      });
-    }
     //Now write the response with the wsdl
     var state = socketStream.res.write(header + wsdl);
   });

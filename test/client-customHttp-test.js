@@ -11,7 +11,6 @@ var fs = require('fs'),
   stream = require('readable-stream'),
   util = require('util'),
   events = require('events'),
-  semver = require('semver'),
   should = require('should');
 
 it('should allow customization of httpClient and the wsdl file download should pass through it', function (done) {
@@ -78,13 +77,6 @@ it('should allow customization of httpClient and the wsdl file download should p
     var chunk = httpReqStream.read();
     should.exist(chunk);
 
-    //This is for compatibility with old node releases <= 0.10
-    //Hackish
-    if (semver.lt(process.version, '0.11.0')) {
-      socketStream.on('data', function (data) {
-        socketStream.ondata(data, 0, 1984);
-      });
-    }
     //Now write the response with the wsdl
     var state = httpResStream.write(
       'HTTP/1.1 200 OK\r\nContent-Type: text/xml; charset=utf-8\r\nContent-Length: 1904\r\n\r\n' +
