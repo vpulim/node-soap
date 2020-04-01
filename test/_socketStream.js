@@ -8,17 +8,9 @@ var fs = require('fs'),
 
 module.exports = function createSocketStream(file, length) {
   //Create a duplex stream
-
   var httpReqStream = new stream.PassThrough();
   var httpResStream = new stream.PassThrough();
   var socketStream = duplexify(httpReqStream, httpResStream);
-
-  // Node 4.x requires cork/uncork
-  socketStream.cork = function () {};
-
-  socketStream.uncork = function () {};
-
-  socketStream.destroy = function () {};
 
   socketStream.req = httpReqStream;
   socketStream.res = httpResStream;

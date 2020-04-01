@@ -37,13 +37,6 @@ it('should allow customization of httpClient and the wsdl file download should p
   var httpResStream = new stream.PassThrough();
   var socketStream = duplexify(httpReqStream, httpResStream);
 
-  // Node 4.x requires cork/uncork
-  socketStream.cork = function () {};
-
-  socketStream.uncork = function () {};
-
-  socketStream.destroy = function () {};
-
   //Custom httpClient
   function MyHttpClient(options, socket) {
     httpClient.call(this, options);
