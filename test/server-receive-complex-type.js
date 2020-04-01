@@ -60,30 +60,28 @@ var responseXMLGood = `<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmln
 
 var responseXMLBad = `<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"  xmlns:tns="http://SampleCompany.com/" xmlns:ns1="urn:uHSD_Intf" xmlns:ns2="urn:uGlobalSOAPTypes"><soap:Body><soap:Fault><soap:Code><soap:Value>SOAP-ENV:Server</soap:Value><soap:Subcode><soap:value>InternalServerError</soap:value></soap:Subcode></soap:Code><soap:Reason><soap:Text>TypeError: Cannot read property &apos;output&apos; of undefined</soap:Text></soap:Reason></soap:Fault></soap:Body></soap:Envelope>`;
 
-  var service = {
-    IHSDTPSClientservice: {
-      IHSDTPSClientPort: {
-        GetVersion: function(args, callback, headers, req) {
-          return {
-            'return': '1.2.3.4' 
-          };
-        }
-      }
-    }
-  };
+var service = {
+  IHSDTPSClientservice: {
+    IHSDTPSClientPort: {
+      GetVersion: function (args, callback, headers, req) {
+        return {
+          return: '1.2.3.4',
+        };
+      },
+    },
+  },
+};
 
 describe('server receive complex type test', function () {
-
-  before(function (done) {    
-
-    server = http.createServer(function(request,response) {
+  before(function (done) {
+    server = http.createServer(function (request, response) {
       response.end('404: Not Found: ' + request.url);
     });
-    
+
     server.listen(51515, function () {
       var soapServer = soap.listen(server, '/GetVersion', service, wsdl);
-      
-      soapServer.on('response', function(response, methodName){
+
+      soapServer.on('response', function (response, methodName) {
         assert.equal(methodName, 'GetVersion');
       });
 
@@ -100,21 +98,23 @@ describe('server receive complex type test', function () {
   });
 
   it('should return good response', function (done) {
-    request({
-      url: url + '/GetVersion',
-      method: 'POST',
-      headers: {
-        SOAPAction: "urn:uHSD_Intf-IHSDTPSClient#GetVersion",
-        "Content-Type": 'text/xml; charset="utf-8"'
+    request(
+      {
+        url: url + '/GetVersion',
+        method: 'POST',
+        headers: {
+          SOAPAction: 'urn:uHSD_Intf-IHSDTPSClient#GetVersion',
+          'Content-Type': 'text/xml; charset="utf-8"',
+        },
+        body: requestXML,
       },
-      body: requestXML
-    }, function (err, response, body) {
-      if (err) {
-        throw err;
+      function (err, response, body) {
+        if (err) {
+          throw err;
+        }
+        assert.equal(body, responseXMLGood);
+        done();
       }
-      assert.equal(body, responseXMLGood);
-      done();
-    });
+    );
   });
-
 });

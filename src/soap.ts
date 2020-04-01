@@ -16,7 +16,15 @@ const debug = debugBuilder('node-soap:soap');
 export const security = _security;
 export { Client } from './client';
 export { HttpClient } from './http';
-export { BasicAuthSecurity, BearerSecurity, ClientSSLSecurity, ClientSSLSecurityPFX, NTLMSecurity, WSSecurity, WSSecurityCert } from './security';
+export {
+  BasicAuthSecurity,
+  BearerSecurity,
+  ClientSSLSecurity,
+  ClientSSLSecurityPFX,
+  NTLMSecurity,
+  WSSecurity,
+  WSSecurityCert,
+} from './security';
 export { Server } from './server';
 export { passwordDigest } from './utils';
 export * from './types';
@@ -26,7 +34,7 @@ type WSDLCallback = (error: any, result?: WSDL) => any;
 
 function createCache() {
   const cache: {
-    [key: string]: WSDL,
+    [key: string]: WSDL;
   } = {};
   return (key: string, load: (cb: WSDLCallback) => any, callback: WSDLCallback) => {
     if (!cache[key]) {
@@ -65,8 +73,18 @@ function _requestWSDL(url: string, options: IOptions, callback: WSDLCallback) {
 export type CreateClientCallback = (err: any, client: Client) => void;
 
 export function createClient(url: string, callback: CreateClientCallback, endpoint?: string): void;
-export function createClient(url: string, options: IOptions, callback: CreateClientCallback, endpoint?: string): void;
-export function createClient(url: string, p2: CreateClientCallback | IOptions, p3?: CreateClientCallback | string, p4?: string): void {
+export function createClient(
+  url: string,
+  options: IOptions,
+  callback: CreateClientCallback,
+  endpoint?: string
+): void;
+export function createClient(
+  url: string,
+  p2: CreateClientCallback | IOptions,
+  p3?: CreateClientCallback | string,
+  p4?: string
+): void {
   let endpoint: string = p4;
   let callback: CreateClientCallback;
   let options: IOptions;
@@ -85,23 +103,44 @@ export function createClient(url: string, p2: CreateClientCallback | IOptions, p
   });
 }
 
-export function createClientAsync(url: string, options?: IOptions, endpoint?: string): BluebirdPromise<Client> {
+export function createClientAsync(
+  url: string,
+  options?: IOptions,
+  endpoint?: string
+): BluebirdPromise<Client> {
   if (typeof options === 'undefined') {
     options = {};
   }
   return new BluebirdPromise((resolve, reject) => {
-    createClient(url, options, (err, client) => {
-      if (err) {
-        reject(err);
-      }
-      resolve(client);
-    }, endpoint);
+    createClient(
+      url,
+      options,
+      (err, client) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(client);
+      },
+      endpoint
+    );
   });
 }
 
-export function listen(server: ServerType, path: string, services: IServices, wsdl: string, callback?: (err: any, res: any) => void): Server;
+export function listen(
+  server: ServerType,
+  path: string,
+  services: IServices,
+  wsdl: string,
+  callback?: (err: any, res: any) => void
+): Server;
 export function listen(server: ServerType, options: IServerOptions): Server;
-export function listen(server: ServerType, p2: string | IServerOptions, services?: IServices, xml?: string, callback?: (err: any, res: any) => void): Server {
+export function listen(
+  server: ServerType,
+  p2: string | IServerOptions,
+  services?: IServices,
+  xml?: string,
+  callback?: (err: any, res: any) => void
+): Server {
   let options: IServerOptions;
   let path: string;
   let uri = '';

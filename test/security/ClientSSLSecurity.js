@@ -1,34 +1,35 @@
 'use strict';
 
 var fs = require('fs'),
-    join = require('path').join;
+  join = require('path').join;
 
-describe('ClientSSLSecurity', function() {
+describe('ClientSSLSecurity', function () {
   var ClientSSLSecurity = require('../../').ClientSSLSecurity;
   var cert = __filename;
   var key = __filename;
 
-  it('is a function', function() {
+  it('is a function', function () {
     ClientSSLSecurity.should.be.type('function');
   });
 
-  describe('defaultOption param', function() {
-    it('is accepted as the third param', function() {
+  describe('defaultOption param', function () {
+    it('is accepted as the third param', function () {
       new ClientSSLSecurity(null, null, {});
     });
 
-    it('is used in addOptions', function() {
+    it('is used in addOptions', function () {
       var options = {};
       var defaultOptions = { foo: 5 };
       var instance = new ClientSSLSecurity(null, null, defaultOptions);
       instance.addOptions(options);
-      options.should.have.property("foo", 5);
+      options.should.have.property('foo', 5);
     });
   });
 
-
   it('should accept extraneous data before cert encapsulation boundaries per rfc 7468', function () {
-    var certBuffer = fs.readFileSync(join(__dirname, '..', 'certs', 'agent2-cert-with-extra-data.pem'));
+    var certBuffer = fs.readFileSync(
+      join(__dirname, '..', 'certs', 'agent2-cert-with-extra-data.pem')
+    );
 
     var instanceCert = new ClientSSLSecurity(null, certBuffer);
   });
@@ -39,9 +40,9 @@ describe('ClientSSLSecurity', function() {
       instance;
 
     instance = new ClientSSLSecurity(keyBuffer, certBuffer, certBuffer);
-    instance.should.have.property("ca", certBuffer);
-    instance.should.have.property("cert", certBuffer);
-    instance.should.have.property("key", keyBuffer);
+    instance.should.have.property('ca', certBuffer);
+    instance.should.have.property('cert', certBuffer);
+    instance.should.have.property('key', keyBuffer);
   });
 
   it('should accept a String as argument for the key or cert', function () {
@@ -52,16 +53,16 @@ describe('ClientSSLSecurity', function() {
       instance;
 
     instance = new ClientSSLSecurity(keyString, certString, certString);
-    instance.should.have.property("ca", certBuffer);
-    instance.should.have.property("cert", certBuffer);
-    instance.should.have.property("key", keyBuffer);
+    instance.should.have.property('ca', certBuffer);
+    instance.should.have.property('cert', certBuffer);
+    instance.should.have.property('key', keyBuffer);
   });
 
   it('should not accept a integer as argument for the key', function () {
     var instance;
     try {
       instance = new ClientSSLSecurity(10);
-    } catch(error) {
+    } catch (error) {
       // do nothing
     }
     should(instance).not.be.ok();
@@ -71,7 +72,7 @@ describe('ClientSSLSecurity', function() {
     var instance;
     try {
       instance = new ClientSSLSecurity(null, 10);
-    } catch(error) {
+    } catch (error) {
       // do nothing
     }
     should(instance).not.be.ok();
@@ -89,7 +90,7 @@ describe('ClientSSLSecurity', function() {
   it('should accept a Array as argument for the ca', function () {
     var caList = [];
     var instance = new ClientSSLSecurity(null, null, caList);
-    instance.should.have.property("ca", caList);
+    instance.should.have.property('ca', caList);
   });
 
   describe('forever parameter', function () {
@@ -106,8 +107,8 @@ describe('ClientSSLSecurity', function() {
 
     it('should return the same agent if parameter is present', function () {
       var instance = new ClientSSLSecurity();
-      var firstOptions = {forever: true};
-      var secondOptions = {forever: true};
+      var firstOptions = { forever: true };
+      var secondOptions = { forever: true };
 
       instance.addOptions(firstOptions);
       instance.addOptions(secondOptions);
@@ -116,7 +117,7 @@ describe('ClientSSLSecurity', function() {
     });
 
     it('should return the same agent if set in defaults', function () {
-      var instance = new ClientSSLSecurity(null, null, null, {forever: true});
+      var instance = new ClientSSLSecurity(null, null, null, { forever: true });
       var firstOptions = {};
       var secondOptions = {};
 

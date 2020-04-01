@@ -1,16 +1,19 @@
-"use strict";
+'use strict';
 
 var fs = require('fs'),
-    soap = require('..'),
-    WSDL = require('../lib/wsdl').WSDL,
-    assert = require('assert'),
-    sinon = require('sinon');
+  soap = require('..'),
+  WSDL = require('../lib/wsdl').WSDL,
+  assert = require('assert'),
+  sinon = require('sinon');
 
 describe('WSDL Parser (strict)', () => {
-  fs.readdirSync(__dirname+'/wsdl/strict').forEach(function(file) {
+  fs.readdirSync(__dirname + '/wsdl/strict').forEach(function (file) {
     if (!/.wsdl$/.exec(file)) return;
-    it('should parse and describe '+file, (done) => {
-      soap.createClient(__dirname+'/wsdl/strict/'+file, {strict: true}, function(err, client) {
+    it('should parse and describe ' + file, (done) => {
+      soap.createClient(__dirname + '/wsdl/strict/' + file, { strict: true }, function (
+        err,
+        client
+      ) {
         assert.ifError(err);
         client.describe();
         done();
@@ -19,54 +22,61 @@ describe('WSDL Parser (strict)', () => {
   });
 
   it('should catch parse error', (done) => {
-    soap.createClient(__dirname+'/wsdl/bad.txt', {strict: true}, function(err) {
+    soap.createClient(__dirname + '/wsdl/bad.txt', { strict: true }, function (err) {
       assert.notEqual(err, null);
       done();
     });
   });
 
-  it("should catch incorrect wsdl", done => {
-    soap.createClient(__dirname + "/wsdl/bad2.txt", { strict: true }, function(
-      err
-    ) {
+  it('should catch incorrect wsdl', (done) => {
+    soap.createClient(__dirname + '/wsdl/bad2.txt', { strict: true }, function (err) {
       assert.notEqual(err, null);
       done();
     });
   });
 
   it('should not give error as string', (done) => {
-    soap.createClient(__dirname+'/wsdl/bad.txt', function(err) {
+    soap.createClient(__dirname + '/wsdl/bad.txt', function (err) {
       assert.notEqual(typeof err, 'string');
       done();
     });
   });
 
   it('should parse external wsdl', (done) => {
-    soap.createClient(__dirname+'/wsdl/wsdlImport/main.wsdl', {strict: true}, function(err, client){
+    soap.createClient(__dirname + '/wsdl/wsdlImport/main.wsdl', { strict: true }, function (
+      err,
+      client
+    ) {
       assert.ifError(err);
-      assert.deepEqual(Object.keys(client.wsdl.definitions.schemas),
-        ['http://example.com/', 'http://schemas.microsoft.com/2003/10/Serialization/Arrays']);
+      assert.deepEqual(Object.keys(client.wsdl.definitions.schemas), [
+        'http://example.com/',
+        'http://schemas.microsoft.com/2003/10/Serialization/Arrays',
+      ]);
       assert.equal(typeof client.getLatestVersion, 'function');
       done();
     });
   });
 
   it('should get the parent namespace when parent namespace is empty string', (done) => {
-    soap.createClient(__dirname+'/wsdl/marketo.wsdl', {strict: true}, function(err, client){
+    soap.createClient(__dirname + '/wsdl/marketo.wsdl', { strict: true }, function (err, client) {
       assert.ifError(err);
-      client.getLeadChanges({
+      client.getLeadChanges(
+        {
           batchSize: 1,
-          startPosition: {activityCreatedAt: '2014-04-14T22:03:48.587Z'},
-          activityNameFilter: {stringItem: ['Send Email']}
-        }, function() {
+          startPosition: { activityCreatedAt: '2014-04-14T22:03:48.587Z' },
+          activityNameFilter: { stringItem: ['Send Email'] },
+        },
+        function () {
           done();
-        });
+        }
+      );
     });
   });
 
   it('should describe extended elements in correct order', (done) => {
-    var expected = '{"DummyService":{"DummyPortType":{"Dummy":{"input":{"DummyRequest":{"DummyField1":"xs:string","DummyField2":"xs:string"},"ExtendedDummyField":"xs:string"},"output":{"DummyResult":"c:DummyResult"}}}}}';
-    soap.createClient(__dirname+'/wsdl/extended_element.wsdl', function(err, client){
+    var expected =
+      '{"DummyService":{"DummyPortType":{"Dummy":{"input":{"DummyRequest":{"DummyField1":"xs:string","DummyField2":"xs:string"},"ExtendedDummyField":"xs:string"},"output":{"DummyResult":"c:DummyResult"}}}}}';
+    soap.createClient(__dirname + '/wsdl/extended_element.wsdl', function (err, client) {
       assert.ifError(err);
       assert.equal(JSON.stringify(client.describe()), expected);
       done();
@@ -74,15 +84,19 @@ describe('WSDL Parser (strict)', () => {
   });
 
   it('should handle element ref', (done) => {
-    var expectedMsg = '<ns1:fooRq xmlns:ns1="http://example.com/bar/xsd"' +
+    var expectedMsg =
+      '<ns1:fooRq xmlns:ns1="http://example.com/bar/xsd"' +
       ' xmlns="http://example.com/bar/xsd"><bar1:paymentRq' +
       ' xmlns:bar1="http://example.com/bar1/xsd">' +
       '<bar1:bankSvcRq>' +
       '<bar1:requestUID>001</bar1:requestUID></bar1:bankSvcRq>' +
       '</bar1:paymentRq></ns1:fooRq>';
-    soap.createClient(__dirname + '/wsdl/elementref/foo.wsdl', {strict: true}, function(err, client) {
+    soap.createClient(__dirname + '/wsdl/elementref/foo.wsdl', { strict: true }, function (
+      err,
+      client
+    ) {
       assert.ifError(err);
-      client.fooOp({paymentRq: {bankSvcRq: {requestUID: '001'}}}, function(err, result) {
+      client.fooOp({ paymentRq: { bankSvcRq: { requestUID: '001' } } }, function (err, result) {
         assert.equal(client.lastMessage, expectedMsg);
         done();
       });
@@ -92,9 +106,12 @@ describe('WSDL Parser (strict)', () => {
   it('should handle type ref', (done) => {
     var expectedMsg = require('./wsdl/typeref/request.xml.js');
     var reqJson = require('./wsdl/typeref/request.json');
-    soap.createClient(__dirname + '/wsdl/typeref/order.wsdl', {strict: true}, function(err, client) {
+    soap.createClient(__dirname + '/wsdl/typeref/order.wsdl', { strict: true }, function (
+      err,
+      client
+    ) {
       assert.ifError(err);
-      client.order(reqJson, function(err, result) {
+      client.order(reqJson, function (err, result) {
         assert.equal(client.lastMessage, expectedMsg);
         done();
       });
@@ -104,13 +121,16 @@ describe('WSDL Parser (strict)', () => {
   it('should parse POJO into xml without making unnecessary recursion', (done) => {
     var expectedMsg = require('./wsdl/perf/request.xml.js');
     var reqJson = require('./wsdl/perf/request.json');
-    var spy = sinon.spy(WSDL.prototype, "findChildSchemaObject");
+    var spy = sinon.spy(WSDL.prototype, 'findChildSchemaObject');
 
-    soap.createClient(__dirname + '/wsdl/perf/order.wsdl', {strict: true}, function(err, client) {
+    soap.createClient(__dirname + '/wsdl/perf/order.wsdl', { strict: true }, function (
+      err,
+      client
+    ) {
       var i, spyCall;
 
       assert.ifError(err);
-      client.order(reqJson, function(err, result) {
+      client.order(reqJson, function (err, result) {
         assert.equal(client.lastMessage, expectedMsg);
 
         // since the reqJson does not use the element named "thing", then findChildSchemaObject should never get to the type named RabbitHole
@@ -121,7 +141,7 @@ describe('WSDL Parser (strict)', () => {
         for (i = 0; i < spy.callCount; i++) {
           spyCall = spy.getCall(i);
           if (spyCall.args[0]) {
-            assert.notEqual(spyCall.args[0].$type, "RabbitHole");
+            assert.notEqual(spyCall.args[0].$type, 'RabbitHole');
           }
         }
 
@@ -132,7 +152,8 @@ describe('WSDL Parser (strict)', () => {
   });
 
   it('should get empty namespace prefix', (done) => {
-    var expectedMsg = '<ns1:fooRq xmlns:ns1="http://example.com/bar/xsd"' +
+    var expectedMsg =
+      '<ns1:fooRq xmlns:ns1="http://example.com/bar/xsd"' +
       ' xmlns="http://example.com/bar/xsd"><bar1:paymentRq' +
       ' xmlns:bar1="http://example.com/bar1/xsd">' +
       '<bar1:bankSvcRq>' +
@@ -140,9 +161,12 @@ describe('WSDL Parser (strict)', () => {
       '</bar1:paymentRq></ns1:fooRq>';
     // var expectedMsg = 'gg';
 
-    soap.createClient(__dirname + '/wsdl/elementref/foo.wsdl', {strict: true}, function(err, client) {
+    soap.createClient(__dirname + '/wsdl/elementref/foo.wsdl', { strict: true }, function (
+      err,
+      client
+    ) {
       assert.ifError(err);
-      client.fooOp({paymentRq: {bankSvcRq: {':requestUID': '001'}}}, function(err, result) {
+      client.fooOp({ paymentRq: { bankSvcRq: { ':requestUID': '001' } } }, function (err, result) {
         assert.equal(client.lastMessage, expectedMsg);
         done();
       });
@@ -152,25 +176,27 @@ describe('WSDL Parser (strict)', () => {
   it('should merge schema with attributes', (done) => {
     var expectedMsg =
       '<peatdef:AskPeat xmlns:peatdef="urn:peat.def" xmlns="urn:peat.def">' +
-        '<peatdef:Question>How are you?</peatdef:Question>' +
+      '<peatdef:Question>How are you?</peatdef:Question>' +
       '</peatdef:AskPeat>';
 
-    soap.createClient(__dirname + '/wsdl/mergeWithAttributes/main.wsdl', {}, function(err, client) {
+    soap.createClient(__dirname + '/wsdl/mergeWithAttributes/main.wsdl', {}, function (
+      err,
+      client
+    ) {
       assert.ok(!err);
-      client.AskPeat({ Question: 'How are you?' }, function(err, result) {
+      client.AskPeat({ Question: 'How are you?' }, function (err, result) {
         assert.equal(client.lastMessage, expectedMsg);
         done();
       });
     });
   });
-
 });
 
 describe('WSDL Parser (non-strict)', () => {
-  fs.readdirSync(__dirname+'/wsdl').forEach(function(file) {
+  fs.readdirSync(__dirname + '/wsdl').forEach(function (file) {
     if (!/.wsdl$/.exec(file)) return;
-    it('should parse and describe '+file, (done) => {
-      soap.createClient(__dirname+'/wsdl/'+file, function(err, client) {
+    it('should parse and describe ' + file, (done) => {
+      soap.createClient(__dirname + '/wsdl/' + file, function (err, client) {
         assert.ifError(err);
         client.describe();
         done();
@@ -179,29 +205,30 @@ describe('WSDL Parser (non-strict)', () => {
   });
 
   it('should not parse connection error', (done) => {
-    soap.createClient(__dirname+'/wsdl/connection/econnrefused.wsdl', function(err, client) {
+    soap.createClient(__dirname + '/wsdl/connection/econnrefused.wsdl', function (err, client) {
       assert.ok(/EADDRNOTAVAIL|ECONNREFUSED/.test(err), err);
       done();
     });
   });
 
   it('should catch parse error', (done) => {
-    soap.createClient(__dirname+'/wsdl/bad.txt', function(err) {
+    soap.createClient(__dirname + '/wsdl/bad.txt', function (err) {
       assert.notEqual(err, null);
       done();
     });
   });
 
   it('should not give error as string', (done) => {
-    soap.createClient(__dirname+'/wsdl/bad.txt', function(err) {
+    soap.createClient(__dirname + '/wsdl/bad.txt', function (err) {
       assert.notEqual(typeof err, 'string');
       done();
     });
   });
 
   it('should load same namespace from included xsd', (done) => {
-    var expected = '{"DummyService":{"DummyPortType":{"Dummy":{"input":{"ID":"IdType|xs:string|pattern","Name":"NameType|xs:string|minLength,maxLength"},"output":{"Result":"dummy:DummyList"}}}}}';
-    soap.createClient(__dirname + '/wsdl/xsdinclude/xsd_include.wsdl', function(err, client) {
+    var expected =
+      '{"DummyService":{"DummyPortType":{"Dummy":{"input":{"ID":"IdType|xs:string|pattern","Name":"NameType|xs:string|minLength,maxLength"},"output":{"Result":"dummy:DummyList"}}}}}';
+    soap.createClient(__dirname + '/wsdl/xsdinclude/xsd_include.wsdl', function (err, client) {
       assert.ifError(err);
       assert.equal(JSON.stringify(client.describe()), expected);
       done();
@@ -209,7 +236,8 @@ describe('WSDL Parser (non-strict)', () => {
   });
 
   it('should all attributes to root elements', (done) => {
-    var expectedMsg = '<ns1:fooRq xmlns:ns1="http://example.com/bar/xsd"' +
+    var expectedMsg =
+      '<ns1:fooRq xmlns:ns1="http://example.com/bar/xsd"' +
       ' xmlns="http://example.com/bar/xsd"><bar1:paymentRq bar1:test="attr"' +
       ' xmlns:bar1="http://example.com/bar1/xsd">' +
       '<bar1:bankSvcRq>' +
@@ -217,55 +245,62 @@ describe('WSDL Parser (non-strict)', () => {
       '</bar1:paymentRq></ns1:fooRq>';
     // var expectedMsg = 'gg';
 
-    soap.createClient(__dirname + '/wsdl/elementref/foo.wsdl', {}, function(err, client) {
+    soap.createClient(__dirname + '/wsdl/elementref/foo.wsdl', {}, function (err, client) {
       assert.ok(!err);
-      client.fooOp({paymentRq: { attributes: {'bar1:test': 'attr'}, bankSvcRq: {':requestUID': '001'}}}, function(err, result) {
-        assert.equal(client.lastMessage, expectedMsg);
-        done();
-      });
+      client.fooOp(
+        { paymentRq: { attributes: { 'bar1:test': 'attr' }, bankSvcRq: { ':requestUID': '001' } } },
+        function (err, result) {
+          assert.equal(client.lastMessage, expectedMsg);
+          done();
+        }
+      );
     });
   });
 
   it('should merge schema with attributes', (done) => {
     var expectedMsg =
       '<peatdef:AskPeat xmlns:peatdef="urn:peat.def" xmlns="urn:peat.def">' +
-        '<peatdef:Question>How are you?</peatdef:Question>' +
+      '<peatdef:Question>How are you?</peatdef:Question>' +
       '</peatdef:AskPeat>';
 
-    soap.createClient(__dirname + '/wsdl/mergeWithAttributes/main.wsdl', {}, function(err, client) {
+    soap.createClient(__dirname + '/wsdl/mergeWithAttributes/main.wsdl', {}, function (
+      err,
+      client
+    ) {
       assert.ok(!err);
-      client.AskPeat({ Question: 'How are you?' }, function(err, result) {
+      client.AskPeat({ Question: 'How are you?' }, function (err, result) {
         assert.equal(client.lastMessage, expectedMsg);
         done();
       });
     });
   });
-  
+
   it('should describe recursive wsdl with extended elements', (done) => {
-    soap.createClient(__dirname+'/wsdl/extended_recursive.wsdl', function(err, client) {
+    soap.createClient(__dirname + '/wsdl/extended_recursive.wsdl', function (err, client) {
       assert.ifError(err);
-      var desc = client.describe();		
-      var personDescription = desc.Service1.BasicHttpBinding_IService1.GetPerson.output.GetPersonResult;
+      var desc = client.describe();
+      var personDescription =
+        desc.Service1.BasicHttpBinding_IService1.GetPerson.output.GetPersonResult;
       assert.equal(personDescription, personDescription.Department.HeadOfDepartment);
       done();
     });
-  });  
+  });
 
   it('should describe referenced elements with type of the same name', (done) => {
-    soap.createClient(__dirname+'/wsdl/ref_element_same_as_type.wsdl', function(err, client) {
+    soap.createClient(__dirname + '/wsdl/ref_element_same_as_type.wsdl', function (err, client) {
       assert.ifError(err);
-      var desc = client.describe();		
+      var desc = client.describe();
       assert.equal(desc.MyService.MyPort.MyOperation.input.ExampleContent.MyID, 'xsd:string');
       done();
     });
-  });  
+  });
 
   it('should describe port type', (done) => {
-    soap.createClient(__dirname+'/wsdl/ref_element_same_as_type.wsdl', function(err, client) {
+    soap.createClient(__dirname + '/wsdl/ref_element_same_as_type.wsdl', function (err, client) {
       assert.ifError(err);
-      var desc = client.wsdl.definitions.portTypes.MyPortType.description(client.wsdl.definitions);		
+      var desc = client.wsdl.definitions.portTypes.MyPortType.description(client.wsdl.definitions);
       assert.equal(desc.MyOperation.input.ExampleContent.MyID, 'xsd:string');
       done();
     });
-  });  
+  });
 });

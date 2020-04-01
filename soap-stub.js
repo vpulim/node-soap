@@ -26,7 +26,7 @@ module.exports = {
   getStub: getStub,
   registerClient: registerClient,
   reset: reset,
-  security: require('./lib/security')
+  security: require('./lib/security'),
 };
 
 /**
@@ -75,8 +75,8 @@ function createClient(wsdlUrl, options, cb) {
  * @return {Function}
  */
 function createErroringStub(err) {
-  return function() {
-    this.args.forEach(function(argSet) {
+  return function () {
+    this.args.forEach(function (argSet) {
       setTimeout(argSet[1].bind(null, err));
     });
     this.yields(err);
@@ -99,8 +99,8 @@ function createErroringStub(err) {
  * @return {Function}
  */
 function createRespondingStub(object, body) {
-  return function() {
-    this.args.forEach(function(argSet) {
+  return function () {
+    this.args.forEach(function (argSet) {
       setTimeout(argSet[1].bind(null, null, object));
     });
     this.yields(null, object, body);
@@ -139,7 +139,7 @@ function getStub(aliasOrWsdlUrl) {
 }
 
 function resetStubbedMethods(client) {
-  Object.keys(client).forEach(function(method) {
+  Object.keys(client).forEach(function (method) {
     method = client[method];
     if (typeof method === 'function' && typeof method.reset === 'function') {
       method.reset();

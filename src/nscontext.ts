@@ -1,4 +1,3 @@
-
 interface INamespace {
   declared: boolean;
   prefix: string;
@@ -13,7 +12,7 @@ interface INamespace {
  */
 class NamespaceScope {
   public parent: NamespaceScope;
-  public namespaces: {[key: string]: INamespace};
+  public namespaces: { [key: string]: INamespace };
 
   constructor(parent: NamespaceScope) {
     this.parent = parent;
@@ -196,7 +195,7 @@ export class NamespaceContext {
     } else {
       // Try to generate a unique namespace
       while (true) {
-        prefix = 'ns' + (++this.prefixCount);
+        prefix = 'ns' + ++this.prefixCount;
         if (!this.getNamespaceURI(prefix)) {
           // The prefix is not used
           break;

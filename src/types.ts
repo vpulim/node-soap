@@ -1,4 +1,3 @@
-
 import * as req from 'request';
 import { HttpClient } from './http';
 
@@ -12,10 +11,15 @@ export type SoapMethod = (
   args: any,
   callback: (err: any, result: any, rawResponse: any, soapHeader: any, rawRequest: any) => void,
   options?: any,
-  extraHeaders?: any,
+  extraHeaders?: any
 ) => void;
 
-export type ISoapServiceMethod = (args: any, callback?: (data: any) => void, headers?: any, req?: any) => any;
+export type ISoapServiceMethod = (
+  args: any,
+  callback?: (data: any) => void,
+  headers?: any,
+  req?: any
+) => any;
 
 // SOAP Fault 1.1 & 1.2
 export interface ISoapFaultError {
@@ -37,8 +41,8 @@ export interface ISoapFault11 {
 // Role, Node, Detail. Should be added when soap module implements them
 // https://www.w3.org/TR/soap12/#soapfault
 export interface ISoapFault12 {
-  Code: { Value: string; Subcode?: { value: string; }; };
-  Reason: { Text: string; };
+  Code: { Value: string; Subcode?: { value: string } };
+  Reason: { Text: string };
   statusCode?: number;
 }
 
@@ -72,8 +76,8 @@ export interface IWsdlBaseOptions {
   attributesKey?: string;
   valueKey?: string;
   xmlKey?: string;
-  overrideRootElement?: { namespace: string; xmlnsAttributes?: IXmlAttribute[]; };
-  ignoredNamespaces?: boolean | string[] | { namespaces?: string[]; override?: boolean; };
+  overrideRootElement?: { namespace: string; xmlnsAttributes?: IXmlAttribute[] };
+  ignoredNamespaces?: boolean | string[] | { namespaces?: string[]; override?: boolean };
   ignoreBaseNameSpaces?: boolean;
   /** escape special XML characters in SOAP message (e.g. &, >, < etc), default: true. */
   escapeXML?: boolean;
