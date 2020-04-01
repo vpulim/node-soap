@@ -4,7 +4,7 @@ var fs = require('fs'),
   soap = require('..'),
   http = require('http'),
   assert = require('assert'),
-  duplexer = require('duplexer'),
+  duplexify = require('duplexify'),
   req = require('request'),
   httpClient = require('../lib/http.js').HttpClient,
   // stream = require('stream'),
@@ -35,7 +35,7 @@ it('should allow customization of httpClient and the wsdl file download should p
 
   var httpReqStream = new stream.PassThrough();
   var httpResStream = new stream.PassThrough();
-  var socketStream = duplexer(httpReqStream, httpResStream);
+  var socketStream = duplexify(httpReqStream, httpResStream);
 
   // Node 4.x requires cork/uncork
   socketStream.cork = function () {};

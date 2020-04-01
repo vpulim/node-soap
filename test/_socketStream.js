@@ -1,7 +1,7 @@
 'use strict';
 
 var fs = require('fs'),
-  duplexer = require('duplexer'),
+  duplexify = require('duplexify'),
   should = require('should'),
   // stream = require('stream'),
   stream = require('readable-stream');
@@ -11,7 +11,7 @@ module.exports = function createSocketStream(file, length) {
 
   var httpReqStream = new stream.PassThrough();
   var httpResStream = new stream.PassThrough();
-  var socketStream = duplexer(httpReqStream, httpResStream);
+  var socketStream = duplexify(httpReqStream, httpResStream);
 
   // Node 4.x requires cork/uncork
   socketStream.cork = function () {};
