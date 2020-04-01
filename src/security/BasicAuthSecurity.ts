@@ -15,7 +15,7 @@ export class BasicAuthSecurity implements ISecurity {
 
   public addHeaders(headers: IHeaders): void {
     headers.Authorization =
-      'Basic ' + new Buffer(this._username + ':' + this._password || '').toString('base64');
+      'Basic ' + Buffer.from(this._username + ':' + this._password || '').toString('base64');
   }
 
   public toXML(): string {
