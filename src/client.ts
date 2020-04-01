@@ -4,7 +4,6 @@
  */
 
 import * as assert from 'assert';
-import * as BluebirdPromise from 'bluebird';
 import * as concatStream from 'concat-stream';
 import * as debugBuilder from 'debug';
 import { EventEmitter } from 'events';
@@ -14,7 +13,7 @@ import * as request from 'request';
 import { v4 as uuid4 } from 'uuid';
 import { HttpClient, Request } from './http';
 import { IHeaders, IOptions, ISecurity, SoapMethod } from './types';
-import { findPrefix } from './utils';
+import { findPrefix, promisifyAll } from './utils';
 import { WSDL } from './wsdl';
 import { IPort, OperationElement, ServiceElement } from './wsdl/elements';
 
@@ -74,11 +73,7 @@ export class Client extends EventEmitter {
     this._initializeOptions(options);
     this._initializeServices(endpoint);
     this.httpClient = options.httpClient || new HttpClient(options);
-    const promiseOptions: BluebirdPromise.PromisifyAllOptions<this> = { multiArgs: true };
-    if (options.overridePromiseSuffix) {
-      promiseOptions.suffix = options.overridePromiseSuffix;
-    }
-    BluebirdPromise.promisifyAll(this, promiseOptions);
+    promisifyAll(this, options?.overridePromiseSuffix ?? 'Async');
   }
 
   /** add soapHeader to soap:Header node */

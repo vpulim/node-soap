@@ -8,11 +8,11 @@
   "author": "Vinay Pulim <v@pulim.com>",
   "dependencies": {
     "@types/request": "^2.48.1",
-    "bluebird": "^3.5.0",
     "concat-stream": "^2.0.0",
     "debug": "^4.1.1",
     "httpntlm": "^1.5.2",
     "lodash": "^4.17.15",
+    "pify": "5.0.0",
     "request": ">=2.9.0",
     "sax": ">=0.6",
     "serve-static": "^1.11.1",
@@ -31,7 +31,7 @@
     "test": "./test"
   },
   "scripts": {
-    "prepare": "npm run build",
+    "prepare": "yarn build",
     "build": "tsc -p .",
     "clean": "rm -rf lib",
     "watch": "tsc -w -p .",
@@ -48,7 +48,6 @@
   ],
   "license": "MIT",
   "devDependencies": {
-    "@types/bluebird": "^3.5.26",
     "@types/debug": "^4.1.2",
     "@types/express": "^4.16.1",
     "@types/lodash": "^4.14.122",

@@ -1,4 +1,5 @@
 import * as crypto from 'crypto';
+import * as pify from 'pify';
 
 export function passwordDigest(nonce: string, created: string, password: string): string {
   // digest = base64 ( sha1 ( nonce + created + password ) )
@@ -61,6 +62,39 @@ export function xmlEscape(obj) {
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&apos;');
+  }
+
+  return obj;
+}
+
+export function promisifyAll(obj, suffix = 'Async') {
+  const identifier = /^[a-z$_][a-z$_0-9]*$/i;
+
+  if (obj.___promisified) {
+    return obj;
+  }
+
+  const functionBlackListMap =
+    Object.getOwnPropertyNames(Object.prototype)
+      .reduce((map, functionName) => {
+        map[functionName] = true
+        return map
+      }, {});
+
+  for (const key of Object.getOwnPropertyNames(obj)) {
+    if (functionBlackListMap[key] || !identifier.test(key)) {
+      continue;
+    }
+
+    const descriptor = Object.getOwnPropertyDescriptor(obj, key)
+
+    if (!descriptor.get) {
+      const func = obj[key]
+      if (typeof func === 'function') {
+        obj[`${key}${suffix}`] = pify(func, { multiArgs: true })
+      }
+    }
+    obj.___promisified = true;
   }
 
   return obj;

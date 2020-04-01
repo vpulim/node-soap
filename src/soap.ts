@@ -3,7 +3,6 @@
  * MIT Licensed
  */
 
-import * as BluebirdPromise from 'bluebird';
 import * as debugBuilder from 'debug';
 import { Client } from './client';
 import * as _security from './security';
@@ -107,11 +106,11 @@ export function createClientAsync(
   url: string,
   options?: IOptions,
   endpoint?: string
-): BluebirdPromise<Client> {
+): Promise<Client> {
   if (typeof options === 'undefined') {
     options = {};
   }
-  return new BluebirdPromise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     createClient(
       url,
       options,
