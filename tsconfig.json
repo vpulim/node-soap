@@ -1,12 +1,11 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
-    "target": "es3",
+    "target": "es5",
     "module": "commonjs",
-    "outDir": "lib",
-    "sourceMap": true,
     "declaration": true,
-    "stripInternal": true
+    "outDir": "./lib",
+    "esModuleInterop": true
   },
   "include": [
     "src/**/*"

@@ -1,5 +1,5 @@
-import * as crypto from 'crypto';
-import * as pify from 'pify';
+import crypto from 'crypto';
+import pify from 'pify';
 
 export function passwordDigest(nonce: string, created: string, password: string): string {
   // digest = base64 ( sha1 ( nonce + created + password ) )

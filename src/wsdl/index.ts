@@ -6,13 +6,13 @@
 /*jshint proto:true*/
 
 import { ok as assert } from 'assert';
-import * as debugBuilder from 'debug';
-import * as fs from 'fs';
-import * as _ from 'lodash';
-import * as path from 'path';
-import * as sax from 'sax';
-import * as stripBom from 'strip-bom';
-import * as url from 'url';
+import debugBuilder from 'debug';
+import fs from 'fs';
+import _ from 'lodash';
+import path from 'path';
+import sax from 'sax';
+import stripBom from 'strip-bom';
+import url from 'url';
 import { HttpClient } from '../http';
 import { NamespaceContext } from '../nscontext';
 import { IOptions } from '../types';

@@ -4,8 +4,8 @@
  */
 
 import { EventEmitter } from 'events';
-import * as http from 'http';
-import * as url from 'url';
+import http from 'http';
+import url from 'url';
 import {
   IOneWayOptions,
   ISecurity,

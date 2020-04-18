@@ -1,6 +1,6 @@
-import * as fs from 'fs';
-import * as https from 'https';
-import * as _ from 'lodash';
+import fs from 'fs';
+import https from 'https';
+import _ from 'lodash';
 import { ISecurity } from '../types';
 
 /**

@@ -1,4 +1,4 @@
-import * as req from 'request';
+import req from 'request';
 import { HttpClient } from './http';
 
 export interface IHeaders {

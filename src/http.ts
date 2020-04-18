@@ -3,11 +3,11 @@
  * MIT Licensed
  */
 
-import * as debugBuilder from 'debug';
-import * as httpNtlm from 'httpntlm';
-import * as _ from 'lodash';
-import * as req from 'request';
-import * as url from 'url';
+import debugBuilder from 'debug';
+import httpNtlm from 'httpntlm';
+import _ from 'lodash';
+import req from 'request';
+import url from 'url';
 import { v4 as uuidv4 } from 'uuid';
 import { IHeaders, IOptions } from './types';
 

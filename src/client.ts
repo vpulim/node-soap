@@ -3,13 +3,13 @@
  * MIT Licensed
  */
 
-import * as assert from 'assert';
-import * as concatStream from 'concat-stream';
-import * as debugBuilder from 'debug';
+import assert from 'assert';
+import concatStream from 'concat-stream';
+import debugBuilder from 'debug';
 import { EventEmitter } from 'events';
 import { IncomingHttpHeaders } from 'http';
-import * as _ from 'lodash';
-import * as request from 'request';
+import _ from 'lodash';
+import request from 'request';
 import { v4 as uuid4 } from 'uuid';
 import { HttpClient, Request } from './http';
 import { IHeaders, IOptions, ISecurity, SoapMethod } from './types';

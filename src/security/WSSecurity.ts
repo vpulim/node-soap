@@ -1,4 +1,4 @@
-import * as crypto from 'crypto';
+import crypto from 'crypto';
 import { ISecurity } from '../types';
 import { passwordDigest, xmlEscape } from '../utils';
 

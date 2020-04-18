@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { IHeaders, ISecurity } from '../types';
 
 export class BearerSecurity implements ISecurity {
