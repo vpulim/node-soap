@@ -1,11 +1,10 @@
 {
-  "name": "soap",
-  "version": "0.31.0",
+  "name": "@oohmedia/soap",
+  "version": "1.0.0",
   "description": "A minimal node SOAP client",
   "engines": {
-    "node": ">=4.0.0"
+    "node": ">10.0.0"
   },
-  "author": "Vinay Pulim <v@pulim.com>",
   "dependencies": {
     "@types/request": "^2.48.4",
     "concat-stream": "^2.0.0",
@@ -19,10 +18,7 @@
     "uuid": "^7.0.3",
     "xml-crypto": "^1.5.3"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/vpulim/node-soap.git"
-  },
+  "repository": "https://github.com/oohmedia/node-soap",
   "main": "./index.js",
   "types": "./lib/soap.d.ts",
   "directories": {

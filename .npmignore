@@ -7,3 +7,5 @@ PUBLISHING.md
 .*
 /src
 /docs
+oohmedia-soap-*.tgz
+renovate.json
