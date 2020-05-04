@@ -730,6 +730,10 @@ export class WSDL {
       }
     } else if (typeof obj === 'object') {
       for (name in obj) {
+        // Happens when Object.create(null) is used, it will not inherit the Object prototype
+        if (!obj.hasOwnProperty) {
+          obj = Object.assign({}, obj);
+        }
         if (!obj.hasOwnProperty(name)) { continue; }
         // don't process attributes as element
         if (name === this.options.attributesKey) {
