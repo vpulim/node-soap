@@ -7,7 +7,6 @@
   },
   "author": "Vinay Pulim <v@pulim.com>",
   "dependencies": {
-    "@types/request": "^2.48.1",
     "bluebird": "^3.5.0",
     "concat-stream": "^2.0.0",
     "debug": "^4.1.1",
@@ -47,6 +46,7 @@
   ],
   "license": "MIT",
   "devDependencies": {
+    "@types/request": "^2.48.1",
     "@types/bluebird": "^3.5.26",
     "@types/debug": "^4.1.2",
     "@types/express": "^4.16.1",
