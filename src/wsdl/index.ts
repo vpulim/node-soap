@@ -418,7 +418,7 @@ export class WSDL {
     p.ontext = (text) => {
       const originalText = text;
       text = trim(text);
-      if (!text.length) {
+      if (!text.length && !this.options.preserveWhitespace) {
         return;
       }
 
