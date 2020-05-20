@@ -52,10 +52,8 @@ export class HttpClient {
    */
   public buildRequest(rurl: string, data: any, exheaders?: IHeaders, exoptions: IExOptions = {}): any {
     const curl = url.parse(rurl);
-    const secure = curl.protocol === 'https:';
     const host = curl.hostname;
     const port = parseInt(curl.port, 10);
-    const path = [curl.pathname || '/', curl.search || '', curl.hash || ''].join('');
     const method = data ? 'POST' : 'GET';
     const headers: IHeaders = {
       'User-Agent': 'node-soap/' + VERSION,
