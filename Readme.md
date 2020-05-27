@@ -1191,9 +1191,9 @@ soap.createClient(__dirname+'/wsdl/fixedPath/netsuite.wsdl', options, function(e
 });
 ```
 
-### Overriding imports URIs
+### Overriding import locations
 
-You can override the URIs of imports in the WSDL by specifying a `overrideImportLocation` function in the WSDL options. This works for both local files where `location` will be a path and for remote sources where `location` will be a URI.
+You can override the URIs or paths of imports in the WSDL by specifying a `overrideImportLocation` function in the WSDL options.
 
 ```javascript
 const options ={
