@@ -51,7 +51,7 @@ describe('WSDL Parser (strict)', () => {
     });
   });
 
-  it('should support the overrideImportUri option', (done) => {
+  it('should support the overrideImportLocation option', (done) => {
     const options = {
       strict: true,
       wsdl_options: {
