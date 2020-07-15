@@ -51,6 +51,26 @@ describe('WSDL Parser (strict)', () => {
     });
   });
 
+  it('should support the overrideImportLocation option', (done) => {
+    const options = {
+      strict: true,
+      wsdl_options: {
+        overrideImportLocation: (location) => {
+          return location.replace('sub.wsdl', 'overridden.wsdl');
+        }
+      },
+      disableCache: true,
+    };
+
+    soap.createClient(__dirname+'/wsdl/wsdlImport/main.wsdl', options, function(err, client){
+      assert.ifError(err);
+      assert.deepEqual(Object.keys(client.wsdl.definitions.schemas),
+        ['http://example.com/', 'http://schemas.microsoft.com/2003/10/Serialization/Arrays']);
+      assert.equal(typeof client.getLatestVersionOverridden, 'function');
+      done();
+    });
+  });
+
   it('should get the parent namespace when parent namespace is empty string', (done) => {
     soap.createClient(__dirname+'/wsdl/marketo.wsdl', {strict: true}, function(err, client){
       assert.ifError(err);

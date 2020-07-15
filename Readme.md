@@ -1191,6 +1191,23 @@ soap.createClient(__dirname+'/wsdl/fixedPath/netsuite.wsdl', options, function(e
 });
 ```
 
+### Overriding import locations
+
+You can override the URIs or paths of imports in the WSDL by specifying a `overrideImportLocation` function in the WSDL options.
+
+```javascript
+const options ={
+    wsdl_options = {
+        overrideImportLocation: (location) => {
+          return 'https://127.0.0.1/imported-service.wsdl';
+        }
+    }
+};
+soap.createClient('https://127.0.0.1/service.wsdl', options, function(err, client) {
+    // your code
+});
+```
+
 ### Specifying the exact namespace definition of the root element
 In rare cases, you may want to precisely control the namespace definition that is included in the root element.
 

@@ -1169,6 +1169,10 @@ export class WSDL {
       includePath = url.resolve(this.uri || '', include.location);
     }
 
+    if (this.options.wsdl_options !== undefined && typeof this.options.wsdl_options.overrideImportLocation === 'function') {
+      includePath = this.options.wsdl_options.overrideImportLocation(includePath);
+    }
+
     const options = _.assign({}, this.options);
     // follow supplied ignoredNamespaces option
     options.ignoredNamespaces = this._originalIgnoredNamespaces || this.options.ignoredNamespaces;
