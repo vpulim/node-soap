@@ -239,7 +239,8 @@ export class Server extends EventEmitter {
     }
 
     if (req.method === 'GET') {
-      if (reqQuery && reqQuery.toLowerCase() === '?wsdl') {
+
+      if (reqQuery && reqQuery.startsWith('?wsdl')) {
         if (typeof this.log === 'function') {
           this.log('info', 'Wants the WSDL');
         }
