@@ -1,3 +1,13 @@
+0.32.0 / 2020-07-17
+===================
+
+* [ENHANCEMENT] Add overrideImportLocation option (#1114)
+* [FIX] Bug where no prototypical inheritence chain exists (#1110)
+* [FIX] Clear http client header (#1103)
+* [FIX] Escape username and password in wss (#1107)
+* [FIX] replace === with startsWith (#1116)
+* [MAINTENANCE]  Move @types/requests dependency into devDependencies (#1111)
+
 0.31.0 / 2020-02-21
 ===================
 
