@@ -200,7 +200,8 @@ export class HttpClient {
             const parts = mimeReader.parse_multipart(res.body.slice(2), boundary);
 
             // first element.data is xml message of multipart response as a buffer
-            body = parts.shift()['data'].toString('utf8');
+            let msg = parts.shift().data
+            body = msg.toString('utf8');
 
             // rest of parts are attachments
             res.attachments = parts;
