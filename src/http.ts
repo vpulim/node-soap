@@ -6,7 +6,6 @@
 import * as debugBuilder from 'debug';
 import * as httpNtlm from 'httpntlm';
 import * as _ from 'lodash';
-import * as mimeReader from './mime-reader';
 import * as req from 'request';
 import * as url from 'url';
 import * as uuid from 'uuid/v4';
@@ -14,6 +13,7 @@ import { IHeaders, IOptions } from './types';
 
 const debug = debugBuilder('node-soap');
 const VERSION = require('../package.json').version;
+const mimeReader = require('./mime-reader');
 
 export interface IExOptions {
   [key: string]: any;
@@ -199,7 +199,7 @@ export class HttpClient {
             // use slice() since in http multipart response the first chars are #13#10 which the parser does not expect
             const parts = mimeReader.parse_multipart(res.body.slice(2), boundary);
 
-            //first element.data is xml message of multipart response as a buffer
+            // first element.data is xml message of multipart response as a buffer
             body = parts.shift()['data'].toString('utf8');
 
             // rest of parts are attachments
