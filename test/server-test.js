@@ -45,7 +45,7 @@ test.service = {
             }
           };
         } else {
-          return { price: 19.56, tax: -1.23 };
+          return { price: 19.56, tax: -1.23, other: 20.001 };
         }
       },
 
@@ -256,7 +256,7 @@ describe('SOAP Server', function() {
     soap.createClient(test.baseUrl + '/stockquote?wsdl', function(err, client) {
       assert.ifError(err);
       var description = client.describe(),
-          expected = { input: { tickerSymbol: "string" }, output:{ price: "float", tax: "double" } };
+          expected = { input: { tickerSymbol: "string" }, output:{ price: "float", tax: "double", other: "decimal" } };
       assert.deepEqual(expected , description.StockQuoteService.StockQuotePort.GetLastTradePrice);
       done();
     });
@@ -269,6 +269,7 @@ describe('SOAP Server', function() {
         assert.ifError(err);
         assert.strictEqual(19.56, result.price); // float
         assert.strictEqual(-1.23, result.tax); // double
+        assert.strictEqual(20.001, result.other); // decimal
         done();
       });
     });

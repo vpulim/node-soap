@@ -21,6 +21,7 @@
                   <xsd:all>
                       <xsd:element name="price" type="float"/>
                       <xsd:element name="tax" type="double"/>
+                      <xsd:element name="other" type="decimal"/>
                   </xsd:all>
               </xsd:complexType>
            </xsd:element>
