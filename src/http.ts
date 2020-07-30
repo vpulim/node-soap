@@ -6,11 +6,11 @@
 import * as debugBuilder from 'debug';
 import * as httpNtlm from 'httpntlm';
 import * as _ from 'lodash';
+import * as mimeReader from './mime-reader.js';
 import * as req from 'request';
 import * as url from 'url';
 import * as uuid from 'uuid/v4';
 import { IHeaders, IOptions } from './types';
-import * as mimeReader from './mime-reader.js';
 
 const debug = debugBuilder('node-soap');
 const VERSION = require('../package.json').version;
@@ -183,29 +183,29 @@ export class HttpClient {
         callback(null, res, res.body);
       });
     } else {
-      //add to options for request to get raw bindary response
+      // add to options for request to get raw bindary response
       options.encoding = null;
       req = this._request(options, (err, res, body) => {
         if (err) {
           return callback(err);
         }
 
-        //look for boundary in headers to see if this is a multipart response
+        // look for boundary in headers to see if this is a multipart response
         const b = res.headers['content-type'].match('boundary=\"(.*?)\"');
-        if(b){
-            //get the value of the boundary
+        if (b) {
+            // get the value of the boundary
             const boundary = b && b.length && b[1];
 
-            //use slice() since in http multipart response the first chars are #13#10 which the parser does not expect
+            // use slice() since in http multipart response the first chars are #13#10 which the parser does not expect
             const parts = mimeReader.parse_multipart(res.body.slice(2), boundary);
 
             //first element.data is xml message of multipart response as a buffer
             body = parts.shift()['data'].toString('utf8');
 
-            //rest of parts are attachments
+            // rest of parts are attachments
             res.attachments = parts;
-        } else { //no boundary found not a multipart response
-            body = body.toString('utf8'); //convert body to utf8 string for node-soap to work
+        } else { // no boundary found not a multipart response
+            body = body.toString('utf8'); // convert body to utf8 string for node-soap to work
         }
 
         body = this.handleResponse(req, res, body);
