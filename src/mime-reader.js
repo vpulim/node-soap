@@ -63,13 +63,9 @@ var MimeReader = {
         //treat first part as xml message
         if(parts.length == 0){
             part.data = data;
-            //part.msg = data.toString();
         } else {
             part.localTmpFile = tempId;
-            fs.closeSync(fd, (err => {
-              if(err)
-                  console.log('Failed to close file', err);
-            }));
+            fs.closeSync(fd);
         }
 
       part.headers = headers
