@@ -13,7 +13,7 @@ import { IHeaders, IOptions } from './types';
 
 const debug = debugBuilder('node-soap');
 const VERSION = require('../package.json').version;
-const mimeReader = require('./mime-reader');
+const mimeReader = require('./lib/mime-reader');
 
 export interface IExOptions {
   [key: string]: any;
