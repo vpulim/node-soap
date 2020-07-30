@@ -1577,3 +1577,22 @@ it('should create async client without options', function (done) {
     done();
   });
 });
+
+it('should replace the InputMessage "Request" element for arg elements', function (done) {
+  soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', {
+    ignoredNamespaces: true,
+    ignoreBaseNameSpaces: true
+  }, function(err, client) {
+    assert.ok(client);
+    client.MyService.MyServicePort.MyOperation(
+      { parameter: 'dummy' },
+      function(err, result, resp, soap, req) {
+        assert.equal(req.indexOf('</Request>'), -1);
+      },
+      {
+        overrideBaseElement: true
+      }
+    );
+    done();
+  });
+});
