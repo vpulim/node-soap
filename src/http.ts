@@ -6,7 +6,7 @@
 import * as debugBuilder from 'debug';
 import * as httpNtlm from 'httpntlm';
 import * as _ from 'lodash';
-import * as mimeReader from './mime-reader.js';
+import * as mimeReader from './mime-reader';
 import * as req from 'request';
 import * as url from 'url';
 import * as uuid from 'uuid/v4';
