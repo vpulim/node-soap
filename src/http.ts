@@ -6,6 +6,7 @@
 import * as debugBuilder from 'debug';
 import * as httpNtlm from 'httpntlm';
 import * as _ from 'lodash';
+import * as mimeReader from './mime-reader';
 import * as req from 'request';
 import * as url from 'url';
 import * as uuid from 'uuid/v4';
@@ -13,7 +14,6 @@ import { IHeaders, IOptions } from './types';
 
 const debug = debugBuilder('node-soap');
 const VERSION = require('../package.json').version;
-const mimeReader = require('./lib/mime-reader');
 
 export interface IExOptions {
   [key: string]: any;
