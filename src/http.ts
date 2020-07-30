@@ -197,7 +197,7 @@ export class HttpClient {
             const boundary = b && b.length && b[1];
 
             //use slice() since in http multipart response the first chars are #13#10 which the parser does not expect
-            var parts = mimeReader.parse_multipart(res.body.slice(2), boundary);
+            const parts = mimeReader.parse_multipart(res.body.slice(2), boundary);
 
             //first element.data is xml message of multipart response as a buffer
             body = parts.shift()['data'].toString('utf8');

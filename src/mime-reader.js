@@ -2,22 +2,22 @@
 //https://github.com/yaronn/ws.js/
 //modified to support large files using a temp local file
 
-var MultipartParser = require('formidable/lib/multipart_parser.js').MultipartParser
+const MultipartParser = require('formidable/lib/multipart_parser.js').MultipartParser
   , fs = require('fs')
 
-var MimeReader = {
+const MimeReader = {
 
   parse_multipart: function(payload, boundary) {
-    var parts = []
-    var part
-    var data
-    var headers = []
-    var curr_header_name
-    var curr_header_value
-    var fd
-    var tempId
+    const parts = []
+    const part
+    const data
+    const headers = []
+    const curr_header_name
+    const curr_header_value
+    const fd
+    const tempId
 
-    var parser = new MultipartParser()
+    const parser = new MultipartParser()
     parser.initWithBoundary(boundary)
 
     parser.onPartBegin = function() {
