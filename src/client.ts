@@ -284,8 +284,9 @@ export class Client extends EventEmitter {
     let xmlnsSoap = 'xmlns:' + envelopeKey + '="http://schemas.xmlsoap.org/soap/envelope/"';
 
     const finish = (obj, body, response) => {
-      if (response.attachments) {
-        obj.Body.getContentResponse.return.attachments = response.attachments;
+      var arr = response.attachments;
+      if (Array.isArray(arr) && arr.length) {
+        obj.Body[name + 'Response'].return.attachments = response.attachments;
       }
 
       let result;
