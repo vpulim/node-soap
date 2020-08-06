@@ -30,7 +30,7 @@ const MimeReader = {
       if(parts.length == 0){
           data = new Buffer('');
       } else {
-          tempId = Math.floor(new Date()).toString() + ".bin";
+          tempId = new Date().getTime() + ".bin";
           fd = fs.openSync(tempId, 'a+');
       }
     }
