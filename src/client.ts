@@ -65,6 +65,7 @@ export class Client extends EventEmitter {
   private security: ISecurity;
   private SOAPAction: string;
   private streamAllowed: boolean;
+  private returnSaxStream: boolean;
   private normalizeNames: boolean;
 
   constructor(wsdl: WSDL, endpoint?: string, options?: IOptions) {
@@ -176,6 +177,7 @@ export class Client extends EventEmitter {
 
   private _initializeOptions(options: IOptions) {
     this.streamAllowed = options.stream;
+    this.returnSaxStream = options.returnSaxStream;
     this.normalizeNames = options.normalizeNames;
     this.wsdl.options.attributesKey = options.attributesKey || 'attributes';
     this.wsdl.options.envelopeKey = options.envelopeKey || 'soap';
@@ -486,21 +488,28 @@ export class Client extends EventEmitter {
           return;
         }
 
-        this.wsdl.xmlToObject(response, (error, obj) => {
-          this.lastResponse = response;
-          this.lastResponseHeaders = response && response.headers;
-          this.lastElapsedTime = Date.now() - startTime;
-          this.emit('response', '<stream>', response, eid);
+        if (this.returnSaxStream) {
+          // directly return the saxStream allowing the end user to define
+          // the parsing logics and corresponding errors managements
+          const saxStream = this.wsdl.getSaxStream(response);
+          return finish({ saxStream }, '<stream>', response);
+        } else {
+          this.wsdl.xmlToObject(response, (error, obj) => {
+            this.lastResponse = response;
+            this.lastResponseHeaders = response && response.headers;
+            this.lastElapsedTime = Date.now() - startTime;
+            this.emit('response', '<stream>', response, eid);
 
-          if (error) {
-            error.response = response;
-            error.body = '<stream>';
-            this.emit('soapError', error, eid);
-            return callback(error, response, undefined, undefined, xml);
-          }
+            if (error) {
+              error.response = response;
+              error.body = '<stream>';
+              this.emit('soapError', error, eid);
+              return callback(error, response, undefined, undefined, xml);
+            }
 
-          return finish(obj, '<stream>', response);
-        });
+            return finish(obj, '<stream>', response);
+          });
+        }
       });
       return;
     }

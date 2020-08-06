@@ -186,6 +186,13 @@ export class WSDL {
     return this.xml || '';
   }
 
+  public getSaxStream(xml) {
+    const saxStream = sax.createStream(true, null);
+    xml.pipe(saxStream);
+
+    return saxStream;
+  }
+
   public xmlToObject(xml, callback?) {
     const p: any = typeof callback === 'function' ? {} : sax.parser(true, null);
     let objectName = null;

@@ -9,57 +9,86 @@ This module lets you connect to web services using SOAP.  It also provides a ser
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 
-- [Features:](#features)
-- [Install](#install)
-- [Why can't I file an issue?](#why-cant-i-file-an-issue)
-- [Where can I find help?](#where-can-i-find-help)
-- [Module](#module)
-  - [soap.createClient(url[, options], callback) - create a new SOAP client from a WSDL url. Also supports a local filesystem path.](#soapcreateclienturl-options-callback---create-a-new-soap-client-from-a-wsdl-url-also-supports-a-local-filesystem-path)
-  - [soap.createClientAsync(url[, options]) - create a new SOAP client from a WSDL url. Also supports a local filesystem path.](#soapcreateclientasyncurl-options---create-a-new-soap-client-from-a-wsdl-url-also-supports-a-local-filesystem-path)
-  - [soap.listen(*server*, *path*, *services*, *wsdl*, *callback*) - create a new SOAP server that listens on *path* and provides *services*.](#soaplistenserver-path-services-wsdl-callback---create-a-new-soap-server-that-listens-on-path-and-provides-services)
-  - [Options](#options)
-  - [Server Logging](#server-logging)
-  - [Server Events](#server-events)
-  - [Server Response on one-way calls](#server-response-on-one-way-calls)
-  - [SOAP Fault](#soap-fault)
-  - [Server security example using PasswordDigest](#server-security-example-using-passworddigest)
-  - [Server connection authorization](#server-connection-authorization)
-- [SOAP Headers](#soap-headers)
-  - [Received SOAP Headers](#received-soap-headers)
-  - [Outgoing SOAP Headers](#outgoing-soap-headers)
-- [Client](#client)
-  - [Client.describe() - description of services, ports and methods as a JavaScript object](#clientdescribe---description-of-services-ports-and-methods-as-a-javascript-object)
-  - [Client.setSecurity(security) - use the specified security protocol](#clientsetsecuritysecurity---use-the-specified-security-protocol)
-  - [Client.*method*(args, callback) - call *method* on the SOAP service.](#clientmethodargs-callback---call-method-on-the-soap-service)
-  - [Client.*method*Async(args) - call *method* on the SOAP service.](#clientmethodasyncargs---call-method-on-the-soap-service)
-  - [Client.*service*.*port*.*method*(args, callback[, options[, extraHeaders]]) - call a *method* using a specific *service* and *port*](#clientserviceportmethodargs-callback-options-extraheaders---call-a-method-using-a-specific-service-and-port)
-  - [Overriding the namespace prefix](#overriding-the-namespace-prefix)
-  - [Client.*lastRequest* - the property that contains last full soap request for client logging](#clientlastrequest---the-property-that-contains-last-full-soap-request-for-client-logging)
-  - [Client.setEndpoint(url) - overwrite the SOAP service endpoint address](#clientsetendpointurl---overwrite-the-soap-service-endpoint-address)
-  - [Client Events](#client-events)
-    - [request](#request)
-    - [message](#message)
-    - [soapError](#soaperror)
-    - [response](#response)
-- [Security](#security)
-  - [BasicAuthSecurity](#basicauthsecurity)
-  - [BearerSecurity](#bearersecurity)
-  - [ClientSSLSecurity](#clientsslsecurity)
-  - [ClientSSLSecurityPFX](#clientsslsecuritypfx)
-  - [WSSecurity](#wssecurity)
-  - [WSSecurityCert](#wssecuritycert)
-  - [NTLMSecurity](#ntlmsecurity)
-- [Handling XML Attributes, Value and XML (wsdlOptions).](#handling-xml-attributes-value-and-xml-wsdloptions)
-  - [Overriding the `value` key](#overriding-the-value-key)
-  - [Overriding the `xml` key](#overriding-the-xml-key)
-  - [Overriding the `attributes` key](#overriding-the-attributes-key)
-  - [Specifying the exact namespace definition of the root element](#specifying-the-exact-namespace-definition-of-the-root-element)
-  - [Custom Deserializer](#custom-deserializer)
-- [Handling "ignored" namespaces](#handling-ignored-namespaces)
-- [Handling "ignoreBaseNameSpaces" attribute](#handling-ignorebasenamespaces-attribute)
-- [soap-stub](#soap-stub)
-  - [Example](#example)
-- [Contributors](#contributors)
+- [Soap ![NPM version](#soap-npm-versionnpm-url-downloadsdownloads-imagenpm-url-build-statustravis-imagetravis-url-coveralls-statuscoveralls-imagecoveralls-url-gitter-chatgitter-imagegitter-url)
+  - [Features:](#features)
+  - [Install](#install)
+  - [Why can't I file an issue?](#why-cant-i-file-an-issue)
+  - [Where can I find help?](#where-can-i-find-help)
+  - [Module](#module)
+    - [soap.createClient(url[, options], callback) - create a new SOAP client from a WSDL url. Also supports a local filesystem path.](#soapcreateclienturl-options-callback---create-a-new-soap-client-from-a-wsdl-url-also-supports-a-local-filesystem-path)
+    - [soap.createClientAsync(url[, options]) - create a new SOAP client from a WSDL url. Also supports a local filesystem path.](#soapcreateclientasyncurl-options---create-a-new-soap-client-from-a-wsdl-url-also-supports-a-local-filesystem-path)
+      - [Options](#options)
+    - [soap.listen(*server*, *path*, *services*, *wsdl*, *callback*) - create a new SOAP server that listens on *path* and provides *services*.](#soaplistenserver-path-services-wsdl-callback---create-a-new-soap-server-that-listens-on-path-and-provides-services)
+    - [Options](#options-1)
+    - [Server Logging](#server-logging)
+    - [Server Events](#server-events)
+    - [Server Response on one-way calls](#server-response-on-one-way-calls)
+    - [SOAP Fault](#soap-fault)
+    - [Server security example using PasswordDigest](#server-security-example-using-passworddigest)
+    - [Server connection authorization](#server-connection-authorization)
+  - [SOAP Headers](#soap-headers)
+    - [Received SOAP Headers](#received-soap-headers)
+    - [Outgoing SOAP Headers](#outgoing-soap-headers)
+      - [*addSoapHeader*(soapHeader[, name, namespace, xmlns]) - add soapHeader to soap:Header node](#addsoapheadersoapheader-name-namespace-xmlns---add-soapheader-to-soapheader-node)
+        - [Parameters](#parameters)
+        - [Returns](#returns)
+        - [Optional parameters when first arg is object :](#optional-parameters-when-first-arg-is-object-)
+      - [*changeSoapHeader*(index, soapHeader[, name, namespace, xmlns]) - change an already existing soapHeader](#changesoapheaderindex-soapheader-name-namespace-xmlns---change-an-already-existing-soapheader)
+        - [Parameters](#parameters-1)
+      - [*getSoapHeaders*() - return all defined headers](#getsoapheaders---return-all-defined-headers)
+      - [*clearSoapHeaders*() - remove all defined headers](#clearsoapheaders---remove-all-defined-headers)
+  - [Client](#client)
+    - [Client.describe() - description of services, ports and methods as a JavaScript object](#clientdescribe---description-of-services-ports-and-methods-as-a-javascript-object)
+    - [Client.setSecurity(security) - use the specified security protocol](#clientsetsecuritysecurity---use-the-specified-security-protocol)
+    - [Client.*method*(args, callback, options) - call *method* on the SOAP service.](#clientmethodargs-callback-options---call-method-on-the-soap-service)
+    - [Client.*method*Async(args, options) - call *method* on the SOAP service.](#clientmethodasyncargs-options---call-method-on-the-soap-service)
+        - [Example with JSON for the `args`](#example-with-json-for-the-args)
+        - [Example with XML String for the `args`](#example-with-xml-string-for-the-args)
+    - [Client.*service*.*port*.*method*(args, callback[, options[, extraHeaders]]) - call a *method* using a specific *service* and *port*](#clientserviceportmethodargs-callback-options-extraheaders---call-a-method-using-a-specific-service-and-port)
+      - [Options (optional)](#options-optional)
+      - [Extra Headers (optional)](#extra-headers-optional)
+      - [Alternative method call using callback-last pattern](#alternative-method-call-using-callback-last-pattern)
+    - [Overriding the namespace prefix](#overriding-the-namespace-prefix)
+    - [Client.*lastRequest* - the property that contains last full soap request for client logging](#clientlastrequest---the-property-that-contains-last-full-soap-request-for-client-logging)
+    - [Client.setEndpoint(url) - overwrite the SOAP service endpoint address](#clientsetendpointurl---overwrite-the-soap-service-endpoint-address)
+    - [Client Events](#client-events)
+    - [_request_](#request)
+    - [_message_](#message)
+    - [_soapError_](#soaperror)
+    - [_response_](#response)
+  - [WSDL](#wsdl)
+  - [WSDL.constructor(wsdl, baseURL, options):](#wsdlconstructorwsdl-baseurl-options)
+      - [Parameters](#parameters-2)
+    - [wsdl.xmlToObject(xml):](#wsdlxmltoobjectxml)
+      - [Parameters:](#parameters-3)
+      - [Returns:](#returns-1)
+    - [wsdl.objectToXML(object, typeName, namespacePrefix, namespaceURI, ...):](#wsdlobjecttoxmlobject-typename-namespaceprefix-namespaceuri-)
+      - [Parameters:](#parameters-4)
+      - [Returns:](#returns-2)
+      - [Example:](#example)
+  - [Security](#security)
+    - [BasicAuthSecurity](#basicauthsecurity)
+    - [BearerSecurity](#bearersecurity)
+    - [ClientSSLSecurity](#clientsslsecurity)
+    - [ClientSSLSecurityPFX](#clientsslsecuritypfx)
+    - [WSSecurity](#wssecurity)
+    - [WSSecurityCert](#wssecuritycert)
+      - [Option examples](#option-examples)
+    - [NTLMSecurity](#ntlmsecurity)
+  - [Handling XML Attributes, Value and XML (wsdlOptions).](#handling-xml-attributes-value-and-xml-wsdloptions)
+    - [Overriding the `value` key](#overriding-the-value-key)
+    - [Overriding the `xml` key](#overriding-the-xml-key)
+    - [Overriding the `attributes` key](#overriding-the-attributes-key)
+    - [Overriding imports relative paths](#overriding-imports-relative-paths)
+    - [Overriding import locations](#overriding-import-locations)
+    - [Specifying the exact namespace definition of the root element](#specifying-the-exact-namespace-definition-of-the-root-element)
+    - [Custom Deserializer](#custom-deserializer)
+    - [Changing the tag formats to use self-closing (empty element) tags](#changing-the-tag-formats-to-use-self-closing-empty-element-tags)
+  - [Handling "ignored" namespaces](#handling-ignored-namespaces)
+  - [Handling "ignoreBaseNameSpaces" attribute](#handling-ignorebasenamespaces-attribute)
+  - [soap-stub](#soap-stub)
+    - [Example](#example-1)
+  - [Contributors](#contributors)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -142,6 +171,8 @@ The `options` argument allows you to customize the client with the following pro
 - overridePromiseSuffix: if your wsdl operations contains names with Async suffix, you will need to override the default promise suffix to a custom one, default: `Async`.
 - normalizeNames: if your wsdl operations contains names with non identifier characters (`[^a-z$_0-9]`), replace them with `_`. Note: if using this option, clients using wsdls with two operations like `soap:method` and `soap-method` will be overwritten. Then, use bracket notation instead (`client['soap:method']()`).
 - namespaceArrayElements: provides support for nonstandard array semantics.  If true, JSON arrays of the form `{list: [{elem: 1}, {elem: 2}]}` are marshalled into xml as `<list><elem>1</elem></list> <list><elem>2</elem></list>`. If false, marshalls into `<list> <elem>1</elem> <elem>2</elem> </list>`. Default: `true`.
+- stream: allows using a stream to parse the XML SOAP response. Default: `false`
+- returnSaxStream: enables the library to return the sax stream, transferring to the end user the responsibility of parsing the XML. It can be used only in combination with *stream* argument set to `true`. Default: `false`
 
 Note: for versions of node >0.10.X, you may need to specify `{connection: 'keep-alive'}` in SOAP headers to avoid truncation of longer chunked responses.
 
@@ -512,7 +543,7 @@ Interesting properties might be:
   ]
   ```
 * `forceMTOM`: set to True if you want to send the request as MTOM even if you don't have attachments
-    
+
 
 ### Client.*method*Async(args, options) - call *method* on the SOAP service.
 
@@ -811,7 +842,7 @@ as default request options to the constructor:
 * `strictSSL: false`
 * `secureOptions: constants.SSL_OP_NO_TLSv1_2` (this is likely needed for node >= 10.0)
 
-If you want to reuse tls sessions, you can use the option `forever: true`. 
+If you want to reuse tls sessions, you can use the option `forever: true`.
 
 ``` javascript
 client.setSecurity(new soap.ClientSSLSecurity(
@@ -837,7 +868,7 @@ as default request options to the constructor:
 * `strictSSL: false`
 * `secureOptions: constants.SSL_OP_NO_TLSv1_2` (this is likely needed for node >= 10.0)
 
-If you want to reuse tls sessions, you can use the option `forever: true`. 
+If you want to reuse tls sessions, you can use the option `forever: true`.
 
 ``` javascript
 client.setSecurity(new soap.ClientSSLSecurityPFX(
@@ -904,20 +935,20 @@ The `options` object is optional and can contain the following properties:
 * `signatureTransformations`: sets the Reference Transforms Algorithm (default ['http://www.w3.org/2000/09/xmldsig#enveloped-signature', 'http://www.w3.org/2001/10/xml-exc-c14n#']). Type is a string array
 * `signatureAlgorithm`: set to `http://www.w3.org/2001/04/xmldsig-more#rsa-sha256` to use sha256
 * `additionalReferences` : (optional) Array of Soap headers that need to be signed.  This need to be added using `client.addSoapHeader('header')`
-* `signerOptions`: (optional) passes options to the XML Signer package - from (https://github.com/yaronn/xml-crypto) 
+* `signerOptions`: (optional) passes options to the XML Signer package - from (https://github.com/yaronn/xml-crypto)
   * `existingPrefixes`: (optional) A hash of prefixes and namespaces prefix: namespace that shouldn't be in the signature because they already exist in the xml (default: `{ 'wsse': 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd' }`)
   * `prefix`: (optional) Adds this value as a prefix for the generated signature tags.
-  * `attrs`: (optional) A hash of attributes and values attrName: value to add to the signature root node 
-  
+  * `attrs`: (optional) A hash of attributes and values attrName: value to add to the signature root node
+
 #### Option examples
 
-`hasTimeStamp:true` 
-  
+`hasTimeStamp:true`
+
 ``` xml
 <soap:Header>
     <wsse:Security soap:mustUnderstand="1">
         <wsse:BinarySecurityToken>XXX</wsse:BinarySecurityToken>
-        <!-- The Timestamp group of tags are added and signed --> 
+        <!-- The Timestamp group of tags are added and signed -->
         <Timestamp xmlns="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" Id="Timestamp">
             <Created>2019-10-01T08:17:50Z</Created>
             <Expires>2019-10-01T08:27:50Z</Expires>
@@ -949,7 +980,7 @@ The `options` object is optional and can contain the following properties:
             <SignedInfo>
                 <CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
                 <SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
-                <!-- The "To" tag is signed and added as a reference --> 
+                <!-- The "To" tag is signed and added as a reference -->
                 <Reference URI="#To">
                     <Transforms>
                         <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
@@ -974,7 +1005,7 @@ The `options` object is optional and can contain the following properties:
 </soap:Header>
 ```
 
-`signerOptions.prefix:'ds'` 
+`signerOptions.prefix:'ds'`
 
 ``` XML
 <soap:Header>
@@ -1010,13 +1041,13 @@ The `options` object is optional and can contain the following properties:
 </soap:Header>
 ```
 
-`signerOptions.attrs:{ Id: 'signature-100', foo:'bar'}` 
-  
+`signerOptions.attrs:{ Id: 'signature-100', foo:'bar'}`
+
 ``` xml
 <soap:Header>
     <wsse:Security soap:mustUnderstand="1">
         <wsse:BinarySecurityToken>XXX</wsse:BinarySecurityToken>
-        <!-- The Timestamp group of tags are added and signed --> 
+        <!-- The Timestamp group of tags are added and signed -->
         <Timestamp xmlns="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" Id="Timestamp">
             <Created>2019-10-01T08:17:50Z</Created>
             <Expires>2019-10-01T08:27:50Z</Expires>
@@ -1180,14 +1211,14 @@ soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', wsdlOptions, funct
 By default, WSDL and schema files import other schemas and types using relative paths.
 
 However in some systems (i.e. NetSuite) when the wsdl is downloaded for offline caching, all files are flattened under a single directory and all the imports fail.
-Passing this option allows `node-soap` to correctly load all files.  
+Passing this option allows `node-soap` to correctly load all files.
 
 ```javascript
 var options ={
     wsdl_options = { fixedPath: true }
 };
 soap.createClient(__dirname+'/wsdl/fixedPath/netsuite.wsdl', options, function(err, client) {
-    // your code  
+    // your code
 });
 ```
 

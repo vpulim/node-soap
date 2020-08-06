@@ -10,7 +10,8 @@ var fs = require('fs'),
 
 [
   { suffix: '', options: {} },
-  { suffix: ' (with streaming)', options: { stream: true } }
+  { suffix: ' (with streaming)', options: { stream: true } },
+  { suffix: ' (with streaming and return stream)', options: { stream: true, returnSaxStream: true } }
 ].forEach(function (meta) {
   describe('SOAP Client' + meta.suffix, function () {
     it('should error on invalid host', function (done) {
@@ -462,7 +463,7 @@ var fs = require('fs'),
 
           client.addHttpHeader('foo', 'bar');
           assert.equal(client.getHttpHeaders().foo, 'bar');
-  
+
           client.clearHttpHeaders();
           assert.equal(client.getHttpHeaders(), null);
 
