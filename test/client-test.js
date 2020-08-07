@@ -3,6 +3,7 @@
 var fs = require('fs'),
   soap = require('..'),
   http = require('http'),
+  stream = require('stream'),
   assert = require('assert'),
   _ = require('lodash'),
   sinon = require('sinon'),
@@ -11,7 +12,6 @@ var fs = require('fs'),
 [
   { suffix: '', options: {} },
   { suffix: ' (with streaming)', options: { stream: true } },
-  { suffix: ' (with streaming and return stream)', options: { stream: true, returnSaxStream: true } }
 ].forEach(function (meta) {
   describe('SOAP Client' + meta.suffix, function () {
     it('should error on invalid host', function (done) {
@@ -1578,3 +1578,50 @@ it('should create async client without options', function (done) {
     done();
   });
 });
+
+
+describe('Client using stream and returnSaxStream', () => {
+  let server = null;
+  let hostname = '127.0.0.1';
+  let port = 15099;
+  let baseUrl = 'http://' + hostname + ':' + port;
+  const envelope = '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"'
+    + ' xmlns:xsd="http://www.w3.org/2001/XMLSchema"'
+    + ' xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">'
+    + '<soap:Body><Response>Hello</Response></soap:Body></soap:Envelope>'
+
+  before(function (done) {
+    server = http.createServer(function (req, res) {
+      res.statusCode = 200;
+      res.write(envelope, 'utf8');
+      res.end();
+    }).listen(port, hostname, done);
+  });
+
+  after(function (done) {
+    server.close();
+    server = null;
+    done();
+  });
+
+  it('should return the saxStream', (done) => {
+    soap.createClient(__dirname + '/wsdl/default_namespace.wsdl',
+    { stream: true, returnSaxStream: true }, (err, client) => {
+      assert.ok(client);
+      assert.ifError(err);
+
+      client.MyOperation({}, (err, result) => {
+        const { saxStream } = result
+        assert.ok(saxStream instanceof stream.Stream);
+        assert.ok(typeof saxStream.on === 'function');
+        assert.ok(typeof saxStream.pipe === 'function');
+
+        saxStream.on('text', (text) => {
+          assert.ok(text === 'Hello')
+        })
+
+        done();
+      }, null, null);
+    }, baseUrl);
+  });
+})
