@@ -110,6 +110,8 @@ export interface IOptions extends IWsdlBaseOptions {
   /** override the request module. */
   request?: req.RequestAPI<req.Request, req.CoreOptions, req.RequiredUriUrl>;
   stream?: boolean;
+  // allows returning the underlying saxStream that parse the SOAP XML response
+  returnSaxStream?: boolean;
   // wsdl options that only work for client
   customDeserializer?: any;
   /** if your wsdl operations contains names with Async suffix, you will need to override the default promise suffix to a custom one, default: Async. */
