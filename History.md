@@ -1,3 +1,9 @@
+0.33.0 / 2020-08-18
+===================
+* [ENHANCEMENT] Added an option to directly return the underlying sax stream (#1120)
+* [FIX] Convert decimals (#1118)
+* [MAINTENANCE] bump lodash to 14.17.19 (#1117)
+
 0.32.0 / 2020-07-17
 ===================
 
