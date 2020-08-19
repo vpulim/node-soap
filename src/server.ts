@@ -6,7 +6,7 @@
 import { EventEmitter } from 'events';
 import * as http from 'http';
 import * as url from 'url';
-import { IOneWayOptions, ISecurity, IServerOptions, IServices, ISoapFault, ISoapServiceMethod } from './types';
+import { IOneWayOptions, IServerOptions, IServicePort, IServices, ISoapFault, ISoapServiceMethod } from './types';
 import { findPrefix } from './utils';
 import { WSDL } from './wsdl';
 import { BindingElement, IPort } from './wsdl/elements';
@@ -173,29 +173,29 @@ export class Server extends EventEmitter {
 
   private _processSoapHeader(soapHeader, name, namespace, xmlns) {
     switch (typeof soapHeader) {
-    case 'object':
-      return this.wsdl.objectToXML(soapHeader, name, namespace, xmlns, true);
-    case 'function':
-      const _this = this;
-      // arrow function does not support arguments variable
-      // tslint:disable-next-line
-      return function() {
-        const result = soapHeader.apply(null, arguments);
+      case 'object':
+        return this.wsdl.objectToXML(soapHeader, name, namespace, xmlns, true);
+      case 'function':
+        const _this = this;
+        // arrow function does not support arguments variable
+        // tslint:disable-next-line
+        return function () {
+          const result = soapHeader.apply(null, arguments);
 
-        if (typeof result === 'object') {
-          return _this.wsdl.objectToXML(result, name, namespace, xmlns, true);
-        } else {
-          return result;
-        }
-      };
-    default:
-      return soapHeader;
+          if (typeof result === 'object') {
+            return _this.wsdl.objectToXML(result, name, namespace, xmlns, true);
+          } else {
+            return result;
+          }
+        };
+      default:
+        return soapHeader;
     }
   }
 
   private _initializeOptions(options: IServerOptions) {
     this.wsdl.options.attributesKey = options.attributesKey || 'attributes';
-    this.onewayOptions.statusCode = this.onewayOptions.responseCode || 200;
+    this.onewayOptions.statusCode = this.onewayOptions.responseCode || 200;
     this.onewayOptions.emptyBody = !!this.onewayOptions.emptyBody;
   }
 
@@ -469,6 +469,7 @@ export class Server extends EventEmitter {
     includeTimestamp?,
   ) {
     options = options || {};
+    let port: IServicePort;
     let method: ISoapServiceMethod;
     let body;
     let headers;
@@ -491,6 +492,7 @@ export class Server extends EventEmitter {
 
     try {
       method = this.services[serviceName][portName][methodName];
+      port = this.services[serviceName][portName];
     } catch (error) {
       return callback(this._envelope('', headers, includeTimestamp));
     }
@@ -547,7 +549,7 @@ export class Server extends EventEmitter {
       handleResult(error, result);
     };
 
-    const result = method(args, methodCallback, options.headers, req);
+    const result = method.apply(this, [args, methodCallback, options.headers, req]);
     if (typeof result !== 'undefined') {
       if (isPromiseLike<any>(result)) {
         result.then((value) => {
