@@ -17,7 +17,8 @@
     "serve-static": "^1.11.1",
     "strip-bom": "^3.0.0",
     "uuid": "^3.1.0",
-    "xml-crypto": "^1.4.0"
+    "xml-crypto": "^1.4.0",
+    "formidable": "^1.2.2"
   },
   "repository": {
     "type": "git",
