@@ -66,7 +66,7 @@ export class HttpClient {
     };
     const mergeOptions = ['headers'];
 
-    const {attachments: _attachments, ...newExoptions } = exoptions
+    const {attachments: _attachments, ...newExoptions } = exoptions;
     const attachments: IAttachment[] = _attachments || [];
 
     if (typeof data === 'string' && attachments.length === 0 && !exoptions.forceMTOM) {
