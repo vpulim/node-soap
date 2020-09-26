@@ -32,7 +32,7 @@ function trim(text) {
 
 function deepMerge<A, B>(destination: A, source: B): A & B {
   return _.mergeWith(destination, source, (a, b) => {
-    return _.isArray(a) ? a.concat(b) : undefined;
+    return Array.isArray(a) ? a.concat(b) : undefined;
   });
 }
 
@@ -495,7 +495,7 @@ export class WSDL {
       for (const n in refs) {
         const ref = refs[n];
         for (const href of ref.hrefs) {
-          _.assign(href.obj, ref.obj);
+          Object.assign(href.obj, ref.obj);
         }
       }
 
@@ -1184,7 +1184,7 @@ export class WSDL {
       includePath = this.options.wsdl_options.overrideImportLocation(includePath);
     }
 
-    const options = _.assign({}, this.options);
+    const options = Object.assign({}, this.options);
     // follow supplied ignoredNamespaces option
     options.ignoredNamespaces = this._originalIgnoredNamespaces || this.options.ignoredNamespaces;
     options.WSDL_CACHE = this.WSDL_CACHE;
