@@ -5,7 +5,7 @@
 
 import * as assert from 'assert';
 import * as BluebirdPromise from 'bluebird';
-import * as concatStream from 'concat-stream';
+import getStream = require('get-stream');
 import * as debugBuilder from 'debug';
 import { EventEmitter } from 'events';
 import { IncomingHttpHeaders } from 'http';
@@ -476,15 +476,14 @@ export class Client extends EventEmitter {
         // When the output element cannot be looked up in the wsdl, play it safe and
         // don't stream
         if (response.statusCode !== 200 || !output || !output.$lookupTypes) {
-          response.pipe(concatStream({encoding: 'string'}, (body) => {
+          getStream(response).then(body => {
             this.lastResponse = body;
             this.lastResponseHeaders = response && response.headers;
             this.lastElapsedTime = Date.now() - startTime;
             this.emit('response', body, response, eid);
 
             return parseSync(body, response);
-
-          }));
+          })
           return;
         }
 

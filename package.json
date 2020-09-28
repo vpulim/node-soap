@@ -8,8 +8,8 @@
   "author": "Vinay Pulim <v@pulim.com>",
   "dependencies": {
     "bluebird": "^3.5.0",
-    "concat-stream": "^2.0.0",
     "debug": "^4.1.1",
+    "get-stream": "^6.0.0",
     "httpntlm": "^1.5.2",
     "lodash": "^4.17.19",
     "request": ">=2.9.0",
