@@ -3,10 +3,9 @@ language: node_js
 notifications:
   email: false
 node_js:
-  - "9"
-  - "8"
-  - "7"
-  - "6"
+  - "10"
+  - "12"
+  - "14"
   - "lts/*"
 env:
   - CXX=g++-4.8
