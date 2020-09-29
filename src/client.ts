@@ -66,11 +66,11 @@ export class Client extends EventEmitter {
   private streamAllowed: boolean;
   private returnSaxStream: boolean;
   private normalizeNames: boolean;
+  private overridePromiseSuffix: string
 
   constructor(wsdl: WSDL, endpoint?: string, options?: IOptions) {
     super();
     options = options || {};
-    this._overridePromiseSuffix = options.overridePromiseSuffix || 'Async';
     this.wsdl = wsdl;
     this._initializeOptions(options);
     this._initializeServices(endpoint);
@@ -174,6 +174,7 @@ export class Client extends EventEmitter {
     this.streamAllowed = options.stream;
     this.returnSaxStream = options.returnSaxStream;
     this.normalizeNames = options.normalizeNames;
+    this.overridePromiseSuffix = options.overridePromiseSuffix || 'Async';
     this.wsdl.options.attributesKey = options.attributesKey || 'attributes';
     this.wsdl.options.envelopeKey = options.envelopeKey || 'soap';
     this.wsdl.options.preserveWhitespace = !!options.preserveWhitespace;
@@ -213,8 +214,10 @@ export class Client extends EventEmitter {
       def[name] = this._defineMethod(methods[name], location);
       const methodName = this.normalizeNames ? name.replace(nonIdentifierChars, '_') : name;
       this[methodName] = def[name];
-      const suffix = this._overridePromiseSuffix;
-      this[methodName + suffix] = this._promisifyMethod(def[name]);
+      if (!nonIdentifierChars.test(methodName)) {
+        const suffix = this.overridePromiseSuffix;
+        this[methodName + suffix] = this._promisifyMethod(def[name]);
+      }
     }
     return def;
   }
