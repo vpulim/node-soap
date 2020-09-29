@@ -3,7 +3,7 @@
   "version": "0.33.0",
   "description": "A minimal node SOAP client",
   "engines": {
-    "node": ">=8.0.0"
+    "node": ">=10.0.0"
   },
   "author": "Vinay Pulim <v@pulim.com>",
   "dependencies": {
