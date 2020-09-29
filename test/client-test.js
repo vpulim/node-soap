@@ -72,7 +72,7 @@ var fs = require('fs'),
         request: function () { }
       };
       soap.createClient(__dirname + '/wsdl/default_namespace.wsdl',
-        _.assign({ httpClient: myHttpClient }, meta.options),
+        Object.assign({ httpClient: myHttpClient }, meta.options),
         function (err, client) {
           assert.ok(client);
           assert.ifError(err);
@@ -85,7 +85,7 @@ var fs = require('fs'),
       var myRequest = function () {
       };
       soap.createClient(__dirname + '/wsdl/default_namespace.wsdl',
-        _.assign({ request: myRequest }, meta.options),
+        Object.assign({ request: myRequest }, meta.options),
         function (err, client) {
           assert.ok(client);
           assert.ifError(err);
@@ -96,7 +96,7 @@ var fs = require('fs'),
 
 
     it('should allow customization of envelope', function (done) {
-      soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', _.assign({ envelopeKey: 'soapenv' }, meta.options), function (err, client) {
+      soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', Object.assign({ envelopeKey: 'soapenv' }, meta.options), function (err, client) {
         assert.ok(client);
         assert.ifError(err);
 
@@ -109,7 +109,7 @@ var fs = require('fs'),
 
 
     it('should allow passing in XML strings', function (done) {
-      soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', _.assign({ envelopeKey: 'soapenv' }, meta.options), function (err, client) {
+      soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', Object.assign({ envelopeKey: 'soapenv' }, meta.options), function (err, client) {
         assert.ok(client);
         assert.ifError(err);
 
@@ -135,7 +135,7 @@ var fs = require('fs'),
 
     it('should allow disabling the wsdl cache', function (done) {
       var spy = sinon.spy(wsdl, 'open_wsdl');
-      var options = _.assign({ disableCache: true }, meta.options);
+      var options = Object.assign({ disableCache: true }, meta.options);
       soap.createClient(__dirname + '/wsdl/binding_document.wsdl', options, function (err1, client1) {
         assert.ok(client1);
         assert.ok(!err1);
@@ -279,7 +279,7 @@ var fs = require('fs'),
       });
 
       it('Should preserve SOAP 1.2 "action" header when sending MTOM request', function (done) {
-        soap.createClient(__dirname + '/wsdl/attachments.wsdl', _.assign({ forceSoap12Headers: true }, meta.options), function (initError, client) {
+        soap.createClient(__dirname + '/wsdl/attachments.wsdl', Object.assign({ forceSoap12Headers: true }, meta.options), function (initError, client) {
           assert.ifError(initError);
 
           client.MyOperation({}, function (error, response, body, soapHeader, rawRequest) {
@@ -291,7 +291,7 @@ var fs = require('fs'),
       })
 
       it('Should send MTOM request even without attachment', function (done) {
-        soap.createClient(__dirname + '/wsdl/attachments.wsdl', _.assign({ forceSoap12Headers: true }, meta.options), function (initError, client) {
+        soap.createClient(__dirname + '/wsdl/attachments.wsdl', Object.assign({ forceSoap12Headers: true }, meta.options), function (initError, client) {
           assert.ifError(initError);
 
           client.MyOperation({}, function (error, response, body, soapHeader, rawRequest) {
@@ -536,7 +536,7 @@ var fs = require('fs'),
       });
 
       it('should add proper headers for soap12', function (done) {
-        soap.createClient(__dirname + '/wsdl/default_namespace_soap12.wsdl', _.assign({ forceSoap12Headers: true }, meta.options), function (err, client) {
+        soap.createClient(__dirname + '/wsdl/default_namespace_soap12.wsdl', Object.assign({ forceSoap12Headers: true }, meta.options), function (err, client) {
           assert.ok(client);
           assert.ifError(err);
 
@@ -1143,7 +1143,7 @@ var fs = require('fs'),
             on: function () { }
           };
         };
-        var options = _.assign({
+        var options = Object.assign({
           request: mockRequestHandler,
         }, meta.options);
         soap.createClient(__dirname + '/wsdl/builtin_types.wsdl', options, function (err, client) {
@@ -1365,7 +1365,7 @@ var fs = require('fs'),
           request: function () { }
         };
         soap.createClientAsync(__dirname + '/wsdl/default_namespace.wsdl',
-          _.assign({ httpClient: myHttpClient }, meta.options))
+          Object.assign({ httpClient: myHttpClient }, meta.options))
           .then(function (client) {
             assert.ok(client);
             assert.equal(client.httpClient, myHttpClient);
@@ -1377,7 +1377,7 @@ var fs = require('fs'),
         var myRequest = function () {
         };
         soap.createClientAsync(__dirname + '/wsdl/default_namespace.wsdl',
-          _.assign({ request: myRequest }, meta.options))
+          Object.assign({ request: myRequest }, meta.options))
           .then(function (client) {
             assert.ok(client);
             assert.equal(client.httpClient._request, myRequest);
@@ -1395,7 +1395,7 @@ var fs = require('fs'),
       });
 
       it('should allow passing in XML strings', function (done) {
-        soap.createClientAsync(__dirname + '/wsdl/default_namespace.wsdl', _.assign({envelopeKey: 'soapenv'}, meta.options))
+        soap.createClientAsync(__dirname + '/wsdl/default_namespace.wsdl', Object.assign({envelopeKey: 'soapenv'}, meta.options))
           .then(function (client) {
             assert.ok(client);
             var xmlStr = '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">\n\t<head>\n\t\t<title>404 - Not Found</title>\n\t</head>\n\t<body>\n\t\t<h1>404 - Not Found</h1>\n\t\t<script type="text/javascript" src="http://gp1.wpc.edgecastcdn.net/00222B/beluga/pilot_rtm/beluga_beacon.js"></script>\n\t</body>\n</html>';
@@ -1409,7 +1409,7 @@ var fs = require('fs'),
 
       it('should allow customization of envelope', function (done) {
         var client;
-        soap.createClientAsync(__dirname + '/wsdl/default_namespace.wsdl', _.assign({ envelopeKey: 'soapenv' }, meta.options))
+        soap.createClientAsync(__dirname + '/wsdl/default_namespace.wsdl', Object.assign({ envelopeKey: 'soapenv' }, meta.options))
         .then(function (createdClient) {
           assert.ok(createdClient);
           client = createdClient;
@@ -1448,7 +1448,7 @@ var fs = require('fs'),
 
       it('should allow disabling the wsdl cache', function (done) {
         var spy = sinon.spy(wsdl, 'open_wsdl');
-        var options = _.assign({ disableCache: true }, meta.options);
+        var options = Object.assign({ disableCache: true }, meta.options);
         soap.createClientAsync(__dirname + '/wsdl/binding_document.wsdl', options)
         .then(function (client) {
           assert.ok(client);
@@ -1484,7 +1484,7 @@ var fs = require('fs'),
     describe('Client created with option normalizeNames', function(){
 
       it('should create node-style method with normalized name (a valid Javascript identifier)', function (done) {
-        soap.createClient(__dirname + '/wsdl/non_identifier_chars_in_operation.wsdl', _.assign({ normalizeNames: true }, meta.options), function (err, client) {
+        soap.createClient(__dirname + '/wsdl/non_identifier_chars_in_operation.wsdl', Object.assign({ normalizeNames: true }, meta.options), function (err, client) {
           assert.ok(client);
           assert.ifError(err);
           client.prefixed_MyOperation({},function(err, result){
@@ -1511,7 +1511,7 @@ var fs = require('fs'),
       });
 
       it('should create promise-style method with normalized name (a valid Javascript identifier)', function (done) {
-        soap.createClient(__dirname + '/wsdl/non_identifier_chars_in_operation.wsdl', _.assign({ normalizeNames: true }, meta.options), function (err, client) {
+        soap.createClient(__dirname + '/wsdl/non_identifier_chars_in_operation.wsdl', Object.assign({ normalizeNames: true }, meta.options), function (err, client) {
           assert.ok(client);
           assert.ifError(err);
           client.prefixed_MyOperationAsync({})
@@ -1525,7 +1525,7 @@ var fs = require('fs'),
       });
 
       it('should not create methods with invalid Javascript identifier', function (done) {
-        soap.createClient(__dirname + '/wsdl/non_identifier_chars_in_operation.wsdl', _.assign({ normalizeNames: true }, meta.options), function (err, client) {
+        soap.createClient(__dirname + '/wsdl/non_identifier_chars_in_operation.wsdl', Object.assign({ normalizeNames: true }, meta.options), function (err, client) {
           assert.ok(client);
           assert.ifError(err);
           assert.throws(function() {client['prefixed-MyOperationAsync']({});}, TypeError);

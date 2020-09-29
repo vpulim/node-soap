@@ -1,5 +1,3 @@
-var _ = require('lodash');
-
 var aliasedClientStubs = {};
 var clientStubs = {};
 
@@ -124,7 +122,7 @@ function registerClient(alias, urlToWsdl, clientStub) {
  * Resets state associated with clientStubs.
  */
 function reset() {
-  _.forEach(clientStubs, resetStubbedMethods);
+  Object.values(clientStubs).forEach(resetStubbedMethods);
   this.errOnCreateClient = false;
 }
 

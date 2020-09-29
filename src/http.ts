@@ -5,7 +5,6 @@
 
 import * as debugBuilder from 'debug';
 import * as httpNtlm from 'httpntlm';
-import * as _ from 'lodash';
 import * as req from 'request';
 import * as url from 'url';
 import * as uuid from 'uuid/v4';
@@ -66,7 +65,9 @@ export class HttpClient {
       'Host': host + (isNaN(port) ? '' : ':' + port),
     };
     const mergeOptions = ['headers'];
-    const attachments: IAttachment[] = exoptions.attachments || [];
+
+    const {attachments: _attachments, ...newExoptions } = exoptions;
+    const attachments: IAttachment[] = _attachments || [];
 
     if (typeof data === 'string' && attachments.length === 0 && !exoptions.forceMTOM) {
       headers['Content-Length'] = Buffer.byteLength(data, 'utf8');
@@ -120,7 +121,7 @@ export class HttpClient {
       options.body = data;
     }
 
-    for (const attr in _.omit(exoptions, ['attachments'])) {
+    for (const attr in newExoptions) {
       if (mergeOptions.indexOf(attr) !== -1) {
         for (const header in exoptions[attr]) {
           options[attr][header] = exoptions[attr][header];
