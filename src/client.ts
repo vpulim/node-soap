@@ -66,7 +66,7 @@ export class Client extends EventEmitter {
   private streamAllowed: boolean;
   private returnSaxStream: boolean;
   private normalizeNames: boolean;
-  private overridePromiseSuffix: string
+  private overridePromiseSuffix: string;
 
   constructor(wsdl: WSDL, endpoint?: string, options?: IOptions) {
     super();
@@ -245,7 +245,7 @@ export class Client extends EventEmitter {
           extraHeaders,
         );
       });
-    }
+    };
   }
 
   private _defineMethod(method: OperationElement, location: string): SoapMethod {
