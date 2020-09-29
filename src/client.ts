@@ -11,7 +11,7 @@ import getStream = require('get-stream');
 import { IncomingHttpHeaders } from 'http';
 import * as _ from 'lodash';
 import * as request from 'request';
-import { v4 as uuid4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import { HttpClient, Request } from './http';
 import { IHeaders, IOptions, ISecurity, SoapMethod } from './types';
 import { findPrefix } from './utils';
@@ -443,7 +443,7 @@ export class Client extends EventEmitter {
     this.lastRequest = xml;
     this.lastEndpoint = location;
 
-    const eid: string = options.exchangeId || uuid4();
+    const eid: string = options.exchangeId || uuidv4();
 
     this.emit('message', message, eid);
     this.emit('request', xml, eid);

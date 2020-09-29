@@ -7,7 +7,7 @@ import * as debugBuilder from 'debug';
 import * as httpNtlm from 'httpntlm';
 import * as req from 'request';
 import * as url from 'url';
-import * as uuid from 'uuid/v4';
+import {v4 as uuidv4} from 'uuid';
 import { IHeaders, IOptions } from './types';
 
 const debug = debugBuilder('node-soap');
@@ -87,7 +87,7 @@ export class HttpClient {
     };
 
     if (exoptions.forceMTOM || attachments.length > 0) {
-      const start = uuid();
+      const start = uuidv4();
       let action = null;
       if (headers['Content-Type'].indexOf('action') > -1) {
            for (const ct of headers['Content-Type'].split('; ')) {
@@ -97,7 +97,7 @@ export class HttpClient {
            }
       }
       headers['Content-Type'] =
-        'multipart/related; type="application/xop+xml"; start="<' + start + '>"; start-info="text/xml"; boundary=' + uuid();
+        'multipart/related; type="application/xop+xml"; start="<' + start + '>"; start-info="text/xml"; boundary=' + uuidv4();
       if (action) {
           headers['Content-Type'] = headers['Content-Type'] + '; ' + action;
       }

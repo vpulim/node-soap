@@ -1,4 +1,4 @@
-import { v4 as uuid4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import { SignedXml } from 'xml-crypto';
 import { ISecurity } from '../types';
 
@@ -25,7 +25,7 @@ function insertStr(src: string, dst: string, pos: number): string {
 }
 
 function generateId(): string {
-  return uuid4().replace(/-/gm, '');
+  return uuidv4().replace(/-/gm, '');
 }
 
 const oasisBaseUri = 'http://docs.oasis-open.org/wss/2004/01';
