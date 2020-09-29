@@ -4,7 +4,6 @@
  */
 
 import * as assert from 'assert';
-import * as BluebirdPromise from 'bluebird';
 import * as debugBuilder from 'debug';
 import { EventEmitter } from 'events';
 import getStream = require('get-stream');
@@ -13,7 +12,7 @@ import * as _ from 'lodash';
 import * as request from 'request';
 import { v4 as uuid4 } from 'uuid';
 import { HttpClient, Request } from './http';
-import { IHeaders, IOptions, ISecurity, SoapMethod } from './types';
+import { IHeaders, IOptions, ISecurity, SoapMethod, SoapMethodAsync } from './types';
 import { findPrefix } from './utils';
 import { WSDL } from './wsdl';
 import { IPort, OperationElement, ServiceElement } from './wsdl/elements';
@@ -74,12 +73,8 @@ export class Client extends EventEmitter {
     this.wsdl = wsdl;
     this._initializeOptions(options);
     this._initializeServices(endpoint);
+    this._overridePromiseSuffix = options.overridePromiseSuffix || 'Async';
     this.httpClient = options.httpClient || new HttpClient(options);
-    const promiseOptions: BluebirdPromise.PromisifyAllOptions<this> = { multiArgs: true };
-    if (options.overridePromiseSuffix) {
-      promiseOptions.suffix = options.overridePromiseSuffix;
-    }
-    BluebirdPromise.promisifyAll(this, promiseOptions);
   }
 
   /** add soapHeader to soap:Header node */
@@ -218,8 +213,36 @@ export class Client extends EventEmitter {
       def[name] = this._defineMethod(methods[name], location);
       const methodName = this.normalizeNames ? name.replace(nonIdentifierChars, '_') : name;
       this[methodName] = def[name];
+      const suffix = this._overridePromiseSuffix;
+      this[methodName + suffix] = this._promisifyMethod(def[name]);
     }
     return def;
+  }
+
+  private _promisifyMethod(method: SoapMethod): SoapMethodAsync {
+    return (args: any, options?: any, extraHeaders?: any) => {
+      return new Promise((resolve, reject) => {
+        const callback = (
+          err: any,
+          result: any,
+          rawResponse: any,
+          soapHeader: any,
+          rawRequest: any,
+        ) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve([result, rawResponse, soapHeader, rawRequest]);
+          }
+        };
+        method(
+          args,
+          callback,
+          options,
+          extraHeaders,
+        );
+      });
+    }
   }
 
   private _defineMethod(method: OperationElement, location: string): SoapMethod {
