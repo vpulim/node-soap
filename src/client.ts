@@ -70,10 +70,10 @@ export class Client extends EventEmitter {
   constructor(wsdl: WSDL, endpoint?: string, options?: IOptions) {
     super();
     options = options || {};
+    this._overridePromiseSuffix = options.overridePromiseSuffix || 'Async';
     this.wsdl = wsdl;
     this._initializeOptions(options);
     this._initializeServices(endpoint);
-    this._overridePromiseSuffix = options.overridePromiseSuffix || 'Async';
     this.httpClient = options.httpClient || new HttpClient(options);
   }
 
