@@ -103,7 +103,7 @@ describe('server receive complex type test', function () {
         url: url + '/GetVersion',
         method: 'POST',
         headers: {
-          SOAPAction: 'urn:uHSD_Intf-IHSDTPSClient#GetVersion',
+          'SOAPAction': 'urn:uHSD_Intf-IHSDTPSClient#GetVersion',
           'Content-Type': 'text/xml; charset="utf-8"',
         },
         body: requestXML,

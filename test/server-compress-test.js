@@ -93,7 +93,7 @@ describe('SOAP Server', function () {
           headers: {
             'content-type': 'text/xml; charset=utf-8',
             'content-encoding': 'gzip',
-            soapaction: '"DefaultNamespace"',
+            'soapaction': '"DefaultNamespace"',
           },
         },
         function (res) {

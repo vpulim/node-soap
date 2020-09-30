@@ -43,7 +43,8 @@
   "prettier": {
     "singleQuote": true,
     "printWidth": 100,
-    "trailingComma": "all"
+    "trailingComma": "all",
+    "quoteProps": "consistent"
   },
   "keywords": [
     "soap"

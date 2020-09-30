@@ -63,11 +63,11 @@ export class HttpClient {
     const method = data ? 'POST' : 'GET';
     const headers: IHeaders = {
       'User-Agent': 'node-soap/' + VERSION,
-      Accept: 'text/html,application/xhtml+xml,application/xml,text/xml;q=0.9,*/*;q=0.8',
+      'Accept': 'text/html,application/xhtml+xml,application/xml,text/xml;q=0.9,*/*;q=0.8',
       'Accept-Encoding': 'none',
       'Accept-Charset': 'utf-8',
-      Connection: exoptions.forever ? 'keep-alive' : 'close',
-      Host: host + (isNaN(port) ? '' : ':' + port),
+      'Connection': exoptions.forever ? 'keep-alive' : 'close',
+      'Host': host + (isNaN(port) ? '' : ':' + port),
     };
     const mergeOptions = ['headers'];
 
@@ -113,7 +113,7 @@ export class HttpClient {
         {
           'Content-Type': 'application/xop+xml; charset=UTF-8; type="text/xml"',
           'Content-ID': '<' + start + '>',
-          body: data,
+          'body': data,
         },
       ];
 
@@ -123,7 +123,7 @@ export class HttpClient {
           'Content-Transfer-Encoding': 'binary',
           'Content-ID': '<' + attachment.contentId + '>',
           'Content-Disposition': 'attachment; filename="' + attachment.name + '"',
-          body: attachment.body,
+          'body': attachment.body,
         });
       });
       options.multipart = multipart;

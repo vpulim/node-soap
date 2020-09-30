@@ -64,7 +64,7 @@ describe('Express server without middleware', function () {
         url: url + '/SayHello',
         method: 'POST',
         headers: {
-          SOAPAction: 'sayHello',
+          'SOAPAction': 'sayHello',
           'Content-Type': 'text/xml; charset="utf-8"',
         },
         body: requestXML,
@@ -172,7 +172,7 @@ describe('Express server with middleware', function () {
         url: url + '/SayHello',
         method: 'POST',
         headers: {
-          SOAPAction: 'sayHello',
+          'SOAPAction': 'sayHello',
           'Content-Type': 'text/xml; charset="utf-8"',
         },
         body: requestXML,
@@ -228,7 +228,7 @@ describe('Express server with bodyParser.json middleware', function () {
         url: url + '/SayHello',
         method: 'POST',
         headers: {
-          SOAPAction: 'sayHello',
+          'SOAPAction': 'sayHello',
           'Content-Type': 'text/xml; charset="utf-8"',
         },
         body: requestXML,

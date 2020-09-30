@@ -83,7 +83,7 @@ describe('server response event test', function () {
         url: url + '/SayHello',
         method: 'POST',
         headers: {
-          SOAPAction: 'sayHello',
+          'SOAPAction': 'sayHello',
           'Content-Type': 'text/xml; charset="utf-8"',
         },
         body: requestXML,

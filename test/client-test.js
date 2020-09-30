@@ -1605,7 +1605,7 @@ var fs = require('fs'),
             ':order': {
               orderDetails: {
                 ':unitNo': 1234,
-                items: [{ ':itemDesc': 'item1' }, { ':itemDesc': 'item2' }],
+                'items': [{ ':itemDesc': 'item1' }, { ':itemDesc': 'item2' }],
               },
             },
           };
