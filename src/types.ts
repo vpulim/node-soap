@@ -9,13 +9,7 @@ export interface IHeaders {
 export type ISoapMethod = SoapMethod;
 export type SoapMethod = (
   args: any,
-  callback: (
-    err: any,
-    result: any,
-    rawResponse: any,
-    soapHeader: any,
-    rawRequest: any
-  ) => void,
+  callback: (err: any, result: any, rawResponse: any, soapHeader: any, rawRequest: any) => void,
   options?: any,
   extraHeaders?: any
 ) => void;
@@ -92,10 +86,7 @@ export interface IWsdlBaseOptions {
     namespace: string;
     xmlnsAttributes?: IXmlAttribute[];
   };
-  ignoredNamespaces?:
-    | boolean
-    | string[]
-    | { namespaces?: string[]; override?: boolean };
+  ignoredNamespaces?: boolean | string[] | { namespaces?: string[]; override?: boolean };
   ignoreBaseNameSpaces?: boolean;
   /** escape special XML characters in SOAP message (e.g. &, >, < etc), default: true. */
   escapeXML?: boolean;

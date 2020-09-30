@@ -23,10 +23,7 @@ describe('NTLMSecurity', function () {
       instance.defaults.should.have.property('username', options.username);
       instance.defaults.should.have.property('password', options.password);
       instance.defaults.should.have.property('domain', options.domain);
-      instance.defaults.should.have.property(
-        'workstation',
-        options.workstation
-      );
+      instance.defaults.should.have.property('workstation', options.workstation);
       instance.defaults.should.have.property('ntlm', true);
     });
 

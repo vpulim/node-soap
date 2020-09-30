@@ -12,13 +12,7 @@ import * as _ from 'lodash';
 import * as request from 'request';
 import { v4 as uuidv4 } from 'uuid';
 import { HttpClient, Request } from './http';
-import {
-  IHeaders,
-  IOptions,
-  ISecurity,
-  SoapMethod,
-  SoapMethodAsync,
-} from './types';
+import { IHeaders, IOptions, ISecurity, SoapMethod, SoapMethodAsync } from './types';
 import { findPrefix } from './utils';
 import { WSDL } from './wsdl';
 import { IPort, OperationElement, ServiceElement } from './wsdl/elements';
@@ -47,10 +41,7 @@ export interface Client {
   /** Emitted when an erroneous response is received. */
   on(event: 'soapError', listener: (error, eid: string) => void): this;
   /** Emitted after a response is received. This is emitted for all responses (both success and errors). */
-  on(
-    event: 'response',
-    listener: (body: any, response: any, eid: string) => void
-  ): this;
+  on(event: 'response', listener: (body: any, response: any, eid: string) => void): this;
 }
 
 export class Client extends EventEmitter {
@@ -87,12 +78,7 @@ export class Client extends EventEmitter {
   }
 
   /** add soapHeader to soap:Header node */
-  public addSoapHeader(
-    soapHeader: any,
-    name?: string,
-    namespace?: any,
-    xmlns?: string
-  ): number {
+  public addSoapHeader(soapHeader: any, name?: string, namespace?: any, xmlns?: string): number {
     if (!this.soapHeaders) {
       this.soapHeaders = [];
     }
@@ -225,10 +211,7 @@ export class Client extends EventEmitter {
     const ports = service.ports;
     const def = {};
     for (const name in ports) {
-      def[name] = this._definePort(
-        ports[name],
-        endpoint ? endpoint : ports[name].location
-      );
+      def[name] = this._definePort(ports[name], endpoint ? endpoint : ports[name].location);
     }
     return def;
   }
@@ -242,9 +225,7 @@ export class Client extends EventEmitter {
     } = {};
     for (const name in methods) {
       def[name] = this._defineMethod(methods[name], location);
-      const methodName = this.normalizeNames
-        ? name.replace(nonIdentifierChars, '_')
-        : name;
+      const methodName = this.normalizeNames ? name.replace(nonIdentifierChars, '_') : name;
       this[methodName] = def[name];
       if (!nonIdentifierChars.test(methodName)) {
         const suffix = this.overridePromiseSuffix;
@@ -275,10 +256,7 @@ export class Client extends EventEmitter {
     };
   }
 
-  private _defineMethod(
-    method: OperationElement,
-    location: string
-  ): SoapMethod {
+  private _defineMethod(method: OperationElement, location: string): SoapMethod {
     let temp;
     return (args, callback, options, extraHeaders) => {
       if (typeof args === 'function') {
@@ -353,8 +331,7 @@ export class Client extends EventEmitter {
     let headers: any = {
       'Content-Type': 'text/xml; charset=utf-8',
     };
-    let xmlnsSoap =
-      'xmlns:' + envelopeKey + '="http://schemas.xmlsoap.org/soap/envelope/"';
+    let xmlnsSoap = 'xmlns:' + envelopeKey + '="http://schemas.xmlsoap.org/soap/envelope/"';
 
     const finish = (obj, body, response) => {
       let result;
@@ -388,8 +365,7 @@ export class Client extends EventEmitter {
       // 'Response', or 'Output', or 'Out'
       // This doesn't necessarily equal the ouput message name. See WSDL 1.1 Section 2.4.5
       if (!result) {
-        result =
-          obj.Body[output.$name.replace(/(?:Out(?:put)?|Response)$/, '')];
+        result = obj.Body[output.$name.replace(/(?:Out(?:put)?|Response)$/, '')];
       }
       if (!result) {
         ['Response', 'Out', 'Output'].forEach((term) => {
@@ -410,9 +386,7 @@ export class Client extends EventEmitter {
         //  When the output element cannot be looked up in the wsdl and the body is JSON
         //  instead of sending the error, we pass the body in the response.
         if (!output || !output.$lookupTypes) {
-          debug(
-            'Response element is not present. Unable to convert response xml to json.'
-          );
+          debug('Response element is not present. Unable to convert response xml to json.');
           //  If the response is JSON then return it as-is.
           const json = _.isObject(body) ? body : tryJSONparse(body);
           if (json) {
@@ -432,16 +406,12 @@ export class Client extends EventEmitter {
     } else if (method.soapAction !== undefined && method.soapAction !== null) {
       soapAction = method.soapAction;
     } else {
-      soapAction =
-        (ns.lastIndexOf('/') !== ns.length - 1 ? ns + '/' : ns) + name;
+      soapAction = (ns.lastIndexOf('/') !== ns.length - 1 ? ns + '/' : ns) + name;
     }
 
     if (this.wsdl.options.forceSoap12Headers) {
-      headers[
-        'Content-Type'
-      ] = `application/soap+xml; charset=utf-8; action="${soapAction}"`;
-      xmlnsSoap =
-        'xmlns:' + envelopeKey + '="http://www.w3.org/2003/05/soap-envelope"';
+      headers['Content-Type'] = `application/soap+xml; charset=utf-8; action="${soapAction}"`;
+      xmlnsSoap = 'xmlns:' + envelopeKey + '="http://www.w3.org/2003/05/soap-envelope"';
     } else {
       headers.SOAPAction = '"' + soapAction + '"';
     }
@@ -468,29 +438,13 @@ export class Client extends EventEmitter {
       this.security.addOptions(options);
     }
 
-    if (
-      style === 'rpc' &&
-      (input.parts || input.name === 'element' || args === null)
-    ) {
-      assert.ok(
-        !style || style === 'rpc',
-        'invalid message definition for document style binding'
-      );
-      message = this.wsdl.objectToRpcXML(
-        name,
-        args,
-        alias,
-        ns,
-        input.name !== 'element'
-      );
+    if (style === 'rpc' && (input.parts || input.name === 'element' || args === null)) {
+      assert.ok(!style || style === 'rpc', 'invalid message definition for document style binding');
+      message = this.wsdl.objectToRpcXML(name, args, alias, ns, input.name !== 'element');
       method.inputSoap === 'encoded' &&
-        (encoding =
-          'soap:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" ');
+        (encoding = 'soap:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" ');
     } else {
-      assert.ok(
-        !style || style === 'document',
-        'invalid message definition for rpc style binding'
-      );
+      assert.ok(!style || style === 'document', 'invalid message definition for rpc style binding');
       // pass `input.$lookupType` if `input.$type` could not be found
       message = this.wsdl.objectToDocumentXML(
         input.$name,
@@ -532,9 +486,7 @@ export class Client extends EventEmitter {
           (this.wsdl.xmlnsInHeader ? ' ' + this.wsdl.xmlnsInHeader : '') +
           '>' +
           (decodedHeaders ? decodedHeaders : '') +
-          (this.security && !this.security.postProcess
-            ? this.security.toXML()
-            : '') +
+          (this.security && !this.security.postProcess ? this.security.toXML() : '') +
           '</' +
           envelopeKey +
           ':Header>'
@@ -578,19 +530,10 @@ export class Client extends EventEmitter {
       }
     };
 
-    if (
-      this.streamAllowed &&
-      typeof this.httpClient.requestStream === 'function'
-    ) {
+    if (this.streamAllowed && typeof this.httpClient.requestStream === 'function') {
       callback = _.once(callback);
       const startTime = Date.now();
-      req = this.httpClient.requestStream(
-        location,
-        xml,
-        headers,
-        options,
-        this
-      );
+      req = this.httpClient.requestStream(location, xml, headers, options, this);
       this.lastRequestHeaders = req.headers;
       const onError = (err) => {
         this.lastResponse = null;

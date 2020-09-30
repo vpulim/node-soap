@@ -86,10 +86,7 @@ describe('server receive complex type test', function () {
       });
 
       url = 'http://' + server.address().address + ':' + server.address().port;
-      if (
-        server.address().address === '0.0.0.0' ||
-        server.address().address === '::'
-      ) {
+      if (server.address().address === '0.0.0.0' || server.address().address === '::') {
         url = 'http://127.0.0.1:' + server.address().port;
       }
       done();

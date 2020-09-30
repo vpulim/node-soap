@@ -47,10 +47,7 @@ describe('Express server without middleware', function () {
     server = expressServer.listen(51515, function () {
       var soapServer = soap.listen(expressServer, '/SayHello', service, wsdl);
       url = 'http://' + server.address().address + ':' + server.address().port;
-      if (
-        server.address().address === '0.0.0.0' ||
-        server.address().address === '::'
-      ) {
+      if (server.address().address === '0.0.0.0' || server.address().address === '::') {
         url = 'http://127.0.0.1:' + server.address().port;
       }
       done();
@@ -157,10 +154,7 @@ describe('Express server with middleware', function () {
       var soapServer = soap.listen(expressServer, '/SayHello', service, wsdl);
       url = 'http://' + server.address().address + ':' + server.address().port;
 
-      if (
-        server.address().address === '0.0.0.0' ||
-        server.address().address === '::'
-      ) {
+      if (server.address().address === '0.0.0.0' || server.address().address === '::') {
         url = 'http://127.0.0.1:' + server.address().port;
       }
 
@@ -216,10 +210,7 @@ describe('Express server with bodyParser.json middleware', function () {
       var soapServer = soap.listen(expressServer, '/SayHello', service, wsdl);
       url = 'http://' + server.address().address + ':' + server.address().port;
 
-      if (
-        server.address().address === '0.0.0.0' ||
-        server.address().address === '::'
-      ) {
+      if (server.address().address === '0.0.0.0' || server.address().address === '::') {
         url = 'http://127.0.0.1:' + server.address().port;
       }
 

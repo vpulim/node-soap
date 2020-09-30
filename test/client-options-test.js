@@ -20,20 +20,16 @@ describe('SOAP Client', function () {
   };
 
   it('should set WSDL options to those specified in createClient', function (done) {
-    soap.createClient(
-      __dirname + '/wsdl/json_response.wsdl',
-      options,
-      function (err, client) {
-        assert.ok(client);
-        assert.ifError(err);
+    soap.createClient(__dirname + '/wsdl/json_response.wsdl', options, function (err, client) {
+      assert.ok(client);
+      assert.ifError(err);
 
-        assert.ok(client.wsdl.options.ignoredNamespaces[0] === 'ignoreThisNS');
-        assert.ok(client.wsdl.options.overrideRootElement.namespace === 'tns');
-        assert.ok(typeof client.MyOperationTest === 'function');
-        assert.ok(client.wsdl.options.request, 'customRequest');
-        assert.ok(client.wsdl.options.namespaceArrayElements === true);
-        done();
-      }
-    );
+      assert.ok(client.wsdl.options.ignoredNamespaces[0] === 'ignoreThisNS');
+      assert.ok(client.wsdl.options.overrideRootElement.namespace === 'tns');
+      assert.ok(typeof client.MyOperationTest === 'function');
+      assert.ok(client.wsdl.options.request, 'customRequest');
+      assert.ok(client.wsdl.options.namespaceArrayElements === true);
+      done();
+    });
   });
 });

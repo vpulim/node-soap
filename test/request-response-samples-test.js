@@ -41,8 +41,7 @@ var requestContext = {
       chunks.push(chunk.toString().replace(/\r?\n$/m, ''));
     });
     req.on('end', function () {
-      if (!requestContext.expectedRequest)
-        return res.end(requestContext.responseToSend);
+      if (!requestContext.expectedRequest) return res.end(requestContext.responseToSend);
 
       var actualRequest = normalizeWhiteSpace(chunks.join(''));
       var expectedRequest = normalizeWhiteSpace(requestContext.expectedRequest);
@@ -102,8 +101,7 @@ tests.forEach(function (test) {
 
   //responseJSON is optional
   if (fs.existsSync(responseJSON)) responseJSON = require(responseJSON);
-  else if (fs.existsSync(responseJSONError))
-    responseJSON = require(responseJSONError);
+  else if (fs.existsSync(responseJSONError)) responseJSON = require(responseJSONError);
   else responseJSON = null;
 
   //responseSoapHeaderJSON is optional
@@ -116,8 +114,7 @@ tests.forEach(function (test) {
   else requestXML = null;
 
   //responseXML is optional
-  if (fs.existsSync(responseXML))
-    responseXML = '' + fs.readFileSync(responseXML);
+  if (fs.existsSync(responseXML)) responseXML = '' + fs.readFileSync(responseXML);
   else responseXML = null;
 
   //requestJSON is required as node-soap will expect a request object anyway
@@ -129,8 +126,7 @@ tests.forEach(function (test) {
 
   //wsdlOptions is optional
   if (fs.existsSync(wsdlOptionsFile)) wsdlOptions = require(wsdlOptionsFile);
-  else if (fs.existsSync(wsdlJSOptionsFile))
-    wsdlOptions = require(wsdlJSOptionsFile);
+  else if (fs.existsSync(wsdlJSOptionsFile)) wsdlOptions = require(wsdlJSOptionsFile);
   else wsdlOptions = {};
 
   generateTest(
@@ -203,21 +199,14 @@ function generateTest(
         }
         if (securityJSON && securityJSON.type === 'ws') {
           client.setSecurity(
-            new WSSecurity(
-              securityJSON.username,
-              securityJSON.password,
-              securityJSON.options
-            )
+            new WSSecurity(securityJSON.username, securityJSON.password, securityJSON.options)
           );
         }
 
         //throw more meaningful error
         if (typeof client[methodName] !== 'function') {
           throw new Error(
-            'method ' +
-              methodName +
-              ' does not exists in wsdl specified in test wsdl: ' +
-              wsdlPath
+            'method ' + methodName + ' does not exists in wsdl specified in test wsdl: ' + wsdlPath
           );
         }
 
@@ -259,10 +248,7 @@ function cbCaller(
             JSON.stringify(responseJSON)
           );
           if (responseSoapHeaderJSON) {
-            assert.equal(
-              JSON.stringify(soapHeader),
-              JSON.stringify(responseSoapHeaderJSON)
-            );
+            assert.equal(JSON.stringify(soapHeader), JSON.stringify(responseSoapHeaderJSON));
           }
         }
       }
@@ -294,10 +280,7 @@ function promiseCaller(
           JSON.stringify(responseJSON)
         );
         if (responseSoapHeaderJSON) {
-          assert.equal(
-            JSON.stringify(soapHeader),
-            JSON.stringify(responseSoapHeaderJSON)
-          );
+          assert.equal(JSON.stringify(soapHeader), JSON.stringify(responseSoapHeaderJSON));
         }
       }
     })

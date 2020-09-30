@@ -44,13 +44,9 @@ describe('No envelope and body elements', function () {
   it('should throw an error when Body and Envelope are missing', function (done) {
     var requestXML =
       '<sayHello xmlns="http://www.examples.com/wsdl/HelloService.wsdl"><firstName>tarun</firstName></sayHello>';
-    var url =
-      'http://' + server.address().address + ':' + server.address().port;
+    var url = 'http://' + server.address().address + ':' + server.address().port;
 
-    if (
-      server.address().address === '0.0.0.0' ||
-      server.address().address === '::'
-    ) {
+    if (server.address().address === '0.0.0.0' || server.address().address === '::') {
       url = 'http://127.0.0.1:' + server.address().port;
     }
 
@@ -68,10 +64,7 @@ describe('No envelope and body elements', function () {
         if (err) {
           throw err;
         }
-        assert.equal(
-          body.indexOf('Failed to parse the SOAP Message body') !== -1,
-          true
-        );
+        assert.equal(body.indexOf('Failed to parse the SOAP Message body') !== -1, true);
         done();
       }
     );

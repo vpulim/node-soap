@@ -35,12 +35,8 @@ describe('ClientSSLSecurity', function () {
   });
 
   it('should accept a Buffer as argument for the key or cert', function () {
-    var certBuffer = fs.readFileSync(
-        join(__dirname, '..', 'certs', 'agent2-cert.pem')
-      ),
-      keyBuffer = fs.readFileSync(
-        join(__dirname, '..', 'certs', 'agent2-key.pem')
-      ),
+    var certBuffer = fs.readFileSync(join(__dirname, '..', 'certs', 'agent2-cert.pem')),
+      keyBuffer = fs.readFileSync(join(__dirname, '..', 'certs', 'agent2-key.pem')),
       instance;
 
     instance = new ClientSSLSecurity(keyBuffer, certBuffer, certBuffer);
@@ -52,12 +48,8 @@ describe('ClientSSLSecurity', function () {
   it('should accept a String as argument for the key or cert', function () {
     var certString = join(__dirname, '..', 'certs', 'agent2-cert.pem'),
       keyString = join(__dirname, '..', 'certs', 'agent2-key.pem'),
-      certBuffer = fs.readFileSync(
-        join(__dirname, '..', 'certs', 'agent2-cert.pem')
-      ),
-      keyBuffer = fs.readFileSync(
-        join(__dirname, '..', 'certs', 'agent2-key.pem')
-      ),
+      certBuffer = fs.readFileSync(join(__dirname, '..', 'certs', 'agent2-cert.pem')),
+      keyBuffer = fs.readFileSync(join(__dirname, '..', 'certs', 'agent2-key.pem')),
       instance;
 
     instance = new ClientSSLSecurity(keyString, certString, certString);
@@ -87,12 +79,8 @@ describe('ClientSSLSecurity', function () {
   });
 
   it('should return blank string when call toXml', function () {
-    var certBuffer = fs.readFileSync(
-        join(__dirname, '..', 'certs', 'agent2-cert.pem')
-      ),
-      keyBuffer = fs.readFileSync(
-        join(__dirname, '..', 'certs', 'agent2-key.pem')
-      ),
+    var certBuffer = fs.readFileSync(join(__dirname, '..', 'certs', 'agent2-cert.pem')),
+      keyBuffer = fs.readFileSync(join(__dirname, '..', 'certs', 'agent2-key.pem')),
       instance;
 
     instance = new ClientSSLSecurity(keyBuffer, certBuffer, certBuffer);

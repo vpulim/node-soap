@@ -35,11 +35,7 @@ function createCache() {
   const cache: {
     [key: string]: WSDL;
   } = {};
-  return (
-    key: string,
-    load: (cb: WSDLCallback) => any,
-    callback: WSDLCallback
-  ) => {
+  return (key: string, load: (cb: WSDLCallback) => any, callback: WSDLCallback) => {
     if (!cache[key]) {
       load((err, result) => {
         if (err) {
@@ -75,11 +71,7 @@ function _requestWSDL(url: string, options: IOptions, callback: WSDLCallback) {
 
 export type CreateClientCallback = (err: any, client: Client) => void;
 
-export function createClient(
-  url: string,
-  callback: CreateClientCallback,
-  endpoint?: string
-): void;
+export function createClient(url: string, callback: CreateClientCallback, endpoint?: string): void;
 export function createClient(
   url: string,
   options: IOptions,

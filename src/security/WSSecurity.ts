@@ -23,11 +23,7 @@ export class WSSecurity implements ISecurity {
   private _actor: string;
   private _mustUnderstand: boolean;
 
-  constructor(
-    username: string,
-    password: string,
-    options?: string | IWSSecurityOptions
-  ) {
+  constructor(username: string, password: string, options?: string | IWSSecurityOptions) {
     options = options || {};
     this._username = username;
     this._password = password;
@@ -36,9 +32,7 @@ export class WSSecurity implements ISecurity {
       this._passwordType = options ? options : 'PasswordText';
       options = {};
     } else {
-      this._passwordType = options.passwordType
-        ? options.passwordType
-        : 'PasswordText';
+      this._passwordType = options.passwordType ? options.passwordType : 'PasswordText';
     }
 
     if (validPasswordTypes.indexOf(this._passwordType) === -1) {
@@ -148,9 +142,7 @@ export class WSSecurity implements ISecurity {
       xmlEscape(this._username) +
       '</wsse:Username>' +
       password +
-      (this._hasTokenCreated
-        ? '<wsu:Created>' + created + '</wsu:Created>'
-        : '') +
+      (this._hasTokenCreated ? '<wsu:Created>' + created + '</wsu:Created>' : '') +
       '</wsse:UsernameToken>' +
       '</wsse:Security>'
     );

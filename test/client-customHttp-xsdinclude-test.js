@@ -40,13 +40,7 @@ it('should allow customization of httpClient, the wsdl file, and associated data
 
   util.inherits(MyHttpClient, httpClient);
 
-  MyHttpClient.prototype.request = function (
-    rurl,
-    data,
-    callback,
-    exheaders,
-    exoptions
-  ) {
+  MyHttpClient.prototype.request = function (rurl, data, callback, exheaders, exoptions) {
     var self = this;
     var options = self.buildRequest(rurl, data, exheaders, exoptions);
     //Specify agent to use
@@ -67,17 +61,11 @@ it('should allow customization of httpClient, the wsdl file, and associated data
 
   var httpCustomClient = new MyHttpClient(
     {},
-    createSocketStream(
-      __dirname + '/wsdl/xsdinclude/xsd_include_http.wsdl',
-      2708
-    ),
+    createSocketStream(__dirname + '/wsdl/xsdinclude/xsd_include_http.wsdl', 2708),
     createSocketStream(__dirname + '/wsdl/xsdinclude/types.xsd', 982)
   );
   var url = 'http://localhost:50000/Dummy.asmx?wsdl';
-  soap.createClient(url, { httpClient: httpCustomClient }, function (
-    err,
-    client
-  ) {
+  soap.createClient(url, { httpClient: httpCustomClient }, function (err, client) {
     assert.ok(client);
     assert.ifError(err);
     assert.equal(client.httpClient, httpCustomClient);

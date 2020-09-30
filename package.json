@@ -41,7 +41,8 @@
     "test": "mocha --timeout 15000 --bail --exit test/*-test.js test/security/*.js"
   },
   "prettier": {
-    "singleQuote": true
+    "singleQuote": true,
+    "printWidth": 100
   },
   "keywords": [
     "soap"

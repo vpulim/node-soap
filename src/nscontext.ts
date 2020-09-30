@@ -122,11 +122,7 @@ export class NamespaceContext {
    * @returns {boolean} true if the mapping is added or false if the mapping
    * already exists
    */
-  public addNamespace(
-    prefix: string,
-    nsUri: string,
-    localOnly?: boolean
-  ): boolean {
+  public addNamespace(prefix: string, nsUri: string, localOnly?: boolean): boolean {
     if (this.getNamespaceURI(prefix, localOnly) === nsUri) {
       return false;
     }
@@ -173,9 +169,7 @@ export class NamespaceContext {
    * @returns {String} Namespace URI
    */
   public getNamespaceURI(prefix: string, localOnly?: boolean): string {
-    return (
-      this.currentScope && this.currentScope.getNamespaceURI(prefix, localOnly)
-    );
+    return this.currentScope && this.currentScope.getNamespaceURI(prefix, localOnly);
   }
 
   /**

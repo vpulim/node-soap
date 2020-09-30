@@ -59,16 +59,11 @@ export class HttpClient {
     const secure = curl.protocol === 'https:';
     const host = curl.hostname;
     const port = parseInt(curl.port, 10);
-    const path = [
-      curl.pathname || '/',
-      curl.search || '',
-      curl.hash || '',
-    ].join('');
+    const path = [curl.pathname || '/', curl.search || '', curl.hash || ''].join('');
     const method = data ? 'POST' : 'GET';
     const headers: IHeaders = {
       'User-Agent': 'node-soap/' + VERSION,
-      Accept:
-        'text/html,application/xhtml+xml,application/xml,text/xml;q=0.9,*/*;q=0.8',
+      Accept: 'text/html,application/xhtml+xml,application/xml,text/xml;q=0.9,*/*;q=0.8',
       'Accept-Encoding': 'none',
       'Accept-Charset': 'utf-8',
       Connection: exoptions.forever ? 'keep-alive' : 'close',
@@ -79,11 +74,7 @@ export class HttpClient {
     const { attachments: _attachments, ...newExoptions } = exoptions;
     const attachments: IAttachment[] = _attachments || [];
 
-    if (
-      typeof data === 'string' &&
-      attachments.length === 0 &&
-      !exoptions.forceMTOM
-    ) {
+    if (typeof data === 'string' && attachments.length === 0 && !exoptions.forceMTOM) {
       headers['Content-Length'] = Buffer.byteLength(data, 'utf8');
       headers['Content-Type'] = 'application/x-www-form-urlencoded';
     }
@@ -131,8 +122,7 @@ export class HttpClient {
           'Content-Type': attachment.mimetype,
           'Content-Transfer-Encoding': 'binary',
           'Content-ID': '<' + attachment.contentId + '>',
-          'Content-Disposition':
-            'attachment; filename="' + attachment.name + '"',
+          'Content-Disposition': 'attachment; filename="' + attachment.name + '"',
           body: attachment.body,
         });
       });
@@ -168,9 +158,7 @@ export class HttpClient {
       // envelope.
       const match = body
         .replace(/<!--[\s\S]*?-->/, '')
-        .match(
-          /(?:<\?[^?]*\?>[\s]*)?<([^:]*):Envelope([\S\s]*)<\/\1:Envelope>/i
-        );
+        .match(/(?:<\?[^?]*\?>[\s]*)?<([^:]*):Envelope([\S\s]*)<\/\1:Envelope>/i);
       if (match) {
         body = match[0];
       }

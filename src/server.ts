@@ -68,20 +68,11 @@ export interface Server {
   emit(event: 'response', headers: any, methodName: string): boolean;
 
   /** Emitted for every received messages. */
-  on(
-    event: 'request',
-    listener: (request: any, methodName: string) => void
-  ): this;
+  on(event: 'request', listener: (request: any, methodName: string) => void): this;
   /** Emitted when the SOAP Headers are not empty. */
-  on(
-    event: 'headers',
-    listener: (headers: any, methodName: string) => void
-  ): this;
+  on(event: 'headers', listener: (headers: any, methodName: string) => void): this;
   /** Emitted before sending SOAP response. */
-  on(
-    event: 'response',
-    listener: (response: any, methodName: string) => void
-  ): this;
+  on(event: 'response', listener: (response: any, methodName: string) => void): this;
 }
 
 interface IExecuteMethodOptions {
@@ -134,9 +125,7 @@ export class Server extends EventEmitter {
     this.returnFault = options && options.returnFault;
     this.onewayOptions = (options && options.oneWay) || {};
     this.enableChunkedEncoding =
-      options.enableChunkedEncoding === undefined
-        ? true
-        : !!options.enableChunkedEncoding;
+      options.enableChunkedEncoding === undefined ? true : !!options.enableChunkedEncoding;
     this.callback = options.callback ? options.callback : () => {};
     if (path[path.length - 1] !== '/') {
       path += '/';
@@ -183,12 +172,7 @@ export class Server extends EventEmitter {
     this._initializeOptions(options);
   }
 
-  public addSoapHeader(
-    soapHeader: any,
-    name?: string,
-    namespace?: any,
-    xmlns?: string
-  ): number {
+  public addSoapHeader(soapHeader: any, name?: string, namespace?: any, xmlns?: string): number {
     if (!this.soapHeaders) {
       this.soapHeaders = [];
     }
@@ -271,11 +255,7 @@ export class Server extends EventEmitter {
           new Date().toISOString()
         );
       } else {
-        error = err.stack
-          ? this.suppressStack === true
-            ? err.message
-            : err.stack
-          : err;
+        error = err.stack ? (this.suppressStack === true ? err.message : err.stack) : err;
         this._sendHttpResponse(res, /* statusCode */ 500, error);
         if (typeof this.log === 'function') {
           this.log('error', error);
@@ -335,11 +315,7 @@ export class Server extends EventEmitter {
     }
   }
 
-  private _process(
-    input,
-    req: Request,
-    cb: (result: any, statusCode?: number) => any
-  ) {
+  private _process(input, req: Request, cb: (result: any, statusCode?: number) => any) {
     const pathname = url.parse(req.url).pathname.replace(/\/$/, '');
     const obj = this.wsdl.xmlToObject(input);
     const body = obj.Body;
@@ -348,8 +324,7 @@ export class Server extends EventEmitter {
     let methodName: string;
     let serviceName: string;
     let portName: string;
-    const includeTimestamp =
-      obj.Header && obj.Header.Security && obj.Header.Security.Timestamp;
+    const includeTimestamp = obj.Header && obj.Header.Security && obj.Header.Security.Timestamp;
     const authenticate =
       this.authenticate ||
       function defaultAuthenticate() {
@@ -385,15 +360,10 @@ export class Server extends EventEmitter {
           for (name in ports) {
             portName = name;
             const port = ports[portName];
-            const portPathname = url
-              .parse(port.location)
-              .pathname.replace(/\/$/, '');
+            const portPathname = url.parse(port.location).pathname.replace(/\/$/, '');
 
             if (typeof this.log === 'function') {
-              this.log(
-                'info',
-                'Trying ' + portName + ' from path ' + portPathname
-              );
+              this.log('info', 'Trying ' + portName + ' from path ' + portPathname);
             }
 
             if (portPathname === pathname) {
@@ -416,9 +386,7 @@ export class Server extends EventEmitter {
       try {
         if (binding.style === 'rpc') {
           methodName =
-            Object.keys(body)[0] === 'attributes'
-              ? Object.keys(body)[1]
-              : Object.keys(body)[0];
+            Object.keys(body)[0] === 'attributes' ? Object.keys(body)[1] : Object.keys(body)[0];
 
           this.emit('request', obj, methodName);
           if (headers) {
@@ -440,9 +408,7 @@ export class Server extends EventEmitter {
           );
         } else {
           const messageElemName =
-            Object.keys(body)[0] === 'attributes'
-              ? Object.keys(body)[1]
-              : Object.keys(body)[0];
+            Object.keys(body)[0] === 'attributes' ? Object.keys(body)[1] : Object.keys(body)[0];
           const pair = binding.topElements[messageElemName];
 
           this.emit('request', obj, pair.methodName);
@@ -633,9 +599,9 @@ export class Server extends EventEmitter {
           this.wsdl.definitions.$targetNamespace
         );
       } else {
-        const element = this.wsdl.definitions.services[serviceName].ports[
-          portName
-        ].binding.methods[methodName].output;
+        const element = this.wsdl.definitions.services[serviceName].ports[portName].binding.methods[
+          methodName
+        ].output;
         body = this.wsdl.objectToDocumentXML(
           outputName,
           result,
@@ -647,8 +613,8 @@ export class Server extends EventEmitter {
     };
 
     if (
-      !this.wsdl.definitions.services[serviceName].ports[portName].binding
-        .methods[methodName].output
+      !this.wsdl.definitions.services[serviceName].ports[portName].binding.methods[methodName]
+        .output
     ) {
       // no output defined = one-way operation so return empty response
       handled = true;

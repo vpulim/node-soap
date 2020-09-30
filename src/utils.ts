@@ -1,10 +1,6 @@
 import * as crypto from 'crypto';
 
-export function passwordDigest(
-  nonce: string,
-  created: string,
-  password: string
-): string {
+export function passwordDigest(nonce: string, created: string, password: string): string {
   // digest = base64 ( sha1 ( nonce + created + password ) )
   const pwHash = crypto.createHash('sha1');
 

@@ -42,9 +42,7 @@ describe('ClientSSLSecurityPFX', function () {
 
   xit('should be usable in a request', function (done) {
     var https = require('https');
-    var pfkBuffer = fs.readFileSync(
-        join(__dirname, '..', 'certs', 'client-password.pfx')
-      ),
+    var pfkBuffer = fs.readFileSync(join(__dirname, '..', 'certs', 'client-password.pfx')),
       instance;
 
     instance = new ClientSSLSecurityPFX(pfkBuffer, 'test2test');
@@ -53,9 +51,7 @@ describe('ClientSSLSecurityPFX', function () {
       port: 1338,
       requestCert: true,
       rejectUnauthorized: false,
-      pfx: fs.readFileSync(
-        join(__dirname, '..', 'certs', 'server-password.pfx')
-      ),
+      pfx: fs.readFileSync(join(__dirname, '..', 'certs', 'server-password.pfx')),
       passphrase: 'test2test',
     };
     var options = {
@@ -88,9 +84,7 @@ describe('ClientSSLSecurityPFX', function () {
   });
 
   it('should accept a passphrase as argument for the pfx cert', function () {
-    var pfkBuffer = fs.readFileSync(
-        join(__dirname, '..', 'certs', 'client-password.pfx')
-      ),
+    var pfkBuffer = fs.readFileSync(join(__dirname, '..', 'certs', 'client-password.pfx')),
       instance;
 
     instance = new ClientSSLSecurityPFX(pfkBuffer, 'test2est');
@@ -99,9 +93,7 @@ describe('ClientSSLSecurityPFX', function () {
   });
 
   it('should accept a Buffer as argument for the pfx cert', function () {
-    var pfkBuffer = fs.readFileSync(
-        join(__dirname, '..', 'certs', 'pfk-buffer.pfx')
-      ),
+    var pfkBuffer = fs.readFileSync(join(__dirname, '..', 'certs', 'pfk-buffer.pfx')),
       instance;
 
     instance = new ClientSSLSecurityPFX(pfkBuffer);
@@ -109,9 +101,7 @@ describe('ClientSSLSecurityPFX', function () {
   });
 
   it('should return a blank when toXML is called', function () {
-    var pfkBuffer = fs.readFileSync(
-        join(__dirname, '..', 'certs', 'pfk-buffer.pfx')
-      ),
+    var pfkBuffer = fs.readFileSync(join(__dirname, '..', 'certs', 'pfk-buffer.pfx')),
       instance;
 
     instance = new ClientSSLSecurityPFX(pfkBuffer);
@@ -120,21 +110,15 @@ describe('ClientSSLSecurityPFX', function () {
   });
 
   it('should accept a String as argument for the pfx cert', function () {
-    var pfkBuffer = fs.readFileSync(
-        join(__dirname, '..', 'certs', 'pfk-buffer.pfx')
-      ),
+    var pfkBuffer = fs.readFileSync(join(__dirname, '..', 'certs', 'pfk-buffer.pfx')),
       instance;
 
-    instance = new ClientSSLSecurityPFX(
-      join(__dirname, '..', 'certs', 'pfk-buffer.pfx')
-    );
+    instance = new ClientSSLSecurityPFX(join(__dirname, '..', 'certs', 'pfk-buffer.pfx'));
     instance.should.have.property('pfx', pfkBuffer);
   });
 
   it('should have an options with addOptions', function () {
-    var pfkBuffer = fs.readFileSync(
-        join(__dirname, '..', 'certs', 'client-password.pfx')
-      ),
+    var pfkBuffer = fs.readFileSync(join(__dirname, '..', 'certs', 'client-password.pfx')),
       instance;
 
     instance = new ClientSSLSecurityPFX(pfkBuffer, 'test2est');

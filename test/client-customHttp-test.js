@@ -53,13 +53,7 @@ it('should allow customization of httpClient and the wsdl file download should p
 
   util.inherits(MyHttpClient, httpClient);
 
-  MyHttpClient.prototype.request = function (
-    rurl,
-    data,
-    callback,
-    exheaders,
-    exoptions
-  ) {
+  MyHttpClient.prototype.request = function (rurl, data, callback, exheaders, exoptions) {
     var self = this;
     var options = self.buildRequest(rurl, data, exheaders, exoptions);
     //Specify agent to use
@@ -78,9 +72,7 @@ it('should allow customization of httpClient and the wsdl file download should p
     return req;
   };
 
-  var wsdl = fs
-    .readFileSync('./test/wsdl/default_namespace.wsdl')
-    .toString('utf8');
+  var wsdl = fs.readFileSync('./test/wsdl/default_namespace.wsdl').toString('utf8');
   //Should be able to read from stream the request
   httpReqStream.once('readable', function readRequest() {
     var chunk = httpReqStream.read();
@@ -102,10 +94,7 @@ it('should allow customization of httpClient and the wsdl file download should p
 
   var httpCustomClient = new MyHttpClient({}, socketStream);
   var url = 'http://localhost:50000/Platform.asmx?wsdl';
-  soap.createClient(url, { httpClient: httpCustomClient }, function (
-    err,
-    client
-  ) {
+  soap.createClient(url, { httpClient: httpCustomClient }, function (err, client) {
     assert.ok(client);
     assert.ifError(err);
     assert.equal(client.httpClient, httpCustomClient);

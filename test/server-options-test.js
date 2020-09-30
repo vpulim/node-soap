@@ -77,10 +77,7 @@ test.service = {
 
 describe('SOAP Server with Options', function () {
   before(function (done) {
-    fs.readFile(__dirname + '/wsdl/strict/stockquote.wsdl', 'utf8', function (
-      err,
-      data
-    ) {
+    fs.readFile(__dirname + '/wsdl/strict/stockquote.wsdl', 'utf8', function (err, data) {
       assert.ifError(err);
       test.wsdl = data;
       done();
@@ -128,16 +125,12 @@ describe('SOAP Server with Options', function () {
 
   it('should start server with callback as normal parameter', function (done) {
     test.server.listen(15099, null, null, function () {
-      test.soapServer = soap.listen(
-        test.server,
-        '/stockquote',
-        test.service,
-        test.wsdl,
-        function (err) {
-          assert.ifError(err);
-          done();
-        }
-      );
+      test.soapServer = soap.listen(test.server, '/stockquote', test.service, test.wsdl, function (
+        err
+      ) {
+        assert.ifError(err);
+        done();
+      });
     });
   });
 
@@ -155,18 +148,11 @@ describe('SOAP Server with Options', function () {
         test.service,
         test.wsdl
       );
-      test.baseUrl =
-        'http://' +
-        test.server.address().address +
-        ':' +
-        test.server.address().port;
+      test.baseUrl = 'http://' + test.server.address().address + ':' + test.server.address().port;
 
       //windows return 0.0.0.0 as address and that is not
       //valid to use in a request
-      if (
-        test.server.address().address === '0.0.0.0' ||
-        test.server.address().address === '::'
-      ) {
+      if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
         test.baseUrl = 'http://127.0.0.1:' + test.server.address().port;
       }
       // console.log(test.baseUrl);
@@ -192,18 +178,11 @@ describe('SOAP Server with Options', function () {
         test.service,
         test.wsdl
       );
-      test.baseUrl =
-        'http://' +
-        test.server.address().address +
-        ':' +
-        test.server.address().port;
+      test.baseUrl = 'http://' + test.server.address().address + ':' + test.server.address().port;
 
       //windows return 0.0.0.0 as address and that is not
       //valid to use in a request
-      if (
-        test.server.address().address === '0.0.0.0' ||
-        test.server.address().address === '::'
-      ) {
+      if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
         test.baseUrl = 'http://127.0.0.1:' + test.server.address().port;
       }
       request(test.baseUrl, function (err, res, body) {
@@ -230,31 +209,17 @@ describe('SOAP Server with Options', function () {
         test.service,
         test.wsdl
       );
-      test.baseUrl =
-        'http://' +
-        test.server.address().address +
-        ':' +
-        test.server.address().port;
+      test.baseUrl = 'http://' + test.server.address().address + ':' + test.server.address().port;
 
       //windows return 0.0.0.0 as address and that is not
       //valid to use in a request
-      if (
-        test.server.address().address === '0.0.0.0' ||
-        test.server.address().address === '::'
-      ) {
+      if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
         test.baseUrl = 'http://127.0.0.1:' + test.server.address().port;
       }
 
-      soap.createClient(test.baseUrl + '/stockquote?wsdl', function (
-        err,
-        client
-      ) {
+      soap.createClient(test.baseUrl + '/stockquote?wsdl', function (err, client) {
         assert.ifError(err);
-        client.GetLastTradePrice({ tickerSymbol: 'xml response' }, function (
-          err,
-          response,
-          body
-        ) {
+        client.GetLastTradePrice({ tickerSymbol: 'xml response' }, function (err, response, body) {
           assert.ifError(err);
           assert.strictEqual(body, responseData);
           done();
@@ -279,31 +244,17 @@ describe('SOAP Server with Options', function () {
         test.service,
         test.wsdl
       );
-      test.baseUrl =
-        'http://' +
-        test.server.address().address +
-        ':' +
-        test.server.address().port;
+      test.baseUrl = 'http://' + test.server.address().address + ':' + test.server.address().port;
 
       //windows return 0.0.0.0 as address and that is not
       //valid to use in a request
-      if (
-        test.server.address().address === '0.0.0.0' ||
-        test.server.address().address === '::'
-      ) {
+      if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
         test.baseUrl = 'http://127.0.0.1:' + test.server.address().port;
       }
 
-      soap.createClient(test.baseUrl + '/stockquote?wsdl', function (
-        err,
-        client
-      ) {
+      soap.createClient(test.baseUrl + '/stockquote?wsdl', function (err, client) {
         assert.ifError(err);
-        client.GetLastTradePrice({ tickerSymbol: 'xml response' }, function (
-          err,
-          response,
-          body
-        ) {
+        client.GetLastTradePrice({ tickerSymbol: 'xml response' }, function (err, response, body) {
           assert.ifError(err);
           assert.strictEqual(body, responseData);
           done();
@@ -326,18 +277,11 @@ describe('SOAP Server with Options', function () {
         test.service,
         test.wsdl
       );
-      test.baseUrl =
-        'http://' +
-        test.server.address().address +
-        ':' +
-        test.server.address().port;
+      test.baseUrl = 'http://' + test.server.address().address + ':' + test.server.address().port;
 
       //windows return 0.0.0.0 as address and that is not
       //valid to use in a request
-      if (
-        test.server.address().address === '0.0.0.0' ||
-        test.server.address().address === '::'
-      ) {
+      if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
         test.baseUrl = 'http://127.0.0.1:' + test.server.address().port;
       }
 
@@ -380,18 +324,11 @@ describe('SOAP Server with Options', function () {
         test.service,
         test.wsdl
       );
-      test.baseUrl =
-        'http://' +
-        test.server.address().address +
-        ':' +
-        test.server.address().port;
+      test.baseUrl = 'http://' + test.server.address().address + ':' + test.server.address().port;
 
       //windows return 0.0.0.0 as address and that is not
       //valid to use in a request
-      if (
-        test.server.address().address === '0.0.0.0' ||
-        test.server.address().address === '::'
-      ) {
+      if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
         test.baseUrl = 'http://127.0.0.1:' + test.server.address().port;
       }
 
@@ -434,18 +371,11 @@ describe('SOAP Server with Options', function () {
         test.service,
         test.wsdl
       );
-      test.baseUrl =
-        'http://' +
-        test.server.address().address +
-        ':' +
-        test.server.address().port;
+      test.baseUrl = 'http://' + test.server.address().address + ':' + test.server.address().port;
 
       //windows return 0.0.0.0 as address and that is not
       //valid to use in a request
-      if (
-        test.server.address().address === '0.0.0.0' ||
-        test.server.address().address === '::'
-      ) {
+      if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
         test.baseUrl = 'http://127.0.0.1:' + test.server.address().port;
       }
 
@@ -486,18 +416,11 @@ describe('SOAP Server with Options', function () {
         test.service,
         test.wsdl
       );
-      test.baseUrl =
-        'http://' +
-        test.server.address().address +
-        ':' +
-        test.server.address().port;
+      test.baseUrl = 'http://' + test.server.address().address + ':' + test.server.address().port;
 
       //windows return 0.0.0.0 as address and that is not
       //valid to use in a request
-      if (
-        test.server.address().address === '0.0.0.0' ||
-        test.server.address().address === '::'
-      ) {
+      if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
         test.baseUrl = 'http://127.0.0.1:' + test.server.address().port;
       }
       // console.log(test.baseUrl);
@@ -514,11 +437,7 @@ describe('SOAP Server with Options', function () {
         },
         function (err, res, body) {
           assert.ifError(err);
-          assert.ok(
-            body.indexOf(
-              'xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"'
-            ) > -1
-          );
+          assert.ok(body.indexOf('xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"') > -1);
           done();
         }
       );
@@ -538,18 +457,11 @@ describe('SOAP Server with Options', function () {
         test.service,
         test.wsdl
       );
-      test.baseUrl =
-        'http://' +
-        test.server.address().address +
-        ':' +
-        test.server.address().port;
+      test.baseUrl = 'http://' + test.server.address().address + ':' + test.server.address().port;
 
       //windows return 0.0.0.0 as address and that is not
       //valid to use in a request
-      if (
-        test.server.address().address === '0.0.0.0' ||
-        test.server.address().address === '::'
-      ) {
+      if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
         test.baseUrl = 'http://127.0.0.1:' + test.server.address().port;
       }
       // console.log(test.baseUrl);
@@ -566,11 +478,7 @@ describe('SOAP Server with Options', function () {
         },
         function (err, res, body) {
           assert.ifError(err);
-          assert.ok(
-            body.indexOf(
-              'xmlns:soap="http://www.w3.org/2003/05/soap-envelope"'
-            ) > -1
-          );
+          assert.ok(body.indexOf('xmlns:soap="http://www.w3.org/2003/05/soap-envelope"') > -1);
           done();
         }
       );
@@ -591,36 +499,22 @@ describe('SOAP Server with Options', function () {
         test.service,
         test.wsdl
       );
-      test.baseUrl =
-        'http://' +
-        test.server.address().address +
-        ':' +
-        test.server.address().port;
+      test.baseUrl = 'http://' + test.server.address().address + ':' + test.server.address().port;
 
       //windows return 0.0.0.0 as address and that is not
       //valid to use in a request
-      if (
-        test.server.address().address === '0.0.0.0' ||
-        test.server.address().address === '::'
-      ) {
+      if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
         test.baseUrl = 'http://127.0.0.1:' + test.server.address().port;
       }
 
-      soap.createClient(test.baseUrl + '/stockquote?wsdl', function (
-        err,
-        client
-      ) {
+      soap.createClient(test.baseUrl + '/stockquote?wsdl', function (err, client) {
         assert.ifError(err);
         client.on('response', function (xml, response) {
           assert.equal(response.statusCode, 202);
           done();
         });
 
-        client.SetTradePrice({ tickerSymbol: 'GOOG' }, function (
-          err,
-          result,
-          body
-        ) {
+        client.SetTradePrice({ tickerSymbol: 'GOOG' }, function (err, result, body) {
           assert.ifError(err);
           assert.equal(result, null);
           assert.equal(body, '');
@@ -645,31 +539,17 @@ describe('SOAP Server with Options', function () {
         test.service,
         test.wsdl
       );
-      test.baseUrl =
-        'http://' +
-        test.server.address().address +
-        ':' +
-        test.server.address().port;
+      test.baseUrl = 'http://' + test.server.address().address + ':' + test.server.address().port;
 
       //windows return 0.0.0.0 as address and that is not
       //valid to use in a request
-      if (
-        test.server.address().address === '0.0.0.0' ||
-        test.server.address().address === '::'
-      ) {
+      if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
         test.baseUrl = 'http://127.0.0.1:' + test.server.address().port;
       }
 
-      soap.createClient(test.baseUrl + '/stockquote?wsdl', function (
-        err,
-        client
-      ) {
+      soap.createClient(test.baseUrl + '/stockquote?wsdl', function (err, client) {
         assert.ifError(err);
-        client.SetTradePrice({ tickerSymbol: 'GOOG' }, function (
-          err,
-          result,
-          body
-        ) {
+        client.SetTradePrice({ tickerSymbol: 'GOOG' }, function (err, result, body) {
           assert.ifError(err);
           assert.strictEqual(body, responseData);
           done();
@@ -689,25 +569,15 @@ describe('SOAP Server with Options', function () {
         test.service,
         test.wsdl
       );
-      test.baseUrl =
-        'http://' +
-        test.server.address().address +
-        ':' +
-        test.server.address().port;
+      test.baseUrl = 'http://' + test.server.address().address + ':' + test.server.address().port;
 
       //windows return 0.0.0.0 as address and that is not
       //valid to use in a request
-      if (
-        test.server.address().address === '0.0.0.0' ||
-        test.server.address().address === '::'
-      ) {
+      if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
         test.baseUrl = 'http://127.0.0.1:' + test.server.address().port;
       }
 
-      soap.createClient(test.baseUrl + '/stockquote?wsdl', function (
-        err,
-        client
-      ) {
+      soap.createClient(test.baseUrl + '/stockquote?wsdl', function (err, client) {
         assert.ifError(err);
 
         client.on('response', function (body, response, eid) {
@@ -716,11 +586,7 @@ describe('SOAP Server with Options', function () {
           assert.equal(headers['content-length'], undefined);
         });
 
-        client.SetTradePrice({ tickerSymbol: 'GOOG' }, function (
-          err,
-          result,
-          body
-        ) {
+        client.SetTradePrice({ tickerSymbol: 'GOOG' }, function (err, result, body) {
           assert.ifError(err);
           done();
         });
@@ -740,25 +606,15 @@ describe('SOAP Server with Options', function () {
         test.service,
         test.wsdl
       );
-      test.baseUrl =
-        'http://' +
-        test.server.address().address +
-        ':' +
-        test.server.address().port;
+      test.baseUrl = 'http://' + test.server.address().address + ':' + test.server.address().port;
 
       //windows return 0.0.0.0 as address and that is not
       //valid to use in a request
-      if (
-        test.server.address().address === '0.0.0.0' ||
-        test.server.address().address === '::'
-      ) {
+      if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
         test.baseUrl = 'http://127.0.0.1:' + test.server.address().port;
       }
 
-      soap.createClient(test.baseUrl + '/stockquote?wsdl', function (
-        err,
-        client
-      ) {
+      soap.createClient(test.baseUrl + '/stockquote?wsdl', function (err, client) {
         assert.ifError(err);
 
         client.on('response', function (body, response, eid) {
@@ -767,11 +623,7 @@ describe('SOAP Server with Options', function () {
           assert.equal(headers['content-length'], undefined);
         });
 
-        client.SetTradePrice({ tickerSymbol: 'GOOG' }, function (
-          err,
-          result,
-          body
-        ) {
+        client.SetTradePrice({ tickerSymbol: 'GOOG' }, function (err, result, body) {
           assert.ifError(err);
           done();
         });
@@ -791,25 +643,15 @@ describe('SOAP Server with Options', function () {
         test.service,
         test.wsdl
       );
-      test.baseUrl =
-        'http://' +
-        test.server.address().address +
-        ':' +
-        test.server.address().port;
+      test.baseUrl = 'http://' + test.server.address().address + ':' + test.server.address().port;
 
       //windows return 0.0.0.0 as address and that is not
       //valid to use in a request
-      if (
-        test.server.address().address === '0.0.0.0' ||
-        test.server.address().address === '::'
-      ) {
+      if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
         test.baseUrl = 'http://127.0.0.1:' + test.server.address().port;
       }
 
-      soap.createClient(test.baseUrl + '/stockquote?wsdl', function (
-        err,
-        client
-      ) {
+      soap.createClient(test.baseUrl + '/stockquote?wsdl', function (err, client) {
         assert.ifError(err);
 
         client.on('response', function (body, response, eid) {
@@ -818,11 +660,7 @@ describe('SOAP Server with Options', function () {
           assert.equal(headers['transfer-encoding'], undefined);
         });
 
-        client.SetTradePrice({ tickerSymbol: 'GOOG' }, function (
-          err,
-          result,
-          body
-        ) {
+        client.SetTradePrice({ tickerSymbol: 'GOOG' }, function (err, result, body) {
           assert.ifError(err);
           done();
         });

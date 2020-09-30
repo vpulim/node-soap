@@ -41,9 +41,7 @@ function appendColon(ns: string): string {
 }
 
 function noColonNameSpace(ns: string): string {
-  return ns && ns.charAt(ns.length - 1) === ':'
-    ? ns.substring(0, ns.length - 1)
-    : ns;
+  return ns && ns.charAt(ns.length - 1) === ':' ? ns.substring(0, ns.length - 1) : ns;
 }
 
 interface IInitializedOptions extends IOptions {
@@ -90,9 +88,7 @@ export class WSDL {
     } else if (typeof definition === 'object') {
       fromFunc = this._fromServices;
     } else {
-      throw new Error(
-        'WSDL constructor takes either an XML string or service definition'
-      );
+      throw new Error('WSDL constructor takes either an XML string or service definition');
     }
 
     process.nextTick(() => {
@@ -272,9 +268,7 @@ export class WSDL {
             }
             message = this.definitions.messages[name];
             // 'cache' this alias to speed future lookups
-            this.definitions.messages[originalName] = this.definitions.messages[
-              name
-            ];
+            this.definitions.messages[originalName] = this.definitions.messages[name];
           } catch (e) {
             if (this.options.returnFault) {
               p.onerror(e);
@@ -332,10 +326,7 @@ export class WSDL {
       let xsiType;
 
       for (const prefix in xmlns) {
-        if (
-          xmlns[prefix] === XSI_URI &&
-          `${prefix}:type` in elementAttributes
-        ) {
+        if (xmlns[prefix] === XSI_URI && `${prefix}:type` in elementAttributes) {
           xsiType = elementAttributes[`${prefix}:type`];
           break;
         }
@@ -468,11 +459,7 @@ export class WSDL {
       } else {
         if (name === 'int' || name === 'integer') {
           value = parseInt(text, 10);
-        } else if (
-          name === 'double' ||
-          name === 'float' ||
-          name === 'decimal'
-        ) {
+        } else if (name === 'double' || name === 'float' || name === 'decimal') {
           value = Number(text);
         } else if (name === 'bool' || name === 'boolean') {
           value = text.toLowerCase() === 'true' || text === '1';
@@ -580,10 +567,7 @@ export class WSDL {
 
         // if the client passed an input element which has a `$lookupType` property instead of `$type`
         // the `def` is found in `schema.elements`.
-        def =
-          schema.complexTypes[qname] ||
-          schema.types[qname] ||
-          schema.elements[qname];
+        def = schema.complexTypes[qname] || schema.types[qname] || schema.elements[qname];
       }
     }
 
@@ -612,15 +596,7 @@ export class WSDL {
     const args = {};
     args[name] = params;
     const parameterTypeObj = type ? this.findSchemaObject(nsURI, type) : null;
-    return this.objectToXML(
-      args,
-      null,
-      nsPrefix,
-      nsURI,
-      true,
-      null,
-      parameterTypeObj
-    );
+    return this.objectToXML(args, null, nsPrefix, nsURI, true, null, parameterTypeObj);
   }
 
   /**
@@ -631,13 +607,7 @@ export class WSDL {
    * @param {String} nsURI
    * @returns {string}
    */
-  public objectToRpcXML(
-    name: string,
-    params,
-    nsPrefix: string,
-    nsURI: string,
-    isParts?: boolean
-  ) {
+  public objectToRpcXML(name: string, params, nsPrefix: string, nsURI: string, isParts?: boolean) {
     const parts = [];
     const defs = this.definitions;
     const nsAttrName = '_xmlns';
@@ -657,10 +627,7 @@ export class WSDL {
         const value = params[key];
         const prefixedKey = (isParts ? '' : nsPrefix) + key;
         const attributes = [];
-        if (
-          typeof value === 'object' &&
-          value.hasOwnProperty(this.options.attributesKey)
-        ) {
+        if (typeof value === 'object' && value.hasOwnProperty(this.options.attributesKey)) {
           const attrs = value[this.options.attributesKey];
           for (const n in attrs) {
             attributes.push(' ' + n + '=' + '"' + attrs[n] + '"');
@@ -731,15 +698,10 @@ export class WSDL {
 
     let xmlnsAttrib = '';
     if (nsURI && isFirst) {
-      if (
-        this.options.overrideRootElement &&
-        this.options.overrideRootElement.xmlnsAttributes
-      ) {
-        this.options.overrideRootElement.xmlnsAttributes.forEach(
-          (attribute) => {
-            xmlnsAttrib += ' ' + attribute.name + '="' + attribute.value + '"';
-          }
-        );
+      if (this.options.overrideRootElement && this.options.overrideRootElement.xmlnsAttributes) {
+        this.options.overrideRootElement.xmlnsAttributes.forEach((attribute) => {
+          xmlnsAttrib += ' ' + attribute.name + '="' + attribute.value + '"';
+        });
       } else {
         if (prefixNamespace && !this.isIgnoredNameSpace(nsPrefix)) {
           // resolve the prefix namespace
@@ -762,10 +724,7 @@ export class WSDL {
     // explicitly use xmlns attribute if available
     if (
       xmlnsAttr &&
-      !(
-        this.options.overrideRootElement &&
-        this.options.overrideRootElement.xmlnsAttributes
-      )
+      !(this.options.overrideRootElement && this.options.overrideRootElement.xmlnsAttributes)
     ) {
       xmlnsAttrib = xmlnsAttr;
     }
@@ -815,13 +774,7 @@ export class WSDL {
 
         let openingTagParts = ['<', name, arrayAttr, xmlnsAttrib];
         if (!emptyNonSubNameSpaceForArray) {
-          openingTagParts = [
-            '<',
-            appendColon(correctOuterNsPrefix),
-            name,
-            arrayAttr,
-            xmlnsAttrib,
-          ];
+          openingTagParts = ['<', appendColon(correctOuterNsPrefix), name, arrayAttr, xmlnsAttrib];
         }
 
         if (body === '' && this.options.useEmptyTag) {
@@ -838,9 +791,7 @@ export class WSDL {
             if (emptyNonSubNameSpaceForArray) {
               parts.push(['</', name, '>'].join(''));
             } else {
-              parts.push(
-                ['</', appendColon(correctOuterNsPrefix), name, '>'].join('')
-              );
+              parts.push(['</', appendColon(correctOuterNsPrefix), name, '>'].join(''));
             }
           }
         }
@@ -903,15 +854,11 @@ export class WSDL {
         } else {
           if (this.definitions.schemas) {
             if (schema) {
-              const childSchemaObject = this.findChildSchemaObject(
-                schemaObject,
-                name
-              );
+              const childSchemaObject = this.findChildSchemaObject(schemaObject, name);
               // find sub namespace if not a primitive
               if (
                 childSchemaObject &&
-                ((childSchemaObject.$type &&
-                  childSchemaObject.$type.indexOf('xsd:') === -1) ||
+                ((childSchemaObject.$type && childSchemaObject.$type.indexOf('xsd:') === -1) ||
                   childSchemaObject.$ref ||
                   childSchemaObject.$name)
               ) {
@@ -924,8 +871,7 @@ export class WSDL {
                 let childNsURI;
                 let childXmlnsAttrib = '';
 
-                let elementQName =
-                  childSchemaObject.$ref || childSchemaObject.$name;
+                let elementQName = childSchemaObject.$ref || childSchemaObject.$name;
                 if (elementQName) {
                   elementQName = splitQName(elementQName);
                   childName = elementQName.name;
@@ -942,16 +888,12 @@ export class WSDL {
                       childNsPrefix = nsPrefix;
                     }
                     childNsURI =
-                      schema.xmlns[childNsPrefix] ||
-                      this.definitions.xmlns[childNsPrefix];
+                      schema.xmlns[childNsPrefix] || this.definitions.xmlns[childNsPrefix];
                   }
 
                   let unqualified = false;
                   // Check qualification form for local elements
-                  if (
-                    childSchemaObject.$name &&
-                    childSchemaObject.targetNamespace === undefined
-                  ) {
+                  if (childSchemaObject.$name && childSchemaObject.targetNamespace === undefined) {
                     if (childSchemaObject.$form === 'unqualified') {
                       unqualified = true;
                     } else if (childSchemaObject.$form === 'qualified') {
@@ -966,8 +908,7 @@ export class WSDL {
 
                   if (childNsURI && childNsPrefix) {
                     if (nsContext.declareNamespace(childNsPrefix, childNsURI)) {
-                      childXmlnsAttrib =
-                        ' xmlns:' + childNsPrefix + '="' + childNsURI + '"';
+                      childXmlnsAttrib = ' xmlns:' + childNsPrefix + '="' + childNsURI + '"';
                       xmlnsAttrib += childXmlnsAttrib;
                     }
                   }
@@ -977,30 +918,20 @@ export class WSDL {
                 if (childSchemaObject.$type) {
                   const typeQName = splitQName(childSchemaObject.$type);
                   const typePrefix = typeQName.prefix;
-                  const typeURI =
-                    schema.xmlns[typePrefix] ||
-                    this.definitions.xmlns[typePrefix];
+                  const typeURI = schema.xmlns[typePrefix] || this.definitions.xmlns[typePrefix];
                   childNsURI = typeURI;
-                  if (
-                    typeURI !== 'http://www.w3.org/2001/XMLSchema' &&
-                    typePrefix !== TNS_PREFIX
-                  ) {
+                  if (typeURI !== 'http://www.w3.org/2001/XMLSchema' && typePrefix !== TNS_PREFIX) {
                     // Add the prefix/namespace mapping, but not declare it
                     nsContext.addNamespace(typePrefix, typeURI);
                   }
                   resolvedChildSchemaObject =
-                    this.findSchemaType(typeQName.name, typeURI) ||
-                    childSchemaObject;
+                    this.findSchemaType(typeQName.name, typeURI) || childSchemaObject;
                 } else {
                   resolvedChildSchemaObject =
-                    this.findSchemaObject(childNsURI, childName) ||
-                    childSchemaObject;
+                    this.findSchemaObject(childNsURI, childName) || childSchemaObject;
                 }
 
-                if (
-                  childSchemaObject.$baseNameSpace &&
-                  this.options.ignoreBaseNameSpaces
-                ) {
+                if (childSchemaObject.$baseNameSpace && this.options.ignoreBaseNameSpaces) {
                   childNsPrefix = nsPrefix;
                   childNsURI = nsURI;
                 }
@@ -1043,8 +974,7 @@ export class WSDL {
                   obj[this.options.attributesKey].xsi_type.xmlns
                 );
 
-                nonSubNameSpace =
-                  obj[this.options.attributesKey].xsi_type.prefix;
+                nonSubNameSpace = obj[this.options.attributesKey].xsi_type.prefix;
                 nsContext.addNamespace(
                   obj[this.options.attributesKey].xsi_type.prefix,
                   obj[this.options.attributesKey].xsi_type.xmlns
@@ -1080,27 +1010,13 @@ export class WSDL {
                 );
               }
             } else {
-              value = this.objectToXML(
-                child,
-                name,
-                nsPrefix,
-                nsURI,
-                false,
-                null,
-                null,
-                nsContext
-              );
+              value = this.objectToXML(child, name, nsPrefix, nsURI, false, null, null, nsContext);
             }
           }
         }
 
         ns = noColonNameSpace(ns);
-        if (
-          prefixNamespace &&
-          !qualified &&
-          isFirst &&
-          !this.options.overrideRootElement
-        ) {
+        if (prefixNamespace && !qualified && isFirst && !this.options.overrideRootElement) {
           ns = nsPrefix;
         } else if (this.isIgnoredNameSpace(ns)) {
           ns = '';
@@ -1202,11 +1118,7 @@ export class WSDL {
     return schema.complexTypes[name];
   }
 
-  public findChildSchemaObject(
-    parameterTypeObj: any,
-    childName: any,
-    backtrace?: any
-  ): any {
+  public findChildSchemaObject(parameterTypeObj: any, childName: any, backtrace?: any): any {
     if (!parameterTypeObj || !childName) {
       return null;
     }
@@ -1227,10 +1139,7 @@ export class WSDL {
     let child;
     let ref;
 
-    if (
-      Array.isArray(parameterTypeObj.$lookupTypes) &&
-      parameterTypeObj.$lookupTypes.length
-    ) {
+    if (Array.isArray(parameterTypeObj.$lookupTypes) && parameterTypeObj.$lookupTypes.length) {
       const types = parameterTypeObj.$lookupTypes;
 
       for (i = 0; i < types.length; i++) {
@@ -1279,11 +1188,8 @@ export class WSDL {
 
         if (child.$base) {
           const baseQName = splitQName(child.$base);
-          const childNameSpace =
-            baseQName.prefix === TNS_PREFIX ? '' : baseQName.prefix;
-          childNsURI =
-            child.xmlns[baseQName.prefix] ||
-            this.definitions.xmlns[baseQName.prefix];
+          const childNameSpace = baseQName.prefix === TNS_PREFIX ? '' : baseQName.prefix;
+          childNsURI = child.xmlns[baseQName.prefix] || this.definitions.xmlns[baseQName.prefix];
 
           const foundBase = this.findSchemaType(baseQName.name, childNsURI);
 
@@ -1362,10 +1268,7 @@ export class WSDL {
     }
 
     const ignoreBaseNameSpaces = options ? options.ignoreBaseNameSpaces : null;
-    if (
-      ignoreBaseNameSpaces !== null &&
-      typeof ignoreBaseNameSpaces !== 'undefined'
-    ) {
+    if (ignoreBaseNameSpaces !== null && typeof ignoreBaseNameSpaces !== 'undefined') {
       this.options.ignoreBaseNameSpaces = ignoreBaseNameSpaces;
     } else {
       this.options.ignoreBaseNameSpaces = this.ignoreBaseNameSpaces;
@@ -1397,10 +1300,7 @@ export class WSDL {
           ? this.options.wsdl_options.fixedPath
           : false;
       if (isFixed) {
-        includePath = path.resolve(
-          path.dirname(this.uri),
-          path.parse(include.location).base
-        );
+        includePath = path.resolve(path.dirname(this.uri), path.parse(include.location).base);
       } else {
         includePath = path.resolve(path.dirname(this.uri), include.location);
       }
@@ -1412,15 +1312,12 @@ export class WSDL {
       this.options.wsdl_options !== undefined &&
       typeof this.options.wsdl_options.overrideImportLocation === 'function'
     ) {
-      includePath = this.options.wsdl_options.overrideImportLocation(
-        includePath
-      );
+      includePath = this.options.wsdl_options.overrideImportLocation(includePath);
     }
 
     const options = Object.assign({}, this.options);
     // follow supplied ignoredNamespaces option
-    options.ignoredNamespaces =
-      this._originalIgnoredNamespaces || this.options.ignoredNamespaces;
+    options.ignoredNamespaces = this._originalIgnoredNamespaces || this.options.ignoredNamespaces;
     options.WSDL_CACHE = this.WSDL_CACHE;
 
     open_wsdl_recursive(includePath, options, (err, wsdl) => {
@@ -1436,9 +1333,7 @@ export class WSDL {
         });
       } else {
         return callback(
-          new Error(
-            'wsdl.defintions is not an instance of elements.DefinitionsElement'
-          )
+          new Error('wsdl.defintions is not an instance of elements.DefinitionsElement')
         );
       }
 
@@ -1474,9 +1369,7 @@ export class WSDL {
           if (this.options.strict) {
             throw e;
           } else {
-            stack.push(
-              new elements.Element(nsName, attrs, options, schemaAttrs)
-            );
+            stack.push(new elements.Element(nsName, attrs, options, schemaAttrs));
           }
         }
       } else {
@@ -1572,16 +1465,8 @@ type WSDLCallback = (error: any, result?: WSDL) => any;
  * this is the only thing that B will depend on when "opening" A
  */
 function open_wsdl_recursive(uri: any, callback: WSDLCallback);
-function open_wsdl_recursive(
-  uri: any,
-  options: IOptions,
-  callback: WSDLCallback
-);
-function open_wsdl_recursive(
-  uri: any,
-  p2: WSDLCallback | IOptions,
-  p3?: WSDLCallback
-) {
+function open_wsdl_recursive(uri: any, options: IOptions, callback: WSDLCallback);
+function open_wsdl_recursive(uri: any, p2: WSDLCallback | IOptions, p3?: WSDLCallback) {
   let fromCache;
   let WSDL_CACHE;
   let options: IOptions;
@@ -1606,11 +1491,7 @@ function open_wsdl_recursive(
 
 export function open_wsdl(uri: any, callback: WSDLCallback);
 export function open_wsdl(uri: any, options: IOptions, callback: WSDLCallback);
-export function open_wsdl(
-  uri: any,
-  p2: WSDLCallback | IOptions,
-  p3?: WSDLCallback
-) {
+export function open_wsdl(uri: any, p2: WSDLCallback | IOptions, p3?: WSDLCallback) {
   let options: IOptions;
   let callback: WSDLCallback;
   if (typeof p2 === 'function') {

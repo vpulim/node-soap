@@ -27,10 +27,7 @@ describe('WSSecurityCert', function () {
 
     try {
       var instance = new WSSecurityCert('*****', cert, '');
-      instance.postProcess(
-        '<soap:Header></soap:Header><soap:Body></soap:Body>',
-        'soap'
-      );
+      instance.postProcess('<soap:Header></soap:Header><soap:Body></soap:Body>', 'soap');
     } catch (e) {
       passed = false;
     }
@@ -42,10 +39,7 @@ describe('WSSecurityCert', function () {
 
   it('should insert a WSSecurity signing block when postProcess is called (private key is raw)', function () {
     var instance = new WSSecurityCert(key, cert, '');
-    var xml = instance.postProcess(
-      '<soap:Header></soap:Header><soap:Body></soap:Body>',
-      'soap'
-    );
+    var xml = instance.postProcess('<soap:Header></soap:Header><soap:Body></soap:Body>', 'soap');
 
     xml.should.containEql('<wsse:Security');
     xml.should.containEql(
@@ -69,9 +63,7 @@ describe('WSSecurityCert', function () {
     );
     xml.should.containEql('<Created>' + instance.created);
     xml.should.containEql('<Expires>' + instance.expires);
-    xml.should.containEql(
-      '<Signature xmlns="http://www.w3.org/2000/09/xmldsig#">'
-    );
+    xml.should.containEql('<Signature xmlns="http://www.w3.org/2000/09/xmldsig#">');
     xml.should.containEql('<wsse:SecurityTokenReference');
     xml.should.containEql('<wsse:Reference URI="#' + instance.x509Id);
     xml.should.containEql(
@@ -83,10 +75,7 @@ describe('WSSecurityCert', function () {
 
   it('should insert a WSSecurity signing block when postProcess is called (private key is protected by a passphrase)', function () {
     var instance = new WSSecurityCert(keyWithPassword, cert, 'soap');
-    var xml = instance.postProcess(
-      '<soap:Header></soap:Header><soap:Body></soap:Body>',
-      'soap'
-    );
+    var xml = instance.postProcess('<soap:Header></soap:Header><soap:Body></soap:Body>', 'soap');
 
     xml.should.containEql('<wsse:Security');
     xml.should.containEql(
@@ -110,9 +99,7 @@ describe('WSSecurityCert', function () {
     );
     xml.should.containEql('<Created>' + instance.created);
     xml.should.containEql('<Expires>' + instance.expires);
-    xml.should.containEql(
-      '<Signature xmlns="http://www.w3.org/2000/09/xmldsig#">'
-    );
+    xml.should.containEql('<Signature xmlns="http://www.w3.org/2000/09/xmldsig#">');
     xml.should.containEql('<wsse:SecurityTokenReference');
     xml.should.containEql('<wsse:Reference URI="#' + instance.x509Id);
     xml.should.containEql(
@@ -228,9 +215,7 @@ describe('WSSecurityCert', function () {
       '<soap:Header></soap:Header><soap:Body><Body></Body></soap:Body>',
       'soap'
     );
-    xml.should.containEql(
-      '<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">'
-    );
+    xml.should.containEql('<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">');
     xml.should.containEql('<ds:SignedInfo>');
     xml.should.containEql('<ds:CanonicalizationMethod');
     xml.should.containEql('<ds:SignatureMethod ');
