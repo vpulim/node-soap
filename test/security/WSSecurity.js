@@ -51,10 +51,10 @@ describe('WSSecurity', function () {
 
     xml.should.containEql('<wsse:Security soap:actor="urn:sample" ');
     xml.should.containEql(
-      'xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" '
+      'xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" ',
     );
     xml.should.containEql(
-      'xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">'
+      'xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">',
     );
     xml.should.containEql('<wsu:Timestamp wsu:Id="Timestamp-');
     xml.should.containEql('<wsu:Created>');
@@ -62,17 +62,17 @@ describe('WSSecurity', function () {
     xml.should.containEql('</wsu:Timestamp>');
     xml.should.containEql('<wsse:UsernameToken ');
     xml.should.containEql(
-      'xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" '
+      'xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" ',
     );
     xml.should.containEql('wsu:Id="SecurityToken-');
     xml.should.containEql('<wsse:Username>my&amp;User</wsse:Username>');
     xml.should.containEql('<wsse:Password ');
     xml.should.containEql(
-      'Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">'
+      'Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">',
     );
     xml.should.containEql('my&amp;Pass</wsse:Password>');
     xml.should.containEql(
-      '<wsse:Nonce EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary">'
+      '<wsse:Nonce EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary">',
     );
     xml.should.containEql('</wsse:Nonce>');
     xml.should.containEql('<wsu:Created>');

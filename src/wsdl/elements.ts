@@ -123,7 +123,7 @@ export class Element {
     nsName: string,
     attrs,
     options: IWsdlBaseOptions,
-    schemaXmlns
+    schemaXmlns,
   ) {
     if (!this.allowedChildren) {
       return;
@@ -776,7 +776,7 @@ export class SchemaElement extends Element {
       this,
       _.pickBy(source, (value, key) => {
         return key.startsWith('$') && !this.hasOwnProperty(key);
-      })
+      }),
     );
 
     return this;

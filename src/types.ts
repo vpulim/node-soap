@@ -11,20 +11,20 @@ export type SoapMethod = (
   args: any,
   callback: (err: any, result: any, rawResponse: any, soapHeader: any, rawRequest: any) => void,
   options?: any,
-  extraHeaders?: any
+  extraHeaders?: any,
 ) => void;
 
 export type SoapMethodAsync = (
   args: any,
   options?: any,
-  extraHeaders?: any
+  extraHeaders?: any,
 ) => Promise<[any, any, any, any]>;
 
 export type ISoapServiceMethod = (
   args: any,
   callback?: (data: any) => void,
   headers?: any,
-  req?: any
+  req?: any,
 ) => any;
 
 // SOAP Fault 1.1 & 1.2

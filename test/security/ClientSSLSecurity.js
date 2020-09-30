@@ -28,7 +28,7 @@ describe('ClientSSLSecurity', function () {
 
   it('should accept extraneous data before cert encapsulation boundaries per rfc 7468', function () {
     var certBuffer = fs.readFileSync(
-      join(__dirname, '..', 'certs', 'agent2-cert-with-extra-data.pem')
+      join(__dirname, '..', 'certs', 'agent2-cert-with-extra-data.pem'),
     );
 
     var instanceCert = new ClientSSLSecurity(null, certBuffer);

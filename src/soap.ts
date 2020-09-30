@@ -76,13 +76,13 @@ export function createClient(
   url: string,
   options: IOptions,
   callback: CreateClientCallback,
-  endpoint?: string
+  endpoint?: string,
 ): void;
 export function createClient(
   url: string,
   p2: CreateClientCallback | IOptions,
   p3?: CreateClientCallback | string,
-  p4?: string
+  p4?: string,
 ): void {
   let endpoint: string = p4;
   let callback: CreateClientCallback;
@@ -105,7 +105,7 @@ export function createClient(
 export function createClientAsync(
   url: string,
   options?: IOptions,
-  endpoint?: string
+  endpoint?: string,
 ): Promise<Client> {
   if (typeof options === 'undefined') {
     options = {};
@@ -120,7 +120,7 @@ export function createClientAsync(
         }
         resolve(client);
       },
-      endpoint
+      endpoint,
     );
   });
 }
@@ -130,7 +130,7 @@ export function listen(
   path: string,
   services: IServices,
   wsdl: string,
-  callback?: (err: any, res: any) => void
+  callback?: (err: any, res: any) => void,
 ): Server;
 export function listen(server: ServerType, options: IServerOptions): Server;
 export function listen(
@@ -138,7 +138,7 @@ export function listen(
   p2: string | IServerOptions,
   services?: IServices,
   xml?: string,
-  callback?: (err: any, res: any) => void
+  callback?: (err: any, res: any) => void,
 ): Server {
   let options: IServerOptions;
   let path: string;

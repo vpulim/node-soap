@@ -75,7 +75,7 @@ describe('Express server without middleware', function () {
         }
         assert.equal(body, responseXML);
         done();
-      }
+      },
     );
   });
 
@@ -94,7 +94,7 @@ describe('Express server without middleware', function () {
         }
         assert.equal(body, wsdl);
         done();
-      }
+      },
     );
   });
 
@@ -106,7 +106,7 @@ describe('Express server without middleware', function () {
       },
       function (req, res) {
         return res.status(200).send('test passed');
-      }
+      },
     );
 
     request(
@@ -120,7 +120,7 @@ describe('Express server without middleware', function () {
         }
         assert.equal(body, 'test passed');
         done();
-      }
+      },
     );
   });
 });
@@ -147,7 +147,7 @@ describe('Express server with middleware', function () {
           return true;
         },
         limit: '5mb',
-      })
+      }),
     );
 
     server = expressServer.listen(51515, function () {
@@ -183,7 +183,7 @@ describe('Express server with middleware', function () {
         }
         assert.equal(body, responseXML);
         done();
-      }
+      },
     );
   });
 });
@@ -239,7 +239,7 @@ describe('Express server with bodyParser.json middleware', function () {
         }
         assert.equal(body, responseXML);
         done();
-      }
+      },
     );
   });
 });

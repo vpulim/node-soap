@@ -206,7 +206,7 @@ describe('SOAP Server', function () {
         assert.equal(res.statusCode, 500);
         assert.ok(body.length);
         done();
-      }
+      },
     );
   });
 
@@ -222,7 +222,7 @@ describe('SOAP Server', function () {
         assert.equal(res.statusCode, 500);
         assert.ok(body.length);
         done();
-      }
+      },
     );
   });
 
@@ -244,7 +244,7 @@ describe('SOAP Server', function () {
         assert.equal(res.statusCode, 500);
         assert.ok(body.length);
         done();
-      }
+      },
     );
   });
 
@@ -368,7 +368,7 @@ describe('SOAP Server', function () {
     soap.createClient(test.baseUrl + '/stockquote?wsdl', function (err, client) {
       assert.ifError(err);
       client.addSoapHeader(
-        '<Security><Timestamp><Created>2015-02-23T12:00:00.000Z</Created><Expires>2015-02-23T12:05:00.000Z</Expires></Timestamp></Security>'
+        '<Security><Timestamp><Created>2015-02-23T12:00:00.000Z</Created><Expires>2015-02-23T12:05:00.000Z</Expires></Timestamp></Security>',
       );
       client.GetLastTradePrice({ tickerSymbol: 'AAPL' }, function (err, result, raw, soapHeader) {
         assert.ifError(err);
@@ -453,11 +453,11 @@ describe('SOAP Server', function () {
         // Verify namespace on elements set according to fault spec 1.2
         assert.ok(
           body.match(/<soap:Code>.*<\/soap:Code>/g),
-          'Body should contain Code-element with namespace'
+          'Body should contain Code-element with namespace',
         );
         assert.ok(
           body.match(/<soap:Reason>.*<\/soap:Reason>/g),
-          'Body should contain Reason-element with namespace'
+          'Body should contain Reason-element with namespace',
         );
         assert.equal(err.response.statusCode, 200);
         done();
@@ -477,11 +477,11 @@ describe('SOAP Server', function () {
         // Verify namespace on elements set according to fault spec 1.1
         assert.ok(
           body.match(/<faultcode>.*<\/faultcode>/g),
-          'Body should contain faultcode-element without namespace'
+          'Body should contain faultcode-element without namespace',
         );
         assert.ok(
           body.match(/<faultstring>.*<\/faultstring>/g),
-          'Body should contain faultstring-element without namespace'
+          'Body should contain faultstring-element without namespace',
         );
         done();
       });
@@ -514,7 +514,7 @@ describe('SOAP Server', function () {
     soap.createClient(test.baseUrl + '/stockquote?wsdl', function (err, client) {
       assert.ifError(err);
       client.addBodyAttribute(
-        'xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" wsu:Id="######################"'
+        'xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" wsu:Id="######################"',
       );
       client.GetLastTradePrice({ tickerSymbol: 'AAPL' }, function (err, response, body) {
         assert.ifError(err);

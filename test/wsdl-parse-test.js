@@ -9,13 +9,13 @@ describe(__filename, function () {
     open_wsdl(path.resolve(__dirname, 'wsdl/recursive.wsdl'), function (err, def) {
       assert.equal(
         def.definitions.messages.operationRequest.parts['constraint[]'].expression,
-        def.definitions.messages.operationRequest.parts['constraint[]'].expression.expression
+        def.definitions.messages.operationRequest.parts['constraint[]'].expression.expression,
       );
       assert.equal(
         def.definitions.messages.operationRequest.parts['constraint[]'].expression,
         def.definitions.messages.operationRequest.parts['constraint[]'].expression.expression[
           'constraint[]'
-        ].expression
+        ].expression,
       );
       done();
     });
@@ -61,7 +61,7 @@ describe(__filename, function () {
         });
 
         done();
-      }
+      },
     );
   });
 });

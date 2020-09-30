@@ -70,7 +70,7 @@ export class WSSecurityCert implements ISecurity {
     privatePEM: any,
     publicP12PEM: any,
     password: any,
-    options: IWSSecurityCertOptions = {}
+    options: IWSSecurityCertOptions = {},
   ) {
     this.publicP12PEM = publicP12PEM
       .toString()
@@ -84,7 +84,7 @@ export class WSSecurityCert implements ISecurity {
       this.signer.addReference(
         '//*[name(.)="soap:Body"]',
         ['http://www.w3.org/2001/10/xml-exc-c14n#'],
-        'http://www.w3.org/2001/04/xmlenc#sha256'
+        'http://www.w3.org/2001/04/xmlenc#sha256',
       );
     }
 
@@ -185,7 +185,7 @@ export class WSSecurityCert implements ISecurity {
     return insertStr(
       this.signer.getSignatureXml(),
       xmlWithSec,
-      xmlWithSec.indexOf('</wsse:Security>')
+      xmlWithSec.indexOf('</wsse:Security>'),
     );
   }
 }

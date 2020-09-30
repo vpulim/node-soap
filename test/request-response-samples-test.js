@@ -142,7 +142,7 @@ tests.forEach(function (test) {
     responseSoapHeaderJSON,
     wsdlOptions,
     options,
-    false
+    false,
   );
   generateTest(
     name,
@@ -157,7 +157,7 @@ tests.forEach(function (test) {
     responseSoapHeaderJSON,
     wsdlOptions,
     options,
-    true
+    true,
   );
 });
 
@@ -174,7 +174,7 @@ function generateTest(
   responseSoapHeaderJSON,
   wsdlOptions,
   options,
-  usePromises
+  usePromises,
 ) {
   var methodCaller = cbCaller;
 
@@ -199,14 +199,14 @@ function generateTest(
         }
         if (securityJSON && securityJSON.type === 'ws') {
           client.setSecurity(
-            new WSSecurity(securityJSON.username, securityJSON.password, securityJSON.options)
+            new WSSecurity(securityJSON.username, securityJSON.password, securityJSON.options),
           );
         }
 
         //throw more meaningful error
         if (typeof client[methodName] !== 'function') {
           throw new Error(
-            'method ' + methodName + ' does not exists in wsdl specified in test wsdl: ' + wsdlPath
+            'method ' + methodName + ' does not exists in wsdl specified in test wsdl: ' + wsdlPath,
           );
         }
 
@@ -217,10 +217,10 @@ function generateTest(
           responseJSON,
           responseSoapHeaderJSON,
           options,
-          done
+          done,
         );
       },
-      'http://localhost:' + port + '/Message/Message.dll?Handler=Default'
+      'http://localhost:' + port + '/Message/Message.dll?Handler=Default',
     );
   };
 }
@@ -232,7 +232,7 @@ function cbCaller(
   responseJSON,
   responseSoapHeaderJSON,
   options,
-  done
+  done,
 ) {
   client[methodName](
     requestJSON,
@@ -245,7 +245,7 @@ function cbCaller(
           // assert.deepEqual(json, responseJSON);
           assert.equal(
             JSON.stringify(typeof json === 'undefined' ? null : json),
-            JSON.stringify(responseJSON)
+            JSON.stringify(responseJSON),
           );
           if (responseSoapHeaderJSON) {
             assert.equal(JSON.stringify(soapHeader), JSON.stringify(responseSoapHeaderJSON));
@@ -254,7 +254,7 @@ function cbCaller(
       }
       done();
     },
-    options
+    options,
   );
 }
 
@@ -265,7 +265,7 @@ function promiseCaller(
   responseJSON,
   responseSoapHeaderJSON,
   options,
-  done
+  done,
 ) {
   client[methodName](requestJSON)
     .then(function (responseArr) {
@@ -277,7 +277,7 @@ function promiseCaller(
         // assert.deepEqual(json, responseJSON);
         assert.equal(
           JSON.stringify(typeof json === 'undefined' ? null : json),
-          JSON.stringify(responseJSON)
+          JSON.stringify(responseJSON),
         );
         if (responseSoapHeaderJSON) {
           assert.equal(JSON.stringify(soapHeader), JSON.stringify(responseSoapHeaderJSON));

@@ -36,7 +36,7 @@ var fs = require('fs'),
     it('should add and clear soap headers', function (done) {
       soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (
         err,
-        client
+        client,
       ) {
         assert.ok(client);
         assert.ok(!client.getSoapHeaders());
@@ -63,7 +63,7 @@ var fs = require('fs'),
       var called = false;
       soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (
         err,
-        client
+        client,
       ) {
         assert.ok(client);
         assert.ifError(err);
@@ -85,7 +85,7 @@ var fs = require('fs'),
           assert.ifError(err);
           assert.equal(client.httpClient, myHttpClient);
           done();
-        }
+        },
       );
     });
 
@@ -99,7 +99,7 @@ var fs = require('fs'),
           assert.ifError(err);
           assert.equal(client.httpClient._request, myRequest);
           done();
-        }
+        },
       );
     });
 
@@ -115,7 +115,7 @@ var fs = require('fs'),
             assert.notEqual(client.lastRequest.indexOf('xmlns:soapenv='), -1);
             done();
           });
-        }
+        },
       );
     });
 
@@ -134,14 +134,14 @@ var fs = require('fs'),
             assert.notEqual(raw.indexOf('html'), -1);
             done();
           });
-        }
+        },
       );
     });
 
     it('should set binding style to "document" by default if not explicitly set in WSDL, per SOAP spec', function (done) {
       soap.createClient(__dirname + '/wsdl/binding_document.wsdl', meta.options, function (
         err,
-        client
+        client,
       ) {
         assert.ok(client);
         assert.ifError(err);
@@ -156,13 +156,13 @@ var fs = require('fs'),
       var options = Object.assign({ disableCache: true }, meta.options);
       soap.createClient(__dirname + '/wsdl/binding_document.wsdl', options, function (
         err1,
-        client1
+        client1,
       ) {
         assert.ok(client1);
         assert.ok(!err1);
         soap.createClient(__dirname + '/wsdl/binding_document.wsdl', options, function (
           err2,
-          client2
+          client2,
         ) {
           assert.ok(client2);
           assert.ok(!err2);
@@ -219,7 +219,7 @@ var fs = require('fs'),
                   contentType: headers['content-type'],
                   parts: parts,
                 }),
-                'utf8'
+                'utf8',
               );
             });
           })
@@ -259,10 +259,10 @@ var fs = require('fs'),
                     server.close();
                     done();
                   },
-                  { attachments: [attachment] }
+                  { attachments: [attachment] },
                 );
               },
-              baseUrl
+              baseUrl,
             );
           });
       });
@@ -315,7 +315,7 @@ var fs = require('fs'),
                   contentType: headers['content-type'],
                   parts: parts,
                 }),
-                'utf8'
+                'utf8',
               );
             });
           })
@@ -342,10 +342,10 @@ var fs = require('fs'),
                 assert(body.contentType.indexOf('action') > -1);
                 done();
               },
-              { attachments: [attachment] }
+              { attachments: [attachment] },
             );
           },
-          baseUrl
+          baseUrl,
         );
       });
 
@@ -377,10 +377,10 @@ var fs = require('fs'),
                 assert.equal(dataHeaders['Content-ID'], contentType.start);
                 done();
               },
-              { forceMTOM: true }
+              { forceMTOM: true },
             );
           },
-          baseUrl
+          baseUrl,
         );
       });
     });
@@ -430,12 +430,12 @@ var fs = require('fs'),
                   done();
                 },
                 null,
-                { 'test-header': 'test' }
+                { 'test-header': 'test' },
               );
             },
-            baseUrl
+            baseUrl,
           );
-        }
+        },
       );
 
       it('should not append `:80` to the Host header on for a request to a service without a port explicitly defined', function (done) {
@@ -454,10 +454,10 @@ var fs = require('fs'),
                 done();
               },
               null,
-              { 'test-header': 'test' }
+              { 'test-header': 'test' },
             );
           },
-          'http://127.0.0.1'
+          'http://127.0.0.1',
         );
       });
 
@@ -476,10 +476,10 @@ var fs = require('fs'),
                 done();
               },
               null,
-              { 'test-header': 'test' }
+              { 'test-header': 'test' },
             );
           },
-          'https://127.0.0.1'
+          'https://127.0.0.1',
         );
       });
 
@@ -498,10 +498,10 @@ var fs = require('fs'),
                 done();
               },
               null,
-              { 'test-header': 'test' }
+              { 'test-header': 'test' },
             );
           },
-          'https://127.0.0.1:443'
+          'https://127.0.0.1:443',
         );
       });
 
@@ -526,10 +526,10 @@ var fs = require('fs'),
                 postProcess: function (_xml) {
                   return _xml.replace('soap', 'SOAP');
                 },
-              }
+              },
             );
           },
-          baseUrl
+          baseUrl,
         );
       });
 
@@ -551,10 +551,10 @@ var fs = require('fs'),
                 done();
               },
               null,
-              { 'test-header': 'test' }
+              { 'test-header': 'test' },
             );
           },
-          baseUrl
+          baseUrl,
         );
       });
 
@@ -576,10 +576,10 @@ var fs = require('fs'),
                 done();
               },
               null,
-              { 'test-header': 'testBad' }
+              { 'test-header': 'testBad' },
             );
           },
-          baseUrl
+          baseUrl,
         );
       });
 
@@ -601,10 +601,10 @@ var fs = require('fs'),
                 done();
               },
               null,
-              { 'test-header': 'test' }
+              { 'test-header': 'test' },
             );
           },
-          baseUrl
+          baseUrl,
         );
       });
 
@@ -629,7 +629,7 @@ var fs = require('fs'),
               done();
             });
           },
-          baseUrl
+          baseUrl,
         );
       });
 
@@ -650,10 +650,10 @@ var fs = require('fs'),
                 done();
               },
               null,
-              { 'test-header': 'test' }
+              { 'test-header': 'test' },
             );
           },
-          baseUrl
+          baseUrl,
         );
       });
 
@@ -676,10 +676,10 @@ var fs = require('fs'),
                 done();
               },
               { time: true },
-              { 'test-header': 'test' }
+              { 'test-header': 'test' },
             );
           },
-          baseUrl
+          baseUrl,
         );
       });
 
@@ -701,10 +701,10 @@ var fs = require('fs'),
                 done();
               },
               { headers: { 'options-test-header': 'test' } },
-              { 'test-header': 'test' }
+              { 'test-header': 'test' },
             );
           },
-          baseUrl
+          baseUrl,
         );
       });
 
@@ -725,10 +725,10 @@ var fs = require('fs'),
                 done();
               },
               null,
-              { 'test-header': 'test' }
+              { 'test-header': 'test' },
             );
           },
-          baseUrl
+          baseUrl,
         );
       });
 
@@ -748,22 +748,22 @@ var fs = require('fs'),
                 assert.ok(client.lastRequest);
                 assert.equal(
                   client.lastRequestHeaders['Content-Type'],
-                  'application/soap+xml; charset=utf-8; action="MyOperation"'
+                  'application/soap+xml; charset=utf-8; action="MyOperation"',
                 );
                 assert.notEqual(
                   client.lastRequest.indexOf(
-                    'xmlns:soap="http://www.w3.org/2003/05/soap-envelope"'
+                    'xmlns:soap="http://www.w3.org/2003/05/soap-envelope"',
                   ),
-                  -1
+                  -1,
                 );
                 assert(!client.lastRequestHeaders.SOAPAction);
                 done();
               },
               null,
-              { 'test-header': 'test' }
+              { 'test-header': 'test' },
             );
           },
-          baseUrl
+          baseUrl,
         );
       });
 
@@ -787,10 +787,10 @@ var fs = require('fs'),
                 done();
               },
               { headers: { 'options-test-header': 'test' } },
-              { 'test-header': 'test' }
+              { 'test-header': 'test' },
             );
           },
-          baseUrl
+          baseUrl,
         );
       });
 
@@ -811,7 +811,7 @@ var fs = require('fs'),
               done();
             });
           },
-          baseUrl
+          baseUrl,
         );
       });
 
@@ -826,7 +826,7 @@ var fs = require('fs'),
             client.MyOperation({}, { headers: { 'options-test-header': 'test' } }, function (
               err,
               result,
-              body
+              body,
             ) {
               assert.ifError(err);
               assert.ok(result);
@@ -837,7 +837,7 @@ var fs = require('fs'),
               done();
             });
           },
-          baseUrl
+          baseUrl,
         );
       });
 
@@ -861,10 +861,10 @@ var fs = require('fs'),
                 assert.ok(client.lastRequestHeaders['options-test-header'] === 'test');
 
                 done();
-              }
+              },
             );
           },
-          baseUrl
+          baseUrl,
         );
       });
     });
@@ -872,7 +872,7 @@ var fs = require('fs'),
     it('should add soap headers', function (done) {
       soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (
         err,
-        client
+        client,
       ) {
         assert.ok(client);
         assert.ok(!client.getSoapHeaders());
@@ -892,7 +892,7 @@ var fs = require('fs'),
 
         assert.ok(
           client.getSoapHeaders()[0] ===
-            '<esnext>false</esnext><moz>true</moz><boss>true</boss><node>true</node><validthis>true</validthis><globals><EventEmitter>true</EventEmitter><Promise>true</Promise></globals>'
+            '<esnext>false</esnext><moz>true</moz><boss>true</boss><node>true</node><validthis>true</validthis><globals><EventEmitter>true</EventEmitter><Promise>true</Promise></globals>',
         );
         done();
       });
@@ -901,7 +901,7 @@ var fs = require('fs'),
     it('should add dynamic soap headers', function (done) {
       soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (
         err,
-        client
+        client,
       ) {
         assert.ok(client);
         assert.ok(!client.getSoapHeaders());
@@ -920,7 +920,7 @@ var fs = require('fs'),
         client.MyOperation({}, function (err, result) {
           assert.notEqual(
             client.lastRequest.indexOf('<TeSt_location>http://www.example.com/v1</TeSt_location>'),
-            -1
+            -1,
           );
           assert.notEqual(client.lastRequest.indexOf('<TeSt_action>MyOperation</TeSt_action>'), -1);
           assert.notEqual(client.lastRequest.indexOf(`<TeSt_random>${random}</TeSt_random>`), -1);
@@ -932,7 +932,7 @@ var fs = require('fs'),
     it('should add soap headers with a namespace', function (done) {
       soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (
         err,
-        client
+        client,
       ) {
         assert.ok(client);
         assert.ok(!client.getSoapHeaders());
@@ -941,7 +941,7 @@ var fs = require('fs'),
 
         assert.ok(client.getSoapHeaders().length === 1);
         assert.ok(
-          client.getSoapHeaders()[0] === '<header1 xmlns="http://example.com">content</header1>'
+          client.getSoapHeaders()[0] === '<header1 xmlns="http://example.com">content</header1>',
         );
 
         client.clearSoapHeaders();
@@ -953,7 +953,7 @@ var fs = require('fs'),
     it('should add http headers', function (done) {
       soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (
         err,
-        client
+        client,
       ) {
         assert.ok(client);
         assert.ok(!client.getHttpHeaders());
@@ -1026,7 +1026,7 @@ var fs = require('fs'),
               });
             });
           },
-          baseUrl
+          baseUrl,
         );
       });
     });
@@ -1087,7 +1087,7 @@ var fs = require('fs'),
               done();
             });
           },
-          baseUrl
+          baseUrl,
         );
       });
     });
@@ -1129,7 +1129,7 @@ var fs = require('fs'),
               done();
             });
           },
-          baseUrl
+          baseUrl,
         );
       });
 
@@ -1145,7 +1145,7 @@ var fs = require('fs'),
               done();
             });
           },
-          baseUrl
+          baseUrl,
         );
       });
     });
@@ -1182,7 +1182,7 @@ var fs = require('fs'),
               done();
             });
           },
-          baseUrl
+          baseUrl,
         );
       });
 
@@ -1198,7 +1198,7 @@ var fs = require('fs'),
               done();
             });
           },
-          baseUrl
+          baseUrl,
         );
       });
     });
@@ -1237,7 +1237,7 @@ var fs = require('fs'),
               done();
             });
           },
-          baseUrl
+          baseUrl,
         );
       });
     });
@@ -1282,7 +1282,7 @@ var fs = require('fs'),
               done();
             });
           },
-          baseUrl
+          baseUrl,
         );
       });
 
@@ -1305,7 +1305,7 @@ var fs = require('fs'),
               done();
             });
           },
-          baseUrl
+          baseUrl,
         );
       });
 
@@ -1329,7 +1329,7 @@ var fs = require('fs'),
               done();
             });
           },
-          baseUrl
+          baseUrl,
         );
       });
 
@@ -1361,7 +1361,7 @@ var fs = require('fs'),
               done();
             });
           },
-          baseUrl
+          baseUrl,
         );
       });
 
@@ -1395,10 +1395,10 @@ var fs = require('fs'),
                 assert.equal(responseEid, requestEid);
                 done();
               },
-              { exchangeId: 'unit' }
+              { exchangeId: 'unit' },
             );
           },
-          baseUrl
+          baseUrl,
         );
       });
 
@@ -1418,7 +1418,7 @@ var fs = require('fs'),
               done();
             });
           },
-          baseUrl
+          baseUrl,
         );
       });
     });
@@ -1433,7 +1433,7 @@ var fs = require('fs'),
         .createServer(function (req, res) {
           res.statusCode = 200;
           res.write(
-            '<?xml version="1.0" encoding="ISO-8859-1"?><SOAP-ENV:Envelope SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"\n  xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"\n  xmlns:xsd="http://www.w3.org/2001/XMLSchema"\n  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\n  xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/">\n<SOAP-ENV:Body><SOAP-ENV:Fault><faultcode xsi:type="xsd:string">Test</faultcode><faultactor xsi:type="xsd:string"></faultactor><faultstring xsi:type="xsd:string">test error</faultstring><detail xsi:type="xsd:string">test detail</detail></SOAP-ENV:Fault></SOAP-ENV:Body></SOAP-ENV:Envelope>'
+            '<?xml version="1.0" encoding="ISO-8859-1"?><SOAP-ENV:Envelope SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"\n  xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"\n  xmlns:xsd="http://www.w3.org/2001/XMLSchema"\n  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\n  xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/">\n<SOAP-ENV:Body><SOAP-ENV:Fault><faultcode xsi:type="xsd:string">Test</faultcode><faultactor xsi:type="xsd:string"></faultactor><faultstring xsi:type="xsd:string">test error</faultstring><detail xsi:type="xsd:string">test detail</detail></SOAP-ENV:Fault></SOAP-ENV:Body></SOAP-ENV:Envelope>',
           );
           res.end();
         })
@@ -1455,7 +1455,7 @@ var fs = require('fs'),
                 done();
               });
             },
-            baseUrl
+            baseUrl,
           );
         });
     });
@@ -1470,7 +1470,7 @@ var fs = require('fs'),
         .createServer(function (req, res) {
           res.statusCode = 200;
           res.write(
-            "<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'><soapenv:Body/></soapenv:Envelope>"
+            "<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'><soapenv:Body/></soapenv:Envelope>",
           );
           res.end();
         })
@@ -1492,7 +1492,7 @@ var fs = require('fs'),
                 done();
               });
             },
-            baseUrl
+            baseUrl,
           );
         });
     });
@@ -1517,7 +1517,7 @@ var fs = require('fs'),
           {
             request: mockRequestHandler,
           },
-          meta.options
+          meta.options,
         );
         soap.createClient(__dirname + '/wsdl/builtin_types.wsdl', options, function (err, client) {
           assert.ok(client);
@@ -1545,14 +1545,14 @@ var fs = require('fs'),
             function () {
               var sentInputContent = client.lastRequest.substring(
                 client.lastRequest.indexOf('<input>') + '<input>'.length,
-                client.lastRequest.indexOf('</input>')
+                client.lastRequest.indexOf('</input>'),
               );
               assert.equal(
                 sentInputContent,
-                '<PeriodList><PeriodType><PeriodId>1</PeriodId></PeriodType></PeriodList>'
+                '<PeriodList><PeriodType><PeriodId>1</PeriodId></PeriodType></PeriodList>',
               );
               done();
-            }
+            },
           );
         });
       });
@@ -1560,7 +1560,7 @@ var fs = require('fs'),
       it('shall generate correct payload for methods with array parameter with colon override', function (done) {
         soap.createClient(__dirname + '/wsdl/array_namespace_override.wsdl', function (
           err,
-          client
+          client,
         ) {
           assert.ok(client);
           var pathToArrayContainer =
@@ -1579,11 +1579,11 @@ var fs = require('fs'),
           client.createWebOrder(input, function () {
             var sentInputContent = client.lastRequest.substring(
               client.lastRequest.indexOf('<items>'),
-              client.lastRequest.lastIndexOf('</items>') + '</items>'.length
+              client.lastRequest.lastIndexOf('</items>') + '</items>'.length,
             );
             assert.equal(
               sentInputContent,
-              '<items><itemDesc>item1</itemDesc></items><items><itemDesc>item2</itemDesc></items>'
+              '<items><itemDesc>item1</itemDesc></items><items><itemDesc>item2</itemDesc></items>',
             );
             done();
           });
@@ -1593,7 +1593,7 @@ var fs = require('fs'),
       it('shall generate correct payload for methods with array parameter with parent namespace', function (done) {
         soap.createClient(__dirname + '/wsdl/array_namespace_override.wsdl', function (
           err,
-          client
+          client,
         ) {
           assert.ok(client);
           var pathToArrayContainer =
@@ -1612,11 +1612,11 @@ var fs = require('fs'),
           client.createWebOrder(input, function () {
             var sentInputContent = client.lastRequest.substring(
               client.lastRequest.indexOf('<ns1:items>'),
-              client.lastRequest.lastIndexOf('</ns1:items>') + '</ns1:items>'.length
+              client.lastRequest.lastIndexOf('</ns1:items>') + '</ns1:items>'.length,
             );
             assert.equal(
               sentInputContent,
-              '<ns1:items><itemDesc>item1</itemDesc></ns1:items><ns1:items><itemDesc>item2</itemDesc></ns1:items>'
+              '<ns1:items><itemDesc>item1</itemDesc></ns1:items><ns1:items><itemDesc>item2</itemDesc></ns1:items>',
             );
             done();
           });
@@ -1645,16 +1645,16 @@ var fs = require('fs'),
               function () {
                 var sentInputContent = client.lastRequest.substring(
                   client.lastRequest.indexOf('<input>') + '<input>'.length,
-                  client.lastRequest.indexOf('</input>')
+                  client.lastRequest.indexOf('</input>'),
                 );
                 assert.equal(
                   sentInputContent,
-                  '<PeriodList><PeriodType><PeriodId>1</PeriodId><PeriodId>2</PeriodId></PeriodType></PeriodList>'
+                  '<PeriodList><PeriodType><PeriodId>1</PeriodId><PeriodId>2</PeriodId></PeriodType></PeriodList>',
                 );
                 done();
-              }
+              },
             );
-          }
+          },
         );
       });
 
@@ -1681,16 +1681,16 @@ var fs = require('fs'),
               function () {
                 var sentInputContent = client.lastRequest.substring(
                   client.lastRequest.indexOf('<input>') + '<input>'.length,
-                  client.lastRequest.indexOf('</input>')
+                  client.lastRequest.indexOf('</input>'),
                 );
                 assert.equal(
                   sentInputContent,
-                  '<PeriodList><PeriodType><PeriodId>1</PeriodId></PeriodType><PeriodType><PeriodId>2</PeriodId></PeriodType></PeriodList>'
+                  '<PeriodList><PeriodType><PeriodId>1</PeriodId></PeriodType><PeriodType><PeriodId>2</PeriodId></PeriodType></PeriodList>',
                 );
                 done();
-              }
+              },
             );
-          }
+          },
         );
       });
 
@@ -1740,14 +1740,14 @@ var fs = require('fs'),
             function () {
               var sentInputContent = client.lastRequest.substring(
                 client.lastRequest.indexOf('<Requests>') + '<Requests>'.length,
-                client.lastRequest.indexOf('</Requests>')
+                client.lastRequest.indexOf('</Requests>'),
               );
               assert.equal(
                 sentInputContent,
-                '<AddAttributeRequest><RequestIdx>1</RequestIdx><Identifier><SystemNamespace>bugrepro</SystemNamespace><ResellerId>1</ResellerId><CustomerNum>860692</CustomerNum><AccountUid>80a6e559-4d65-11e7-bd5b-0050569a12d7</AccountUid></Identifier><Attr><AttributeId>716</AttributeId><IsTemplateAttribute>0</IsTemplateAttribute><ReadOnly>0</ReadOnly><CanBeModified>1</CanBeModified><Name>domain</Name><AccountElements><AccountElement><ElementId>1693</ElementId><Name>domain</Name><Value>foo</Value><ReadOnly>0</ReadOnly><CanBeModified>1</CanBeModified></AccountElement></AccountElements></Attr><RequestedBy>blah</RequestedBy><RequestedByLogin>system</RequestedByLogin></AddAttributeRequest>'
+                '<AddAttributeRequest><RequestIdx>1</RequestIdx><Identifier><SystemNamespace>bugrepro</SystemNamespace><ResellerId>1</ResellerId><CustomerNum>860692</CustomerNum><AccountUid>80a6e559-4d65-11e7-bd5b-0050569a12d7</AccountUid></Identifier><Attr><AttributeId>716</AttributeId><IsTemplateAttribute>0</IsTemplateAttribute><ReadOnly>0</ReadOnly><CanBeModified>1</CanBeModified><Name>domain</Name><AccountElements><AccountElement><ElementId>1693</ElementId><Name>domain</Name><Value>foo</Value><ReadOnly>0</ReadOnly><CanBeModified>1</CanBeModified></AccountElement></AccountElements></Attr><RequestedBy>blah</RequestedBy><RequestedByLogin>system</RequestedByLogin></AddAttributeRequest>',
               );
               done();
-            }
+            },
           );
         });
       });
@@ -1822,7 +1822,7 @@ var fs = require('fs'),
         soap
           .createClientAsync(
             __dirname + '/wsdl/default_namespace.wsdl',
-            Object.assign({ httpClient: myHttpClient }, meta.options)
+            Object.assign({ httpClient: myHttpClient }, meta.options),
           )
           .then(function (client) {
             assert.ok(client);
@@ -1836,7 +1836,7 @@ var fs = require('fs'),
         soap
           .createClientAsync(
             __dirname + '/wsdl/default_namespace.wsdl',
-            Object.assign({ request: myRequest }, meta.options)
+            Object.assign({ request: myRequest }, meta.options),
           )
           .then(function (client) {
             assert.ok(client);
@@ -1859,7 +1859,7 @@ var fs = require('fs'),
         soap
           .createClientAsync(
             __dirname + '/wsdl/default_namespace.wsdl',
-            Object.assign({ envelopeKey: 'soapenv' }, meta.options)
+            Object.assign({ envelopeKey: 'soapenv' }, meta.options),
           )
           .then(function (client) {
             assert.ok(client);
@@ -1878,7 +1878,7 @@ var fs = require('fs'),
         soap
           .createClientAsync(
             __dirname + '/wsdl/default_namespace.wsdl',
-            Object.assign({ envelopeKey: 'soapenv' }, meta.options)
+            Object.assign({ envelopeKey: 'soapenv' }, meta.options),
           )
           .then(function (createdClient) {
             assert.ok(createdClient);
@@ -1914,7 +1914,7 @@ var fs = require('fs'),
 
             assert.ok(
               client.getSoapHeaders()[0] ===
-                '<esnext>false</esnext><moz>true</moz><boss>true</boss><node>true</node><validthis>true</validthis><globals><EventEmitter>true</EventEmitter><Promise>true</Promise></globals>'
+                '<esnext>false</esnext><moz>true</moz><boss>true</boss><node>true</node><validthis>true</validthis><globals><EventEmitter>true</EventEmitter><Promise>true</Promise></globals>',
             );
             done();
           });
@@ -1969,7 +1969,7 @@ var fs = require('fs'),
               assert.ok(client.lastRequest);
               done();
             });
-          }
+          },
         );
       });
 
@@ -1990,7 +1990,7 @@ var fs = require('fs'),
               assert.ok(client.lastRequest);
               done();
             });
-          }
+          },
         );
       });
 
@@ -2009,7 +2009,7 @@ var fs = require('fs'),
                 assert.ok(client.lastRequest);
                 done();
               });
-          }
+          },
         );
       });
 
@@ -2027,7 +2027,7 @@ var fs = require('fs'),
               client['prefixed-MyOperation']({});
             }, TypeError);
             done();
-          }
+          },
         );
       });
 
@@ -2043,7 +2043,7 @@ var fs = require('fs'),
               assert.ok(client.lastRequest);
               done();
             });
-          }
+          },
         );
       });
 
@@ -2058,7 +2058,7 @@ var fs = require('fs'),
               client['prefixed-MyOperationAsync']({});
             }, TypeError);
             done();
-          }
+          },
         );
       });
     });
@@ -2136,10 +2136,10 @@ describe('Client using stream and returnSaxStream', () => {
             done();
           },
           null,
-          null
+          null,
         );
       },
-      baseUrl
+      baseUrl,
     );
   });
 });

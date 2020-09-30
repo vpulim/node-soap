@@ -25,7 +25,7 @@ export class ClientSSLSecurity implements ISecurity {
     key: string | Buffer,
     cert: string | Buffer,
     ca?: Buffer | string | any[],
-    defaults?: any
+    defaults?: any,
   ) {
     if (key) {
       if (Buffer.isBuffer(key)) {

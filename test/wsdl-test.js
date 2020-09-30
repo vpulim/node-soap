@@ -12,7 +12,7 @@ describe('WSDL Parser (strict)', () => {
     it('should parse and describe ' + file, (done) => {
       soap.createClient(__dirname + '/wsdl/strict/' + file, { strict: true }, function (
         err,
-        client
+        client,
       ) {
         assert.ifError(err);
         client.describe();
@@ -45,7 +45,7 @@ describe('WSDL Parser (strict)', () => {
   it('should parse external wsdl', (done) => {
     soap.createClient(__dirname + '/wsdl/wsdlImport/main.wsdl', { strict: true }, function (
       err,
-      client
+      client,
     ) {
       assert.ifError(err);
       assert.deepEqual(Object.keys(client.wsdl.definitions.schemas), [
@@ -90,7 +90,7 @@ describe('WSDL Parser (strict)', () => {
         },
         function () {
           done();
-        }
+        },
       );
     });
   });
@@ -115,7 +115,7 @@ describe('WSDL Parser (strict)', () => {
       '</bar1:paymentRq></ns1:fooRq>';
     soap.createClient(__dirname + '/wsdl/elementref/foo.wsdl', { strict: true }, function (
       err,
-      client
+      client,
     ) {
       assert.ifError(err);
       client.fooOp({ paymentRq: { bankSvcRq: { requestUID: '001' } } }, function (err, result) {
@@ -130,7 +130,7 @@ describe('WSDL Parser (strict)', () => {
     var reqJson = require('./wsdl/typeref/request.json');
     soap.createClient(__dirname + '/wsdl/typeref/order.wsdl', { strict: true }, function (
       err,
-      client
+      client,
     ) {
       assert.ifError(err);
       client.order(reqJson, function (err, result) {
@@ -147,7 +147,7 @@ describe('WSDL Parser (strict)', () => {
 
     soap.createClient(__dirname + '/wsdl/perf/order.wsdl', { strict: true }, function (
       err,
-      client
+      client,
     ) {
       var i, spyCall;
 
@@ -185,7 +185,7 @@ describe('WSDL Parser (strict)', () => {
 
     soap.createClient(__dirname + '/wsdl/elementref/foo.wsdl', { strict: true }, function (
       err,
-      client
+      client,
     ) {
       assert.ifError(err);
       client.fooOp({ paymentRq: { bankSvcRq: { ':requestUID': '001' } } }, function (err, result) {
@@ -203,7 +203,7 @@ describe('WSDL Parser (strict)', () => {
 
     soap.createClient(__dirname + '/wsdl/mergeWithAttributes/main.wsdl', {}, function (
       err,
-      client
+      client,
     ) {
       assert.ok(!err);
       client.AskPeat({ Question: 'How are you?' }, function (err, result) {
@@ -279,7 +279,7 @@ describe('WSDL Parser (non-strict)', () => {
         function (err, result) {
           assert.equal(client.lastMessage, expectedMsg);
           done();
-        }
+        },
       );
     });
   });
@@ -292,7 +292,7 @@ describe('WSDL Parser (non-strict)', () => {
 
     soap.createClient(__dirname + '/wsdl/mergeWithAttributes/main.wsdl', {}, function (
       err,
-      client
+      client,
     ) {
       assert.ok(!err);
       client.AskPeat({ Question: 'How are you?' }, function (err, result) {

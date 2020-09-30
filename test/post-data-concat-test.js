@@ -54,7 +54,7 @@ describe('post data concat test', function () {
         client.MyOperation(postdata, function (error, response) {
           assert(!error);
         });
-      }
+      },
     );
   });
 });

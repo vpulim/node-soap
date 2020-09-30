@@ -53,7 +53,7 @@ export class HttpClient {
     rurl: string,
     data: any,
     exheaders?: IHeaders,
-    exoptions: IExOptions = {}
+    exoptions: IExOptions = {},
   ): any {
     const curl = url.parse(rurl);
     const secure = curl.protocol === 'https:';
@@ -172,7 +172,7 @@ export class HttpClient {
     callback: (error: any, res?: any, body?: any) => any,
     exheaders?: IHeaders,
     exoptions?: IExOptions,
-    caller?
+    caller?,
   ) {
     const options = this.buildRequest(rurl, data, exheaders, exoptions);
     let req: req.Request;
@@ -211,7 +211,7 @@ export class HttpClient {
     data: any,
     exheaders?: IHeaders,
     exoptions?: IExOptions,
-    caller?
+    caller?,
   ): req.Request {
     const options = this.buildRequest(rurl, data, exheaders, exoptions);
     return this._request(options);

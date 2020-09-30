@@ -77,7 +77,7 @@ describe('SOAP Server', function () {
           clientResponse = client.lastResponse;
           check(clientResponse, gzipResponse);
         });
-      }
+      },
     );
 
     var gzip = zlib.createGzip();
@@ -107,8 +107,8 @@ describe('SOAP Server', function () {
             check(clientResponse, gzipResponse);
             // Don't forget to close the server.
           });
-        }
-      )
+        },
+      ),
     );
 
     // Send the request body through the gzip stream to the server.

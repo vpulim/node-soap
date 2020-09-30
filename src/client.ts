@@ -91,7 +91,7 @@ export class Client extends EventEmitter {
     soapHeader: any,
     name?: any,
     namespace?: any,
-    xmlns?: any
+    xmlns?: any,
   ): void {
     if (!this.soapHeaders) {
       this.soapHeaders = [];
@@ -129,7 +129,7 @@ export class Client extends EventEmitter {
     bodyAttribute: any,
     name?: string,
     namespace?: string,
-    xmlns?: string
+    xmlns?: string,
   ): void {
     if (!this.bodyAttributes) {
       this.bodyAttributes = [];
@@ -243,7 +243,7 @@ export class Client extends EventEmitter {
           result: any,
           rawResponse: any,
           soapHeader: any,
-          rawRequest: any
+          rawRequest: any,
         ) => {
           if (err) {
             reject(err);
@@ -280,7 +280,7 @@ export class Client extends EventEmitter {
           callback(error, result, rawResponse, soapHeader, rawRequest);
         },
         options,
-        extraHeaders
+        extraHeaders,
       );
     };
   }
@@ -313,7 +313,7 @@ export class Client extends EventEmitter {
     location: string,
     callback,
     options,
-    extraHeaders
+    extraHeaders,
   ) {
     const name = method.$name;
     const input = method.input;
@@ -451,7 +451,7 @@ export class Client extends EventEmitter {
         args,
         input.targetNSAlias,
         input.targetNamespace,
-        input.$type || input.$lookupType
+        input.$type || input.$lookupType,
       );
     }
 
@@ -604,7 +604,7 @@ export class Client extends EventEmitter {
       },
       headers,
       options,
-      this
+      this,
     );
 
     // Added mostly for testability, but possibly useful for debugging

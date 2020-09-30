@@ -118,7 +118,7 @@ describe('SOAP Server with Options', function () {
           },
         },
         test.service,
-        test.wsdl
+        test.wsdl,
       );
     });
   });
@@ -126,7 +126,7 @@ describe('SOAP Server with Options', function () {
   it('should start server with callback as normal parameter', function (done) {
     test.server.listen(15099, null, null, function () {
       test.soapServer = soap.listen(test.server, '/stockquote', test.service, test.wsdl, function (
-        err
+        err,
       ) {
         assert.ifError(err);
         done();
@@ -146,7 +146,7 @@ describe('SOAP Server with Options', function () {
           escapeXML: false,
         },
         test.service,
-        test.wsdl
+        test.wsdl,
       );
       test.baseUrl = 'http://' + test.server.address().address + ':' + test.server.address().port;
 
@@ -176,7 +176,7 @@ describe('SOAP Server with Options', function () {
           escapeXML: true,
         },
         test.service,
-        test.wsdl
+        test.wsdl,
       );
       test.baseUrl = 'http://' + test.server.address().address + ':' + test.server.address().port;
 
@@ -207,7 +207,7 @@ describe('SOAP Server with Options', function () {
           escapeXML: true,
         },
         test.service,
-        test.wsdl
+        test.wsdl,
       );
       test.baseUrl = 'http://' + test.server.address().address + ':' + test.server.address().port;
 
@@ -242,7 +242,7 @@ describe('SOAP Server with Options', function () {
           escapeXML: false,
         },
         test.service,
-        test.wsdl
+        test.wsdl,
       );
       test.baseUrl = 'http://' + test.server.address().address + ':' + test.server.address().port;
 
@@ -275,7 +275,7 @@ describe('SOAP Server with Options', function () {
           escapeXML: false,
         },
         test.service,
-        test.wsdl
+        test.wsdl,
       );
       test.baseUrl = 'http://' + test.server.address().address + ':' + test.server.address().port;
 
@@ -304,7 +304,7 @@ describe('SOAP Server with Options', function () {
           assert.equal(res.statusCode, 500);
           assert.ok(body.indexOf('\n    at') !== -1);
           done();
-        }
+        },
       );
     });
   });
@@ -322,7 +322,7 @@ describe('SOAP Server with Options', function () {
           suppressStack: true,
         },
         test.service,
-        test.wsdl
+        test.wsdl,
       );
       test.baseUrl = 'http://' + test.server.address().address + ':' + test.server.address().port;
 
@@ -351,7 +351,7 @@ describe('SOAP Server with Options', function () {
           assert.equal(res.statusCode, 500);
           assert.equal(body.indexOf('\n    at'), -1);
           done();
-        }
+        },
       );
     });
   });
@@ -369,7 +369,7 @@ describe('SOAP Server with Options', function () {
           returnFault: true,
         },
         test.service,
-        test.wsdl
+        test.wsdl,
       );
       test.baseUrl = 'http://' + test.server.address().address + ':' + test.server.address().port;
 
@@ -398,7 +398,7 @@ describe('SOAP Server with Options', function () {
           assert.equal(res.statusCode, 500);
           assert.ok(body.match(/<faultcode>.*<\/faultcode>/g), 'Invalid XML');
           done();
-        }
+        },
       );
     });
   });
@@ -414,7 +414,7 @@ describe('SOAP Server with Options', function () {
           forceSoap12Headers: false,
         },
         test.service,
-        test.wsdl
+        test.wsdl,
       );
       test.baseUrl = 'http://' + test.server.address().address + ':' + test.server.address().port;
 
@@ -439,7 +439,7 @@ describe('SOAP Server with Options', function () {
           assert.ifError(err);
           assert.ok(body.indexOf('xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"') > -1);
           done();
-        }
+        },
       );
     });
   });
@@ -455,7 +455,7 @@ describe('SOAP Server with Options', function () {
           forceSoap12Headers: true,
         },
         test.service,
-        test.wsdl
+        test.wsdl,
       );
       test.baseUrl = 'http://' + test.server.address().address + ':' + test.server.address().port;
 
@@ -480,7 +480,7 @@ describe('SOAP Server with Options', function () {
           assert.ifError(err);
           assert.ok(body.indexOf('xmlns:soap="http://www.w3.org/2003/05/soap-envelope"') > -1);
           done();
-        }
+        },
       );
     });
   });
@@ -497,7 +497,7 @@ describe('SOAP Server with Options', function () {
           },
         },
         test.service,
-        test.wsdl
+        test.wsdl,
       );
       test.baseUrl = 'http://' + test.server.address().address + ':' + test.server.address().port;
 
@@ -537,7 +537,7 @@ describe('SOAP Server with Options', function () {
           },
         },
         test.service,
-        test.wsdl
+        test.wsdl,
       );
       test.baseUrl = 'http://' + test.server.address().address + ':' + test.server.address().port;
 
@@ -567,7 +567,7 @@ describe('SOAP Server with Options', function () {
           xml: test.wsdl,
         },
         test.service,
-        test.wsdl
+        test.wsdl,
       );
       test.baseUrl = 'http://' + test.server.address().address + ':' + test.server.address().port;
 
@@ -604,7 +604,7 @@ describe('SOAP Server with Options', function () {
           enableChunkedEncoding: true,
         },
         test.service,
-        test.wsdl
+        test.wsdl,
       );
       test.baseUrl = 'http://' + test.server.address().address + ':' + test.server.address().port;
 
@@ -641,7 +641,7 @@ describe('SOAP Server with Options', function () {
           enableChunkedEncoding: false,
         },
         test.service,
-        test.wsdl
+        test.wsdl,
       );
       test.baseUrl = 'http://' + test.server.address().address + ':' + test.server.address().port;
 

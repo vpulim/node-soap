@@ -114,7 +114,7 @@ describe('server receive complex type test', function () {
         }
         assert.equal(body, responseXMLGood);
         done();
-      }
+      },
     );
   });
 });

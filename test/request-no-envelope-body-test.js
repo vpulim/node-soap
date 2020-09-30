@@ -31,7 +31,7 @@ describe('No envelope and body elements', function () {
               },
             },
           },
-          wsdl
+          wsdl,
         );
         done();
       });
@@ -66,7 +66,7 @@ describe('No envelope and body elements', function () {
         }
         assert.equal(body.indexOf('Failed to parse the SOAP Message body') !== -1, true);
         done();
-      }
+      },
     );
   });
 });

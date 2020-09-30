@@ -533,7 +533,7 @@ export class WSDL {
           detail = detail || body.Fault.detail;
 
           const error: any = new Error(
-            code + ': ' + string + (detail ? ': ' + JSON.stringify(detail) : '')
+            code + ': ' + string + (detail ? ': ' + JSON.stringify(detail) : ''),
           );
 
           error.root = root;
@@ -587,7 +587,7 @@ export class WSDL {
     params,
     nsPrefix: string,
     nsURI?: string,
-    type?: string
+    type?: string,
   ) {
     // If user supplies XML already, just use that.  XML Declaration should not be present.
     if (params && params._xml) {
@@ -637,7 +637,7 @@ export class WSDL {
         parts.push(
           typeof value === 'object'
             ? this.objectToXML(value, key, nsPrefix, nsURI)
-            : xmlEscape(value)
+            : xmlEscape(value),
         );
         parts.push(['</', prefixedKey, '>'].join(''));
       }
@@ -676,7 +676,7 @@ export class WSDL {
     isFirst?: boolean,
     xmlnsAttr?,
     schemaObject?,
-    nsContext?: NamespaceContext
+    nsContext?: NamespaceContext,
   ) {
     const schema = this.definitions.schemas[nsURI];
 
@@ -769,7 +769,7 @@ export class WSDL {
           false,
           null,
           schemaObject,
-          nsContext
+          nsContext,
         );
 
         let openingTagParts = ['<', name, arrayAttr, xmlnsAttrib];
@@ -849,7 +849,7 @@ export class WSDL {
             false,
             null,
             schemaObject,
-            nsContext
+            nsContext,
           );
         } else {
           if (this.definitions.schemas) {
@@ -962,7 +962,7 @@ export class WSDL {
                   false,
                   childXmlnsAttrib,
                   resolvedChildSchemaObject,
-                  nsContext
+                  nsContext,
                 );
               } else if (
                 obj[this.options.attributesKey] &&
@@ -971,13 +971,13 @@ export class WSDL {
                 // if parent object has complex type defined and child not found in parent
                 const completeChildParamTypeObject = this.findChildSchemaObject(
                   obj[this.options.attributesKey].xsi_type.type,
-                  obj[this.options.attributesKey].xsi_type.xmlns
+                  obj[this.options.attributesKey].xsi_type.xmlns,
                 );
 
                 nonSubNameSpace = obj[this.options.attributesKey].xsi_type.prefix;
                 nsContext.addNamespace(
                   obj[this.options.attributesKey].xsi_type.prefix,
-                  obj[this.options.attributesKey].xsi_type.xmlns
+                  obj[this.options.attributesKey].xsi_type.xmlns,
                 );
                 value = this.objectToXML(
                   child,
@@ -987,7 +987,7 @@ export class WSDL {
                   false,
                   null,
                   null,
-                  nsContext
+                  nsContext,
                 );
               } else {
                 if (Array.isArray(child)) {
@@ -1006,7 +1006,7 @@ export class WSDL {
                   false,
                   null,
                   null,
-                  nsContext
+                  nsContext,
                 );
               }
             } else {
@@ -1034,7 +1034,7 @@ export class WSDL {
               xmlnsAttrib,
               child === null ? ' xsi:nil="true"' : '',
               useEmptyTag ? ' />' : '>',
-            ].join('')
+            ].join(''),
           );
         }
 
@@ -1048,7 +1048,7 @@ export class WSDL {
                 emptyNonSubNameSpace ? '' : appendColon(nonSubNameSpace || ns),
                 name,
                 '>',
-              ].join('')
+              ].join(''),
             );
           }
         }
@@ -1228,7 +1228,7 @@ export class WSDL {
         this.options.ignoredNamespaces = ignoredNamespaces.namespaces;
       } else {
         this.options.ignoredNamespaces = this.ignoredNamespaces.concat(
-          ignoredNamespaces.namespaces
+          ignoredNamespaces.namespaces,
         );
       }
     } else {
@@ -1333,7 +1333,7 @@ export class WSDL {
         });
       } else {
         return callback(
-          new Error('wsdl.defintions is not an instance of elements.DefinitionsElement')
+          new Error('wsdl.defintions is not an instance of elements.DefinitionsElement'),
         );
       }
 
@@ -1542,13 +1542,13 @@ export function open_wsdl(uri: any, p2: WSDLCallback | IOptions, p3?: WSDLCallba
                 '\n\n\r Code: ' +
                 response.statusCode +
                 '\n\n\r Response Body: ' +
-                response.body
-            )
+                response.body,
+            ),
           );
         }
       },
       request_headers,
-      request_options
+      request_options,
     );
   }
 

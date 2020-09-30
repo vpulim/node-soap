@@ -8,7 +8,7 @@ describe('WSSecurityCert', function () {
   var cert = fs.readFileSync(join(__dirname, '..', 'certs', 'agent2-cert.pem'));
   var key = fs.readFileSync(join(__dirname, '..', 'certs', 'agent2-key.pem'));
   var keyWithPassword = fs.readFileSync(
-    join(__dirname, '..', 'certs', 'agent2-key-with-password.pem')
+    join(__dirname, '..', 'certs', 'agent2-key-with-password.pem'),
   ); // The passphrase protecting the private key is "soap"
 
   it('is a function', function () {
@@ -43,23 +43,23 @@ describe('WSSecurityCert', function () {
 
     xml.should.containEql('<wsse:Security');
     xml.should.containEql(
-      'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd'
+      'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd',
     );
     xml.should.containEql(
-      'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd'
+      'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd',
     );
     xml.should.containEql('soap:mustUnderstand="1"');
     xml.should.containEql('<wsse:BinarySecurityToken');
     xml.should.containEql(
-      'EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary'
+      'EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary',
     );
     xml.should.containEql(
-      'ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3"'
+      'ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3"',
     );
     xml.should.containEql('wsu:Id="' + instance.x509Id);
     xml.should.containEql('</wsse:BinarySecurityToken>');
     xml.should.containEql(
-      '<Timestamp xmlns="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" Id="_1">'
+      '<Timestamp xmlns="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" Id="_1">',
     );
     xml.should.containEql('<Created>' + instance.created);
     xml.should.containEql('<Expires>' + instance.expires);
@@ -67,7 +67,7 @@ describe('WSSecurityCert', function () {
     xml.should.containEql('<wsse:SecurityTokenReference');
     xml.should.containEql('<wsse:Reference URI="#' + instance.x509Id);
     xml.should.containEql(
-      'ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3"/>'
+      'ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3"/>',
     );
     xml.should.containEql(instance.publicP12PEM);
     xml.should.containEql(instance.signer.getSignatureXml());
@@ -79,23 +79,23 @@ describe('WSSecurityCert', function () {
 
     xml.should.containEql('<wsse:Security');
     xml.should.containEql(
-      'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd'
+      'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd',
     );
     xml.should.containEql(
-      'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd'
+      'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd',
     );
     xml.should.containEql('soap:mustUnderstand="1"');
     xml.should.containEql('<wsse:BinarySecurityToken');
     xml.should.containEql(
-      'EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary'
+      'EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary',
     );
     xml.should.containEql(
-      'ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3"'
+      'ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3"',
     );
     xml.should.containEql('wsu:Id="' + instance.x509Id);
     xml.should.containEql('</wsse:BinarySecurityToken>');
     xml.should.containEql(
-      '<Timestamp xmlns="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" Id="_1">'
+      '<Timestamp xmlns="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" Id="_1">',
     );
     xml.should.containEql('<Created>' + instance.created);
     xml.should.containEql('<Expires>' + instance.expires);
@@ -103,7 +103,7 @@ describe('WSSecurityCert', function () {
     xml.should.containEql('<wsse:SecurityTokenReference');
     xml.should.containEql('<wsse:Reference URI="#' + instance.x509Id);
     xml.should.containEql(
-      'ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3"/>'
+      'ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3"/>',
     );
     xml.should.containEql(instance.publicP12PEM);
     xml.should.containEql(instance.signer.getSignatureXml());
@@ -113,7 +113,7 @@ describe('WSSecurityCert', function () {
     var instance = new WSSecurityCert(key, cert, '');
     var xml = instance.postProcess(
       '<soap:Header></soap:Header><soap:Body><Body></Body><Timestamp></Timestamp></soap:Body>',
-      'soap'
+      'soap',
     );
     xml.match(/<Reference URI="#/g).should.have.length(2);
   });
@@ -122,7 +122,7 @@ describe('WSSecurityCert', function () {
     var instance = new WSSecurityCert(key, cert, '', { hasTimeStamp: false });
     var xml = instance.postProcess(
       '<soap:Header></soap:Header><soap:Body><Body></Body><Timestamp></Timestamp></soap:Body>',
-      'soap'
+      'soap',
     );
     xml.match(/<Reference URI="#/g).should.have.length(1);
   });
@@ -131,11 +131,11 @@ describe('WSSecurityCert', function () {
     var instance = new WSSecurityCert(key, cert, '');
     var _ = instance.postProcess(
       '<soap:Header></soap:Header><soap:Body><Body></Body><Timestamp></Timestamp></soap:Body>',
-      'soap'
+      'soap',
     );
     var xml = instance.postProcess(
       '<soap:Header></soap:Header><soap:Body><Body></Body><Timestamp></Timestamp></soap:Body>',
-      'soap'
+      'soap',
     );
     xml.match(/<Reference URI="#/g).should.have.length(2);
   });
@@ -144,10 +144,10 @@ describe('WSSecurityCert', function () {
     var instance = new WSSecurityCert(key, cert, '', { hasTimeStamp: false });
     var xml = instance.postProcess(
       '<soap:Header></soap:Header><soap:Body><Body></Body><Timestamp></Timestamp></soap:Body>',
-      'soap'
+      'soap',
     );
     xml.should.not.containEql(
-      '<Timestamp xmlns="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" Id="_1">'
+      '<Timestamp xmlns="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" Id="_1">',
     );
     xml.should.not.containEql('<Created>' + instance.created);
     xml.should.not.containEql('<Expires>' + instance.expires);
@@ -160,10 +160,10 @@ describe('WSSecurityCert', function () {
     });
     var xml = instance.postProcess(
       '<soap:Header></soap:Header><soap:Body><Body></Body></soap:Body>',
-      'soap'
+      'soap',
     );
     xml.should.containEql(
-      'SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"'
+      'SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"',
     );
   });
 
@@ -171,10 +171,10 @@ describe('WSSecurityCert', function () {
     var instance = new WSSecurityCert(key, cert, '');
     var xml = instance.postProcess(
       '<soap:Header></soap:Header><soap:Body><Body></Body></soap:Body>',
-      'soap'
+      'soap',
     );
     xml.should.containEql(
-      'xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"'
+      'xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"',
     );
   });
   it('should still add wsse if another signerOption attribute is passed through ', function () {
@@ -183,10 +183,10 @@ describe('WSSecurityCert', function () {
     });
     var xml = instance.postProcess(
       '<soap:Header></soap:Header><soap:Body><Body></Body></soap:Body>',
-      'soap'
+      'soap',
     );
     xml.should.containEql(
-      'xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"'
+      'xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"',
     );
     xml.should.containEql('<ds:SignedInfo>');
   });
@@ -199,10 +199,10 @@ describe('WSSecurityCert', function () {
     });
     var xml = instance.postProcess(
       '<soap:Header></soap:Header><soap:Body><Body></Body></soap:Body>',
-      'soap'
+      'soap',
     );
     xml.should.containEql(
-      '<wsse:SecurityTokenReference xmlns:wsse="https://localhost/node-soap.xsd">'
+      '<wsse:SecurityTokenReference xmlns:wsse="https://localhost/node-soap.xsd">',
     );
   });
   it('should contain the prefix to the generated Signature tags', function () {
@@ -213,7 +213,7 @@ describe('WSSecurityCert', function () {
     });
     var xml = instance.postProcess(
       '<soap:Header></soap:Header><soap:Body><Body></Body></soap:Body>',
-      'soap'
+      'soap',
     );
     xml.should.containEql('<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">');
     xml.should.containEql('<ds:SignedInfo>');
@@ -234,10 +234,10 @@ describe('WSSecurityCert', function () {
     });
     var xml = instance.postProcess(
       '<soap:Header></soap:Header><soap:Body><Body></Body></soap:Body>',
-      'soap'
+      'soap',
     );
     xml.should.containEql(
-      '<Signature Id="security_123" xmlns="http://www.w3.org/2000/09/xmldsig#">'
+      '<Signature Id="security_123" xmlns="http://www.w3.org/2000/09/xmldsig#">',
     );
   });
   it('should sign additional headers that are added via additionalReferences', function () {
@@ -246,7 +246,7 @@ describe('WSSecurityCert', function () {
     });
     var xml = instance.postProcess(
       '<soap:Header><To Id="To">localhost.com</To><Action Id="action-1234">testing</Action></soap:Header><soap:Body><Body></Body></soap:Body>',
-      'soap'
+      'soap',
     );
     xml.should.containEql('<Reference URI="#To">');
     xml.should.containEql('<Reference URI="#action-1234">');
@@ -255,7 +255,7 @@ describe('WSSecurityCert', function () {
     var instance = new WSSecurityCert(key, cert, '');
     var xml = instance.postProcess(
       '<soapenv:Header></soapenv:Header><soapenv:Body></soapenv:Body>',
-      'soapenv'
+      'soapenv',
     );
     xml.should.containEql('<wsse:Security');
   });
@@ -265,7 +265,7 @@ describe('WSSecurityCert', function () {
       var instance = new WSSecurityCert(key, cert, '');
       xml = instance.postProcess(
         '<soapenv:Header></soapenv:Header><soapenv:Body></soapenv:Body>',
-        'soap'
+        'soap',
       );
     } catch (e) {
       // do nothing

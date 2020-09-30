@@ -94,7 +94,7 @@ export class Server extends EventEmitter {
     security: any,
     processAuthResult?: (result: boolean) => void,
     req?: Request,
-    obj?: any
+    obj?: any,
   ) => boolean | void | Promise<boolean>;
 
   private wsdl: WSDL;
@@ -110,7 +110,7 @@ export class Server extends EventEmitter {
     path: string,
     services: IServices,
     wsdl: WSDL,
-    options?: IServerOptions
+    options?: IServerOptions,
   ) {
     super();
 
@@ -185,7 +185,7 @@ export class Server extends EventEmitter {
     soapHeader: any,
     name?: any,
     namespace?: any,
-    xmlns?: any
+    xmlns?: any,
   ): void {
     if (!this.soapHeaders) {
       this.soapHeaders = [];
@@ -252,7 +252,7 @@ export class Server extends EventEmitter {
               this.log('error', err);
             }
           },
-          new Date().toISOString()
+          new Date().toISOString(),
         );
       } else {
         error = err.stack ? (this.suppressStack === true ? err.message : err.stack) : err;
@@ -404,7 +404,7 @@ export class Server extends EventEmitter {
               style: 'rpc',
             },
             req,
-            callback
+            callback,
           );
         } else {
           const messageElemName =
@@ -430,7 +430,7 @@ export class Server extends EventEmitter {
             },
             req,
             callback,
-            includeTimestamp
+            includeTimestamp,
           );
         }
       } catch (error) {
@@ -463,7 +463,7 @@ export class Server extends EventEmitter {
               statusCode: 500,
             },
             callback,
-            includeTimestamp
+            includeTimestamp,
           );
         }
 
@@ -486,7 +486,7 @@ export class Server extends EventEmitter {
                   statusCode: 500,
                 },
                 callback,
-                includeTimestamp
+                includeTimestamp,
               );
             }
           } else {
@@ -500,7 +500,7 @@ export class Server extends EventEmitter {
                 statusCode: 401,
               },
               callback,
-              includeTimestamp
+              includeTimestamp,
             );
           }
         }
@@ -510,7 +510,7 @@ export class Server extends EventEmitter {
         obj.Header && obj.Header.Security,
         processAuthResult,
         req,
-        obj
+        obj,
       );
       if (isPromiseLike<boolean>(functionResult)) {
         functionResult.then(
@@ -519,7 +519,7 @@ export class Server extends EventEmitter {
           },
           (err: any) => {
             processAuthResult(err);
-          }
+          },
         );
       }
       if (typeof functionResult === 'boolean') {
@@ -534,7 +534,7 @@ export class Server extends EventEmitter {
     options: IExecuteMethodOptions,
     req: Request,
     callback: (result: any, statusCode?: number) => any,
-    includeTimestamp?
+    includeTimestamp?,
   ) {
     options = options || {};
     let method: ISoapServiceMethod;
@@ -586,7 +586,7 @@ export class Server extends EventEmitter {
               statusCode: 500,
             },
             callback,
-            includeTimestamp
+            includeTimestamp,
           );
         }
       }
@@ -596,7 +596,7 @@ export class Server extends EventEmitter {
           outputName,
           result,
           '',
-          this.wsdl.definitions.$targetNamespace
+          this.wsdl.definitions.$targetNamespace,
         );
       } else {
         const element = this.wsdl.definitions.services[serviceName].ports[portName].binding.methods[
@@ -606,7 +606,7 @@ export class Server extends EventEmitter {
           outputName,
           result,
           element.targetNSAlias,
-          element.targetNamespace
+          element.targetNamespace,
         );
       }
       callback(this._envelope(body, headers, includeTimestamp));
@@ -645,7 +645,7 @@ export class Server extends EventEmitter {
           },
           (err) => {
             handleResult(err);
-          }
+          },
         );
       } else {
         handleResult(null, result);
@@ -707,7 +707,7 @@ export class Server extends EventEmitter {
   private _sendError(
     soapFault: ISoapFault,
     callback: (result: any, statusCode?: number) => any,
-    includeTimestamp
+    includeTimestamp,
   ) {
     let fault;
 

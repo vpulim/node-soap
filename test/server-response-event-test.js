@@ -94,7 +94,7 @@ describe('server response event test', function () {
         }
         assert.equal(body, responseXMLChanged);
         done();
-      }
+      },
     );
   });
 });
