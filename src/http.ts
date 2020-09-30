@@ -7,7 +7,7 @@ import * as debugBuilder from 'debug';
 import * as httpNtlm from 'httpntlm';
 import * as req from 'request';
 import * as url from 'url';
-import {v4 as uuidv4} from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import { IHeaders, IOptions } from './types';
 
 const debug = debugBuilder('node-soap');
@@ -49,27 +49,41 @@ export class HttpClient {
    * @param {Object} exoptions Extra options
    * @returns {Object} The http request object for the `request` module
    */
-  public buildRequest(rurl: string, data: any, exheaders?: IHeaders, exoptions: IExOptions = {}): any {
+  public buildRequest(
+    rurl: string,
+    data: any,
+    exheaders?: IHeaders,
+    exoptions: IExOptions = {}
+  ): any {
     const curl = url.parse(rurl);
     const secure = curl.protocol === 'https:';
     const host = curl.hostname;
     const port = parseInt(curl.port, 10);
-    const path = [curl.pathname || '/', curl.search || '', curl.hash || ''].join('');
+    const path = [
+      curl.pathname || '/',
+      curl.search || '',
+      curl.hash || '',
+    ].join('');
     const method = data ? 'POST' : 'GET';
     const headers: IHeaders = {
       'User-Agent': 'node-soap/' + VERSION,
-      'Accept': 'text/html,application/xhtml+xml,application/xml,text/xml;q=0.9,*/*;q=0.8',
+      Accept:
+        'text/html,application/xhtml+xml,application/xml,text/xml;q=0.9,*/*;q=0.8',
       'Accept-Encoding': 'none',
       'Accept-Charset': 'utf-8',
-      'Connection': exoptions.forever ? 'keep-alive' : 'close',
-      'Host': host + (isNaN(port) ? '' : ':' + port),
+      Connection: exoptions.forever ? 'keep-alive' : 'close',
+      Host: host + (isNaN(port) ? '' : ':' + port),
     };
     const mergeOptions = ['headers'];
 
-    const {attachments: _attachments, ...newExoptions } = exoptions;
+    const { attachments: _attachments, ...newExoptions } = exoptions;
     const attachments: IAttachment[] = _attachments || [];
 
-    if (typeof data === 'string' && attachments.length === 0 && !exoptions.forceMTOM) {
+    if (
+      typeof data === 'string' &&
+      attachments.length === 0 &&
+      !exoptions.forceMTOM
+    ) {
       headers['Content-Length'] = Buffer.byteLength(data, 'utf8');
       headers['Content-Type'] = 'application/x-www-form-urlencoded';
     }
@@ -90,30 +104,36 @@ export class HttpClient {
       const start = uuidv4();
       let action = null;
       if (headers['Content-Type'].indexOf('action') > -1) {
-           for (const ct of headers['Content-Type'].split('; ')) {
-               if (ct.indexOf('action') > -1) {
-                    action = ct;
-               }
-           }
+        for (const ct of headers['Content-Type'].split('; ')) {
+          if (ct.indexOf('action') > -1) {
+            action = ct;
+          }
+        }
       }
       headers['Content-Type'] =
-        'multipart/related; type="application/xop+xml"; start="<' + start + '>"; start-info="text/xml"; boundary=' + uuidv4();
+        'multipart/related; type="application/xop+xml"; start="<' +
+        start +
+        '>"; start-info="text/xml"; boundary=' +
+        uuidv4();
       if (action) {
-          headers['Content-Type'] = headers['Content-Type'] + '; ' + action;
+        headers['Content-Type'] = headers['Content-Type'] + '; ' + action;
       }
-      const multipart: any[] = [{
-        'Content-Type': 'application/xop+xml; charset=UTF-8; type="text/xml"',
-        'Content-ID': '<' + start + '>',
-        'body': data,
-      }];
+      const multipart: any[] = [
+        {
+          'Content-Type': 'application/xop+xml; charset=UTF-8; type="text/xml"',
+          'Content-ID': '<' + start + '>',
+          body: data,
+        },
+      ];
 
       attachments.forEach((attachment) => {
         multipart.push({
           'Content-Type': attachment.mimetype,
           'Content-Transfer-Encoding': 'binary',
           'Content-ID': '<' + attachment.contentId + '>',
-          'Content-Disposition': 'attachment; filename="' + attachment.name + '"',
-          'body': attachment.body,
+          'Content-Disposition':
+            'attachment; filename="' + attachment.name + '"',
+          body: attachment.body,
         });
       });
       options.multipart = multipart;
@@ -146,8 +166,11 @@ export class HttpClient {
     if (typeof body === 'string') {
       // Remove any extra characters that appear before or after the SOAP
       // envelope.
-      const match =
-        body.replace(/<!--[\s\S]*?-->/, '').match(/(?:<\?[^?]*\?>[\s]*)?<([^:]*):Envelope([\S\s]*)<\/\1:Envelope>/i);
+      const match = body
+        .replace(/<!--[\s\S]*?-->/, '')
+        .match(
+          /(?:<\?[^?]*\?>[\s]*)?<([^:]*):Envelope([\S\s]*)<\/\1:Envelope>/i
+        );
       if (match) {
         body = match[0];
       }
@@ -161,7 +184,7 @@ export class HttpClient {
     callback: (error: any, res?: any, body?: any) => any,
     exheaders?: IHeaders,
     exoptions?: IExOptions,
-    caller?,
+    caller?
   ) {
     const options = this.buildRequest(rurl, data, exheaders, exoptions);
     let req: req.Request;
@@ -176,7 +199,7 @@ export class HttpClient {
           return callback(err);
         }
         // if result is stream
-        if ( typeof res.body !== 'string') {
+        if (typeof res.body !== 'string') {
           res.body = res.body.toString();
         }
         res.body = this.handleResponse(req, res, res.body);
@@ -195,7 +218,13 @@ export class HttpClient {
     return req;
   }
 
-  public requestStream(rurl: string, data: any, exheaders?: IHeaders, exoptions?: IExOptions, caller?): req.Request {
+  public requestStream(
+    rurl: string,
+    data: any,
+    exheaders?: IHeaders,
+    exoptions?: IExOptions,
+    caller?
+  ): req.Request {
     const options = this.buildRequest(rurl, data, exheaders, exoptions);
     return this._request(options);
   }

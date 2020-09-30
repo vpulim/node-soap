@@ -1,4 +1,3 @@
-
 import { ok as assert } from 'assert';
 import * as debugBuilder from 'debug';
 import * as _ from 'lodash';
@@ -60,7 +59,7 @@ export interface IXmlNs {
 }
 
 export class Element {
-  public readonly allowedChildren?: {[k: string]: typeof Element} = {};
+  public readonly allowedChildren?: { [k: string]: typeof Element } = {};
   public $name?: string;
   public $targetNamespace?;
   public children: Element[] = [];
@@ -119,7 +118,13 @@ export class Element {
     delete this.name;
   }
 
-  public startElement(stack: Element[], nsName: string, attrs, options: IWsdlBaseOptions, schemaXmlns) {
+  public startElement(
+    stack: Element[],
+    nsName: string,
+    attrs,
+    options: IWsdlBaseOptions,
+    schemaXmlns
+  ) {
     if (!this.allowedChildren) {
       return;
     }
@@ -132,7 +137,6 @@ export class Element {
     } else {
       this.unexpected(nsName);
     }
-
   }
 
   public endElement(stack: Element[], nsName: string) {
@@ -156,15 +160,16 @@ export class Element {
   }
 
   public unexpected(name: string) {
-    throw new Error('Found unexpected element (' + name + ') inside ' + this.nsName);
+    throw new Error(
+      'Found unexpected element (' + name + ') inside ' + this.nsName
+    );
   }
 
   public description(definitions?: DefinitionsElement, xmlns?: IXmlNs): any {
     return this.$name || this.name;
   }
 
-  public init(): void {
-  }
+  public init(): void {}
 
   private _initializeOptions(options: IWsdlBaseOptions) {
     if (options) {
@@ -226,20 +231,25 @@ export class ElementElement extends Element {
     if (type) {
       type = splitQName(type);
       const typeName: string = type.name;
-      const ns: string = xmlns && xmlns[type.prefix] ||
-          ((definitions.xmlns[type.prefix] !== undefined || definitions.xmlns[this.targetNSAlias] !== undefined) && this.schemaXmlns[type.prefix]) ||
-          definitions.xmlns[type.prefix];
+      const ns: string =
+        (xmlns && xmlns[type.prefix]) ||
+        ((definitions.xmlns[type.prefix] !== undefined ||
+          definitions.xmlns[this.targetNSAlias] !== undefined) &&
+          this.schemaXmlns[type.prefix]) ||
+        definitions.xmlns[type.prefix];
       const schema = definitions.schemas[ns];
-      const typeElement = schema && ( this.$type ? schema.complexTypes[typeName] || schema.types[typeName] : schema.elements[typeName] );
+      const typeElement =
+        schema &&
+        (this.$type
+          ? schema.complexTypes[typeName] || schema.types[typeName]
+          : schema.elements[typeName]);
 
       if (ns && definitions.schemas[ns]) {
         xmlns = definitions.schemas[ns].xmlns;
       }
 
       if (typeElement && !(typeName in Primitives)) {
-
         if (!(typeName in definitions.descriptions.types)) {
-
           let elem: any = {};
           if (!this.$ref) {
             definitions.descriptions.types[typeName] = elem;
@@ -273,7 +283,6 @@ export class ElementElement extends Element {
             element[name] = definitions.descriptions.types[typeName];
           }
         }
-
       } else {
         element[name] = this.$type;
       }
@@ -281,7 +290,10 @@ export class ElementElement extends Element {
       const children = this.children;
       element[name] = {};
       for (const child of children) {
-        if (child instanceof ComplexTypeElement || child instanceof SimpleTypeElement) {
+        if (
+          child instanceof ComplexTypeElement ||
+          child instanceof SimpleTypeElement
+        ) {
           element[name] = child.description(definitions, xmlns);
         }
       }
@@ -290,8 +302,7 @@ export class ElementElement extends Element {
   }
 }
 
-export class AnyElement extends Element {
-}
+export class AnyElement extends Element {}
 
 export class InputElement extends Element {
   public readonly allowedChildren = buildAllowedChildren([
@@ -344,9 +355,7 @@ export class OutputElement extends Element {
 }
 
 export class SimpleTypeElement extends Element {
-  public readonly allowedChildren = buildAllowedChildren([
-    'restriction',
-  ]);
+  public readonly allowedChildren = buildAllowedChildren(['restriction']);
 
   public description(definitions: DefinitionsElement) {
     for (const child of this.children) {
@@ -370,7 +379,7 @@ export class RestrictionElement extends Element {
   public description(definitions?: DefinitionsElement, xmlns?: IXmlNs) {
     const children = this.children;
     let desc;
-    for (let i = 0, child; child = children[i]; i++) {
+    for (let i = 0, child; (child = children[i]); i++) {
       if (child instanceof SequenceElement || child instanceof ChoiceElement) {
         desc = child.description(definitions, xmlns);
         break;
@@ -379,9 +388,14 @@ export class RestrictionElement extends Element {
     if (desc && this.$base) {
       const type = splitQName(this.$base);
       const typeName = type.name;
-      const ns = xmlns && xmlns[type.prefix] || definitions.xmlns[type.prefix];
+      const ns =
+        (xmlns && xmlns[type.prefix]) || definitions.xmlns[type.prefix];
       const schema = definitions.schemas[ns];
-      const typeElement = schema && ( schema.complexTypes[typeName] || schema.types[typeName] || schema.elements[typeName] );
+      const typeElement =
+        schema &&
+        (schema.complexTypes[typeName] ||
+          schema.types[typeName] ||
+          schema.elements[typeName]);
 
       desc.getBase = () => {
         return typeElement.description(definitions, schema.xmlns);
@@ -391,9 +405,11 @@ export class RestrictionElement extends Element {
 
     // then simple element
     const base = this.$base ? this.$base + '|' : '';
-    const restrictions = this.children.map((child) => {
-      return child.description();
-    }).join(',');
+    const restrictions = this.children
+      .map((child) => {
+        return child.description();
+      })
+      .join(',');
 
     return [this.$base, restrictions].filter(Boolean).join('|');
   }
@@ -417,14 +433,18 @@ export class ExtensionElement extends Element {
     if (this.$base) {
       const type = splitQName(this.$base);
       const typeName = type.name;
-      const ns = xmlns && xmlns[type.prefix] || definitions.xmlns[type.prefix];
+      const ns =
+        (xmlns && xmlns[type.prefix]) || definitions.xmlns[type.prefix];
       const schema = definitions.schemas[ns];
 
       if (typeName in Primitives) {
         return this.$base;
       } else {
-        const typeElement = schema && ( schema.complexTypes[typeName] ||
-          schema.types[typeName] || schema.elements[typeName] );
+        const typeElement =
+          schema &&
+          (schema.complexTypes[typeName] ||
+            schema.types[typeName] ||
+            schema.elements[typeName]);
 
         if (typeElement) {
           const base = typeElement.description(definitions, schema.xmlns);
@@ -474,12 +494,13 @@ export class ComplexTypeElement extends Element {
   public description(definitions: DefinitionsElement, xmlns: IXmlNs) {
     const children = this.children || [];
     for (const child of children) {
-      if (child instanceof ChoiceElement ||
+      if (
+        child instanceof ChoiceElement ||
         child instanceof SequenceElement ||
         child instanceof AllElement ||
         child instanceof SimpleContentElement ||
-        child instanceof ComplexContentElement) {
-
+        child instanceof ComplexContentElement
+      ) {
         return child.description(definitions, xmlns);
       }
     }
@@ -488,9 +509,7 @@ export class ComplexTypeElement extends Element {
 }
 
 export class ComplexContentElement extends Element {
-  public readonly allowedChildren = buildAllowedChildren([
-    'extension',
-  ]);
+  public readonly allowedChildren = buildAllowedChildren(['extension']);
   public description(definitions: DefinitionsElement, xmlns: IXmlNs) {
     for (const child of this.children) {
       if (child instanceof ExtensionElement) {
@@ -502,9 +521,7 @@ export class ComplexContentElement extends Element {
 }
 
 export class SimpleContentElement extends Element {
-  public readonly allowedChildren = buildAllowedChildren([
-    'extension',
-  ]);
+  public readonly allowedChildren = buildAllowedChildren(['extension']);
   public description(definitions: DefinitionsElement, xmlns: IXmlNs) {
     for (const child of this.children) {
       if (child instanceof ExtensionElement) {
@@ -538,10 +555,7 @@ export class SequenceElement extends Element {
 }
 
 export class AllElement extends Element {
-  public readonly allowedChildren = buildAllowedChildren([
-    'choice',
-    'element',
-  ]);
+  public readonly allowedChildren = buildAllowedChildren(['choice', 'element']);
   public description(definitions: DefinitionsElement, xmlns: IXmlNs) {
     const sequence = {};
     for (const child of this.children) {
@@ -590,7 +604,10 @@ export class MessageElement extends Element {
       let schema = definitions.schemas[definitions.xmlns[ns]];
       this.element = schema.elements[nsName.name];
       if (!this.element) {
-        debug(nsName.name + ' is not present in wsdl and cannot be processed correctly.');
+        debug(
+          nsName.name +
+            ' is not present in wsdl and cannot be processed correctly.'
+        );
         return;
       }
       this.element.targetNSAlias = ns;
@@ -611,17 +628,21 @@ export class MessageElement extends Element {
 
       // if nested lookup types where found, prepare them for furter usage
       if (lookupTypes.length > 0) {
-        lookupTypes = lookupTypes.
-          join('_').
-          split('_').
-          filter(function removeEmptyLookupTypes(type) {
+        lookupTypes = lookupTypes
+          .join('_')
+          .split('_')
+          .filter(function removeEmptyLookupTypes(type) {
             return type !== '^';
           });
 
-        const schemaXmlns = definitions.schemas[this.element.targetNamespace].xmlns;
+        const schemaXmlns =
+          definitions.schemas[this.element.targetNamespace].xmlns;
 
         for (let i = 0; i < lookupTypes.length; i++) {
-          lookupTypes[i] = this._createLookupTypeObject(lookupTypes[i], schemaXmlns);
+          lookupTypes[i] = this._createLookupTypeObject(
+            lookupTypes[i],
+            schemaXmlns
+          );
         }
       }
 
@@ -629,15 +650,20 @@ export class MessageElement extends Element {
 
       if (this.element.$type) {
         const type = splitQName(this.element.$type);
-        const typeNs = schema.xmlns && schema.xmlns[type.prefix] || definitions.xmlns[type.prefix];
+        const typeNs =
+          (schema.xmlns && schema.xmlns[type.prefix]) ||
+          definitions.xmlns[type.prefix];
 
         if (typeNs) {
           if (type.name in Primitives) {
-              // this.element = this.element.$type;
+            // this.element = this.element.$type;
           } else {
             // first check local mapping of ns alias to namespace
             schema = definitions.schemas[typeNs];
-            const ctype = schema.complexTypes[type.name] || schema.types[type.name] || schema.elements[type.name];
+            const ctype =
+              schema.complexTypes[type.name] ||
+              schema.types[type.name] ||
+              schema.elements[type.name];
 
             if (ctype) {
               this.parts = ctype.description(definitions, schema.xmlns);
@@ -654,7 +680,7 @@ export class MessageElement extends Element {
       // rpc encoding
       this.parts = {};
       delete this.element;
-      for (let i = 0; part = this.children[i]; i++) {
+      for (let i = 0; (part = this.children[i]); i++) {
         if (part.name === 'documentation') {
           // <wsdl:documentation can be present under <wsdl:message>
           continue;
@@ -665,7 +691,9 @@ export class MessageElement extends Element {
         const type = nsName.name;
         const schemaDefinition = definitions.schemas[ns];
         if (typeof schemaDefinition !== 'undefined') {
-          this.parts[part.$name] = definitions.schemas[ns].types[type] || definitions.schemas[ns].complexTypes[type];
+          this.parts[part.$name] =
+            definitions.schemas[ns].types[type] ||
+            definitions.schemas[ns].complexTypes[type];
         } else {
           this.parts[part.$name] = part.$type;
         }
@@ -731,16 +759,18 @@ export class MessageElement extends Element {
 
     if (element.hasOwnProperty('$type') && typeof element.$type === 'string') {
       if (excluded.indexOf(element.$type.split(':')[0]) === -1) {
-        resolvedType += ('_' + element.$type + '#' + element.$name);
+        resolvedType += '_' + element.$type + '#' + element.$name;
       }
     }
 
     if (element.children.length > 0) {
       element.children.forEach((child) => {
-        const resolvedChildType = this._getNestedLookupTypeString(child).replace(/\^_/, '');
+        const resolvedChildType = this._getNestedLookupTypeString(
+          child
+        ).replace(/\^_/, '');
 
         if (resolvedChildType && typeof resolvedChildType === 'string') {
-          resolvedType += ('_' + resolvedChildType);
+          resolvedType += '_' + resolvedChildType;
         }
       });
     }
@@ -766,9 +796,9 @@ export class SchemaElement extends Element {
     'include',
     'simpleType',
   ]);
-  public complexTypes: {[name: string]: ComplexTypeElement} = {};
-  public types: {[name: string]: SimpleTypeElement} = {};
-  public elements: {[name: string]: ElementElement} = {};
+  public complexTypes: { [name: string]: ComplexTypeElement } = {};
+  public types: { [name: string]: SimpleTypeElement } = {};
+  public elements: { [name: string]: ElementElement } = {};
   public includes: IInclude[] = [];
   public $elementFormDefault;
 
@@ -781,9 +811,12 @@ export class SchemaElement extends Element {
     _.merge(this.xmlns, source.xmlns);
 
     // Merge attributes from source without overwriting our's
-    _.merge(this, _.pickBy(source, (value, key) => {
-      return key.startsWith('$') && !this.hasOwnProperty(key);
-    }));
+    _.merge(
+      this,
+      _.pickBy(source, (value, key) => {
+        return key.startsWith('$') && !this.hasOwnProperty(key);
+      })
+    );
 
     return this;
   }
@@ -796,7 +829,8 @@ export class SchemaElement extends Element {
       const location = child.$schemaLocation || child.$location;
       if (location) {
         this.includes.push({
-          namespace: child.$namespace || child.$targetNamespace || this.$targetNamespace,
+          namespace:
+            child.$namespace || child.$targetNamespace || this.$targetNamespace,
           location: location,
         });
       }
@@ -817,7 +851,7 @@ export class TypesElement extends Element {
     'documentation',
     'schema',
   ]);
-  public schemas: {[name: string]: SchemaElement} = {};
+  public schemas: { [name: string]: SchemaElement } = {};
 
   // fix#325
   public addChild(child) {
@@ -828,7 +862,11 @@ export class TypesElement extends Element {
     if (!this.schemas.hasOwnProperty(targetNamespace)) {
       this.schemas[targetNamespace] = child;
     } else {
-      console.error('Target-Namespace "' + targetNamespace + '" already in use by another Schema!');
+      console.error(
+        'Target-Namespace "' +
+          targetNamespace +
+          '" already in use by another Schema!'
+      );
     }
   }
 }
@@ -860,7 +898,7 @@ export class OperationElement extends Element {
 
   public postProcess(definitions: DefinitionsElement, tag: string) {
     const children = this.children;
-    for (let i = 0, child; child = children[i]; i++) {
+    for (let i = 0, child; (child = children[i]); i++) {
       if (child.name !== 'input' && child.name !== 'output') {
         continue;
       }
@@ -885,7 +923,9 @@ export class OperationElement extends Element {
 
   public description(definitions: DefinitionsElement) {
     const inputDesc = this.input ? this.input.description(definitions) : null;
-    const outputDesc = this.output ? this.output.description(definitions) : null;
+    const outputDesc = this.output
+      ? this.output.description(definitions)
+      : null;
     return {
       input: inputDesc && inputDesc[Object.keys(inputDesc)[0]],
       output: outputDesc && outputDesc[Object.keys(outputDesc)[0]],
@@ -907,7 +947,7 @@ export class PortTypeElement extends Element {
     if (typeof children === 'undefined') {
       return;
     }
-    for (let i = 0, child; child = children[i]; i++) {
+    for (let i = 0, child; (child = children[i]); i++) {
       if (child.name !== 'operation') {
         continue;
       }
@@ -948,7 +988,7 @@ export class BindingElement extends Element {
   public topElements?: ITopElements;
   public transport = '';
   public style = '';
-  public methods: {[name: string]: OperationElement} = {};
+  public methods: { [name: string]: OperationElement } = {};
   public $type?: string;
 
   public addChild(child) {
@@ -968,7 +1008,7 @@ export class BindingElement extends Element {
       portType.postProcess(definitions);
       this.methods = portType.methods;
 
-      for (let i = 0, child; child = children[i]; i++) {
+      for (let i = 0, child; (child = children[i]); i++) {
         if (child.name !== 'operation') {
           continue;
         }
@@ -1010,7 +1050,7 @@ export class PortElement extends Element {
   public location = null;
 
   public addChild(child) {
-    if (child.name === 'address' && typeof (child.$location) !== 'undefined') {
+    if (child.name === 'address' && typeof child.$location !== 'undefined') {
       this.location = child.$location;
     }
   }
@@ -1026,13 +1066,13 @@ export class ServiceElement extends Element {
     'documentation',
     'port',
   ]);
-  public ports: {[name: string]: IPort} = {};
+  public ports: { [name: string]: IPort } = {};
 
   public postProcess(definitions: DefinitionsElement) {
     const children = this.children;
     const bindings = definitions.bindings;
     if (children && children.length > 0) {
-      for (let i = 0, child; child = children[i]; i++) {
+      for (let i = 0, child; (child = children[i]); i++) {
         if (child.name !== 'port') {
           continue;
         }
@@ -1073,21 +1113,23 @@ export class DefinitionsElement extends Element {
     'types',
   ]);
   public complexTypes;
-  public messages: {[name: string]: MessageElement} = {};
-  public portTypes: {[name: string]: PortTypeElement} = {};
-  public bindings: {[name: string]: BindingElement} = {};
-  public services: {[name: string]: ServiceElement} = {};
-  public schemas: {[name: string]: SchemaElement} = {};
+  public messages: { [name: string]: MessageElement } = {};
+  public portTypes: { [name: string]: PortTypeElement } = {};
+  public bindings: { [name: string]: BindingElement } = {};
+  public services: { [name: string]: ServiceElement } = {};
+  public schemas: { [name: string]: SchemaElement } = {};
   public descriptions: {
     types: {
       [key: string]: Element;
-    },
+    };
   } = {
     types: {},
   };
 
   public init() {
-    if (this.name !== 'definitions') { this.unexpected(this.nsName); }
+    if (this.name !== 'definitions') {
+      this.unexpected(this.nsName);
+    }
   }
 
   public addChild(child) {
@@ -1104,8 +1146,10 @@ export class DefinitionsElement extends Element {
     } else if (child instanceof PortTypeElement) {
       this.portTypes[child.$name] = child;
     } else if (child instanceof BindingElement) {
-      if (child.transport === 'http://schemas.xmlsoap.org/soap/http' ||
-        child.transport === 'http://www.w3.org/2003/05/soap/bindings/HTTP/') {
+      if (
+        child.transport === 'http://schemas.xmlsoap.org/soap/http' ||
+        child.transport === 'http://www.w3.org/2003/05/soap/bindings/HTTP/'
+      ) {
         this.bindings[child.$name] = child;
       }
     } else if (child instanceof ServiceElement) {
@@ -1167,7 +1211,9 @@ const ElementTypeMap: {
   types: TypesElement,
 };
 
-function buildAllowedChildren(elementList: string[]): {[k: string]: typeof Element} {
+function buildAllowedChildren(
+  elementList: string[]
+): { [k: string]: typeof Element } {
   const rtn = {};
   for (const element of elementList) {
     rtn[element.replace(/^_/, '')] = ElementTypeMap[element] || Element;

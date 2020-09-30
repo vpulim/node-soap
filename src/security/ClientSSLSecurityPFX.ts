@@ -1,4 +1,3 @@
-
 import * as fs from 'fs';
 import * as https from 'https';
 import * as _ from 'lodash';
@@ -28,7 +27,9 @@ export class ClientSSLSecurityPFX implements ISecurity {
       } else if (typeof pfx === 'string') {
         this.pfx = fs.readFileSync(pfx);
       } else {
-        throw new Error('supplied pfx file should be a buffer or a file location');
+        throw new Error(
+          'supplied pfx file should be a buffer or a file location'
+        );
       }
     }
 

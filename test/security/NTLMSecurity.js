@@ -1,13 +1,13 @@
 'use strict';
 
-describe('NTLMSecurity', function() {
+describe('NTLMSecurity', function () {
   var NTLMSecurity = require('../../').NTLMSecurity;
-  var username = "admin";
-  var password = "password1234";
-  var domain = "LOCAL";
-  var workstation = "MACHINE";
+  var username = 'admin';
+  var password = 'password1234';
+  var domain = 'LOCAL';
+  var workstation = 'MACHINE';
 
-  it('is a function', function() {
+  it('is a function', function () {
     NTLMSecurity.should.be.type('function');
   });
 
@@ -17,17 +17,20 @@ describe('NTLMSecurity', function() {
         username: username,
         password: password,
         domain: domain,
-        workstation: workstation
+        workstation: workstation,
       };
       var instance = new NTLMSecurity(options);
       instance.defaults.should.have.property('username', options.username);
       instance.defaults.should.have.property('password', options.password);
       instance.defaults.should.have.property('domain', options.domain);
-      instance.defaults.should.have.property('workstation', options.workstation);
+      instance.defaults.should.have.property(
+        'workstation',
+        options.workstation
+      );
       instance.defaults.should.have.property('ntlm', true);
     });
 
-    it('should accept valid variables', function() {
+    it('should accept valid variables', function () {
       var instance = new NTLMSecurity(username, password, domain, workstation);
       instance.defaults.should.have.property('username', username);
       instance.defaults.should.have.property('password', password);
@@ -36,9 +39,9 @@ describe('NTLMSecurity', function() {
       instance.defaults.should.have.property('ntlm', true);
     });
   });
-  
+
   describe('addHeaders', function () {
-    it('should set connection as \'keep-alive\'', function () {
+    it("should set connection as 'keep-alive'", function () {
       var headers = {};
       var instance = new NTLMSecurity(username, password);
       instance.addHeaders(headers);
@@ -46,13 +49,13 @@ describe('NTLMSecurity', function() {
     });
   });
 
-  describe('defaultOption param', function() {
-    it('is used in addOptions', function() {
+  describe('defaultOption param', function () {
+    it('is used in addOptions', function () {
       var options = {};
       var instance = new NTLMSecurity(username, password);
       instance.addOptions(options);
-      options.should.have.property("username", username);
-      options.should.have.property("password", password);
+      options.should.have.property('username', username);
+      options.should.have.property('password', password);
     });
   });
 });

@@ -1,4 +1,3 @@
-
 import * as _ from 'lodash';
 import { IHeaders, ISecurity } from '../types';
 
@@ -6,7 +5,12 @@ export class NTLMSecurity implements ISecurity {
   private defaults;
 
   constructor(defaults: any);
-  constructor(username: any, password?: string, domain?: string, workstation?: string) {
+  constructor(
+    username: any,
+    password?: string,
+    domain?: string,
+    workstation?: string
+  ) {
     if (typeof username === 'object') {
       this.defaults = username;
       this.defaults.ntlm = true;
