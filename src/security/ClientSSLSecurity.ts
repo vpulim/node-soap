@@ -1,4 +1,3 @@
-
 import * as fs from 'fs';
 import * as https from 'https';
 import * as _ from 'lodash';
@@ -21,8 +20,7 @@ export class ClientSSLSecurity implements ISecurity  {
   private defaults;
   private agent: https.Agent;
 
-  constructor(key: string | Buffer, cert: string | Buffer, defaults?: any);
-  constructor(key: string | Buffer, cert: string | Buffer, ca?: Buffer | string | any[], defaults?: any) {
+  constructor(key: string | Buffer, cert: string | Buffer, ca?: Buffer | string | any[] | any, defaults?: any) {
     if (key) {
       if (Buffer.isBuffer(key)) {
         this.key = key;
