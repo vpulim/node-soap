@@ -95,6 +95,13 @@ describe('WSSecurityCert', function () {
     xml.match(/<Reference URI="#/g).should.have.length(1);
   });
 
+  it('should only add one Reference elements, for Soap Body wsse:Security element when addTimestamp is false and SignatureMethod Algorithm=sha256', function () {
+    var instance = new WSSecurityCert(key, cert, '', { hasTimeStamp: false,  signatureAlgorithm: "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256" });
+    var xml = instance.postProcess('<soap:Header></soap:Header><soap:Body><Body></Body><Timestamp></Timestamp></soap:Body>', 'soap');
+    xml.match(/<Reference URI="#/g).should.have.length(1);
+  });
+
+
   it('double post process should not add extra alments', function () {
     var instance = new WSSecurityCert(key, cert, '');
     var _ = instance.postProcess('<soap:Header></soap:Header><soap:Body><Body></Body><Timestamp></Timestamp></soap:Body>', 'soap');
