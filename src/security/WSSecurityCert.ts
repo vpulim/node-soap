@@ -28,7 +28,16 @@ function generateId(): string {
   return uuidv4().replace(/-/gm, '');
 }
 
+function resolvePlaceholderInReferences(references: any[], bodyXpath: string) {
+  for (const ref of references) {
+    if (ref.xpath === bodyXpathPlaceholder) {
+      ref.xpath = bodyXpath;
+    }
+  }
+}
+
 const oasisBaseUri = 'http://docs.oasis-open.org/wss/2004/01';
+const bodyXpathPlaceholder = '[[bodyXpath]]';
 
 export interface IWSSecurityCertOptions {
   hasTimeStamp?: boolean;
@@ -65,7 +74,7 @@ export class WSSecurityCert implements ISecurity {
     if (options.signatureAlgorithm === 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256') {
       this.signer.signatureAlgorithm = options.signatureAlgorithm;
       this.signer.addReference(
-        '//*[name(.)="soap:Body"]',
+          bodyXpathPlaceholder,
         [ 'http://www.w3.org/2001/10/xml-exc-c14n#' ],
         'http://www.w3.org/2001/04/xmlenc#sha256',
       );
@@ -134,6 +143,8 @@ export class WSSecurityCert implements ISecurity {
     const references = this.signatureTransformations;
 
     const bodyXpath = `//*[name(.)='${envelopeKey}:Body']`;
+    resolvePlaceholderInReferences(this.signer.references, bodyXpath);
+
     if (!(this.signer.references.filter((ref) => (ref.xpath === bodyXpath)).length > 0)) {
       this.signer.addReference(bodyXpath, references);
     }
