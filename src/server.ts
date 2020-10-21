@@ -240,7 +240,7 @@ export class Server extends EventEmitter {
 
     if (req.method === 'GET') {
 
-      if (reqQuery && reqQuery.startsWith('?wsdl')) {
+      if (reqQuery && reqQuery.toLowerCase().startsWith('?wsdl')) {
         if (typeof this.log === 'function') {
           this.log('info', 'Wants the WSDL');
         }
