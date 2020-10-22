@@ -205,7 +205,7 @@ export class Server extends EventEmitter {
       if (typeof this.log === 'function') {
         this.log('received', xml);
       }
-      this._process(xml, req, (result, statusCode) => {
+      this._process(xml, req, res, (result, statusCode) => {
         this._sendHttpResponse(res, statusCode, result);
         if (typeof this.log === 'function') {
           this.log('replied', result);
@@ -281,7 +281,7 @@ export class Server extends EventEmitter {
     }
   }
 
-  private _process(input, req: Request, cb: (result: any, statusCode?: number) => any) {
+  private _process(input, req: Request, res: Response, cb: (result: any, statusCode?: number) => any) {
     const pathname = url.parse(req.url).pathname.replace(/\/$/, '');
     const obj = this.wsdl.xmlToObject(input);
     const body = obj.Body;
@@ -363,7 +363,7 @@ export class Server extends EventEmitter {
             args: body[methodName],
             headers: headers,
             style: 'rpc',
-          }, req, callback);
+          }, req, res, callback);
         } else {
           const messageElemName = (Object.keys(body)[0] === 'attributes' ? Object.keys(body)[1] : Object.keys(body)[0]);
           const pair = binding.topElements[messageElemName];
@@ -383,7 +383,7 @@ export class Server extends EventEmitter {
             args: body[messageElemName],
             headers: headers,
             style: 'document',
-          }, req, callback, includeTimestamp);
+          }, req, res, callback, includeTimestamp);
         }
       } catch (error) {
         if (error.Fault !== undefined) {
@@ -465,6 +465,7 @@ export class Server extends EventEmitter {
   private _executeMethod(
     options: IExecuteMethodOptions,
     req: Request,
+    res: Response,
     callback: (result: any, statusCode?: number) => any,
     includeTimestamp?,
   ) {
@@ -482,7 +483,7 @@ export class Server extends EventEmitter {
     if (this.soapHeaders) {
       headers = this.soapHeaders.map((header) => {
         if (typeof header === 'function') {
-          return header(methodName, args, options.headers, req);
+          return header(methodName, args, options.headers, req, res, this);
         } else {
           return header;
         }
@@ -547,7 +548,7 @@ export class Server extends EventEmitter {
       handleResult(error, result);
     };
 
-    const result = method(args, methodCallback, options.headers, req);
+    const result = method(args, methodCallback, options.headers, req, res, this);
     if (typeof result !== 'undefined') {
       if (isPromiseLike<any>(result)) {
         result.then((value) => {
