@@ -21,7 +21,7 @@ export type SoapMethodAsync = (
   extraHeaders?: any,
 ) => Promise<[any, any, any, any]>;
 
-export type ISoapServiceMethod = (args: any, callback?: (data: any) => void, headers?: any, req?: any) => any;
+export type ISoapServiceMethod = (args: any, callback?: (data: any) => void, headers?: any, req?: any, res?: any, sender?: any) => any;
 
 // SOAP Fault 1.1 & 1.2
 export interface ISoapFaultError {
