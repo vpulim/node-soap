@@ -1,3 +1,14 @@
+0.34.0 / 2020-10-29
+===================
+* [FIX] fix non lower case ?wsdl handling (#1129)
+* [FIX] Fixing bug: if options.signatureAlgorithm = ..sha256 => will be generated two Reference to Body. (#1128)
+* [MAINTENANCE] Remove constructor overload (#1127)
+* [MAINTENANCE] Drop bluebird (#1125)
+* [MAINTENANCE] Upgrade uuid (#1124)
+* [MAINTENANCE] Avoid lodash where possible (#1122)
+* [MAINTENANCE] Move static-serve to dev dependencies (#1121)
+* [MAINTENANCE] Replace concat-stream with get-stream (#1123)
+
 0.33.0 / 2020-08-18
 ===================
 * [ENHANCEMENT] Added an option to directly return the underlying sax stream (#1120)
