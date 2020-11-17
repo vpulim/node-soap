@@ -1,3 +1,7 @@
+0.35.0 / 2020-11-17
+===================
+* [MAINTENANCE] upgraded xml-crypto to latest version (#1131)
+
 0.34.0 / 2020-10-29
 ===================
 * [FIX] fix non lower case ?wsdl handling (#1129)
