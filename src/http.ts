@@ -8,14 +8,10 @@ import * as httpNtlm from 'httpntlm';
 import * as req from 'request';
 import * as url from 'url';
 import {v4 as uuidv4} from 'uuid';
-import { IHeaders, IOptions } from './types';
+import { IExOptions, IHeaders, IHttpClient, IOptions } from './types';
 
 const debug = debugBuilder('node-soap');
 const VERSION = require('../package.json').version;
-
-export interface IExOptions {
-  [key: string]: any;
-}
 
 export interface IAttachment {
   name: string;
@@ -33,7 +29,7 @@ export type Request = req.Request;
  *
  * @constructor
  */
-export class HttpClient {
+export class HttpClient implements IHttpClient {
   private _request: req.RequestAPI<req.Request, req.CoreOptions, req.Options>;
 
   constructor(options?: IOptions) {

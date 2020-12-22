@@ -1,9 +1,17 @@
 
 import * as req from 'request';
-import { HttpClient } from './http';
 
 export interface IHeaders {
   [k: string]: any;
+}
+
+export interface IExOptions {
+  [key: string]: any;
+}
+
+export interface IHttpClient {
+  request(rurl: string, data: any, callback: (error: any, res?: any, body?: any) => any, exheaders?: IHeaders, exoptions?: IExOptions, caller?);
+  requestStream?(rurl: string, data: any, exheaders?: IHeaders, exoptions?: IExOptions, caller?): req.Request;
 }
 
 /** @deprecated use SoapMethod */
@@ -112,7 +120,7 @@ export interface IOptions extends IWsdlBaseOptions {
   /** set specific key instead of <pre><soap:Body></soap:Body></pre>. */
   envelopeKey?: string;
   /** provide your own http client that implements request(rurl, data, callback, exheaders, exoptions) */
-  httpClient?: HttpClient;
+  httpClient?: IHttpClient;
   /** override the request module. */
   request?: req.RequestAPI<req.Request, req.CoreOptions, req.RequiredUriUrl>;
   stream?: boolean;

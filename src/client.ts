@@ -12,7 +12,7 @@ import * as _ from 'lodash';
 import * as request from 'request';
 import { v4 as uuidv4 } from 'uuid';
 import { HttpClient, Request } from './http';
-import { IHeaders, IOptions, ISecurity, SoapMethod, SoapMethodAsync } from './types';
+import { IHeaders, IHttpClient, IOptions, ISecurity, SoapMethod, SoapMethodAsync } from './types';
 import { findPrefix } from './utils';
 import { WSDL } from './wsdl';
 import { IPort, OperationElement, ServiceElement } from './wsdl/elements';
@@ -56,7 +56,7 @@ export class Client extends EventEmitter {
   public lastElapsedTime?: number;
 
   private wsdl: WSDL;
-  private httpClient: HttpClient;
+  private httpClient: IHttpClient;
   private soapHeaders: any[];
   private httpHeaders: IHeaders;
   private bodyAttributes: string[];
