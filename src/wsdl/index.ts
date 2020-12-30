@@ -1058,6 +1058,20 @@ export class WSDL {
         return this.findChildSchemaObject(typeDef, childName, backtrace);
       }
     }
+    
+    // handle $base (e.g. for ExtensionElement) like $type
+    if (object.$base) {
+      const typeInfo = splitQName(object.$base);
+      if (typeInfo.prefix === TNS_PREFIX) {
+        childNsURI = parameterTypeObj.$targetNamespace;
+      } else {
+        childNsURI = this.definitions.xmlns[typeInfo.prefix];
+      }
+      const typeDef = this.findSchemaType(typeInfo.name, childNsURI);
+      if (typeDef) {
+        return this.findChildSchemaObject(typeDef, childName, backtrace);
+      }
+    }
 
     if (object.children) {
       for (i = 0, child; child = object.children[i]; i++) {
