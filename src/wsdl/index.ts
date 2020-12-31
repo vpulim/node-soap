@@ -1058,7 +1058,7 @@ export class WSDL {
         return this.findChildSchemaObject(typeDef, childName, backtrace);
       }
     }
-    
+
     // handle $base (e.g. for ExtensionElement) like $type
     if (object.$base) {
       const typeInfo = splitQName(object.$base);

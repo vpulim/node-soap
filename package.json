@@ -45,9 +45,9 @@
   "license": "MIT",
   "devDependencies": {
     "@types/debug": "^4.1.2",
-    "@types/express": "^4.16.1",
-    "@types/lodash": "^4.14.122",
-    "@types/node": "^11.11.0",
+    "@types/express": "^4.17.9",
+    "@types/lodash": "^4.14.166",
+    "@types/node": "^11.15.42",
     "@types/request": "^2.48.1",
     "@types/sax": "^1.0.1",
     "@types/uuid": "^8.3.0",
