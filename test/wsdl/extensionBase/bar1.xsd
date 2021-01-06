@@ -1,0 +1,17 @@
+<xsd:schema targetNamespace="http://example.com/bar1/xsd"
+            elementFormDefault="qualified" version="2.1.4"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:bar1="http://example.com/bar1/xsd">
+  <xsd:complexType name="NameType">
+      <xsd:sequence>
+          <xsd:element ref="bar1:name1" minOccurs="1"/>
+      </xsd:sequence>
+  </xsd:complexType>
+  <xsd:element name="name1">
+    <xsd:simpleType>
+      <xsd:restriction base="xsd:string">
+        <xsd:maxLength value="50"/>
+      </xsd:restriction>
+    </xsd:simpleType>
+  </xsd:element>
+</xsd:schema>
