@@ -1,3 +1,9 @@
+0.36.0 / 2021-01-13
+===================
+* [FIX] Extract required HttpClient functions to dedicated interface (#1132)
+* [FIX] pass *res* and *server* object into header() and method() (#1130)
+* [MAINTENANCE] refactor: use of Buffer.from instead of a deprecated new Buffer() (#1134)
+
 0.35.0 / 2020-11-17
 ===================
 * [MAINTENANCE] upgraded xml-crypto to latest version (#1131)
