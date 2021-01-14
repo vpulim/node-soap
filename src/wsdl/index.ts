@@ -1060,20 +1060,20 @@ export class WSDL {
     }
 
     // handle $base (e.g. for ExtensionElement) like $type
-    if (object.$base) {
-      const typeInfo = splitQName(object.$base);
-      if (typeInfo.prefix === TNS_PREFIX) {
+    if (object.$base && (!Array.isArray(object.children) || !object.children.length)) {
+      const baseInfo = splitQName(object.$base);
+      if (baseInfo.prefix === TNS_PREFIX) {
         childNsURI = parameterTypeObj.$targetNamespace;
       } else {
-        childNsURI = this.definitions.xmlns[typeInfo.prefix];
+        childNsURI = this.definitions.xmlns[baseInfo.prefix];
       }
-      const typeDef = this.findSchemaType(typeInfo.name, childNsURI);
-      if (typeDef) {
-        return this.findChildSchemaObject(typeDef, childName, backtrace);
+      const baseDef = this.findSchemaType(baseInfo.name, childNsURI);
+      if (baseDef) {
+        return this.findChildSchemaObject(baseDef, childName, backtrace);
       }
     }
 
-    if (object.children) {
+    if (Array.isArray(object.children) && object.children.length > 0) {
       for (i = 0, child; child = object.children[i]; i++) {
         found = this.findChildSchemaObject(child, childName, backtrace);
         if (found) {
