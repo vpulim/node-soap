@@ -120,6 +120,20 @@ describe('WSDL Parser (strict)', () => {
       });
     });
   });
+  
+  it('should handle extension base', (done) => {
+    var expectedMsg = '<bar:Shipper xmlns:bar="http://example.com/bar/xsd"' +
+      ' xmlns="http://example.com/bar/xsd"><bar:Name>' + 
+      '<bar1:name1 xmlns:bar1="http://example.com/bar1/xsd">ABC</bar1:name1></bar:Name>' + 
+      '</bar:Shipper>';
+    soap.createClient(__dirname + '/wsdl/extensionBase/foo.wsdl', {strict: true}, function(err, client) {
+      assert.ifError(err);
+      client.fooOp({Name: {name1: 'ABC'}}, function(err, result) {
+        assert.equal(client.lastMessage, expectedMsg);
+        done();
+      });
+    });
+  });
 
   it('should parse POJO into xml without making unnecessary recursion', (done) => {
     var expectedMsg = require('./wsdl/perf/request.xml.js');
