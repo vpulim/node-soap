@@ -1062,9 +1062,9 @@ export class WSDL {
     // handle $base (e.g. for ExtensionElement) like $type
     if (object.$base && (!Array.isArray(object.children) || !object.children.length)) {
       const baseInfo = splitQName(object.$base);
-      childNsURI = this.definitions.xmlns[baseInfo.prefix];
-      if (baseInfo.prefix === TNS_PREFIX) {
-        childNsURI = parameterTypeObj.$targetNamespace;
+      childNsURI = parameterTypeObj.$targetNamespace;
+      if (baseInfo.prefix !== TNS_PREFIX) {
+        childNsURI = this.definitions.xmlns[baseInfo.prefix];
       }
       const baseDef = this.findSchemaType(baseInfo.name, childNsURI);
       if (baseDef) {
