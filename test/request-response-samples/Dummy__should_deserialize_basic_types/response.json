@@ -1,0 +1,9 @@
+{
+  "boolean": true,
+  "decimal": 1.1,
+  "double": 1.21,
+  "float": 1.321,
+  "int": 1,
+  "short": 3,
+  "string": "foo"
+}
