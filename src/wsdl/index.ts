@@ -1059,7 +1059,20 @@ export class WSDL {
       }
     }
 
-    if (object.children) {
+    // handle $base (e.g. for ExtensionElement) like $type
+    if (object.$base && (!Array.isArray(object.children) || !object.children.length)) {
+      const baseInfo = splitQName(object.$base);
+      childNsURI = parameterTypeObj.$targetNamespace;
+      if (baseInfo.prefix !== TNS_PREFIX) {
+        childNsURI = this.definitions.xmlns[baseInfo.prefix];
+      }
+      const baseDef = this.findSchemaType(baseInfo.name, childNsURI);
+      if (baseDef) {
+        return this.findChildSchemaObject(baseDef, childName, backtrace);
+      }
+    }
+
+    if (Array.isArray(object.children) && object.children.length > 0) {
       for (i = 0, child; child = object.children[i]; i++) {
         found = this.findChildSchemaObject(child, childName, backtrace);
         if (found) {
