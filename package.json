@@ -1,5 +1,5 @@
 {
-  "name": "soap",
+  "name": "@custodia-team/soap",
   "version": "0.36.0",
   "description": "A minimal node SOAP client",
   "engines": {
@@ -19,7 +19,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/vpulim/node-soap.git"
+    "url": "https://github.com/custodia-team/node-soap.git"
+  },
+  "publishConfig": {
+    "registry":"https://npm.pkg.github.com/custodia-team"
   },
   "main": "./index.js",
   "types": "./lib/soap.d.ts",
@@ -71,7 +74,7 @@
     "source-map-support": "^0.5.10",
     "timekeeper": "^2.1.2",
     "tslint": "^5.18.0",
-    "typedoc": "^0.14.2",
+    "typedoc": "^0.20.25",
     "typescript": "^3.3.3333"
   }
 }

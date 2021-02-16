@@ -290,6 +290,9 @@ export class ElementElement extends Element {
   }
 }
 
+export class AttributeGroupElement extends ElementElement {
+}
+
 export class AnyElement extends Element {
 }
 
@@ -765,6 +768,7 @@ export class SchemaElement extends Element {
     'import',
     'include',
     'simpleType',
+    'attributeGroup',
   ]);
   public complexTypes: {[name: string]: ComplexTypeElement} = {};
   public types: {[name: string]: SimpleTypeElement} = {};
@@ -1147,6 +1151,7 @@ const ElementTypeMap: {
   definitions: DefinitionsElement,
   documentation: DocumentationElement,
   element: ElementElement,
+  attributeGroup: AttributeGroupElement,
   enumeration: EnumerationElement,
   extension: ExtensionElement,
   fault: Element,
