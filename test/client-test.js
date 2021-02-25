@@ -1578,6 +1578,49 @@ it('should create async client without options', function (done) {
     done();
   });
 });
+// console.log(__dirname)
+it('should add namespace to array of objects', function (done) {
+  soap.createClientAsync(__dirname + '/wsdl/PurchaseRequestService.wsdl').then(function (client) {
+    const input = {
+      errorProcessingLevel: "ALL",
+      groupBy: "SUPPLIER",
+      initiateApprovalAfterRequisitionImport: "N",
+      interfaceSourceCode: "ABC",
+      purchaseRequestPayload: {
+        ApproverEmail: "abc@gmail.com",
+        PurchaseRequestInputReqLineInterface: [
+          {
+            Amount: "600.00",
+            GroupCode: "supplier",
+            ItemDescription: "test1",
+            LineTypeId: 6,
+            ProductType: "SERVICES",
+            RequestedDeliveryDate: "2021-02-26",
+            
+          },
+          {
+            Amount: "400.00",
+            GroupCode: "supplier",
+            ItemDescription: "test2",
+            LineTypeId: 7,
+            ProductType: "SERVICES",
+            RequestedDeliveryDate: "2021-02-28",
+          },
+        ],
+      },
+      RequisitioningBUName: "BU",
+      requisitioningBUName: "BU",
+    };
+    client.setSecurity(new soap.BasicAuthSecurity('username', 'password'));
+    client.createRequisition(input,function(err, result, rawResponse, soapHeader, rawRequest) {
+      const match = rawRequest.match(/<ns1:PurchaseRequestInputReqLineInterface xmlns:.{3}="(.*?)">/);
+      if(match && match.length) {
+        assert.ok(match[0])
+      }
+      done();
+    });
+  });
+});
 
 
 describe('Client using stream and returnSaxStream', () => {
