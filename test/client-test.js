@@ -1578,7 +1578,7 @@ it('should create async client without options', function (done) {
     done();
   });
 });
-// console.log(__dirname)
+
 it('should add namespace to array of objects', function (done) {
   soap.createClientAsync(__dirname + '/wsdl/PurchaseRequestService.wsdl').then(function (client) {
     const input = {
