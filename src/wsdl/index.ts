@@ -676,13 +676,6 @@ export class WSDL {
       }
     }
 
-    if (Array.isArray(obj)) {
-      if (prefixNamespace && !this.isIgnoredNameSpace(nsPrefix)) {
-          // resolve the prefix namespace
-          xmlnsAttrib += ' xmlns:' + nsPrefix + '="' + nsURI + '"';
-      }
-    }
-
     if (!nsContext) {
       nsContext = new NamespaceContext();
       nsContext.declareNamespace(nsPrefix, nsURI);
