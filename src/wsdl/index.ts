@@ -1270,6 +1270,14 @@ export class WSDL {
       }
     };
 
+    p.ontext = (text) => {
+      const top = stack[stack.length - 1];
+      const pureText = text.trim();
+      if (pureText) {
+        top.setText(text);
+      }
+    }
+
     p.onclosetag = (name) => {
       const top = stack[stack.length - 1];
       assert(top, 'Unmatched close tag: ' + name);
