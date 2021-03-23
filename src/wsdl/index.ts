@@ -668,15 +668,15 @@ export class WSDL {
         if (qualified || soapHeader) { xmlnsAttrib += ' xmlns="' + nsURI + '"'; }
       }
     }
-    
-    if(Array.isArray(obj)){
+
+    if (Array.isArray(obj)) {
       if (prefixNamespace && !this.isIgnoredNameSpace(nsPrefix)) {
           // resolve the prefix namespace
           xmlnsAttrib += ' xmlns:' + nsPrefix + '="' + nsURI + '"';
       }
     }
 
-    if(Array.isArray(obj)){
+    if (Array.isArray(obj)) {
       if (prefixNamespace && !this.isIgnoredNameSpace(nsPrefix)) {
           // resolve the prefix namespace
           xmlnsAttrib += ' xmlns:' + nsPrefix + '="' + nsURI + '"';
