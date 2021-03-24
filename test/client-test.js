@@ -1588,7 +1588,9 @@ it('should add namespace to array of objects', function (done) {
       interfaceSourceCode: "ABC",
       purchaseRequestPayload: {
         ApproverEmail: "abc@gmail.com",
-        PurchaseRequestInputReqLineInterface: [
+        ApproverId: "idname",
+        PurchaseRequestInputReqLineInterface: 
+        [
           {
             Amount: "600.00",
             GroupCode: "supplier",
@@ -1616,6 +1618,8 @@ it('should add namespace to array of objects', function (done) {
       const match = rawRequest.match(/<ns1:PurchaseRequestInputReqLineInterface xmlns:.{3}="(.*?)">/);
       if(match && match.length) {
         assert.ok(match[0])
+      } else {
+        assert.ok(null, `Array object don't have namesapce`)
       }
       done();
     });
