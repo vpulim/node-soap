@@ -7,22 +7,22 @@
   },
   "author": "Vinay Pulim <v@pulim.com>",
   "dependencies": {
-    "debug": "^4.1.1",
+    "debug": "^4.3.1",
     "get-stream": "^6.0.0",
     "httpntlm": "^1.5.2",
-    "lodash": "^4.17.19",
+    "lodash": "^4.17.21",
     "request": ">=2.9.0",
     "sax": ">=0.6",
     "strip-bom": "^3.0.0",
-    "uuid": "^8.3.0",
-    "xml-crypto": "^2.0.0"
+    "uuid": "^8.3.2",
+    "xml-crypto": "^2.1.1"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/custodia-team/node-soap.git"
   },
   "publishConfig": {
-    "registry":"https://npm.pkg.github.com/custodia-team"
+    "registry": "https://npm.pkg.github.com/custodia-team"
   },
   "main": "./index.js",
   "types": "./lib/soap.d.ts",
@@ -48,9 +48,9 @@
   "license": "MIT",
   "devDependencies": {
     "@types/debug": "^4.1.2",
-    "@types/express": "^4.16.1",
-    "@types/lodash": "^4.14.122",
-    "@types/node": "^11.11.0",
+    "@types/express": "^4.17.11",
+    "@types/lodash": "^4.14.168",
+    "@types/node": "^11.15.49",
     "@types/request": "^2.48.1",
     "@types/sax": "^1.0.1",
     "@types/uuid": "^8.3.0",
@@ -74,7 +74,7 @@
     "source-map-support": "^0.5.10",
     "timekeeper": "^2.1.2",
     "tslint": "^5.18.0",
-    "typedoc": "^0.20.25",
-    "typescript": "^3.3.3333"
+    "typedoc": "^0.20.33",
+    "typescript": "^3.9.9"
   }
 }
