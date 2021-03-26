@@ -754,6 +754,21 @@ export class MessageElement extends Element {
   }
 }
 
+export class AnnotationElement extends Element {
+  public readonly allowedChildren = buildAllowedChildren([
+    'documentation',
+  ]);
+  public documentation: DocumentationElement = null;
+
+  public addChild(child) {
+    if (child instanceof DocumentationElement) {
+      this.documentation = child;
+      this.children.pop();
+    }
+  }
+
+}
+
 export class DocumentationElement extends Element {
   // no children
 }
