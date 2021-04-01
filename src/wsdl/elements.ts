@@ -190,6 +190,7 @@ export class ElementElement extends Element {
     'complexType',
     'simpleType',
   ]);
+  public annotation: AnnotationElement = null;
   public $minOccurs?: string;
   public $maxOccurs?: string;
   public $type?: string;
@@ -198,6 +199,13 @@ export class ElementElement extends Element {
   public targetNamespace?: string;
   public $lookupType?: string;
   public $lookupTypes?: any[];
+
+  public addChild(child) {
+    if (child instanceof AnnotationElement) {
+      this.annotation = child;
+      this.children.pop();
+    }
+  }
 
   public description(definitions: DefinitionsElement, xmlns?: IXmlNs) {
     let element = {};
@@ -476,6 +484,15 @@ export class ComplexTypeElement extends Element {
     'sequence',
     'simpleContent',
   ]);
+  public annotation: AnnotationElement = null;
+
+  public addChild(child) {
+    if (child instanceof AnnotationElement) {
+      this.annotation = child;
+    }
+    this.children.pop();
+  }
+
   public description(definitions: DefinitionsElement, xmlns: IXmlNs) {
     const children = this.children || [];
     for (const child of children) {
