@@ -1,3 +1,10 @@
+0.37.0 / 2021-04-07
+===================
+* [ENHANCEMENT] Add native support for short deserialization (#1136)
+* [FIX] Add handling for extension base without children (#1135)
+* [FIX] Arrays with proper prefix and namespace (#1137)
+* [MAINTENANCE] update xml-crypto version (#1138)
+
 0.36.0 / 2021-01-13
 ===================
 * [FIX] Extract required HttpClient functions to dedicated interface (#1132)
