@@ -736,6 +736,7 @@ export class WSDL {
         }
       }
     } else if (typeof obj === 'object') {
+      let currentChildXmlnsAttrib = '';
       for (name in obj) {
         // Happens when Object.create(null) is used, it will not inherit the Object prototype
         if (!obj.hasOwnProperty) {
@@ -834,7 +835,10 @@ export class WSDL {
                   if (childNsURI && childNsPrefix) {
                     if (nsContext.declareNamespace(childNsPrefix, childNsURI)) {
                       childXmlnsAttrib = ' xmlns:' + childNsPrefix + '="' + childNsURI + '"';
-                      xmlnsAttrib += childXmlnsAttrib;
+                      if (!xmlnsAttrib.includes(childNsPrefix)) {
+                        currentChildXmlnsAttrib = childXmlnsAttrib;
+                        xmlnsAttrib += childXmlnsAttrib;
+                      }
                     }
                   }
                 }
@@ -874,6 +878,7 @@ export class WSDL {
                     current: childNsPrefix,
                     parent: ns,
                   };
+                  childXmlnsAttrib = childXmlnsAttrib && childXmlnsAttrib.length ? childXmlnsAttrib : currentChildXmlnsAttrib;
                 } else {
                   // parent (array) already got the namespace
                   childXmlnsAttrib = null;
