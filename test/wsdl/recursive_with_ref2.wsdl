@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:tns="http://www.comped.it/CloudSignService" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	name="CloudSignService" targetNamespace="http://www.comped.it/CloudSignService"
+	xmlns:fault="http://www.comped.it/te/serviceFault" xmlns:p="http://www.w3.org/2001/XMLSchema">
+	<wsdl:types>
+		<schema xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.comped.it/CloudSignService">
+			<element name="property">
+				<complexType>
+					<sequence>
+						<element name="value2" type="string" minOccurs="0"/>
+						<element ref="tns:property" minOccurs="0" maxOccurs="unbounded"/>
+					</sequence>
+				</complexType>
+			</element>
+			
+			<complexType name="property">
+				<sequence>
+					<element ref="tns:property" minOccurs="0" maxOccurs="unbounded"/>
+				</sequence>
+			</complexType>
+			
+			<element name="AddSignature">
+				<complexType>
+					<sequence>
+						<element name="properties" type="tns:property"/>
+					</sequence>
+				</complexType>
+			</element>
+
+			<element name="AddSignatureResponse">
+				<complexType>
+					<sequence>
+					</sequence>
+				</complexType>
+			</element>
+		</schema>
+	</wsdl:types>
+	
+	<wsdl:message name="AddSignatureRequest">
+		<wsdl:part element="tns:AddSignature" name="parameters" />
+	</wsdl:message>
+	<wsdl:message name="AddSignatureResponse">
+		<wsdl:part element="tns:AddSignatureResponse" name="parameters" />
+	</wsdl:message>
+	<wsdl:portType name="CloudSignService">
+		<wsdl:operation name="AddSignature">
+			<wsdl:input message="tns:AddSignatureRequest" />
+			<wsdl:output message="tns:AddSignatureResponse" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="CloudSignServiceSOAP" type="tns:CloudSignService">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="AddSignature">
+			<soap:operation soapAction="http://www.comped.it/CloudSignService/AddSignature" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="fault">
+				<soap:fault use="literal" name="fault" />
+			</wsdl:fault>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="CloudSignService">
+		<wsdl:port binding="tns:CloudSignServiceSOAP" name="CloudSignServiceSOAP">
+			<soap:address location="http://www.example.org/" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>
