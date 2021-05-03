@@ -68,7 +68,7 @@ describe(__filename, function () {
     open_wsdl(path.resolve(__dirname, 'wsdl/recursive_with_ref2.wsdl'), function (err, def) {
       assert.ifError(err);
       var desc = def.definitions.portTypes.CloudSignService.description(def.definitions);
-      assert.equal(desc.AddSignature.input.properties.property && desc.AddSignature.input.properties.property.value2, 'xsd:string');
+      assert.equal(desc.AddSignature.input.properties.property && desc.AddSignature.input.properties.property.value2, 'string');
       done();
     });
   });
