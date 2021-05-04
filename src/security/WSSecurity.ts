@@ -12,6 +12,7 @@ export interface IWSSecurityOptions {
   hasTokenCreated?: boolean;
   actor?: string;
   mustUnderstand?;
+  envelopeKey?: string;
 }
 
 export class WSSecurity implements ISecurity {
@@ -23,11 +24,13 @@ export class WSSecurity implements ISecurity {
   private _hasTokenCreated: boolean;
   private _actor: string;
   private _mustUnderstand: boolean;
+  private _envelopeKey: string;
 
   constructor(username: string, password: string, options?: string | IWSSecurityOptions) {
     options = options || {};
     this._username = username;
     this._password = password;
+    this._envelopeKey = 'soap';
     // must account for backward compatibility for passwordType String param as well as object options defaults: passwordType = 'PasswordText', hasTimeStamp = true
     if (typeof options === 'string') {
       this._passwordType = options ? options : 'PasswordText';
@@ -51,6 +54,9 @@ export class WSSecurity implements ISecurity {
     }
     if (options.mustUnderstand != null) {
       this._mustUnderstand = !!options.mustUnderstand;
+    }
+    if (options.envelopeKey) {
+      this._envelopeKey = options.envelopeKey;
     }
   }
 
@@ -98,8 +104,8 @@ export class WSSecurity implements ISecurity {
         '<wsse:Nonce EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary">' + nonce + '</wsse:Nonce>';
     }
 
-    return '<wsse:Security ' + (this._actor ? 'soap:actor="' + this._actor + '" ' : '') +
-      (this._mustUnderstand ? 'soap:mustUnderstand="1" ' : '') +
+    return '<wsse:Security ' + (this._actor ? `${this._envelopeKey}:actor="${this._actor}" ` : '') +
+      (this._mustUnderstand ? `${this._envelopeKey}:mustUnderstand="1" ` : '') +
       'xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">' +
       timeStampXml +
       '<wsse:UsernameToken xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" wsu:Id="SecurityToken-' + created + '">' +

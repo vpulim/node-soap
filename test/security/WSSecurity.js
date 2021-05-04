@@ -69,4 +69,18 @@ describe('WSSecurity', function() {
     xml.should.containEql('</wsse:UsernameToken></wsse:Security>');
 
   });
+  it('should add envelopeKey to properties in Security block', function () {
+    var username = 'myUser';
+    var password = 'myPass';
+    var options = {
+      hasTimeStamp: false,
+      mustUnderstand: true,
+      actor: 'urn:sample',
+      envelopeKey: 'soapenv',
+    };
+    var instance = new WSSecurity(username, password, options);
+    var xml = instance.toXML();
+    xml.should.containEql('<wsse:Security soapenv:actor="urn:sample" ');
+    xml.should.containEql('soapenv:mustUnderstand="1"');
+  });
 });
