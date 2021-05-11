@@ -9,7 +9,7 @@
   "dependencies": {
     "debug": "^4.1.1",
     "get-stream": "^6.0.0",
-    "httpntlm": "^1.5.2",
+    "httpntlm": "^1.7.7",
     "lodash": "^4.17.19",
     "request": ">=2.9.0",
     "sax": ">=0.6",
