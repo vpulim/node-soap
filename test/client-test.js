@@ -1671,4 +1671,69 @@ describe('Client using stream and returnSaxStream', () => {
       }, null, null);
     }, baseUrl);
   });
-})
+});
+
+describe('Client posting complex body', () => {
+  let server = null;
+  let hostname = '127.0.0.1';
+  let port = 15099;
+  let baseUrl = 'http://' + hostname + ':' + port;
+  const envelope = '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"'
+    + ' xmlns:xsd="http://www.w3.org/2001/XMLSchema"'
+    + ' xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">'
+    + '<soap:Body><Response>Hello</Response></soap:Body></soap:Envelope>'
+
+  before(function (done) {
+    server = http.createServer(function (req, res) {
+      res.statusCode = 200;
+      res.write(envelope, 'utf8');
+      res.end();
+    }).listen(port, hostname, done);
+  });
+
+  after(function (done) {
+    server.close();
+    server = null;
+    done();
+  });
+
+  it('should serialize complex body', function (done) {
+    soap.createClient(__dirname + '/wsdl/complex/registration-common.wsdl', function (err, client) {
+      if (err) {
+        return void done(err);
+      }
+      assert.ok(client);
+  
+      var requestBody = {
+        id: 'ID00000000000000000000000000000000',
+        lastName: 'Doe',
+        firstName: 'John',
+        dateOfBirth: '1970-01-01',
+        correspondenceLanguage: 'ENG',
+        emailAddress: 'jdoe@doe.com',
+        lookupPermission: 'ALLOWED',
+        companyAddress: {
+          address: {
+            streetName: 'Street',
+            postalCode: 'Code',
+            city: 'City',
+            countryCode: 'US'
+          },
+          companyName: 'ACME'
+        }
+      }
+  
+      client.registerUser(requestBody, function (err, result) {
+        assert.ok(client.lastRequest);
+        assert.ok(client.lastMessage);
+        assert.ok(client.lastEndpoint);
+
+        console.log(client.lastMessage);
+        const expectedBody = '<registrationMessages:registerUserRequest xmlns:registrationMessages="http://test-soap.com/api/registration/messages" xmlns="http://test-soap.com/api/registration/messages"><registrationMessages:id>ID00000000000000000000000000000000</registrationMessages:id><registrationMessages:lastName>Doe</registrationMessages:lastName><registrationMessages:firstName>John</registrationMessages:firstName><registrationMessages:dateOfBirth>1970-01-01</registrationMessages:dateOfBirth><registrationMessages:correspondenceLanguage>ENG</registrationMessages:correspondenceLanguage><registrationMessages:emailAddress>jdoe@doe.com</registrationMessages:emailAddress><registrationMessages:lookupPermission>ALLOWED</registrationMessages:lookupPermission><registrationMessages:companyAddress><ct:address xmlns:ct="http://test-soap.com/api/common/types"><ct:streetName>Street</ct:streetName><ct:postalCode>Code</ct:postalCode><ct:city>City</ct:city><ct:countryCode>US</ct:countryCode></ct:address><ct:companyName xmlns:ct="http://test-soap.com/api/common/types">ACME</ct:companyName></registrationMessages:companyAddress></registrationMessages:registerUserRequest>';
+        assert.strictEqual(client.lastMessage, expectedBody);
+  
+        done();
+      });
+    }, baseUrl);
+  });
+});

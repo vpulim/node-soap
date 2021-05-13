@@ -56,7 +56,7 @@ describe(__filename, function () {
   });
 
   it('should parse complex wsdls', function (done) {
-    open_wsdl(path.resolve(__dirname, 'wsdl/complex/registration.wsdl'), function (err, def) {
+    open_wsdl(path.resolve(__dirname, 'wsdl/complex/registration-common.wsdl'), function (err, def) {
       if (err) {
         return done( err );
       }
@@ -75,7 +75,7 @@ describe(__filename, function () {
       }
 
       var requestBody = {
-        id: 'FI_ID_VALUE',
+        id: 'ID00000000000000000000000000000000',
         lastName: 'Doe',
         firstName: 'John',
         dateOfBirth: '1970-01-01',
@@ -98,15 +98,13 @@ describe(__filename, function () {
         requestBody, 
         'msg',
         'http://test-soap.com/api/registration/messages',
-        'registerUserRequest'
+        'registerUserRequest' 
       );
 
-      console.log(requestAsXML);
-
       /*
-      Expected XML
+      Expected XML:
       <msg:registerUserRequest xmlns:msg="http://test-soap.com/api/registration/messages" xmlns="http://test-soap.com/api/registration/messages">
-        <msg:id>FI_ID_VALUE</msg:id>
+        <msg:id>ID00000000000000000000000000000000</msg:id>
         <msg:lastName>Doe</msg:lastName>
         <msg:firstName>John</msg:firstName>
         <msg:dateOfBirth>1970-01-01</msg:dateOfBirth>
@@ -120,11 +118,11 @@ describe(__filename, function () {
             <ct:city>City</ct:city>
             <ct:countryCode>US</ct:countryCode>
           </ct:address>
-          <ct:companyName>ACME</ct:companyName>
+          <ct:companyName xmlns:ct="http://test-soap.com/api/common/types">ACME</ct:companyName>
         </msg:companyAddress>
       </msg:registerUserRequest>
       */
-      assert.strictEqual(requestAsXML, '<msg:registerUserRequest xmlns:msg="http://test-soap.com/api/registration/messages" xmlns="http://test-soap.com/api/registration/messages"><msg:id>FI_ID_VALUE</msg:id><msg:lastName>Doe</msg:lastName><msg:firstName>John</msg:firstName><msg:dateOfBirth>1970-01-01</msg:dateOfBirth><msg:correspondenceLanguage>ENG</msg:correspondenceLanguage><msg:emailAddress>jdoe@doe.com</msg:emailAddress><msg:lookupPermission>ALLOWED</msg:lookupPermission><msg:companyAddress><ct:address xmlns:ct="http://test-soap.com/api/common/types"><ct:streetName>Street</ct:streetName><ct:postalCode>Code</ct:postalCode><ct:city>City</ct:city><ct:countryCode>US</ct:countryCode></ct:address><ct:companyName>ACME</ct:companyName></msg:companyAddress></msg:registerUserRequest>');
+      assert.strictEqual(requestAsXML, '<msg:registerUserRequest xmlns:msg="http://test-soap.com/api/registration/messages" xmlns="http://test-soap.com/api/registration/messages"><msg:id>ID00000000000000000000000000000000</msg:id><msg:lastName>Doe</msg:lastName><msg:firstName>John</msg:firstName><msg:dateOfBirth>1970-01-01</msg:dateOfBirth><msg:correspondenceLanguage>ENG</msg:correspondenceLanguage><msg:emailAddress>jdoe@doe.com</msg:emailAddress><msg:lookupPermission>ALLOWED</msg:lookupPermission><msg:companyAddress><ct:address xmlns:ct="http://test-soap.com/api/common/types"><ct:streetName>Street</ct:streetName><ct:postalCode>Code</ct:postalCode><ct:city>City</ct:city><ct:countryCode>US</ct:countryCode></ct:address><ct:companyName xmlns:ct="http://test-soap.com/api/common/types">ACME</ct:companyName></msg:companyAddress></msg:registerUserRequest>');
 
       done();
     });

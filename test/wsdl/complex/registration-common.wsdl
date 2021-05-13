@@ -40,7 +40,7 @@
     <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
 
     <wsdl:operation name="registerUser">
-      <soap:operation soapAction="http://test-soap.com/api/registration/registerCUser"/>
+      <soap:operation soapAction="http://test-soap.com/api/registration/registerUser"/>
       <wsdl:input>
         <soap:body parts="registerUserRequest" use="literal"/>
       </wsdl:input>
