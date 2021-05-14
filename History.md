@@ -1,3 +1,11 @@
+0.38.0 / 2021-05-14
+===================
+
+* [DOC]  Remove duplicate paragraph and example code in Readme. (#1140)
+* [ENHANCEMENT] Add an option to for an envelopeKey for WSSecurity (#1143)
+* [FIX]  Circular element references inside wsdl - assistance needed (#1142)
+* [MAINTENANCE] Bump typedoc to 0.20.36, update package-lock.json (#1141)
+
 0.37.0 / 2021-04-07
 ===================
 * [ENHANCEMENT] Add native support for short deserialization (#1136)

@@ -1,6 +1,6 @@
 {
   "name": "soap",
-  "version": "0.37.0",
+  "version": "0.38.0",
   "description": "A minimal node SOAP client",
   "engines": {
     "node": ">=10.0.0"
@@ -71,7 +71,7 @@
     "source-map-support": "^0.5.10",
     "timekeeper": "^2.1.2",
     "tslint": "^5.18.0",
-    "typedoc": "^0.14.2",
+    "typedoc": "^0.20.36",
     "typescript": "^3.3.3333"
   }
 }

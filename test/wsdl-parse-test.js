@@ -55,6 +55,24 @@ describe(__filename, function () {
     });
   });
 
+  it('should parse recursive wsdls with element references', function (done) {
+    open_wsdl(path.resolve(__dirname, 'wsdl/recursive_with_ref.wsdl'), function (err, def) {
+        assert.ifError(err);
+        var desc = def.definitions.portTypes.CloudSignService.description(def.definitions);
+        assert.equal(desc.AddSignature.input.properties.property && desc.AddSignature.input.properties.property.value2, 'string');
+        done();
+    });
+  });
+
+  it('should parse recursive wsdls with element references and complex types named same as references', function (done) {
+    open_wsdl(path.resolve(__dirname, 'wsdl/recursive_with_ref2.wsdl'), function (err, def) {
+      assert.ifError(err);
+      var desc = def.definitions.portTypes.CloudSignService.description(def.definitions);
+      assert.equal(desc.AddSignature.input.properties.property && desc.AddSignature.input.properties.property.value2, 'string');
+      done();
+    });
+  });
+
   it('should parse complex wsdls', function (done) {
     open_wsdl(path.resolve(__dirname, 'wsdl/complex/registration-common.wsdl'), function (err, def) {
       if (err) {
@@ -127,5 +145,4 @@ describe(__filename, function () {
       done();
     });
   });
-
 });
