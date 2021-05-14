@@ -130,7 +130,7 @@ export class WSSecurityCert implements ISecurity {
     const secHeader =
       `<wsse:Security xmlns:wsse="${oasisBaseUri}/oasis-200401-wss-wssecurity-secext-1.0.xsd" ` +
       `xmlns:wsu="${oasisBaseUri}/oasis-200401-wss-wssecurity-utility-1.0.xsd" ` +
-      `soap:mustUnderstand="1">` +
+      `${envelopeKey}:mustUnderstand="1">` +
       `<wsse:BinarySecurityToken ` +
       `EncodingType="${oasisBaseUri}/oasis-200401-wss-soap-message-security-1.0#Base64Binary" ` +
       `ValueType="${oasisBaseUri}/oasis-200401-wss-x509-token-profile-1.0#X509v3" ` +
