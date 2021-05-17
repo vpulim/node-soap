@@ -1291,6 +1291,7 @@ export class WSDL {
     this.definitions = this._parse(xml);
     this.definitions.descriptions = {
       types: {},
+      elements: {},
     };
     this.xml = xml;
   }
