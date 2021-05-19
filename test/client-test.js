@@ -21,8 +21,8 @@ var fs = require('fs'),
       });
     });
 
-    it('should detect uppercase schemas as urls', function(done) {
-      soap.createClient('HTTP://localhost:1', function(err, client) {
+    it('should detect uppercase schemas as urls', function (done) {
+      soap.createClient('HTTP://localhost:1', function (err, client) {
         assert.ok(err)
         // ECONNREFUSED indicates that the WSDL path is being evaluated as a URL
         // If instead ENOENT is returned, the WSDL path is being evaluated (incorrectly)
@@ -114,11 +114,11 @@ var fs = require('fs'),
         assert.ifError(err);
 
         var xmlStr = '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">\n\t<head>\n\t\t<title>404 - Not Found</title>\n\t</head>\n\t<body>\n\t\t<h1>404 - Not Found</h1>\n\t\t<script type="text/javascript" src="http://gp1.wpc.edgecastcdn.net/00222B/beluga/pilot_rtm/beluga_beacon.js"></script>\n\t</body>\n</html>';
-        client.MyOperation({_xml: xmlStr}, function (err, result, raw, soapHeader) {
-            assert.ok(err);
-            assert.notEqual(raw.indexOf('html'), -1);
-            done();
-          });
+        client.MyOperation({ _xml: xmlStr }, function (err, result, raw, soapHeader) {
+          assert.ok(err);
+          assert.notEqual(raw.indexOf('html'), -1);
+          done();
+        });
       });
     });
 
@@ -227,7 +227,7 @@ var fs = require('fs'),
       });
     });
 
-    describe('SOAP 1.2 and MTOM binary data', function (){
+    describe('SOAP 1.2 and MTOM binary data', function () {
       var server = null;
       var hostname = '127.0.0.1';
       var port = 15099;
@@ -345,9 +345,8 @@ var fs = require('fs'),
           assert.ok(client);
           assert.ifError(err);
 
-          client.MyOperation({}, function (err, result) {
+          client.MyOperation({}, function () {
             assert.notEqual(client.lastRequestHeaders.Host.indexOf(':' + port), -1);
-
             done();
           }, null, { 'test-header': 'test' });
         }, baseUrl);
@@ -358,9 +357,8 @@ var fs = require('fs'),
           assert.ok(client);
           assert.ifError(err);
 
-          client.MyOperation({}, function (err, result) {
+          client.MyOperation({}, function () {
             assert.equal(client.lastRequestHeaders.Host.indexOf(':80'), -1);
-
             done();
           }, null, { 'test-header': 'test' });
         }, 'http://127.0.0.1');
@@ -392,24 +390,24 @@ var fs = require('fs'),
 
 
       it('should have xml request modified', function (done) {
-          soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function(err, client) {
-              assert.ok(client);
-              assert.ifError(err);
+        soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
+          assert.ok(client);
+          assert.ifError(err);
 
-              client.MyOperation({}, function(err, result) {
-                      assert.ok(result);
-                      assert.ok(client.lastResponse);
-                      assert.ok(client.lastResponseHeaders);
+          client.MyOperation({}, function (err, result) {
+            assert.ok(result);
+            assert.ok(client.lastResponse);
+            assert.ok(client.lastResponseHeaders);
 
-                      done();
-                    }, {
-                  postProcess: function(_xml) {
-                          return _xml.replace('soap', 'SOAP');
-                        }
-                }
-              );
-            }, baseUrl);
-        });
+            done();
+          }, {
+            postProcess: function (_xml) {
+              return _xml.replace('soap', 'SOAP');
+            }
+          }
+          );
+        }, baseUrl);
+      });
 
       it('should have the correct extra header in the request', function (done) {
         soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
@@ -456,7 +454,7 @@ var fs = require('fs'),
         }, baseUrl);
       });
 
-      it ('should remove add httpHeaders after the call', function (done) {
+      it('should remove add httpHeaders after the call', function (done) {
         soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
           assert.ok(client);
           assert.ifError(err);
@@ -797,8 +795,15 @@ var fs = require('fs'),
           client.MyOperation({}, function (err, result) {
             assert.ok(err);
             assert.ok(err.response);
-            assert.equal(err.body, '{"tempResponse":"temp"}');
-            done();
+            if (meta.options.stream) {
+              err.response.data.on('data', (d) => {
+                assert.equal(d.toString(), '{"tempResponse":"temp"}');
+                done();
+              })
+            } else {
+              assert.equal(JSON.stringify(err.response.data), '{"tempResponse":"temp"}');
+              done();
+            }
           });
         }, baseUrl);
       });
@@ -832,7 +837,7 @@ var fs = require('fs'),
           client.MyOperation({}, function (err, result) {
             assert.ok(err);
             assert.ok(err.response);
-            assert.ok(err.body);
+            assert.ok(err.response.data);
             done();
           });
         }, baseUrl);
@@ -1049,7 +1054,7 @@ var fs = require('fs'),
             assert.equal('unit', requestEid);
             assert.equal(responseEid, requestEid);
             done();
-          }, {exchangeId : 'unit'});
+          }, { exchangeId: 'unit' });
         }, baseUrl);
       });
 
@@ -1130,22 +1135,15 @@ var fs = require('fs'),
     describe('Method invocation', function () {
 
       it('shall generate correct payload for methods with string parameter', function (done) {
-        // Mock the http post function in order to easy be able to validate the
-        // generated payload
+        // Mock the http post function in order to easy be able to validate the generated payload
         var stringParameterValue = 'MY_STRING_PARAMETER_VALUE';
-        var expectedSoapBody = '<sstringElement xmlns="http://www.BuiltinTypes.com/">' +
-          stringParameterValue +
-          '</sstringElement>';
+        var expectedSoapBody = '<sstringElement xmlns="http://www.BuiltinTypes.com/">' + stringParameterValue + '</sstringElement>';
         var request = null;
         var mockRequestHandler = function (_request) {
           request = _request;
-          return {
-            on: function () { }
-          };
+          return Promise.resolve(request);
         };
-        var options = Object.assign({
-          request: mockRequestHandler,
-        }, meta.options);
+        var options = Object.assign({ request: mockRequestHandler, }, meta.options);
         soap.createClient(__dirname + '/wsdl/builtin_types.wsdl', options, function (err, client) {
           assert.ok(client);
 
@@ -1153,7 +1151,7 @@ var fs = require('fs'),
           client.StringOperation(stringParameterValue);
 
           // Analyse and validate the generated soap body
-          var requestBody = request.body;
+          var requestBody = request.data;
           var soapBody = requestBody.match(/<soap:Body>(.*)<\/soap:Body>/)[1];
           assert.ok(soapBody === expectedSoapBody);
           done();
@@ -1161,12 +1159,12 @@ var fs = require('fs'),
       });
 
       it('shall generate correct payload for methods with array parameter', function (done) {
-        soap.createClient(__dirname + '/wsdl/list_parameter.wsdl', function(err, client) {
+        soap.createClient(__dirname + '/wsdl/list_parameter.wsdl', function (err, client) {
           assert.ok(client);
           var pathToArrayContainer = 'TimesheetV201511Mobile.TimesheetV201511MobileSoap.AddTimesheet.input.input.PeriodList';
           var arrayParameter = _.get(client.describe(), pathToArrayContainer)['PeriodType[]'];
           assert.ok(arrayParameter);
-          client.AddTimesheet({input: {PeriodList: {PeriodType: [{PeriodId: '1'}]}}}, function() {
+          client.AddTimesheet({ input: { PeriodList: { PeriodType: [{ PeriodId: '1' }] } } }, function () {
             var sentInputContent = client.lastRequest.substring(client.lastRequest.indexOf('<input>') + '<input>'.length, client.lastRequest.indexOf('</input>'));
             assert.equal(sentInputContent, '<PeriodList><PeriodType><PeriodId>1</PeriodId></PeriodType></PeriodList>');
             done();
@@ -1175,7 +1173,7 @@ var fs = require('fs'),
       });
 
       it('shall generate correct payload for methods with array parameter with colon override', function (done) {
-        soap.createClient(__dirname + '/wsdl/array_namespace_override.wsdl', function(err, client) {
+        soap.createClient(__dirname + '/wsdl/array_namespace_override.wsdl', function (err, client) {
           assert.ok(client);
           var pathToArrayContainer = 'SampleArrayServiceImplService.SampleArrayServiceImplPort.createWebOrder.input.order';
           var arrayParameter = _.get(client.describe(), pathToArrayContainer)['orderDetails[]'];
@@ -1185,11 +1183,11 @@ var fs = require('fs'),
             ':order': {
               ':orderDetails': {
                 ':unitNo': 1234,
-                ':items':[{ ':itemDesc': 'item1'}, { ':itemDesc': 'item2'}]
+                ':items': [{ ':itemDesc': 'item1' }, { ':itemDesc': 'item2' }]
               },
             },
           };
-          client.createWebOrder(input, function() {
+          client.createWebOrder(input, function () {
             var sentInputContent = client.lastRequest.substring(client.lastRequest.indexOf('<items>'), client.lastRequest.lastIndexOf('</items>') + '</items>'.length);
             assert.equal(sentInputContent, '<items><itemDesc>item1</itemDesc></items><items><itemDesc>item2</itemDesc></items>');
             done();
@@ -1198,7 +1196,7 @@ var fs = require('fs'),
       });
 
       it('shall generate correct payload for methods with array parameter with parent namespace', function (done) {
-        soap.createClient(__dirname + '/wsdl/array_namespace_override.wsdl', function(err, client) {
+        soap.createClient(__dirname + '/wsdl/array_namespace_override.wsdl', function (err, client) {
           assert.ok(client);
           var pathToArrayContainer = 'SampleArrayServiceImplService.SampleArrayServiceImplPort.createWebOrder.input.order';
           var arrayParameter = _.get(client.describe(), pathToArrayContainer)['orderDetails[]'];
@@ -1208,11 +1206,11 @@ var fs = require('fs'),
             ':order': {
               'orderDetails': {
                 ':unitNo': 1234,
-                'items':[{ ':itemDesc': 'item1'}, { ':itemDesc': 'item2'}]
+                'items': [{ ':itemDesc': 'item1' }, { ':itemDesc': 'item2' }]
               },
             },
           };
-          client.createWebOrder(input, function() {
+          client.createWebOrder(input, function () {
             var sentInputContent = client.lastRequest.substring(client.lastRequest.indexOf('<ns1:items>'), client.lastRequest.lastIndexOf('</ns1:items>') + '</ns1:items>'.length);
             assert.equal(sentInputContent, '<ns1:items><itemDesc>item1</itemDesc></ns1:items><ns1:items><itemDesc>item2</itemDesc></ns1:items>');
             done();
@@ -1222,12 +1220,12 @@ var fs = require('fs'),
 
       it('shall generate correct payload for methods with array parameter when individual array elements are not namespaced', function (done) {
         // used for servers that cannot aggregate individually namespaced array elements
-        soap.createClient(__dirname + '/wsdl/list_parameter.wsdl', {disableCache: true, namespaceArrayElements: false}, function(err, client) {
+        soap.createClient(__dirname + '/wsdl/list_parameter.wsdl', { disableCache: true, namespaceArrayElements: false }, function (err, client) {
           assert.ok(client);
           var pathToArrayContainer = 'TimesheetV201511Mobile.TimesheetV201511MobileSoap.AddTimesheet.input.input.PeriodList';
           var arrayParameter = _.get(client.describe(), pathToArrayContainer)['PeriodType[]'];
           assert.ok(arrayParameter);
-          client.AddTimesheet({input: {PeriodList: {PeriodType: [{PeriodId: '1'}, {PeriodId: '2'}]}}}, function() {
+          client.AddTimesheet({ input: { PeriodList: { PeriodType: [{ PeriodId: '1' }, { PeriodId: '2' }] } } }, function () {
             var sentInputContent = client.lastRequest.substring(client.lastRequest.indexOf('<input>') + '<input>'.length, client.lastRequest.indexOf('</input>'));
             assert.equal(sentInputContent, '<PeriodList><PeriodType><PeriodId>1</PeriodId><PeriodId>2</PeriodId></PeriodType></PeriodList>');
             done();
@@ -1237,13 +1235,13 @@ var fs = require('fs'),
 
       it('shall generate correct payload for methods with array parameter when individual array elements are namespaced', function (done) {
         // this is the default behavior for array element namespacing
-        soap.createClient(__dirname + '/wsdl/list_parameter.wsdl', {disableCache: true, namespaceArrayElements: true}, function(err, client) {
+        soap.createClient(__dirname + '/wsdl/list_parameter.wsdl', { disableCache: true, namespaceArrayElements: true }, function (err, client) {
           assert.ok(client);
           assert.ok(client.wsdl.options.namespaceArrayElements === true);
           var pathToArrayContainer = 'TimesheetV201511Mobile.TimesheetV201511MobileSoap.AddTimesheet.input.input.PeriodList';
           var arrayParameter = _.get(client.describe(), pathToArrayContainer)['PeriodType[]'];
           assert.ok(arrayParameter);
-          client.AddTimesheet({input: {PeriodList: {PeriodType: [{PeriodId: '1'}, {PeriodId: '2'}]}}}, function() {
+          client.AddTimesheet({ input: { PeriodList: { PeriodType: [{ PeriodId: '1' }, { PeriodId: '2' }] } } }, function () {
             var sentInputContent = client.lastRequest.substring(client.lastRequest.indexOf('<input>') + '<input>'.length, client.lastRequest.indexOf('</input>'));
             assert.equal(sentInputContent, '<PeriodList><PeriodType><PeriodId>1</PeriodId></PeriodType><PeriodType><PeriodId>2</PeriodId></PeriodType></PeriodList>');
             done();
@@ -1259,36 +1257,36 @@ var fs = require('fs'),
 
           assert.ok(client);
           client.AddAttribute({
-            "Requests":{
-              "AddAttributeRequest":[
+            "Requests": {
+              "AddAttributeRequest": [
                 {
-                  "RequestIdx":1,
-                  "Identifier":{
-                    "SystemNamespace":"bugrepro",
-                    "ResellerId":1,
-                    "CustomerNum":"860692",
-                    "AccountUid":"80a6e559-4d65-11e7-bd5b-0050569a12d7"
+                  "RequestIdx": 1,
+                  "Identifier": {
+                    "SystemNamespace": "bugrepro",
+                    "ResellerId": 1,
+                    "CustomerNum": "860692",
+                    "AccountUid": "80a6e559-4d65-11e7-bd5b-0050569a12d7"
                   },
-                  "Attr":{
-                    "AttributeId":716,
-                    "IsTemplateAttribute":0,
-                    "ReadOnly":0,
-                    "CanBeModified":1,
-                    "Name":"domain",
-                    "AccountElements":{
-                      "AccountElement":[
+                  "Attr": {
+                    "AttributeId": 716,
+                    "IsTemplateAttribute": 0,
+                    "ReadOnly": 0,
+                    "CanBeModified": 1,
+                    "Name": "domain",
+                    "AccountElements": {
+                      "AccountElement": [
                         {
-                          "ElementId":1693,
-                          "Name":"domain",
-                          "Value":"foo",
-                          "ReadOnly":0,
-                          "CanBeModified":1
+                          "ElementId": 1693,
+                          "Name": "domain",
+                          "Value": "foo",
+                          "ReadOnly": 0,
+                          "CanBeModified": 1
                         }
                       ]
                     }
                   },
-                  "RequestedBy":"blah",
-                  "RequestedByLogin":"system"
+                  "RequestedBy": "blah",
+                  "RequestedByLogin": "system"
                 }
               ]
             }
@@ -1320,11 +1318,11 @@ var fs = require('fs'),
     describe('Client created with createClientAsync', function () {
       it('should error on invalid host', function (done) {
         soap.createClientAsync('http://localhost:1', meta.options)
-        .then(function (client) {})
-        .catch(function (err) {
-          assert.ok(err);
-          done();
-        });
+          .then(function (client) { })
+          .catch(function (err) {
+            assert.ok(err);
+            done();
+          });
       });
 
       it('should add and clear soap headers', function (done) {
@@ -1376,32 +1374,33 @@ var fs = require('fs'),
       it('should allow customization of request for http client', function (done) {
         var myRequest = function () {
         };
-        soap.createClientAsync(__dirname + '/wsdl/default_namespace.wsdl',
-          Object.assign({ request: myRequest }, meta.options))
-          .then(function (client) {
-            assert.ok(client);
-            assert.equal(client.httpClient._request, myRequest);
-            done();
-          });
-      });
-
-      it('should set binding style to "document" by default if not explicitly set in WSDL, per SOAP spec', function (done) {
-        soap.createClientAsync(__dirname + '/wsdl/binding_document.wsdl', meta.options)
-        .then(function (client) {
+        soap.createClientAsync(
+          __dirname + '/wsdl/default_namespace.wsdl',
+          Object.assign({ request: myRequest }, meta.options)
+        ).then(function (client) {
           assert.ok(client);
-          assert.ok(client.wsdl.definitions.bindings.mySoapBinding.style === 'document');
+          assert.equal(client.httpClient._request, myRequest);
           done();
         });
       });
 
+      it('should set binding style to "document" by default if not explicitly set in WSDL, per SOAP spec', function (done) {
+        soap.createClientAsync(__dirname + '/wsdl/binding_document.wsdl', meta.options)
+          .then(function (client) {
+            assert.ok(client);
+            assert.ok(client.wsdl.definitions.bindings.mySoapBinding.style === 'document');
+            done();
+          });
+      });
+
       it('should allow passing in XML strings', function (done) {
-        soap.createClientAsync(__dirname + '/wsdl/default_namespace.wsdl', Object.assign({envelopeKey: 'soapenv'}, meta.options))
+        soap.createClientAsync(__dirname + '/wsdl/default_namespace.wsdl', Object.assign({ envelopeKey: 'soapenv' }, meta.options))
           .then(function (client) {
             assert.ok(client);
             var xmlStr = '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">\n\t<head>\n\t\t<title>404 - Not Found</title>\n\t</head>\n\t<body>\n\t\t<h1>404 - Not Found</h1>\n\t\t<script type="text/javascript" src="http://gp1.wpc.edgecastcdn.net/00222B/beluga/pilot_rtm/beluga_beacon.js"></script>\n\t</body>\n</html>';
-            return client.MyOperationAsync({_xml: xmlStr});
+            return client.MyOperationAsync({ _xml: xmlStr });
           })
-          .then(function ([result, raw, soapHeader]) {})
+          .then(function ([result, raw, soapHeader]) { })
           .catch(function (err) {
             done();
           });
@@ -1410,84 +1409,84 @@ var fs = require('fs'),
       it('should allow customization of envelope', function (done) {
         var client;
         soap.createClientAsync(__dirname + '/wsdl/default_namespace.wsdl', Object.assign({ envelopeKey: 'soapenv' }, meta.options))
-        .then(function (createdClient) {
-          assert.ok(createdClient);
-          client = createdClient;
-          return client.MyOperationAsync({});
-        })
-        .then(function (response) {})
-        .catch(function (err) {
-          assert.notEqual(client.lastRequest.indexOf('xmlns:soapenv='), -1);
-          done();
-        });
+          .then(function (createdClient) {
+            assert.ok(createdClient);
+            client = createdClient;
+            return client.MyOperationAsync({});
+          })
+          .then(function (response) { })
+          .catch(function (err) {
+            assert.notEqual(client.lastRequest.indexOf('xmlns:soapenv='), -1);
+            done();
+          });
       });
 
       it('should add soap headers', function (done) {
         soap.createClientAsync(__dirname + '/wsdl/default_namespace.wsdl', meta.options)
-        .then(function (client) {
-          assert.ok(client);
-          assert.ok(!client.getSoapHeaders());
-          var soapheader = {
-            'esnext': false,
-            'moz': true,
-            'boss': true,
-            'node': true,
-            'validthis': true,
-            'globals': {
-              'EventEmitter': true,
-              'Promise': true
-            }
-          };
+          .then(function (client) {
+            assert.ok(client);
+            assert.ok(!client.getSoapHeaders());
+            var soapheader = {
+              'esnext': false,
+              'moz': true,
+              'boss': true,
+              'node': true,
+              'validthis': true,
+              'globals': {
+                'EventEmitter': true,
+                'Promise': true
+              }
+            };
 
-          client.addSoapHeader(soapheader);
+            client.addSoapHeader(soapheader);
 
-          assert.ok(client.getSoapHeaders()[0] === '<esnext>false</esnext><moz>true</moz><boss>true</boss><node>true</node><validthis>true</validthis><globals><EventEmitter>true</EventEmitter><Promise>true</Promise></globals>');
-          done();
-        });
+            assert.ok(client.getSoapHeaders()[0] === '<esnext>false</esnext><moz>true</moz><boss>true</boss><node>true</node><validthis>true</validthis><globals><EventEmitter>true</EventEmitter><Promise>true</Promise></globals>');
+            done();
+          });
       });
 
       it('should allow disabling the wsdl cache', function (done) {
         var spy = sinon.spy(wsdl, 'open_wsdl');
         var options = Object.assign({ disableCache: true }, meta.options);
         soap.createClientAsync(__dirname + '/wsdl/binding_document.wsdl', options)
-        .then(function (client) {
-          assert.ok(client);
-          return soap.createClientAsync(__dirname + '/wsdl/binding_document.wsdl', options);
-        })
-        .then(function (client) {
-          assert.ok(client);
-          assert.ok(spy.calledTwice);
-          wsdl.open_wsdl.restore();
-          done();
-        });
+          .then(function (client) {
+            assert.ok(client);
+            return soap.createClientAsync(__dirname + '/wsdl/binding_document.wsdl', options);
+          })
+          .then(function (client) {
+            assert.ok(client);
+            assert.ok(spy.calledTwice);
+            wsdl.open_wsdl.restore();
+            done();
+          });
       });
 
       it('should add http headers', function (done) {
         soap.createClientAsync(__dirname + '/wsdl/default_namespace.wsdl', meta.options)
-        .then(function (client) {
-          assert.ok(client);
-          assert.ok(!client.getHttpHeaders());
+          .then(function (client) {
+            assert.ok(client);
+            assert.ok(!client.getHttpHeaders());
 
-          client.addHttpHeader('foo', 'bar');
+            client.addHttpHeader('foo', 'bar');
 
-          assert.ok(client.getHttpHeaders());
-          assert.equal(client.getHttpHeaders().foo, 'bar');
+            assert.ok(client.getHttpHeaders());
+            assert.equal(client.getHttpHeaders().foo, 'bar');
 
-          client.clearHttpHeaders();
-          assert.equal(client.getHttpHeaders(), null);
-          done();
-        });
+            client.clearHttpHeaders();
+            assert.equal(client.getHttpHeaders(), null);
+            done();
+          });
       });
 
     });
 
-    describe('Client created with option normalizeNames', function(){
+    describe('Client created with option normalizeNames', function () {
 
       it('should create node-style method with normalized name (a valid Javascript identifier)', function (done) {
         soap.createClient(__dirname + '/wsdl/non_identifier_chars_in_operation.wsdl', Object.assign({ normalizeNames: true }, meta.options), function (err, client) {
           assert.ok(client);
           assert.ifError(err);
-          client.prefixed_MyOperation({},function(err, result){
+          client.prefixed_MyOperation({}, function (err, result) {
             // only need to check that a valid request is generated, response isn't needed
             assert.ok(client.lastRequest);
             done();
@@ -1500,9 +1499,9 @@ var fs = require('fs'),
           assert.ok(client);
           assert.ifError(err);
           /*jshint -W069 */
-          assert.throws(function(){client.MyService.MyServicePort['prefixed_MyOperation']({});},TypeError);
+          assert.throws(function () { client.MyService.MyServicePort['prefixed_MyOperation']({}); }, TypeError);
           /*jshint +W069 */
-          client.MyService.MyServicePort['prefixed-MyOperation']({},function(err, result){
+          client.MyService.MyServicePort['prefixed-MyOperation']({}, function (err, result) {
             // only need to check that a valid request is generated, response isn't needed
             assert.ok(client.lastRequest);
             done();
@@ -1515,8 +1514,8 @@ var fs = require('fs'),
           assert.ok(client);
           assert.ifError(err);
           client.prefixed_MyOperationAsync({})
-            .then(function(result){})
-            .catch(function(err){
+            .then(function (result) { })
+            .catch(function (err) {
               // only need to check that a valid request is generated, response isn't needed
               assert.ok(client.lastRequest);
               done();
@@ -1528,8 +1527,8 @@ var fs = require('fs'),
         soap.createClient(__dirname + '/wsdl/non_identifier_chars_in_operation.wsdl', Object.assign({ normalizeNames: true }, meta.options), function (err, client) {
           assert.ok(client);
           assert.ifError(err);
-          assert.throws(function() {client['prefixed-MyOperationAsync']({});}, TypeError);
-          assert.throws(function() {client['prefixed-MyOperation']({});}, TypeError);
+          assert.throws(function () { client['prefixed-MyOperationAsync']({}); }, TypeError);
+          assert.throws(function () { client['prefixed-MyOperation']({}); }, TypeError);
           done();
         });
       });
@@ -1538,7 +1537,7 @@ var fs = require('fs'),
         soap.createClient(__dirname + '/wsdl/non_identifier_chars_in_operation.wsdl', meta.options, function (err, client) {
           assert.ok(client);
           assert.ifError(err);
-          client['prefixed-MyOperation']({}, function(err, result){
+          client['prefixed-MyOperation']({}, function (err, result) {
             // only need to check that a valid request is generated, response isn't needed
             assert.ok(client.lastRequest);
             done();
@@ -1550,7 +1549,7 @@ var fs = require('fs'),
         soap.createClient(__dirname + '/wsdl/non_identifier_chars_in_operation.wsdl', meta.options, function (err, client) {
           assert.ok(client);
           assert.ifError(err);
-          assert.throws(function() {client['prefixed-MyOperationAsync']({});}, TypeError);
+          assert.throws(function () { client['prefixed-MyOperationAsync']({}); }, TypeError);
           done();
         });
       });
@@ -1558,13 +1557,13 @@ var fs = require('fs'),
   });
 });
 
-it('shall generate correct header for custom defined header arguments', function(done) {
+it('shall generate correct header for custom defined header arguments', function (done) {
   soap.createClientAsync(__dirname + '/wsdl/default_namespace.wsdl').then(function (client) {
     client.addSoapHeader('test-header-namespace')
     client.wsdl.xmlnsInHeader = 'xmlns="https://example.com/v1"';
     var expectedDefinedHeader = '<soap:Header xmlns="https://example.com/v1">';
 
-    client.MyOperation(function(err, result, rawResponse, soapHeader, rawRequest) {
+    client.MyOperation(function (err, result, rawResponse, soapHeader, rawRequest) {
       var definedSoapHeader = client.lastRequest.match(/<soap:Header xmlns=("(.*?)">)/)[0];
       assert.ok(definedSoapHeader === expectedDefinedHeader);
       done();
@@ -1589,34 +1588,34 @@ it('should add namespace to array of objects', function (done) {
       purchaseRequestPayload: {
         ApproverEmail: "abc@gmail.com",
         ApproverId: "idname",
-        PurchaseRequestInputReqLineInterface: 
-        [
-          {
-            Amount: "600.00",
-            GroupCode: "supplier",
-            ItemDescription: "test1",
-            LineTypeId: 6,
-            ProductType: "SERVICES",
-            RequestedDeliveryDate: "2021-02-26",
-            
-          },
-          {
-            Amount: "400.00",
-            GroupCode: "supplier",
-            ItemDescription: "test2",
-            LineTypeId: 7,
-            ProductType: "SERVICES",
-            RequestedDeliveryDate: "2021-02-28",
-          },
-        ],
+        PurchaseRequestInputReqLineInterface:
+          [
+            {
+              Amount: "600.00",
+              GroupCode: "supplier",
+              ItemDescription: "test1",
+              LineTypeId: 6,
+              ProductType: "SERVICES",
+              RequestedDeliveryDate: "2021-02-26",
+
+            },
+            {
+              Amount: "400.00",
+              GroupCode: "supplier",
+              ItemDescription: "test2",
+              LineTypeId: 7,
+              ProductType: "SERVICES",
+              RequestedDeliveryDate: "2021-02-28",
+            },
+          ],
       },
       RequisitioningBUName: "BU",
       requisitioningBUName: "BU",
     };
     client.setSecurity(new soap.BasicAuthSecurity('username', 'password'));
-    client.createRequisition(input,function(err, result, rawResponse, soapHeader, rawRequest) {
+    client.createRequisition(input, function (err, result, rawResponse, soapHeader, rawRequest) {
       const match = rawRequest.match(/<ns1:PurchaseRequestInputReqLineInterface xmlns:.{3}="(.*?)">/);
-      if(match && match.length) {
+      if (match && match.length) {
         assert.ok(match[0])
       } else {
         assert.ok(null, `Array object don't have namesapce`)
@@ -1653,22 +1652,22 @@ describe('Client using stream and returnSaxStream', () => {
 
   it('should return the saxStream', (done) => {
     soap.createClient(__dirname + '/wsdl/default_namespace.wsdl',
-    { stream: true, returnSaxStream: true }, (err, client) => {
-      assert.ok(client);
-      assert.ifError(err);
+      { stream: true, returnSaxStream: true }, (err, client) => {
+        assert.ok(client);
+        assert.ifError(err);
 
-      client.MyOperation({}, (err, result) => {
-        const { saxStream } = result
-        assert.ok(saxStream instanceof stream.Stream);
-        assert.ok(typeof saxStream.on === 'function');
-        assert.ok(typeof saxStream.pipe === 'function');
+        client.MyOperation({}, (err, result) => {
+          const { saxStream } = result
+          assert.ok(saxStream instanceof stream.Stream);
+          assert.ok(typeof saxStream.on === 'function');
+          assert.ok(typeof saxStream.pipe === 'function');
 
-        saxStream.on('text', (text) => {
-          assert.ok(text === 'Hello')
-        })
+          saxStream.on('text', (text) => {
+            assert.ok(text === 'Hello')
+          })
 
-        done();
-      }, null, null);
-    }, baseUrl);
+          done();
+        }, null, null);
+      }, baseUrl);
   });
 })

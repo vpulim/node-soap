@@ -339,7 +339,7 @@ describe('SOAP Server', function() {
       client.IsValidPrice({ price: "invalid_price"}, function(err, result) {
         assert.ok(err);
         assert.ok(err.root.Envelope.Body.Fault);
-        assert.equal(err.response.statusCode, 500);
+        assert.equal(err.response.status, 500);
         done();
       });
     });
@@ -446,7 +446,7 @@ describe('SOAP Server', function() {
           "Body should contain Code-element with namespace");
         assert.ok(body.match(/<soap:Reason>.*<\/soap:Reason>/g),
           "Body should contain Reason-element with namespace");
-        assert.equal(err.response.statusCode, 200);
+        assert.equal(err.response.status, 200);
         done();
       });
     });

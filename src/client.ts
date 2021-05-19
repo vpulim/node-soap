@@ -9,9 +9,8 @@ import { EventEmitter } from 'events';
 import getStream = require('get-stream');
 import { IncomingHttpHeaders } from 'http';
 import * as _ from 'lodash';
-import * as request from 'request';
 import { v4 as uuidv4 } from 'uuid';
-import { HttpClient, Request } from './http';
+import { HttpClient } from './http';
 import { IHeaders, IHttpClient, IOptions, ISecurity, SoapMethod, SoapMethodAsync } from './types';
 import { findPrefix } from './utils';
 import { WSDL } from './wsdl';
@@ -50,7 +49,7 @@ export class Client extends EventEmitter {
   public lastRequest?: string;
   public lastMessage?: string;
   public lastEndpoint?: string;
-  public lastRequestHeaders?: request.Headers;
+  public lastRequestHeaders?: any;
   public lastResponse?: any;
   public lastResponseHeaders?: IncomingHttpHeaders;
   public lastElapsedTime?: number;
@@ -272,23 +271,23 @@ export class Client extends EventEmitter {
 
   private _processSoapHeader(soapHeader, name, namespace, xmlns) {
     switch (typeof soapHeader) {
-    case 'object':
-      return this.wsdl.objectToXML(soapHeader, name, namespace, xmlns, true);
-    case 'function':
-      const _this = this;
-      // arrow function does not support arguments variable
-      // tslint:disable-next-line
-      return function() {
-        const result = soapHeader.apply(null, arguments);
+      case 'object':
+        return this.wsdl.objectToXML(soapHeader, name, namespace, xmlns, true);
+      case 'function':
+        const _this = this;
+        // arrow function does not support arguments variable
+        // tslint:disable-next-line
+        return function () {
+          const result = soapHeader.apply(null, arguments);
 
-        if (typeof result === 'object') {
-          return _this.wsdl.objectToXML(result, name, namespace, xmlns, true);
-        } else {
-          return result;
-        }
-      };
-    default:
-      return soapHeader;
+          if (typeof result === 'object') {
+            return _this.wsdl.objectToXML(result, name, namespace, xmlns, true);
+          } else {
+            return result;
+          }
+        };
+      default:
+        return soapHeader;
     }
   }
 
@@ -303,7 +302,6 @@ export class Client extends EventEmitter {
     let encoding = '';
     let message = '';
     let xml: string = null;
-    let req: Request;
     let soapAction: string;
     const alias = findPrefix(defs.xmlns, ns);
     let headers: any = {
@@ -321,7 +319,7 @@ export class Client extends EventEmitter {
 
       // If it's not HTML and Soap Body is empty
       if (!obj.html && !obj.Body) {
-        if (response.statusCode >= 400) {
+        if (response.status >= 400) {
           const error: ISoapError = new Error('Error http status codes');
           error.response = response;
           error.body = body;
@@ -331,7 +329,7 @@ export class Client extends EventEmitter {
         return callback(null, obj, body, obj.Header);
       }
 
-      if ( typeof obj.Body !== 'object' ) {
+      if (typeof obj.Body !== 'object') {
         const error: ISoapError = new Error('Cannot parse response');
         error.response = response;
         error.body = body;
@@ -400,7 +398,7 @@ export class Client extends EventEmitter {
     if (this.httpHeaders === null) {
       headers = {};
     } else {
-      for (const header in this.httpHeaders) { headers[header] = this.httpHeaders[header];  }
+      for (const header in this.httpHeaders) { headers[header] = this.httpHeaders[header]; }
       for (const attr in extraHeaders) { headers[attr] = extraHeaders[attr]; }
     }
 
@@ -412,9 +410,9 @@ export class Client extends EventEmitter {
       this.security.addOptions(options);
     }
 
-    if ((style === 'rpc') && ( ( input.parts || input.name === 'element' ) || args === null) ) {
+    if ((style === 'rpc') && ((input.parts || input.name === 'element') || args === null)) {
       assert.ok(!style || style === 'rpc', 'invalid message definition for document style binding');
-      message = this.wsdl.objectToRpcXML(name, args, alias, ns, (input.name !== 'element' ));
+      message = this.wsdl.objectToRpcXML(name, args, alias, ns, (input.name !== 'element'));
       (method.inputSoap === 'encoded') && (encoding = 'soap:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" ');
     } else {
       assert.ok(!style || style === 'document', 'invalid message definition for rpc style binding');
@@ -447,8 +445,8 @@ export class Client extends EventEmitter {
           '</' + envelopeKey + ':Header>'
         )
         :
-          ''
-        ) +
+        ''
+      ) +
       '<' + envelopeKey + ':Body' +
       (this.bodyAttributes ? this.bodyAttributes.join(' ') : '') +
       (this.security && this.security.postProcess ? ' Id="_0"' : '') +
@@ -485,8 +483,6 @@ export class Client extends EventEmitter {
     if (this.streamAllowed && typeof this.httpClient.requestStream === 'function') {
       callback = _.once(callback);
       const startTime = Date.now();
-      req = this.httpClient.requestStream(location, xml, headers, options, this);
-      this.lastRequestHeaders = req.headers;
       const onError = (err) => {
         this.lastResponse = null;
         this.lastResponseHeaders = null;
@@ -495,54 +491,62 @@ export class Client extends EventEmitter {
 
         callback(err, undefined, undefined, undefined, xml);
       };
-      req.on('error', onError);
-      req.on('response', (response) => {
-        response.on('error', onError);
 
-        // When the output element cannot be looked up in the wsdl, play it safe and
-        // don't stream
-        if (response.statusCode !== 200 || !output || !output.$lookupTypes) {
-          getStream(response).then((body) => {
+      this.httpClient.requestStream(location, xml, headers, options, this).then((res) => {
+        this.lastRequestHeaders = res.headers;
+        res.data.on('error', onError);
+
+        // When the output element cannot be looked up in the wsdl,
+        // play it safe and don't stream
+        if (res.status !== 200 || !output || !output.$lookupTypes) {
+          getStream(res.data).then((body) => {
             this.lastResponse = body;
-            this.lastResponseHeaders = response && response.headers;
             this.lastElapsedTime = Date.now() - startTime;
-            this.emit('response', body, response, eid);
+            this.lastResponseHeaders = res && res.headers;
+            // Added mostly for testability, but possibly useful for debugging
+            this.lastRequestHeaders = res.config.headers;
+            this.emit('response', body, res, eid);
 
-            return parseSync(body, response);
+            return parseSync(body, res);
           });
           return;
         }
-
         if (this.returnSaxStream) {
           // directly return the saxStream allowing the end user to define
           // the parsing logics and corresponding errors managements
-          const saxStream = this.wsdl.getSaxStream(response);
-          return finish({ saxStream }, '<stream>', response);
+          const saxStream = this.wsdl.getSaxStream(res.data);
+          return finish({ saxStream }, '<stream>', res.data);
         } else {
-          this.wsdl.xmlToObject(response, (error, obj) => {
-            this.lastResponse = response;
-            this.lastResponseHeaders = response && response.headers;
+          this.wsdl.xmlToObject(res.data, (error, obj) => {
+            this.lastResponse = res;
             this.lastElapsedTime = Date.now() - startTime;
-            this.emit('response', '<stream>', response, eid);
+            this.lastResponseHeaders = res && res.headers;
+            // Added mostly for testability, but possibly useful for debugging
+            this.lastRequestHeaders = res.config.headers;
+            this.emit('response', '<stream>', res.data, eid);
 
             if (error) {
-              error.response = response;
+              error.response = res;
               error.body = '<stream>';
               this.emit('soapError', error, eid);
-              return callback(error, response, undefined, undefined, xml);
+              return callback(error, res, undefined, undefined, xml);
             }
 
-            return finish(obj, '<stream>', response);
+            return finish(obj, '<stream>', res);
           });
         }
-      });
+      }, onError);
       return;
     }
 
-    req = this.httpClient.request(location, xml, (err, response, body) => {
+    return this.httpClient.request(location, xml, (err, response, body) => {
       this.lastResponse = body;
-      this.lastResponseHeaders = response && response.headers;
-      this.lastElapsedTime = response && response.elapsedTime;
+      if (response) {
+        this.lastResponseHeaders = response.headers;
+        this.lastElapsedTime = response.headers.date;
+        // Added mostly for testability, but possibly useful for debugging
+        this.lastRequestHeaders = response.config && response.config.headers;
+      }
       this.emit('response', body, response, eid);
 
       if (err) {
@@ -550,11 +554,7 @@ export class Client extends EventEmitter {
       } else {
         return parseSync(body, response);
       }
-    }, headers, options, this);
 
-    // Added mostly for testability, but possibly useful for debugging
-    if (req && req.headers && !options.ntlm) { // fixes an issue when req or req.headers is undefined, doesn't apply to ntlm requests
-      this.lastRequestHeaders = req.headers;
-    }
+    }, headers, options, this);
   }
 }

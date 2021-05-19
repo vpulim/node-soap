@@ -62,7 +62,7 @@ export class WSDL {
   public WSDL_CACHE;
 
   private callback: (err: Error, caller?) => void;
-  private services: {[name: string]: elements.ServiceElement};
+  private services: { [name: string]: elements.ServiceElement };
   private xml: string;
   private _includesWsdl;
   private _originalIgnoredNamespaces;
@@ -71,7 +71,7 @@ export class WSDL {
     let fromFunc;
 
     this.uri = uri;
-    this.callback = () => {};
+    this.callback = () => { };
     this._includesWsdl = [];
 
     // initialize WSDL cache
@@ -135,10 +135,10 @@ export class WSDL {
               if (methods[methodName].input) {
                 const inputName = methods[methodName].input.$name;
                 let outputName = '';
-                if (methods[methodName].output ) {
+                if (methods[methodName].output) {
                   outputName = methods[methodName].output.$name;
                 }
-                topEls[inputName] = {methodName: methodName, outputName: outputName};
+                topEls[inputName] = { methodName: methodName, outputName: outputName };
               }
             }
           }
@@ -216,7 +216,7 @@ export class WSDL {
         },
       },
     };
-    const stack: any[] = [{name: null, object: root, schema: schema}];
+    const stack: any[] = [{ name: null, object: root, schema: schema }];
     const xmlns: any = {};
 
     const refs = {};
@@ -281,13 +281,13 @@ export class WSDL {
       if (attrs.href) {
         id = attrs.href.substr(1);
         if (!refs[id]) {
-          refs[id] = {hrefs: [], obj: null};
+          refs[id] = { hrefs: [], obj: null };
         }
-        refs[id].hrefs.push({par: top.object, key: name, obj: obj});
+        refs[id].hrefs.push({ par: top.object, key: name, obj: obj });
       }
       if (id = attrs.id) {
         if (!refs[id]) {
-          refs[id] = {hrefs: [], obj: null};
+          refs[id] = { hrefs: [], obj: null };
         }
       }
 
@@ -304,8 +304,8 @@ export class WSDL {
       for (attributeName in elementAttributes) {
         const res = splitQName(attributeName);
         if (res.name === 'nil' && xmlns[res.prefix] === XSI_URI && elementAttributes[attributeName] &&
-            (elementAttributes[attributeName].toLowerCase() === 'true' || elementAttributes[attributeName] === '1')
-          ) {
+          (elementAttributes[attributeName].toLowerCase() === 'true' || elementAttributes[attributeName] === '1')
+        ) {
           hasNilAttribute = true;
           break;
         }
@@ -344,7 +344,7 @@ export class WSDL {
       if (topSchema && topSchema[name + '[]']) {
         name = name + '[]';
       }
-      stack.push({name: originalName, object: obj, schema: (xsiTypeSchema || (topSchema && topSchema[name])), id: attrs.id, nil: hasNilAttribute});
+      stack.push({ name: originalName, object: obj, schema: (xsiTypeSchema || (topSchema && topSchema[name])), id: attrs.id, nil: hasNilAttribute });
     };
 
     p.onclosetag = (nsName) => {
@@ -356,7 +356,7 @@ export class WSDL {
       const name = splitQName(nsName).name;
 
       if (typeof cur.schema === 'string' && (cur.schema === 'string' || cur.schema.split(':')[1] === 'string')) {
-        if (typeof obj === 'object' &&  Object.keys(obj).length === 0) { obj = cur.object = ''; }
+        if (typeof obj === 'object' && Object.keys(obj).length === 0) { obj = cur.object = ''; }
       }
 
       if (cur.nil === true) {
@@ -472,18 +472,18 @@ export class WSDL {
       saxStream.on('cdata', p.oncdata);
       saxStream.on('text', p.ontext);
       xml.pipe(saxStream)
-      .on('error', (err) => {
-        callback(err);
-      })
-      .on('end', () => {
-        let r;
-        try {
-          r = finish();
-        } catch (e) {
-          return callback(e);
-        }
-        callback(null, r);
-      });
+        .on('error', (err) => {
+          callback(err);
+        })
+        .on('end', () => {
+          let r;
+          try {
+            r = finish();
+          } catch (e) {
+            return callback(e);
+          }
+          callback(null, r);
+        });
       return;
     }
     p.write(xml).close();
@@ -603,7 +603,7 @@ export class WSDL {
             attributes.push(' ' + n + '=' + '"' + attrs[n] + '"');
           }
         }
-        parts.push(['<', prefixedKey ].concat(attributes).concat('>').join(''));
+        parts.push(['<', prefixedKey].concat(attributes).concat('>').join(''));
         parts.push((typeof value === 'object') ? this.objectToXML(value, key, nsPrefix, nsURI) : xmlEscape(value));
         parts.push(['</', prefixedKey, '>'].join(''));
       }
@@ -788,7 +788,7 @@ export class WSDL {
               // find sub namespace if not a primitive
               if (childSchemaObject &&
                 ((childSchemaObject.$type && (childSchemaObject.$type.indexOf('xsd:') === -1)) ||
-                childSchemaObject.$ref || childSchemaObject.$name)) {
+                  childSchemaObject.$ref || childSchemaObject.$name)) {
                 /*if the base name space of the children is not in the ingoredSchemaNamspaces we use it.
                  This is because in some services the child nodes do not need the baseNameSpace.
                  */
@@ -1119,7 +1119,7 @@ export class WSDL {
     const ignoredNamespaces = options ? options.ignoredNamespaces : null;
 
     if (ignoredNamespaces &&
-        (Array.isArray(ignoredNamespaces.namespaces) || typeof ignoredNamespaces.namespaces === 'string')) {
+      (Array.isArray(ignoredNamespaces.namespaces) || typeof ignoredNamespaces.namespaces === 'string')) {
       if (ignoredNamespaces.override) {
         this.options.ignoredNamespaces = ignoredNamespaces.namespaces;
       } else {
@@ -1239,7 +1239,7 @@ export class WSDL {
 
     p.onopentag = (node) => {
       const nsName = node.name;
-      const attrs  = node.attributes;
+      const attrs = node.attributes;
 
       const top = stack[stack.length - 1];
       const name = splitQName(nsName).name;
@@ -1309,12 +1309,12 @@ export class WSDL {
       }
       const ns = xmlns[alias];
       switch (ns) {
-        case 'http://xml.apache.org/xml-soap' : // apachesoap
-        case 'http://schemas.xmlsoap.org/wsdl/' : // wsdl
-        case 'http://schemas.xmlsoap.org/wsdl/soap/' : // wsdlsoap
+        case 'http://xml.apache.org/xml-soap': // apachesoap
+        case 'http://schemas.xmlsoap.org/wsdl/': // wsdl
+        case 'http://schemas.xmlsoap.org/wsdl/soap/': // wsdlsoap
         case 'http://schemas.xmlsoap.org/wsdl/soap12/': // wsdlsoap12
-        case 'http://schemas.xmlsoap.org/soap/encoding/' : // soapenc
-        case 'http://www.w3.org/2001/XMLSchema' : // xsd
+        case 'http://schemas.xmlsoap.org/soap/encoding/': // soapenc
+        case 'http://www.w3.org/2001/XMLSchema': // xsd
           continue;
       }
       if (~ns.indexOf('http://schemas.xmlsoap.org/')) {
@@ -1370,7 +1370,7 @@ function open_wsdl_recursive(uri: any, p2: WSDLCallback | IOptions, p3?: WSDLCal
 
   WSDL_CACHE = options.WSDL_CACHE;
 
-  if (fromCache = WSDL_CACHE[ uri ]) {
+  if (fromCache = WSDL_CACHE[uri]) {
     return callback.call(fromCache, null, fromCache);
   }
 
@@ -1403,7 +1403,7 @@ export function open_wsdl(uri: any, p2: WSDLCallback | IOptions, p3?: WSDLCallba
         callback(err);
       } else {
         wsdl = new WSDL(definition, uri, options);
-        WSDL_CACHE[ uri ] = wsdl;
+        WSDL_CACHE[uri] = wsdl;
         wsdl.WSDL_CACHE = WSDL_CACHE;
         wsdl.onReady(callback);
       }
@@ -1414,13 +1414,13 @@ export function open_wsdl(uri: any, p2: WSDLCallback | IOptions, p3?: WSDLCallba
     httpClient.request(uri, null /* options */, (err, response, definition) => {
       if (err) {
         callback(err);
-      } else if (response && response.statusCode === 200) {
+      } else if (response && response.status === 200) {
         wsdl = new WSDL(definition, uri, options);
-        WSDL_CACHE[ uri ] = wsdl;
+        WSDL_CACHE[uri] = wsdl;
         wsdl.WSDL_CACHE = WSDL_CACHE;
         wsdl.onReady(callback);
       } else {
-        callback(new Error('Invalid WSDL URL: ' + uri + '\n\n\r Code: ' + response.statusCode + '\n\n\r Response Body: ' + response.body));
+        callback(new Error('Invalid WSDL URL: ' + uri + '\n\n\r Code: ' + response.status + '\n\n\r Response Body: ' + response.data));
       }
     }, request_headers, request_options);
   }

@@ -43,6 +43,7 @@ function createCache() {
     }
   };
 }
+
 const getFromCache = createCache();
 
 function _requestWSDL(url: string, options: IOptions, callback: WSDLCallback) {
