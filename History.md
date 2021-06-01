@@ -1,3 +1,9 @@
+0.39.0 / 2021-06-01
+===================
+
+* [FIX] Fixed namespace resolution in case of complexType extension. (#1145)
+* [FIX] Read length of buffer directly (#1147)
+
 0.38.0 / 2021-05-14
 ===================
 

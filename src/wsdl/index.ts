@@ -1087,7 +1087,7 @@ export class WSDL {
         if (child.$base) {
           const baseQName = splitQName(child.$base);
           const childNameSpace = baseQName.prefix === TNS_PREFIX ? '' : baseQName.prefix;
-          childNsURI = child.xmlns[baseQName.prefix] || this.definitions.xmlns[baseQName.prefix];
+          childNsURI = child.xmlns[baseQName.prefix] || child.schemaXmlns[baseQName.prefix];
 
           const foundBase = this.findSchemaType(baseQName.name, childNsURI);
 
