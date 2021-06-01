@@ -257,7 +257,7 @@ export class Server extends EventEmitter {
 
       // request body is already provided by an express middleware
       // in this case unzipping should also be done by the express middleware itself
-      if (req.body && Object.keys(req.body).length > 0) {
+      if (req.body && req.body.length > 0) {
         return this._processRequestXml(req, res, req.body.toString());
       }
 
