@@ -321,7 +321,7 @@ describe('SOAP Server with Options', function() {
       );
     });
   });
-  
+
   it('should return soap fault in server response', function(done) {
     test.server.listen(15099, null, null, function() {
       test.soapServer = soap.listen(test.server, {
