@@ -7,7 +7,9 @@
   },
   "author": "Vinay Pulim <v@pulim.com>",
   "dependencies": {
+    "content-type-parser": "^1.0.2",
     "debug": "^4.1.1",
+    "formidable": "^1.2.2",
     "get-stream": "^6.0.0",
     "httpntlm": "^1.5.2",
     "lodash": "^4.17.19",

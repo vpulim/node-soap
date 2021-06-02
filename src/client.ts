@@ -12,7 +12,7 @@ import * as _ from 'lodash';
 import * as request from 'request';
 import { v4 as uuidv4 } from 'uuid';
 import { HttpClient, Request } from './http';
-import { IHeaders, IHttpClient, IOptions, ISecurity, SoapMethod, SoapMethodAsync } from './types';
+import { IHeaders, IHttpClient, IMTOMAttachments, IOptions, ISecurity, SoapMethod, SoapMethodAsync } from './types';
 import { findPrefix } from './utils';
 import { WSDL } from './wsdl';
 import { IPort, OperationElement, ServiceElement } from './wsdl/elements';
@@ -67,6 +67,7 @@ export class Client extends EventEmitter {
   private returnSaxStream: boolean;
   private normalizeNames: boolean;
   private overridePromiseSuffix: string;
+  public lastReponseAttachments: IMTOMAttachments;
 
   constructor(wsdl: WSDL, endpoint?: string, options?: IOptions) {
     super();
@@ -543,6 +544,7 @@ export class Client extends EventEmitter {
       this.lastResponse = body;
       this.lastResponseHeaders = response && response.headers;
       this.lastElapsedTime = response && response.elapsedTime;
+      this.lastReponseAttachments = response && response.mtomResponseAttachments;
       this.emit('response', body, response, eid);
 
       if (err) {

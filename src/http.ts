@@ -7,8 +7,10 @@ import * as debugBuilder from 'debug';
 import * as httpNtlm from 'httpntlm';
 import * as req from 'request';
 import * as url from 'url';
+import * as contentTypeParser from "content-type-parser";
 import {v4 as uuidv4} from 'uuid';
-import { IExOptions, IHeaders, IHttpClient, IOptions } from './types';
+import { IExOptions, IHeaders, IHttpClient, IMTOMAttachments, IOptions } from './types';
+import { parseMTOMResp } from './utils';
 
 const debug = debugBuilder('node-soap');
 const VERSION = require('../package.json').version;
@@ -31,9 +33,11 @@ export type Request = req.Request;
  */
 export class HttpClient implements IHttpClient {
   private _request: req.RequestAPI<req.Request, req.CoreOptions, req.Options>;
+  private options: IOptions;
 
   constructor(options?: IOptions) {
     options = options || {};
+    this.options = options;
     this._request = options.request || req;
   }
 
@@ -179,9 +183,38 @@ export class HttpClient implements IHttpClient {
         callback(null, res, res.body);
       });
     } else {
+      const _this = this;
+      if(this.options.mtomResponse){
+        options.encoding = null;
+      }
       req = this._request(options, (err, res, body) => {
         if (err) {
           return callback(err);
+        }
+        if(_this.options.mtomResponse){
+          const isMultipartResp = res.headers['content-type'].toLowerCase().indexOf("multipart/related") > -1;
+          if(isMultipartResp){
+            let boundary;
+            const parsedContentType = contentTypeParser(res.headers['content-type']);
+            if(parsedContentType && parsedContentType.parameterList){
+                boundary = ((parsedContentType.parameterList as Array<any>).find(item => item.key === "boundary") || {}).value;
+            }
+            if(!boundary){
+              callback(new Error("Missing boundary from content-type"));
+            }
+            const multipartResponse = parseMTOMResp(res.body, boundary);
+
+            //first part is the soap response
+            const firstPart = multipartResponse.parts.shift();
+            body = firstPart.body.toString('utf8');
+            
+            //If clause only to pass previous tests without res
+            if(res){
+              res.mtomResponseAttachments = multipartResponse;
+            }
+          }else{
+            body = body.toString('utf8');
+          }
         }
         body = this.handleResponse(req, res, body);
         callback(null, res, body);

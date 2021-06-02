@@ -151,8 +151,9 @@ The `options` argument allows you to customize the client with the following pro
 - namespaceArrayElements: provides support for nonstandard array semantics.  If true, JSON arrays of the form `{list: [{elem: 1}, {elem: 2}]}` are marshalled into xml as `<list><elem>1</elem></list> <list><elem>2</elem></list>`. If false, marshalls into `<list> <elem>1</elem> <elem>2</elem> </list>`. Default: `true`.
 - stream: allows using a stream to parse the XML SOAP response. Default: `false`
 - returnSaxStream: enables the library to return the sax stream, transferring to the end user the responsibility of parsing the XML. It can be used only in combination with *stream* argument set to `true`. Default: `false`
+- mtomResponse: Treat response as multipart/related response with MTOM attachment. Reach attachments on the `lastReponseAttachments` property of SoapClient. Default: `false`
 
-Note: for versions of node >0.10.X, you may need to specify `{connection: 'keep-alive'}` in SOAP headers to avoid truncation of longer chunked responses.
+Note: for versions of node >0.10.X, you may need to specify `{connection: 'keep-alive'}` in SOAP headers to avoid truncation of longer chunked responses. 
 
 ### soap.listen(*server*, *path*, *services*, *wsdl*, *callback*) - create a new SOAP server that listens on *path* and provides *services*.
 *server* can be a [http](https://nodejs.org/api/http.html) Server or [express](http://expressjs.com/) framework based server

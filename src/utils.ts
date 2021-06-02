@@ -1,5 +1,7 @@
 
 import * as crypto from 'crypto';
+import { IMTOMAttachments } from './types';
+const MultipartParser = require('formidable/lib/multipart_parser.js').MultipartParser;
 
 export function passwordDigest(nonce: string, created: string, password: string): string {
   // digest = base64 ( sha1 ( nonce + created + password ) )
@@ -63,4 +65,51 @@ export function xmlEscape(obj) {
   }
 
   return obj;
+}
+
+export function parseMTOMResp(payload: Buffer, boundary: string): IMTOMAttachments{
+  const resp: IMTOMAttachments = {
+    parts:[]
+  };
+  let headerName = "", headerValue = "", data: Buffer;
+  let partIndex = 0;
+  const parser = new MultipartParser();
+
+
+  parser.initWithBoundary(boundary)
+  parser.onPartBegin = function() {
+    resp.parts[partIndex] = {
+      body:null,
+      headers:{}
+    };
+    data = Buffer.from('');
+  }
+
+  parser.onHeaderField = function(b: Buffer, start: number, end: number) {
+    headerName = b.slice(start, end).toString()
+  };
+
+  parser.onHeaderValue = function(b: Buffer, start: number, end: number) {
+    headerValue = b.slice(start, end).toString()
+  }
+
+  parser.onHeaderEnd = function() {
+    resp.parts[partIndex].headers[headerName.toLowerCase()] = headerValue;
+  }
+
+  parser.onHeadersEnd = function() {}
+
+  parser.onPartData = function(b: Buffer, start: number, end: number) {
+      data = Buffer.concat([data, b.slice(start, end)]);
+  }
+
+  parser.onPartEnd = function() {
+    resp.parts[partIndex].body = data;
+    partIndex++;
+  }
+
+  parser.onEnd = function() {}
+  parser.write(payload);
+
+  return resp;
 }
