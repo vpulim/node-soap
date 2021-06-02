@@ -67,7 +67,7 @@ export class Client extends EventEmitter {
   private returnSaxStream: boolean;
   private normalizeNames: boolean;
   private overridePromiseSuffix: string;
-  public lastReponseAttachments: IMTOMAttachments;
+  public lastResponseAttachments: IMTOMAttachments;
 
   constructor(wsdl: WSDL, endpoint?: string, options?: IOptions) {
     super();
@@ -544,7 +544,7 @@ export class Client extends EventEmitter {
       this.lastResponse = body;
       this.lastResponseHeaders = response && response.headers;
       this.lastElapsedTime = response && response.elapsedTime;
-      this.lastReponseAttachments = response && response.mtomResponseAttachments;
+      this.lastResponseAttachments = response && response.mtomResponseAttachments;
       this.emit('response', body, response, eid);
 
       if (err) {

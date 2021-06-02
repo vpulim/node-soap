@@ -186,8 +186,8 @@ function cbCaller(client, methodName, requestJSON, responseJSON, responseSoapHea
         if(responseSoapHeaderJSON){
           assert.equal(JSON.stringify(soapHeader), JSON.stringify(responseSoapHeaderJSON));
         }
-        if(client.lastReponseAttachments){
-          assert.deepEqual(client.lastReponseAttachments.parts,attachmentParts)
+        if(client.lastResponseAttachments){
+          assert.deepEqual(client.lastResponseAttachments.parts,attachmentParts)
         }
       }
     }
@@ -197,7 +197,7 @@ function cbCaller(client, methodName, requestJSON, responseJSON, responseSoapHea
 
 function promiseCaller(client, methodName, requestJSON, responseJSON, responseSoapHeaderJSON, options, attachmentParts, done){
   client[methodName](requestJSON).then(function(responseArr){
-    const respAttachments = client.lastReponseAttachments;
+    const respAttachments = client.lastResponseAttachments;
     var json = responseArr[0];
     var body = responseArr[1];
     var soapHeader = responseArr[2];
@@ -208,8 +208,8 @@ function promiseCaller(client, methodName, requestJSON, responseJSON, responseSo
       if(responseSoapHeaderJSON){
         assert.equal(JSON.stringify(soapHeader), JSON.stringify(responseSoapHeaderJSON));
       }
-      if(client.lastReponseAttachments){
-        assert.deepEqual(client.lastReponseAttachments.parts,attachmentParts)
+      if(client.lastResponseAttachments){
+        assert.deepEqual(client.lastResponseAttachments.parts,attachmentParts)
       }
     }
   }).catch(function(err) {
