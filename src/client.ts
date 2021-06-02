@@ -475,9 +475,7 @@ export class Client extends EventEmitter {
     const tryJSONparse = (body) => {
       try {
         return JSON.parse(body);
-      } catch (err) {
-        return undefined;
-      }
+      } catch (err) { return undefined; }
     };
 
     if (this.streamAllowed && typeof this.httpClient.requestStream === 'function') {
@@ -487,15 +485,25 @@ export class Client extends EventEmitter {
         this.lastResponse = null;
         this.lastResponseHeaders = null;
         this.lastElapsedTime = null;
+        this.lastRequestHeaders = err.config && err.config.headers;
         this.emit('response', null, null, eid);
-
-        callback(err, undefined, undefined, undefined, xml);
+        if (this.returnSaxStream || !err.response || !err.response.data) {
+          callback(err, undefined, undefined, undefined, xml);
+        } else {
+          err.response.data.on('close', (e) => {
+            callback(err, undefined, undefined, undefined, xml);
+          });
+          err.response.data.on('data', (e) => {
+            err.response.data = e.toString();
+          });
+        }
       };
 
       this.httpClient.requestStream(location, xml, headers, options, this).then((res) => {
         this.lastRequestHeaders = res.headers;
-        res.data.on('error', onError);
-
+        if (res.data.on) {
+          res.data.on('error', (err) => onError(err));
+        }
         // When the output element cannot be looked up in the wsdl,
         // play it safe and don't stream
         if (res.status !== 200 || !output || !output.$lookupTypes) {
@@ -504,7 +512,7 @@ export class Client extends EventEmitter {
             this.lastElapsedTime = Date.now() - startTime;
             this.lastResponseHeaders = res && res.headers;
             // Added mostly for testability, but possibly useful for debugging
-            this.lastRequestHeaders = res.config.headers;
+            this.lastRequestHeaders = res.config && res.config.headers || res.headers;
             this.emit('response', body, res, eid);
 
             return parseSync(body, res);
@@ -550,6 +558,14 @@ export class Client extends EventEmitter {
       this.emit('response', body, response, eid);
 
       if (err) {
+        this.lastRequestHeaders = err.config && err.config.headers;
+        try {
+          if (err.response && err.response.data) {
+            this.wsdl.xmlToObject(err.response.data);
+          }
+        } catch (error) {
+          err.root = error.root || error;
+        }
         callback(err, undefined, undefined, undefined, xml);
       } else {
         return parseSync(body, response);

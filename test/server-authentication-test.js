@@ -39,14 +39,12 @@ describe('SOAP Server', function () {
     test.server.listen(15099, null, null, function () {
       test.soapServer = soap.listen(test.server, '/stockquote', test.service, test.wsdl);
       test.soapServer.authenticate = test.authenticateProxy;
-      test.baseUrl =
-        'http://' + test.server.address().address + ":" + test.server.address().port;
+      var testSv = test.server.address();
+      test.baseUrl = `http://${testSv.address}:${testSv.port}`;
 
-      //windows return 0.0.0.0 as address and that is not
-      //valid to use in a request
-      if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
-        test.baseUrl =
-          'http://127.0.0.1:' + test.server.address().port;
+      // windows return 0.0.0.0 as address and that is not valid to use in a request
+      if (testSv.address === '0.0.0.0' || testSv.address === '::') {
+        test.baseUrl = `http://127.0.0.1:${testSv.port}`;
       }
 
       done();
