@@ -57,6 +57,11 @@ var requestContext = {
       assert.equal(actualRequest, expectedRequest);
 
       if(!requestContext.responseToSend)return requestContext.doneHandler();
+      if(requestContext.responseHttpHeaders){
+        for(const headerKey in requestContext.responseHttpHeaders ){
+          res.setHeader(headerKey,requestContext.responseHttpHeaders[headerKey]);
+        }
+      }
       res.end(requestContext.responseToSend);
 
       requestContext.expectedRequest = null;
@@ -81,6 +86,8 @@ tests.forEach(function(test){
   var options = path.resolve(test, 'options.json');
   var wsdlOptionsFile = path.resolve(test, 'wsdl_options.json');
   var wsdlJSOptionsFile = path.resolve(test, 'wsdl_options.js');
+  var responseHttpHeaders = path.resolve(test,'responseHttpHeader.json');
+  var attachmentParts = path.resolve(test, "attachmentParts.js");
   var wsdlOptions = {};
 
   //headerJSON is optional
@@ -120,11 +127,20 @@ tests.forEach(function(test){
   else if(fs.existsSync(wsdlJSOptionsFile)) wsdlOptions = require(wsdlJSOptionsFile);
   else wsdlOptions = {};
 
-  generateTest(name, methodName, wsdl, headerJSON, securityJSON, requestXML, requestJSON, responseXML, responseJSON, responseSoapHeaderJSON, wsdlOptions, options, false);
-  generateTest(name, methodName, wsdl, headerJSON, securityJSON, requestXML, requestJSON, responseXML, responseJSON, responseSoapHeaderJSON, wsdlOptions, options, true);
+
+  //responseHttpHeaders
+  if(fs.existsSync(responseHttpHeaders))  responseHttpHeaders = require(responseHttpHeaders)
+  else responseHttpHeaders = null;
+
+  //attachmentParts
+  if(fs.existsSync(attachmentParts))  attachmentParts = require(attachmentParts)
+  else attachmentParts = null;
+
+  generateTest(name, methodName, wsdl, headerJSON, securityJSON, requestXML, requestJSON, responseXML, responseJSON, responseSoapHeaderJSON, wsdlOptions, options, responseHttpHeaders, attachmentParts, false);
+  generateTest(name, methodName, wsdl, headerJSON, securityJSON, requestXML, requestJSON, responseXML, responseJSON, responseSoapHeaderJSON, wsdlOptions, options, responseHttpHeaders, attachmentParts, true);
 });
 
-function generateTest(name, methodName, wsdlPath, headerJSON, securityJSON, requestXML, requestJSON, responseXML, responseJSON, responseSoapHeaderJSON, wsdlOptions, options, usePromises){
+function generateTest(name, methodName, wsdlPath, headerJSON, securityJSON, requestXML, requestJSON, responseXML, responseJSON, responseSoapHeaderJSON, wsdlOptions, options, responseHttpHeaders, attachmentParts, usePromises){
   var methodCaller = cbCaller;
 
   if (usePromises) {
@@ -137,6 +153,7 @@ function generateTest(name, methodName, wsdlPath, headerJSON, securityJSON, requ
     if(requestXML) requestContext.expectedRequest = requestXML;
     if(responseXML) requestContext.responseToSend = responseXML;
     requestContext.doneHandler = done;
+    requestContext.responseHttpHeaders = responseHttpHeaders;
     soap.createClient(wsdlPath, wsdlOptions, function(err, client){
       if (headerJSON) {
         for (var headerKey in headerJSON) {
@@ -152,12 +169,12 @@ function generateTest(name, methodName, wsdlPath, headerJSON, securityJSON, requ
         throw new Error('method ' + methodName + ' does not exists in wsdl specified in test wsdl: ' + wsdlPath);
       }
 
-      methodCaller(client, methodName, requestJSON, responseJSON, responseSoapHeaderJSON, options, done);
+      methodCaller(client, methodName, requestJSON, responseJSON, responseSoapHeaderJSON, options, attachmentParts, done);
     }, 'http://localhost:'+port+'/Message/Message.dll?Handler=Default');
   };
 }
 
-function cbCaller(client, methodName, requestJSON, responseJSON, responseSoapHeaderJSON, options, done){
+function cbCaller(client, methodName, requestJSON, responseJSON, responseSoapHeaderJSON, options, attachmentParts, done){
   client[methodName](requestJSON, function(err, json, body, soapHeader){
     if(requestJSON){
       if (err) {
@@ -169,14 +186,18 @@ function cbCaller(client, methodName, requestJSON, responseJSON, responseSoapHea
         if(responseSoapHeaderJSON){
           assert.equal(JSON.stringify(soapHeader), JSON.stringify(responseSoapHeaderJSON));
         }
+        if(client.lastReponseAttachments){
+          assert.deepEqual(client.lastReponseAttachments.parts,attachmentParts)
+        }
       }
     }
     done();
   }, options);
 }
 
-function promiseCaller(client, methodName, requestJSON, responseJSON, responseSoapHeaderJSON, options, done){
+function promiseCaller(client, methodName, requestJSON, responseJSON, responseSoapHeaderJSON, options, attachmentParts, done){
   client[methodName](requestJSON).then(function(responseArr){
+    const respAttachments = client.lastReponseAttachments;
     var json = responseArr[0];
     var body = responseArr[1];
     var soapHeader = responseArr[2];
@@ -186,6 +207,9 @@ function promiseCaller(client, methodName, requestJSON, responseJSON, responseSo
       assert.equal(JSON.stringify(typeof json === 'undefined' ? null : json), JSON.stringify(responseJSON));
       if(responseSoapHeaderJSON){
         assert.equal(JSON.stringify(soapHeader), JSON.stringify(responseSoapHeaderJSON));
+      }
+      if(client.lastReponseAttachments){
+        assert.deepEqual(client.lastReponseAttachments.parts,attachmentParts)
       }
     }
   }).catch(function(err) {
