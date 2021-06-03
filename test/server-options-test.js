@@ -586,4 +586,24 @@ describe('SOAP Server with Options', function() {
       });
     });
   });
+
+  it('should accept regex as path', function(done) {
+    test.server.listen(15099, null, null, function() {
+      test.soapServer = soap.listen(test.server, {
+        path: /test\/.*/,
+        services: test.service,
+        xml: test.wsdl
+      }, test.service, test.wsdl);
+
+      soap.createClient(test.baseUrl + '/test/te?wsdl', function(err, client) {
+        assert.ifError(err);
+      });
+
+      soap.createClient(test.baseUrl + '/teste/az?wsdl', function(err, client) {
+        assert.notStrictEqual(err, null);
+        done()
+      });
+    });
+  });
+
 });

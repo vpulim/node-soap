@@ -140,7 +140,7 @@ export interface IOneWayOptions {
 }
 
 export interface IServerOptions extends IWsdlBaseOptions {
-  path: string;
+  path: string | RegExp;
   services: IServices;
   xml?: string;
   uri?: string;
