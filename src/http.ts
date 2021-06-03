@@ -193,7 +193,7 @@ export class HttpClient implements IHttpClient {
           return callback(err);
         }
         if (_this.options.mtomResponse) {
-          const isMultipartResp = res.headers['content-type'].toLowerCase().indexOf('multipart/related') > -1;
+          const isMultipartResp = res.headers['content-type'] && res.headers['content-type'].toLowerCase().indexOf('multipart/related') > -1;
           if (isMultipartResp) {
             let boundary;
             const parsedContentType = contentTypeParser(res.headers['content-type']);

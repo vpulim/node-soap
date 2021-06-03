@@ -1,7 +1,7 @@
 
 import * as crypto from 'crypto';
+import { MultipartParser } from 'formidable/lib/multipart_parser.js';
 import { IMTOMAttachments } from './types';
-const MultipartParser = require('formidable/lib/multipart_parser.js').MultipartParser;
 
 export function passwordDigest(nonce: string, created: string, password: string): string {
   // digest = base64 ( sha1 ( nonce + created + password ) )
