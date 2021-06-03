@@ -202,7 +202,7 @@ export class HttpClient implements IHttpClient {
             if(!boundary){
               callback(new Error("Missing boundary from content-type"));
             }
-            const multipartResponse = parseMTOMResp(res.body, boundary);
+            const multipartResponse = parseMTOMResp(body, boundary);
 
             //first part is the soap response
             const firstPart = multipartResponse.parts.shift();
