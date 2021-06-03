@@ -154,9 +154,9 @@ export interface IServerOptions extends IWsdlBaseOptions {
   enableChunkedEncoding?: boolean;
 }
 
-export interface IMTOMAttachments{
+export interface IMTOMAttachments {
   parts: Array<{
-    body:Buffer,
-    headers:{[key: string]: string}
-  }>
+    body: Buffer,
+    headers: {[key: string]: string},
+  }>;
 }

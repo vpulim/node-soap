@@ -54,6 +54,7 @@ export class Client extends EventEmitter {
   public lastResponse?: any;
   public lastResponseHeaders?: IncomingHttpHeaders;
   public lastElapsedTime?: number;
+  public lastResponseAttachments: IMTOMAttachments;
 
   private wsdl: WSDL;
   private httpClient: IHttpClient;
@@ -67,7 +68,6 @@ export class Client extends EventEmitter {
   private returnSaxStream: boolean;
   private normalizeNames: boolean;
   private overridePromiseSuffix: string;
-  public lastResponseAttachments: IMTOMAttachments;
 
   constructor(wsdl: WSDL, endpoint?: string, options?: IOptions) {
     super();

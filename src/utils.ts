@@ -67,48 +67,49 @@ export function xmlEscape(obj) {
   return obj;
 }
 
-export function parseMTOMResp(payload: Buffer, boundary: string): IMTOMAttachments{
+export function parseMTOMResp(payload: Buffer, boundary: string): IMTOMAttachments {
   const resp: IMTOMAttachments = {
-    parts:[]
+    parts: [],
   };
-  let headerName = "", headerValue = "", data: Buffer;
+  let headerName = '';
+  let headerValue = '';
+  let data: Buffer;
   let partIndex = 0;
   const parser = new MultipartParser();
 
-
-  parser.initWithBoundary(boundary)
-  parser.onPartBegin = function() {
+  parser.initWithBoundary(boundary);
+  parser.onPartBegin = () => {
     resp.parts[partIndex] = {
-      body:null,
-      headers:{}
+      body: null,
+      headers: {},
     };
     data = Buffer.from('');
-  }
-
-  parser.onHeaderField = function(b: Buffer, start: number, end: number) {
-    headerName = b.slice(start, end).toString()
   };
 
-  parser.onHeaderValue = function(b: Buffer, start: number, end: number) {
-    headerValue = b.slice(start, end).toString()
-  }
+  parser.onHeaderField = (b: Buffer, start: number, end: number) => {
+    headerName = b.slice(start, end).toString();
+  };
 
-  parser.onHeaderEnd = function() {
+  parser.onHeaderValue = (b: Buffer, start: number, end: number) => {
+    headerValue = b.slice(start, end).toString();
+  };
+
+  parser.onHeaderEnd = () => {
     resp.parts[partIndex].headers[headerName.toLowerCase()] = headerValue;
-  }
+  };
 
-  parser.onHeadersEnd = function() {}
+  parser.onHeadersEnd = () => {};
 
-  parser.onPartData = function(b: Buffer, start: number, end: number) {
+  parser.onPartData = (b: Buffer, start: number, end: number) => {
       data = Buffer.concat([data, b.slice(start, end)]);
-  }
+  };
 
-  parser.onPartEnd = function() {
+  parser.onPartEnd = () => {
     resp.parts[partIndex].body = data;
     partIndex++;
-  }
+  };
 
-  parser.onEnd = function() {}
+  parser.onEnd = () => {};
   parser.write(payload);
 
   return resp;

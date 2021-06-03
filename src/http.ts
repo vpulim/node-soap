@@ -3,11 +3,12 @@
  * MIT Licensed
  */
 
+import * as contentTypeParser from 'content-type-parser';
 import * as debugBuilder from 'debug';
 import * as httpNtlm from 'httpntlm';
 import * as req from 'request';
 import * as url from 'url';
-import * as contentTypeParser from "content-type-parser";
+
 import {v4 as uuidv4} from 'uuid';
 import { IExOptions, IHeaders, IHttpClient, IMTOMAttachments, IOptions } from './types';
 import { parseMTOMResp } from './utils';
@@ -184,35 +185,34 @@ export class HttpClient implements IHttpClient {
       });
     } else {
       const _this = this;
-      if(this.options.mtomResponse){
+      if (this.options.mtomResponse) {
         options.encoding = null;
       }
       req = this._request(options, (err, res, body) => {
         if (err) {
           return callback(err);
         }
-        if(_this.options.mtomResponse){
-          const isMultipartResp = res.headers['content-type'].toLowerCase().indexOf("multipart/related") > -1;
-          if(isMultipartResp){
+        if (_this.options.mtomResponse) {
+          const isMultipartResp = res.headers['content-type'].toLowerCase().indexOf('multipart/related') > -1;
+          if (isMultipartResp) {
             let boundary;
             const parsedContentType = contentTypeParser(res.headers['content-type']);
-            if(parsedContentType && parsedContentType.parameterList){
-                boundary = ((parsedContentType.parameterList as Array<any>).find(item => item.key === "boundary") || {}).value;
+            if (parsedContentType && parsedContentType.parameterList) {
+                boundary = ((parsedContentType.parameterList as any[]).find( (item) =>  item.key === 'boundary') || {}).value;
             }
-            if(!boundary){
-              callback(new Error("Missing boundary from content-type"));
+            if (!boundary) {
+              return callback(new Error('Missing boundary from content-type'));
             }
             const multipartResponse = parseMTOMResp(body, boundary);
 
-            //first part is the soap response
+            // first part is the soap response
             const firstPart = multipartResponse.parts.shift();
-            body = firstPart.body.toString('utf8');
-            
-            //If clause only to pass previous tests without res
-            if(res){
-              res.mtomResponseAttachments = multipartResponse;
+            if (!firstPart || !firstPart.body) {
+              return callback(new Error('Cannot parse multipart response'));
             }
-          }else{
+            body = firstPart.body.toString('utf8');
+            res.mtomResponseAttachments = multipartResponse;
+          } else {
             body = body.toString('utf8');
           }
         }
