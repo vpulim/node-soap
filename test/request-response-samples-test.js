@@ -151,7 +151,13 @@ function generateTest(name, methodName, wsdlPath, headerJSON, securityJSON, requ
 
   suite[name] = function(done){
     if(requestXML) requestContext.expectedRequest = requestXML;
-    if(responseXML) requestContext.responseToSend = responseXML;
+    if (responseXML) {
+      if (wsdlOptions.mtomResponse) {//all LF to CRLF
+          responseXML = responseXML.replace(/\r\n/g, "\n");
+          responseXML = responseXML.replace(/\n/g, "\r\n");
+      }
+      requestContext.responseToSend = responseXML;
+    }
     requestContext.doneHandler = done;
     requestContext.responseHttpHeaders = responseHttpHeaders;
     soap.createClient(wsdlPath, wsdlOptions, function(err, client){
