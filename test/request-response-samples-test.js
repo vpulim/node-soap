@@ -152,7 +152,7 @@ function generateTest(name, methodName, wsdlPath, headerJSON, securityJSON, requ
   suite[name] = function(done){
     if(requestXML) requestContext.expectedRequest = requestXML;
     if (responseXML) {
-      if (wsdlOptions.mtomResponse) {//all LF to CRLF
+      if (wsdlOptions.parseReponseAttachments) {//all LF to CRLF
           responseXML = responseXML.replace(/\r\n/g, "\n");
           responseXML = responseXML.replace(/\n/g, "\r\n");
       }

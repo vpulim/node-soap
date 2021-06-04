@@ -133,7 +133,7 @@ export interface IOptions extends IWsdlBaseOptions {
   /** @internal */
   WSDL_CACHE?;
   /** handle MTOM soapAttachments in response */
-  mtomResponse?: boolean;
+  parseReponseAttachments?: boolean;
 }
 
 export interface IOneWayOptions {

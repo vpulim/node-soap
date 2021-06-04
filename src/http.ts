@@ -185,14 +185,14 @@ export class HttpClient implements IHttpClient {
       });
     } else {
       const _this = this;
-      if (this.options.mtomResponse) {
+      if (this.options.parseReponseAttachments) {
         options.encoding = null;
       }
       req = this._request(options, (err, res, body) => {
         if (err) {
           return callback(err);
         }
-        if (_this.options.mtomResponse) {
+        if (_this.options.parseReponseAttachments) {
           const isMultipartResp = res.headers['content-type'] && res.headers['content-type'].toLowerCase().indexOf('multipart/related') > -1;
           if (isMultipartResp) {
             let boundary;
