@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<schema elementFormDefault="qualified" targetNamespace="http://xmlns.oracle.com/apps/prc/po/editDocument/purchaseRequestService/types/"
+     xmlns:ns0="http://xmlns.oracle.com/adf/svc/errors/" xmlns:ns1="http://xmlns.oracle.com/apps/prc/po/editDocument/purchaseRequestService/"
+     xmlns:tns="http://xmlns.oracle.com/apps/prc/po/editDocument/purchaseRequestService/types/"
+     xmlns="http://www.w3.org/2001/XMLSchema">
+    <import namespace="http://xmlns.oracle.com/apps/prc/po/editDocument/purchaseRequestService/"
+         schemaLocation="https://ecex-test.prc.us2.oraclecloud.com:443/fscmService/PurchaseRequestService?XSD=/oracle/apps/prc/po/editDocument/purchaseRequestService/PurchaseRequestControlEntry.xsd"/>
+    <import namespace="http://xmlns.oracle.com/apps/prc/po/editDocument/purchaseRequestService/"
+         schemaLocation="https://ecex-test.prc.us2.oraclecloud.com:443/fscmService/PurchaseRequestService?XSD=/oracle/apps/prc/po/editDocument/purchaseRequestService/PurchaseRequestChangeEntry.xsd"/>
+    <import namespace="http://xmlns.oracle.com/apps/prc/po/editDocument/purchaseRequestService/"
+         schemaLocation="https://ecex-test.prc.us2.oraclecloud.com:443/fscmService/PurchaseRequestService?XSD=/oracle/apps/prc/po/editDocument/purchaseRequestService/PurchaseRequestGetEntry.xsd"/>
+    <import namespace="http://xmlns.oracle.com/apps/prc/po/editDocument/purchaseRequestService/"
+         schemaLocation="https://ecex-test.prc.us2.oraclecloud.com:443/fscmService/PurchaseRequestService?XSD=/oracle/apps/prc/po/editDocument/purchaseRequestService/PurchaseRequestGetResult.xsd"/>
+    <import namespace="http://xmlns.oracle.com/apps/prc/po/editDocument/purchaseRequestService/"
+         schemaLocation="https://ecex-test.prc.us2.oraclecloud.com:443/fscmService/PurchaseRequestService?XSD=/oracle/apps/prc/po/editDocument/purchaseRequestService/PurchaseRequestInputReqHeaderInterface.xsd"/>
+    <import namespace="http://xmlns.oracle.com/apps/prc/po/editDocument/purchaseRequestService/"
+         schemaLocation="https://ecex-test.prc.us2.oraclecloud.com:443/fscmService/PurchaseRequestService?XSD=/oracle/apps/prc/po/editDocument/purchaseRequestService/PurchaseRequestChangeResult.xsd"/>
+    <import namespace="http://xmlns.oracle.com/apps/prc/po/editDocument/purchaseRequestService/"
+         schemaLocation="https://ecex-test.prc.us2.oraclecloud.com:443/fscmService/PurchaseRequestService?XSD=/oracle/apps/prc/po/editDocument/purchaseRequestService/PurchaseRequestControlResult.xsd"/>
+    <import namespace="http://xmlns.oracle.com/apps/prc/po/editDocument/purchaseRequestService/"
+         schemaLocation="https://ecex-test.prc.us2.oraclecloud.com:443/fscmService/PurchaseRequestService?XSD=/oracle/apps/prc/po/editDocument/purchaseRequestService/PurchaseRequestOutputReqHeaderInterface.xsd"/>
+    <import namespace="http://xmlns.oracle.com/adf/svc/errors/" schemaLocation="https://ecex-test.prc.us2.oraclecloud.com:443/fscmService/PurchaseRequestService?XSD=/META-INF/wsdl/ServiceException.xsd"/>
+    <element name="getPurchaseRequest">
+        <complexType>
+            <sequence>
+                <element name="payload" type="ns1:PurchaseRequestGetEntry"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="getPurchaseRequestResponse">
+        <complexType>
+            <sequence>
+                <element maxOccurs="unbounded" minOccurs="0" name="result" type="ns1:PurchaseRequestGetResult"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="getPurchaseRequestAsync">
+        <complexType>
+            <sequence>
+                <element name="payload" type="ns1:PurchaseRequestGetEntry"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="getPurchaseRequestAsyncResponse">
+        <complexType>
+            <sequence>
+                <element maxOccurs="unbounded" minOccurs="0" name="result" type="ns1:PurchaseRequestGetResult"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="controlPurchaseRequest">
+        <complexType>
+            <sequence>
+                <element name="payload" type="ns1:PurchaseRequestControlEntry"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="controlPurchaseRequestResponse">
+        <complexType>
+            <sequence>
+                <element name="result" type="ns1:PurchaseRequestControlResult"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="controlPurchaseRequestAsync">
+        <complexType>
+            <sequence>
+                <element name="payload" type="ns1:PurchaseRequestControlEntry"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="controlPurchaseRequestAsyncResponse">
+        <complexType>
+            <sequence>
+                <element name="result" type="ns1:PurchaseRequestControlResult"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="changePurchaseRequest">
+        <complexType>
+            <sequence>
+                <element name="payload" type="ns1:PurchaseRequestChangeEntry"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="changePurchaseRequestResponse">
+        <complexType>
+            <sequence>
+                <element name="result" type="ns1:PurchaseRequestChangeResult"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="changePurchaseRequestAsync">
+        <complexType>
+            <sequence>
+                <element name="payload" type="ns1:PurchaseRequestChangeEntry"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="changePurchaseRequestAsyncResponse">
+        <complexType>
+            <sequence>
+                <element name="result" type="ns1:PurchaseRequestChangeResult"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="submitImportRequisition">
+        <complexType>
+            <sequence>
+                <element name="interfaceSourceCode" type="string"/>
+                <element minOccurs="0" name="batchId" nillable="true" type="long"/>
+                <element minOccurs="0" name="requisitioningBUId" nillable="true" type="long"/>
+                <element minOccurs="0" name="requisitioningBUName" nillable="true" type="string"/>
+                <element minOccurs="0" name="groupBy" nillable="true" type="string"/>
+                <element minOccurs="0" name="nextRequisitionNumber" nillable="true" type="int"/>
+                <element minOccurs="0" name="initiateApprovalAfterRequisitionImport" nillable="true"
+                     type="string"/>
+                <element minOccurs="0" name="maximumBatchSize" nillable="true" type="int"/>
+                <element minOccurs="0" name="errorProcessingLevel" nillable="true" type="string"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="submitImportRequisitionResponse">
+        <complexType>
+            <sequence>
+                <element maxOccurs="unbounded" minOccurs="0" name="result" type="ns1:PurchaseRequestOutputReqHeaderInterface"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="populateInterfaceTable">
+        <complexType>
+            <sequence>
+                <element name="interfaceSourceCode" type="string"/>
+                <element minOccurs="0" name="batchId" nillable="true" type="long"/>
+                <element maxOccurs="unbounded" minOccurs="1" name="purchaseRequestPayload" type="ns1:PurchaseRequestInputReqHeaderInterface"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="populateInterfaceTableResponse">
+        <complexType>
+            <sequence>
+                <element name="result" type="string"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="createRequisition">
+        <complexType>
+            <sequence>
+                <element name="interfaceSourceCode" type="string"/>
+                <element minOccurs="0" name="requisitioningBUId" nillable="true" type="long"/>
+                <element minOccurs="0" name="requisitioningBUName" nillable="true" type="string"/>
+                <element minOccurs="0" name="groupBy" nillable="true" type="string"/>
+                <element minOccurs="0" name="nextRequisitionNumber" nillable="true" type="int"/>
+                <element minOccurs="0" name="initiateApprovalAfterRequisitionImport" nillable="true"
+                     type="string"/>
+                <element minOccurs="0" name="maximumBatchSize" nillable="true" type="int"/>
+                <element minOccurs="0" name="errorProcessingLevel" nillable="true" type="string"/>
+                <element maxOccurs="unbounded" minOccurs="1" name="purchaseRequestPayload" type="ns1:PurchaseRequestInputReqHeaderInterface"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="createRequisitionResponse">
+        <complexType>
+            <sequence>
+                <element maxOccurs="unbounded" minOccurs="0" name="result" type="ns1:PurchaseRequestOutputReqHeaderInterface"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="populateInterfaceTableAsync">
+        <complexType>
+            <sequence>
+                <element name="interfaceSourceCode" type="string"/>
+                <element minOccurs="0" name="batchId" nillable="true" type="long"/>
+                <element maxOccurs="unbounded" minOccurs="1" name="purchaseRequestPayload" type="ns1:PurchaseRequestInputReqHeaderInterface"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="populateInterfaceTableAsyncResponse">
+        <complexType>
+            <sequence>
+                <element name="result" type="string"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="submitImportRequisitionAsync">
+        <complexType>
+            <sequence>
+                <element name="interfaceSourceCode" type="string"/>
+                <element minOccurs="0" name="batchId" nillable="true" type="long"/>
+                <element minOccurs="0" name="requisitioningBUId" nillable="true" type="long"/>
+                <element minOccurs="0" name="requisitioningBUName" nillable="true" type="string"/>
+                <element minOccurs="0" name="groupBy" nillable="true" type="string"/>
+                <element minOccurs="0" name="nextRequisitionNumber" nillable="true" type="int"/>
+                <element minOccurs="0" name="initiateApprovalAfterRequisitionImport" nillable="true"
+                     type="string"/>
+                <element minOccurs="0" name="maximumBatchSize" nillable="true" type="int"/>
+                <element minOccurs="0" name="errorProcessingLevel" nillable="true" type="string"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="submitImportRequisitionAsyncResponse">
+        <complexType>
+            <sequence>
+                <element maxOccurs="unbounded" minOccurs="0" name="result" type="ns1:PurchaseRequestOutputReqHeaderInterface"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="createRequisitionAsync">
+        <complexType>
+            <sequence>
+                <element name="interfaceSourceCode" type="string"/>
+                <element minOccurs="0" name="requisitioningBUId" nillable="true" type="long"/>
+                <element minOccurs="0" name="requisitioningBUName" nillable="true" type="string"/>
+                <element minOccurs="0" name="groupBy" nillable="true" type="string"/>
+                <element minOccurs="0" name="nextRequisitionNumber" nillable="true" type="int"/>
+                <element minOccurs="0" name="initiateApprovalAfterRequisitionImport" nillable="true"
+                     type="string"/>
+                <element minOccurs="0" name="maximumBatchSize" nillable="true" type="int"/>
+                <element minOccurs="0" name="errorProcessingLevel" nillable="true" type="string"/>
+                <element maxOccurs="unbounded" minOccurs="1" name="purchaseRequestPayload" type="ns1:PurchaseRequestInputReqHeaderInterface"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="createRequisitionAsyncResponse">
+        <complexType>
+            <sequence>
+                <element maxOccurs="unbounded" minOccurs="0" name="result" type="ns1:PurchaseRequestOutputReqHeaderInterface"/>
+            </sequence>
+        </complexType>
+    </element>
+</schema>

@@ -231,6 +231,7 @@ export class ElementElement extends Element {
           definitions.xmlns[type.prefix];
       const schema = definitions.schemas[ns];
       const typeElement = schema && ( this.$type ? schema.complexTypes[typeName] || schema.types[typeName] : schema.elements[typeName] );
+      const typeStorage = this.$type ? definitions.descriptions.types : definitions.descriptions.elements;
 
       if (ns && definitions.schemas[ns]) {
         xmlns = definitions.schemas[ns].xmlns;
@@ -238,12 +239,10 @@ export class ElementElement extends Element {
 
       if (typeElement && !(typeName in Primitives)) {
 
-        if (!(typeName in definitions.descriptions.types)) {
+        if (!(typeName in typeStorage)) {
 
           let elem: any = {};
-          if (!this.$ref) {
-            definitions.descriptions.types[typeName] = elem;
-          }
+          typeStorage[typeName] = elem;
 
           const description = typeElement.description(definitions, xmlns);
           if (typeof description === 'string') {
@@ -265,12 +264,12 @@ export class ElementElement extends Element {
             elem.targetNamespace = ns;
           }
 
-          definitions.descriptions.types[typeName] = elem;
+          typeStorage[typeName] = elem;
         } else {
           if (this.$ref) {
-            element = definitions.descriptions.types[typeName];
+            element = typeStorage[typeName];
           } else {
-            element[name] = definitions.descriptions.types[typeName];
+            element[name] = typeStorage[typeName];
           }
         }
 
@@ -1086,8 +1085,12 @@ export class DefinitionsElement extends Element {
     types: {
       [key: string]: Element;
     },
+    elements: {
+      [key: string]: Element;
+    },
   } = {
     types: {},
+    elements: {},
   };
 
   public init() {

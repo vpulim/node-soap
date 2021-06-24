@@ -190,6 +190,13 @@ describe('WSSecurityCert', function () {
     var xml = instance.postProcess('<soapenv:Header></soapenv:Header><soapenv:Body></soapenv:Body>', 'soapenv');
     xml.should.containEql('<wsse:Security');
   });
+  it('should add envelopeKey to properties in Security block', function () {
+    var instance = new WSSecurityCert(key, cert, '', {
+      mustUnderstand: true,
+    });
+    var xml = instance.postProcess('<soapenv:Header></soapenv:Header><soapenv:Body></soapenv:Body>', 'soapenv');
+    xml.should.containEql('soapenv:mustUnderstand="1"');
+  });
   it('should not accept envelopeKey not set in envelope', function () {
     var xml;
     try {

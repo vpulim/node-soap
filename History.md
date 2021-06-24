@@ -1,3 +1,24 @@
+0.39.0 / 2021-06-01
+===================
+
+* [FIX] Fixed namespace resolution in case of complexType extension. (#1145)
+* [FIX] Read length of buffer directly (#1147)
+
+0.38.0 / 2021-05-14
+===================
+
+* [DOC]  Remove duplicate paragraph and example code in Readme. (#1140)
+* [ENHANCEMENT] Add an option to for an envelopeKey for WSSecurity (#1143)
+* [FIX]  Circular element references inside wsdl - assistance needed (#1142)
+* [MAINTENANCE] Bump typedoc to 0.20.36, update package-lock.json (#1141)
+
+0.37.0 / 2021-04-07
+===================
+* [ENHANCEMENT] Add native support for short deserialization (#1136)
+* [FIX] Add handling for extension base without children (#1135)
+* [FIX] Arrays with proper prefix and namespace (#1137)
+* [MAINTENANCE] update xml-crypto version (#1138)
+
 0.36.0 / 2021-01-13
 ===================
 * [FIX] Extract required HttpClient functions to dedicated interface (#1132)
