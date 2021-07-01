@@ -18,16 +18,17 @@ export interface IHttpClient {
 export type ISoapMethod = SoapMethod;
 export type SoapMethod = (
   args: any,
-  callback: (err: any, result: any, rawResponse: any, soapHeader: any, rawRequest: any) => void,
+  callback: (err: any, result: any, rawResponse: any, soapHeader: any, rawRequest: any, mtomAttachments?: IMTOMAttachments) => void,
   options?: any,
   extraHeaders?: any,
+  mtomAttachments?: IMTOMAttachments
 ) => void;
 
 export type SoapMethodAsync = (
   args: any,
   options?: any,
   extraHeaders?: any,
-) => Promise<[any, any, any, any]>;
+) => Promise<[any, any, any, any, IMTOMAttachments?]>;
 
 export type ISoapServiceMethod = (args: any, callback?: (data: any) => void, headers?: any, req?: any, res?: any, sender?: any) => any;
 
@@ -157,6 +158,6 @@ export interface IServerOptions extends IWsdlBaseOptions {
 export interface IMTOMAttachments {
   parts: Array<{
     body: Buffer,
-    headers: {[key: string]: string},
+    headers: { [key: string]: string },
   }>;
 }

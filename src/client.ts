@@ -232,11 +232,12 @@ export class Client extends EventEmitter {
           rawResponse: any,
           soapHeader: any,
           rawRequest: any,
+          mtomAttachments: any
         ) => {
           if (err) {
             reject(err);
           } else {
-            resolve([result, rawResponse, soapHeader, rawRequest]);
+            resolve([result, rawResponse, soapHeader, rawRequest, mtomAttachments]);
           }
         };
         method(
@@ -265,31 +266,31 @@ export class Client extends EventEmitter {
         extraHeaders = options;
         options = temp;
       }
-      this._invoke(method, args, location, (error, result, rawResponse, soapHeader, rawRequest) => {
-        callback(error, result, rawResponse, soapHeader, rawRequest);
+      this._invoke(method, args, location, (error, result, rawResponse, soapHeader, rawRequest, mtomAttachments) => {
+        callback(error, result, rawResponse, soapHeader, rawRequest, mtomAttachments);
       }, options, extraHeaders);
     };
   }
 
   private _processSoapHeader(soapHeader, name, namespace, xmlns) {
     switch (typeof soapHeader) {
-    case 'object':
-      return this.wsdl.objectToXML(soapHeader, name, namespace, xmlns, true);
-    case 'function':
-      const _this = this;
-      // arrow function does not support arguments variable
-      // tslint:disable-next-line
-      return function() {
-        const result = soapHeader.apply(null, arguments);
+      case 'object':
+        return this.wsdl.objectToXML(soapHeader, name, namespace, xmlns, true);
+      case 'function':
+        const _this = this;
+        // arrow function does not support arguments variable
+        // tslint:disable-next-line
+        return function () {
+          const result = soapHeader.apply(null, arguments);
 
-        if (typeof result === 'object') {
-          return _this.wsdl.objectToXML(result, name, namespace, xmlns, true);
-        } else {
-          return result;
-        }
-      };
-    default:
-      return soapHeader;
+          if (typeof result === 'object') {
+            return _this.wsdl.objectToXML(result, name, namespace, xmlns, true);
+          } else {
+            return result;
+          }
+        };
+      default:
+        return soapHeader;
     }
   }
 
@@ -317,7 +318,7 @@ export class Client extends EventEmitter {
 
       if (!output) {
         // one-way, no output expected
-        return callback(null, null, body, obj.Header, xml);
+        return callback(null, null, body, obj.Header, xml, response.mtomResponseAttachments);
       }
 
       // If it's not HTML and Soap Body is empty
@@ -332,7 +333,7 @@ export class Client extends EventEmitter {
         return callback(null, obj, body, obj.Header);
       }
 
-      if ( typeof obj.Body !== 'object' ) {
+      if (typeof obj.Body !== 'object') {
         const error: ISoapError = new Error('Cannot parse response');
         error.response = response;
         error.body = body;
@@ -354,7 +355,7 @@ export class Client extends EventEmitter {
         });
       }
 
-      callback(null, result, body, obj.Header, xml);
+      callback(null, result, body, obj.Header, xml, response.mtomResponseAttachments);
     };
 
     const parseSync = (body, response) => {
@@ -375,7 +376,7 @@ export class Client extends EventEmitter {
         error.response = response;
         error.body = body;
         this.emit('soapError', error, eid);
-        return callback(error, response, body, undefined, xml);
+        return callback(error, response, body, undefined, xml, response.mtomResponseAttachments);
       }
       return finish(obj, body, response);
     };
@@ -401,7 +402,7 @@ export class Client extends EventEmitter {
     if (this.httpHeaders === null) {
       headers = {};
     } else {
-      for (const header in this.httpHeaders) { headers[header] = this.httpHeaders[header];  }
+      for (const header in this.httpHeaders) { headers[header] = this.httpHeaders[header]; }
       for (const attr in extraHeaders) { headers[attr] = extraHeaders[attr]; }
     }
 
@@ -413,9 +414,9 @@ export class Client extends EventEmitter {
       this.security.addOptions(options);
     }
 
-    if ((style === 'rpc') && ( ( input.parts || input.name === 'element' ) || args === null) ) {
+    if ((style === 'rpc') && ((input.parts || input.name === 'element') || args === null)) {
       assert.ok(!style || style === 'rpc', 'invalid message definition for document style binding');
-      message = this.wsdl.objectToRpcXML(name, args, alias, ns, (input.name !== 'element' ));
+      message = this.wsdl.objectToRpcXML(name, args, alias, ns, (input.name !== 'element'));
       (method.inputSoap === 'encoded') && (encoding = 'soap:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" ');
     } else {
       assert.ok(!style || style === 'document', 'invalid message definition for rpc style binding');
@@ -448,8 +449,8 @@ export class Client extends EventEmitter {
           '</' + envelopeKey + ':Header>'
         )
         :
-          ''
-        ) +
+        ''
+      ) +
       '<' + envelopeKey + ':Body' +
       (this.bodyAttributes ? this.bodyAttributes.join(' ') : '') +
       (this.security && this.security.postProcess ? ' Id="_0"' : '') +
