@@ -8,7 +8,7 @@ export function passwordDigest(nonce: string, created: string, password: string)
   const NonceBytes = Buffer.from(nonce || '', 'base64');
   const CreatedBytes = Buffer.from(created || '', 'utf8');
   const PasswordBytes = Buffer.from(password || '', 'utf8');
-  const FullBytes = Buffer.concat([NonceBytes, CreatedBytes, PasswordBytes ]);
+  const FullBytes = Buffer.concat([NonceBytes, CreatedBytes, PasswordBytes]);
 
   pwHash.update(FullBytes);
   return pwHash.digest('base64');

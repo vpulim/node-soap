@@ -173,29 +173,29 @@ export class Server extends EventEmitter {
 
   private _processSoapHeader(soapHeader, name, namespace, xmlns) {
     switch (typeof soapHeader) {
-    case 'object':
-      return this.wsdl.objectToXML(soapHeader, name, namespace, xmlns, true);
-    case 'function':
-      const _this = this;
-      // arrow function does not support arguments variable
-      // tslint:disable-next-line
-      return function() {
-        const result = soapHeader.apply(null, arguments);
+      case 'object':
+        return this.wsdl.objectToXML(soapHeader, name, namespace, xmlns, true);
+      case 'function':
+        const _this = this;
+        // arrow function does not support arguments variable
+        // tslint:disable-next-line
+        return function () {
+          const result = soapHeader.apply(null, arguments);
 
-        if (typeof result === 'object') {
-          return _this.wsdl.objectToXML(result, name, namespace, xmlns, true);
-        } else {
-          return result;
-        }
-      };
-    default:
-      return soapHeader;
+          if (typeof result === 'object') {
+            return _this.wsdl.objectToXML(result, name, namespace, xmlns, true);
+          } else {
+            return result;
+          }
+        };
+      default:
+        return soapHeader;
     }
   }
 
   private _initializeOptions(options: IServerOptions) {
     this.wsdl.options.attributesKey = options.attributesKey || 'attributes';
-    this.onewayOptions.statusCode = this.onewayOptions.responseCode || 200;
+    this.onewayOptions.statusCode = this.onewayOptions.responseCode || 200;
     this.onewayOptions.emptyBody = !!this.onewayOptions.emptyBody;
   }
 

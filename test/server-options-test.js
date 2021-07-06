@@ -1,18 +1,18 @@
 "use strict";
 
 var fs = require('fs'),
-    soap = require('..'),
-    assert = require('assert'),
-    request = require('request'),
-    http = require('http'),
-    lastReqAddress;
+  soap = require('..'),
+  assert = require('assert'),
+  request = require('request'),
+  http = require('http'),
+  lastReqAddress;
 
 var test = {};
 test.server = null;
 test.service = {
   StockQuoteService: {
     StockQuotePort: {
-      GetLastTradePrice: function(args, cb, soapHeader) {
+      GetLastTradePrice: function (args, cb, soapHeader) {
         if (soapHeader)
           return { price: soapHeader.SomeToken };
         if (args.tickerSymbol === 'trigger error') {
@@ -43,10 +43,10 @@ test.service = {
         }
       },
 
-      SetTradePrice: function(args, cb, soapHeader) {
+      SetTradePrice: function (args, cb, soapHeader) {
       },
 
-      IsValidPrice: function(args, cb, soapHeader, req) {
+      IsValidPrice: function (args, cb, soapHeader, req) {
         lastReqAddress = req.connection.remoteAddress;
 
         var validationError = {
@@ -60,9 +60,9 @@ test.service = {
           }
         };
 
-        var isValidPrice = function() {
+        var isValidPrice = function () {
           var price = args.price;
-          if(isNaN(price) || (price === ' ')) {
+          if (isNaN(price) || (price === ' ')) {
             return cb(validationError);
           }
 
@@ -77,17 +77,17 @@ test.service = {
   }
 };
 
-describe('SOAP Server with Options', function() {
-  before(function(done) {
-    fs.readFile(__dirname + '/wsdl/strict/stockquote.wsdl', 'utf8', function(err, data) {
+describe('SOAP Server with Options', function () {
+  before(function (done) {
+    fs.readFile(__dirname + '/wsdl/strict/stockquote.wsdl', 'utf8', function (err, data) {
       assert.ifError(err);
       test.wsdl = data;
       done();
     });
   });
 
-  beforeEach(function(done) {
-    test.server = http.createServer(function(req, res) {
+  beforeEach(function (done) {
+    test.server = http.createServer(function (req, res) {
       res.statusCode = 404;
       res.end();
     });
@@ -95,8 +95,8 @@ describe('SOAP Server with Options', function() {
     done();
   });
 
-  afterEach(function(done) {
-    test.server.close(function() {
+  afterEach(function (done) {
+    test.server.close(function () {
       test.server = null;
       delete test.soapServer;
       test.soapServer = null;
@@ -104,8 +104,8 @@ describe('SOAP Server with Options', function() {
     });
   });
 
-  it('should start server with callback in options parameter', function(done) {
-    test.server.listen(15099, null, null, function() {
+  it('should start server with callback in options parameter', function (done) {
+    test.server.listen(15099, null, null, function () {
       test.soapServer = soap.listen(test.server, {
         path: '/stockquote',
         services: test.service,
@@ -120,7 +120,7 @@ describe('SOAP Server with Options', function() {
     });
   });
 
-  it('should start server with callback as normal parameter', function(done) {
+  it('should start server with callback as normal parameter', function (done) {
     test.server.listen(15099, null, null, function () {
       test.soapServer = soap.listen(
         test.server,
@@ -135,8 +135,8 @@ describe('SOAP Server with Options', function() {
     });
   });
 
-  it('should be running with escapeXML false', function(done) {
-    test.server.listen(15099, null, null, function() {
+  it('should be running with escapeXML false', function (done) {
+    test.server.listen(15099, null, null, function () {
       test.soapServer = soap.listen(test.server, {
         path: '/stockquote',
         services: test.service,
@@ -146,13 +146,12 @@ describe('SOAP Server with Options', function() {
       }, test.service, test.wsdl);
       test.baseUrl = 'http://' + test.server.address().address + ":" + test.server.address().port;
 
-      //windows return 0.0.0.0 as address and that is not
-      //valid to use in a request
+      // windows return 0.0.0.0 as address and that is not valid to use in a request
       if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
         test.baseUrl = 'http://127.0.0.1:' + test.server.address().port;
       }
       // console.log(test.baseUrl);
-      request(test.baseUrl, function(err, res, body) {
+      request(test.baseUrl, function (err, res, body) {
         assert.ifError(err);
         console.log(body);
         done();
@@ -160,8 +159,8 @@ describe('SOAP Server with Options', function() {
     });
   });
 
-  it('should be running  with escapeXML true', function(done) {
-    test.server.listen(15099, null, null, function() {
+  it('should be running  with escapeXML true', function (done) {
+    test.server.listen(15099, null, null, function () {
       test.soapServer = soap.listen(test.server, {
         path: '/stockquote',
         services: test.service,
@@ -172,13 +171,12 @@ describe('SOAP Server with Options', function() {
       test.baseUrl =
         'http://' + test.server.address().address + ":" + test.server.address().port;
 
-      //windows return 0.0.0.0 as address and that is not
-      //valid to use in a request
+      // windows return 0.0.0.0 as address and that is not valid to use in a request
       if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
         test.baseUrl =
           'http://127.0.0.1:' + test.server.address().port;
       }
-      request(test.baseUrl, function(err, res, body) {
+      request(test.baseUrl, function (err, res, body) {
         assert.ifError(err);
         console.log(body);
         done();
@@ -187,9 +185,9 @@ describe('SOAP Server with Options', function() {
   });
 
 
-  it('should escapeXML in response body', function(done) {
+  it('should escapeXML in response body', function (done) {
     var responseData = '<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"  xmlns:tns="http://example.com/stockquote.wsdl" xmlns:xsd1="http://example.com/stockquote.xsd"><soap:Body><xsd1:TradePrice xmlns:xsd1="http://example.com/stockquote.xsd">&lt;S:Envelope xmlns:S=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;&lt;S:Body&gt;&lt;ns3:UpdateProfileResponse xmlns:ns3=&quot;http://www.bigdatacollect.or/Name/Types&quot; xmlns=&quot;http://www.bigdatacollect.or/Common/Types&quot;&gt;&lt;ns3:Result resultStatusFlag=&quot;SUCCESS&quot;&gt;&lt;IDs&gt;&lt;UniqueID source=&quot;TESTSOURCE&quot;&gt;100&lt;/UniqueID&gt;&lt;/IDs&gt;&lt;/ns3:Result&gt;&lt;/ns3:UpdateProfileResponse&gt;&lt;/S:Body&gt;&lt;/S:Envelope&gt;</xsd1:TradePrice></soap:Body></soap:Envelope>';
-    test.server.listen(15099, null, null, function() {
+    test.server.listen(15099, null, null, function () {
       test.soapServer = soap.listen(test.server, {
         path: '/stockquote',
         services: test.service,
@@ -199,15 +197,14 @@ describe('SOAP Server with Options', function() {
       }, test.service, test.wsdl);
       test.baseUrl = 'http://' + test.server.address().address + ":" + test.server.address().port;
 
-      //windows return 0.0.0.0 as address and that is not
-      //valid to use in a request
+      // windows return 0.0.0.0 as address and that is not valid to use in a request
       if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
         test.baseUrl = 'http://127.0.0.1:' + test.server.address().port;
       }
 
-      soap.createClient(test.baseUrl + '/stockquote?wsdl', function(err, client) {
+      soap.createClient(test.baseUrl + '/stockquote?wsdl', function (err, client) {
         assert.ifError(err);
-        client.GetLastTradePrice({ tickerSymbol: 'xml response' }, function(err, response, body) {
+        client.GetLastTradePrice({ tickerSymbol: 'xml response' }, function (err, response, body) {
           assert.ifError(err);
           assert.strictEqual(body, responseData);
           done();
@@ -216,9 +213,9 @@ describe('SOAP Server with Options', function() {
     });
   });
 
-  it('should not escapeXML response in body', function(done) {
+  it('should not escapeXML response in body', function (done) {
     var responseData = '<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"  xmlns:tns="http://example.com/stockquote.wsdl" xmlns:xsd1="http://example.com/stockquote.xsd"><soap:Body><xsd1:TradePrice xmlns:xsd1="http://example.com/stockquote.xsd"><S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/"><S:Body><ns3:UpdateProfileResponse xmlns:ns3="http://www.bigdatacollect.or/Name/Types" xmlns="http://www.bigdatacollect.or/Common/Types"><ns3:Result resultStatusFlag="SUCCESS"><IDs><UniqueID source="TESTSOURCE">100</UniqueID></IDs></ns3:Result></ns3:UpdateProfileResponse></S:Body></S:Envelope></xsd1:TradePrice></soap:Body></soap:Envelope>';
-    test.server.listen(15099, null, null, function() {
+    test.server.listen(15099, null, null, function () {
       test.soapServer = soap.listen(test.server, {
         path: '/stockquote',
         services: test.service,
@@ -228,15 +225,14 @@ describe('SOAP Server with Options', function() {
       }, test.service, test.wsdl);
       test.baseUrl = 'http://' + test.server.address().address + ":" + test.server.address().port;
 
-      //windows return 0.0.0.0 as address and that is not
-      //valid to use in a request
+      // windows return 0.0.0.0 as address and that is not valid to use in a request
       if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
         test.baseUrl = 'http://127.0.0.1:' + test.server.address().port;
       }
 
-      soap.createClient(test.baseUrl + '/stockquote?wsdl', function(err, client) {
+      soap.createClient(test.baseUrl + '/stockquote?wsdl', function (err, client) {
         assert.ifError(err);
-        client.GetLastTradePrice({ tickerSymbol: 'xml response' }, function(err, response, body) {
+        client.GetLastTradePrice({ tickerSymbol: 'xml response' }, function (err, response, body) {
           assert.ifError(err);
           assert.strictEqual(body, responseData);
           done();
@@ -245,8 +241,8 @@ describe('SOAP Server with Options', function() {
     });
   });
 
-  it('should disclose error stack in server response', function(done) {
-    test.server.listen(15099, null, null, function() {
+  it('should disclose error stack in server response', function (done) {
+    test.server.listen(15099, null, null, function () {
       test.soapServer = soap.listen(test.server, {
         path: '/stockquote',
         services: test.service,
@@ -256,24 +252,23 @@ describe('SOAP Server with Options', function() {
       }, test.service, test.wsdl);
       test.baseUrl = 'http://' + test.server.address().address + ":" + test.server.address().port;
 
-      //windows return 0.0.0.0 as address and that is not
-      //valid to use in a request
+      // windows return 0.0.0.0 as address and that is not valid to use in a request
       if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
         test.baseUrl = 'http://127.0.0.1:' + test.server.address().port;
       }
 
       request.post({
         url: test.baseUrl + '/stockquote?wsdl',
-        body : '<soapenv:Envelope' +
-                    ' xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"' +
-                    ' xmlns:soap="http://service.applicationsnet.com/soap/">' +
-                '  <soapenv:Header/>' +
-                '  <soapenv:Body>' +
-                '    <soap:WrongTag/>' +
-                '  </soapenv:Body>' +
-                '</soapenv:Envelope>',
-        headers: {'Content-Type': 'text/xml'}
-      }, function(err, res, body) {
+        body: '<soapenv:Envelope' +
+          ' xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"' +
+          ' xmlns:soap="http://service.applicationsnet.com/soap/">' +
+          '  <soapenv:Header/>' +
+          '  <soapenv:Body>' +
+          '    <soap:WrongTag/>' +
+          '  </soapenv:Body>' +
+          '</soapenv:Envelope>',
+        headers: { 'Content-Type': 'text/xml' }
+      }, function (err, res, body) {
         assert.ifError(err);
         assert.equal(res.statusCode, 500);
         assert.ok(body.indexOf('\n    at') !== -1);
@@ -283,8 +278,8 @@ describe('SOAP Server with Options', function() {
     });
   });
 
-  it('should not disclose error stack in server response', function(done) {
-    test.server.listen(15099, null, null, function() {
+  it('should not disclose error stack in server response', function (done) {
+    test.server.listen(15099, null, null, function () {
       test.soapServer = soap.listen(test.server, {
         path: '/stockquote',
         services: test.service,
@@ -295,24 +290,23 @@ describe('SOAP Server with Options', function() {
       }, test.service, test.wsdl);
       test.baseUrl = 'http://' + test.server.address().address + ":" + test.server.address().port;
 
-      //windows return 0.0.0.0 as address and that is not
-      //valid to use in a request
+      // windows return 0.0.0.0 as address and that is not valid to use in a request
       if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
         test.baseUrl = 'http://127.0.0.1:' + test.server.address().port;
       }
 
       request.post({
         url: test.baseUrl + '/stockquote?wsdl',
-        body : '<soapenv:Envelope' +
-                    ' xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"' +
-                    ' xmlns:soap="http://service.applicationsnet.com/soap/">' +
-                '  <soapenv:Header/>' +
-                '  <soapenv:Body>' +
-                '    <soap:WrongTag/>' +
-                '  </soapenv:Body>' +
-                '</soapenv:Envelope>',
-        headers: {'Content-Type': 'text/xml'}
-      }, function(err, res, body) {
+        body: '<soapenv:Envelope' +
+          ' xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"' +
+          ' xmlns:soap="http://service.applicationsnet.com/soap/">' +
+          '  <soapenv:Header/>' +
+          '  <soapenv:Body>' +
+          '    <soap:WrongTag/>' +
+          '  </soapenv:Body>' +
+          '</soapenv:Envelope>',
+        headers: { 'Content-Type': 'text/xml' }
+      }, function (err, res, body) {
         assert.ifError(err);
         assert.equal(res.statusCode, 500);
         assert.equal(body.indexOf('\n    at'), -1);
@@ -321,9 +315,9 @@ describe('SOAP Server with Options', function() {
       );
     });
   });
-  
-  it('should return soap fault in server response', function(done) {
-    test.server.listen(15099, null, null, function() {
+
+  it('should return soap fault in server response', function (done) {
+    test.server.listen(15099, null, null, function () {
       test.soapServer = soap.listen(test.server, {
         path: '/stockquote',
         services: test.service,
@@ -334,24 +328,23 @@ describe('SOAP Server with Options', function() {
       }, test.service, test.wsdl);
       test.baseUrl = 'http://' + test.server.address().address + ":" + test.server.address().port;
 
-      //windows return 0.0.0.0 as address and that is not
-      //valid to use in a request
+      // windows return 0.0.0.0 as address and that is not valid to use in a request
       if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
         test.baseUrl = 'http://127.0.0.1:' + test.server.address().port;
       }
 
       request.post({
         url: test.baseUrl + '/stockquote?wsdl',
-        body : '<soapenv:Envelope' +
-                    ' xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"' +
-                    ' xmlns:soap="http://service.applicationsnet.com/soap/">' +
-                '  <soapenv:Header/>' +
-                '  <soapenv:Body>' +
-                '    <soap:WrongTag/>' +
-                '  </soapenv:Body>' +
-                '</soapenv:Envelope>',
-        headers: {'Content-Type': 'text/xml'}
-      }, function(err, res, body) {
+        body: '<soapenv:Envelope' +
+          ' xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"' +
+          ' xmlns:soap="http://service.applicationsnet.com/soap/">' +
+          '  <soapenv:Header/>' +
+          '  <soapenv:Body>' +
+          '    <soap:WrongTag/>' +
+          '  </soapenv:Body>' +
+          '</soapenv:Envelope>',
+        headers: { 'Content-Type': 'text/xml' }
+      }, function (err, res, body) {
         assert.ifError(err);
         assert.equal(res.statusCode, 500);
         assert.ok(body.match(/<faultcode>.*<\/faultcode>/g),
@@ -361,8 +354,8 @@ describe('SOAP Server with Options', function() {
       );
     });
   });
-  it('should not return a SOAP 12 envelope when headers are not forced', function(done) {
-    test.server.listen(15099, null, null, function() {
+  it('should not return a SOAP 12 envelope when headers are not forced', function (done) {
+    test.server.listen(15099, null, null, function () {
       test.soapServer = soap.listen(test.server, {
         path: '/stockquote',
         services: test.service,
@@ -372,8 +365,7 @@ describe('SOAP Server with Options', function() {
       }, test.service, test.wsdl);
       test.baseUrl = 'http://' + test.server.address().address + ":" + test.server.address().port;
 
-      //windows return 0.0.0.0 as address and that is not
-      //valid to use in a request
+      // windows return 0.0.0.0 as address and that is not valid to use in a request
       if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
         test.baseUrl = 'http://127.0.0.1:' + test.server.address().port;
       }
@@ -381,12 +373,12 @@ describe('SOAP Server with Options', function() {
       request.post({
         url: test.baseUrl + '/stockquote',
         body: '<soapenv:Envelope' +
-                  ' xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"' +
-                  ' xmlns:soap="http://service.applicationsnet.com/soap/">' +
-              '  <soapenv:Header/>' +
-              '  <soapenv:Body>' +
-              '</soapenv:Envelope>'
-      }, function(err, res, body) {
+          ' xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"' +
+          ' xmlns:soap="http://service.applicationsnet.com/soap/">' +
+          '  <soapenv:Header/>' +
+          '  <soapenv:Body>' +
+          '</soapenv:Envelope>'
+      }, function (err, res, body) {
         assert.ifError(err);
         assert.ok(
           body.indexOf('xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"') > -1
@@ -395,8 +387,8 @@ describe('SOAP Server with Options', function() {
       });
     });
   });
-  it('should return a SOAP 12 envelope when headers are forced', function(done) {
-    test.server.listen(15099, null, null, function() {
+  it('should return a SOAP 12 envelope when headers are forced', function (done) {
+    test.server.listen(15099, null, null, function () {
       test.soapServer = soap.listen(test.server, {
         path: '/stockquote',
         services: test.service,
@@ -406,8 +398,7 @@ describe('SOAP Server with Options', function() {
       }, test.service, test.wsdl);
       test.baseUrl = 'http://' + test.server.address().address + ":" + test.server.address().port;
 
-      //windows return 0.0.0.0 as address and that is not
-      //valid to use in a request
+      // windows return 0.0.0.0 as address and that is not valid to use in a request
       if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
         test.baseUrl = 'http://127.0.0.1:' + test.server.address().port;
       }
@@ -415,12 +406,12 @@ describe('SOAP Server with Options', function() {
       request.post({
         url: test.baseUrl + '/stockquote',
         body: '<soapenv:Envelope' +
-                  ' xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"' +
-                  ' xmlns:soap="http://service.applicationsnet.com/soap/">' +
-              '  <soapenv:Header/>' +
-              '  <soapenv:Body>' +
-              '</soapenv:Envelope>'
-      }, function(err, res, body) {
+          ' xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"' +
+          ' xmlns:soap="http://service.applicationsnet.com/soap/">' +
+          '  <soapenv:Header/>' +
+          '  <soapenv:Body>' +
+          '</soapenv:Envelope>'
+      }, function (err, res, body) {
         assert.ifError(err);
         assert.ok(
           body.indexOf('xmlns:soap="http://www.w3.org/2003/05/soap-envelope"') > -1
@@ -430,7 +421,7 @@ describe('SOAP Server with Options', function() {
     });
   });
   it('should return configured statusCode on one-way operations', function (done) {
-    test.server.listen(15099, null, null, function() {
+    test.server.listen(15099, null, null, function () {
       test.soapServer = soap.listen(test.server, {
         path: '/stockquote',
         services: test.service,
@@ -441,30 +432,29 @@ describe('SOAP Server with Options', function() {
       }, test.service, test.wsdl);
       test.baseUrl = 'http://' + test.server.address().address + ":" + test.server.address().port;
 
-      //windows return 0.0.0.0 as address and that is not
-      //valid to use in a request
+      // windows return 0.0.0.0 as address and that is not valid to use in a request
       if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
         test.baseUrl = 'http://127.0.0.1:' + test.server.address().port;
       }
 
-      soap.createClient(test.baseUrl + '/stockquote?wsdl', function(err, client) {
+      soap.createClient(test.baseUrl + '/stockquote?wsdl', function (err, client) {
         assert.ifError(err);
         client.on('response', function (xml, response) {
-          assert.equal(response.statusCode, 202);
+          assert.equal(response.status, 202);
           done();
         });
 
-        client.SetTradePrice({ tickerSymbol: 'GOOG' }, function(err, result, body) {
+        client.SetTradePrice({ tickerSymbol: 'GOOG' }, function (err, result, body) {
           assert.ifError(err);
-          assert.equal(result,null);
-          assert.equal(body,'');
+          assert.equal(result, null);
+          assert.equal(body, '');
         });
       });
     });
   });
   it('should return empty body on one-way operations if configured', function (done) {
     var responseData = '<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"  xmlns:tns="http://example.com/stockquote.wsdl" xmlns:xsd1="http://example.com/stockquote.xsd"><soap:Body/></soap:Envelope>';
-    test.server.listen(15099, null, null, function() {
+    test.server.listen(15099, null, null, function () {
       test.soapServer = soap.listen(test.server, {
         path: '/stockquote',
         services: test.service,
@@ -475,15 +465,14 @@ describe('SOAP Server with Options', function() {
       }, test.service, test.wsdl);
       test.baseUrl = 'http://' + test.server.address().address + ":" + test.server.address().port;
 
-      //windows return 0.0.0.0 as address and that is not
-      //valid to use in a request
+      // windows return 0.0.0.0 as address and that is not valid to use in a request
       if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
         test.baseUrl = 'http://127.0.0.1:' + test.server.address().port;
       }
 
-      soap.createClient(test.baseUrl + '/stockquote?wsdl', function(err, client) {
+      soap.createClient(test.baseUrl + '/stockquote?wsdl', function (err, client) {
         assert.ifError(err);
-        client.SetTradePrice({ tickerSymbol: 'GOOG' }, function(err, result, body) {
+        client.SetTradePrice({ tickerSymbol: 'GOOG' }, function (err, result, body) {
           assert.ifError(err);
           assert.strictEqual(body, responseData);
           done();
@@ -492,7 +481,7 @@ describe('SOAP Server with Options', function() {
     });
   });
   it('should use chunked transfer encoding by default', function (done) {
-    test.server.listen(15099, null, null, function() {
+    test.server.listen(15099, null, null, function () {
       test.soapServer = soap.listen(test.server, {
         path: '/stockquote',
         services: test.service,
@@ -500,22 +489,21 @@ describe('SOAP Server with Options', function() {
       }, test.service, test.wsdl);
       test.baseUrl = 'http://' + test.server.address().address + ":" + test.server.address().port;
 
-      //windows return 0.0.0.0 as address and that is not
-      //valid to use in a request
+      // windows return 0.0.0.0 as address and that is not valid to use in a request
       if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
         test.baseUrl = 'http://127.0.0.1:' + test.server.address().port;
       }
 
-      soap.createClient(test.baseUrl + '/stockquote?wsdl', function(err, client) {
+      soap.createClient(test.baseUrl + '/stockquote?wsdl', function (err, client) {
         assert.ifError(err);
 
-        client.on('response', function(body, response, eid) {
+        client.on('response', function (body, response, eid) {
           var headers = response.headers;
           assert.strictEqual(headers['transfer-encoding'], 'chunked');
           assert.equal(headers['content-length'], undefined);
         })
 
-        client.SetTradePrice({ tickerSymbol: 'GOOG' }, function(err, result, body) {
+        client.SetTradePrice({ tickerSymbol: 'GOOG' }, function (err, result, body) {
           assert.ifError(err);
           done();
         });
@@ -523,7 +511,7 @@ describe('SOAP Server with Options', function() {
     });
   });
   it('should use chunked transfer encoding when enabled in options', function (done) {
-    test.server.listen(15099, null, null, function() {
+    test.server.listen(15099, null, null, function () {
       test.soapServer = soap.listen(test.server, {
         path: '/stockquote',
         services: test.service,
@@ -532,22 +520,21 @@ describe('SOAP Server with Options', function() {
       }, test.service, test.wsdl);
       test.baseUrl = 'http://' + test.server.address().address + ":" + test.server.address().port;
 
-      //windows return 0.0.0.0 as address and that is not
-      //valid to use in a request
+      // windows return 0.0.0.0 as address and that is not valid to use in a request
       if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
         test.baseUrl = 'http://127.0.0.1:' + test.server.address().port;
       }
 
-      soap.createClient(test.baseUrl + '/stockquote?wsdl', function(err, client) {
+      soap.createClient(test.baseUrl + '/stockquote?wsdl', function (err, client) {
         assert.ifError(err);
 
-        client.on('response', function(body, response, eid) {
+        client.on('response', function (body, response, eid) {
           var headers = response.headers;
           assert.strictEqual(headers['transfer-encoding'], 'chunked');
           assert.equal(headers['content-length'], undefined);
         })
 
-        client.SetTradePrice({ tickerSymbol: 'GOOG' }, function(err, result, body) {
+        client.SetTradePrice({ tickerSymbol: 'GOOG' }, function (err, result, body) {
           assert.ifError(err);
           done();
         });
@@ -555,7 +542,7 @@ describe('SOAP Server with Options', function() {
     });
   });
   it('should not use chunked transfer encoding when disabled in options', function (done) {
-    test.server.listen(15099, null, null, function() {
+    test.server.listen(15099, null, null, function () {
       test.soapServer = soap.listen(test.server, {
         path: '/stockquote',
         services: test.service,
@@ -564,22 +551,21 @@ describe('SOAP Server with Options', function() {
       }, test.service, test.wsdl);
       test.baseUrl = 'http://' + test.server.address().address + ":" + test.server.address().port;
 
-      //windows return 0.0.0.0 as address and that is not
-      //valid to use in a request
+      // windows return 0.0.0.0 as address and that is not valid to use in a request
       if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
         test.baseUrl = 'http://127.0.0.1:' + test.server.address().port;
       }
 
-      soap.createClient(test.baseUrl + '/stockquote?wsdl', function(err, client) {
+      soap.createClient(test.baseUrl + '/stockquote?wsdl', function (err, client) {
         assert.ifError(err);
 
-        client.on('response', function(body, response, eid) {
+        client.on('response', function (body, response, eid) {
           var headers = response.headers;
           assert.notEqual(headers['content-length'], undefined);
           assert.equal(headers['transfer-encoding'], undefined);
         })
 
-        client.SetTradePrice({ tickerSymbol: 'GOOG' }, function(err, result, body) {
+        client.SetTradePrice({ tickerSymbol: 'GOOG' }, function (err, result, body) {
           assert.ifError(err);
           done();
         });
