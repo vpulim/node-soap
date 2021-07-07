@@ -175,7 +175,6 @@ export class HttpClient implements IHttpClient {
       if (this.options.parseReponseAttachments) {
         options.responseType = 'arraybuffer';
         options.responseEncoding = 'binary';
-        //options.encoding = null;
       }
       req = this._request(options);
     }
