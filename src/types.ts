@@ -1,5 +1,6 @@
 
-import * as req from 'request';
+import * as req from 'axios';
+import { ReadStream } from 'fs';
 
 export interface IHeaders {
   [k: string]: any;
@@ -10,8 +11,8 @@ export interface IExOptions {
 }
 
 export interface IHttpClient {
-  request(rurl: string, data: any, callback: (error: any, res?: any, body?: any) => any, exheaders?: IHeaders, exoptions?: IExOptions, caller?);
-  requestStream?(rurl: string, data: any, exheaders?: IHeaders, exoptions?: IExOptions, caller?): req.Request;
+  request(rurl: string, data: any, callback: (error: any, res?: any, body?: any) => any, exheaders?: IHeaders, exoptions?: IExOptions, caller?): req.AxiosPromise;
+  requestStream?(rurl: string, data: any, exheaders?: IHeaders, exoptions?: IExOptions, caller?): req.AxiosPromise<ReadStream>;
 }
 
 /** @deprecated use SoapMethod */
@@ -21,7 +22,7 @@ export type SoapMethod = (
   callback: (err: any, result: any, rawResponse: any, soapHeader: any, rawRequest: any, mtomAttachments?: IMTOMAttachments) => void,
   options?: any,
   extraHeaders?: any,
-  mtomAttachments?: IMTOMAttachments
+  mtomAttachments?: IMTOMAttachments,
 ) => void;
 
 export type SoapMethodAsync = (
@@ -123,7 +124,7 @@ export interface IOptions extends IWsdlBaseOptions {
   /** provide your own http client that implements request(rurl, data, callback, exheaders, exoptions) */
   httpClient?: IHttpClient;
   /** override the request module. */
-  request?: req.RequestAPI<req.Request, req.CoreOptions, req.RequiredUriUrl>;
+  request?: req.AxiosInstance;
   stream?: boolean;
   // allows returning the underlying saxStream that parse the SOAP XML response
   returnSaxStream?: boolean;
@@ -143,7 +144,7 @@ export interface IOneWayOptions {
 }
 
 export interface IServerOptions extends IWsdlBaseOptions {
-  path: string;
+  path: string | RegExp;
   services: IServices;
   xml?: string;
   uri?: string;

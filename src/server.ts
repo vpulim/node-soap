@@ -72,7 +72,7 @@ interface IExecuteMethodOptions {
 }
 
 export class Server extends EventEmitter {
-  public path: string;
+  public path: string | RegExp;
   public services: IServices;
   public log: (type: string, data: any) => any;
   public authorizeConnection: (req: Request, res?: Response) => boolean;
@@ -86,7 +86,7 @@ export class Server extends EventEmitter {
   private soapHeaders: any[];
   private callback?: (err: any, res: any) => void;
 
-  constructor(server: ServerType, path: string, services: IServices, wsdl: WSDL, options?: IServerOptions) {
+  constructor(server: ServerType, path: string | RegExp, services: IServices, wsdl: WSDL, options?: IServerOptions) {
     super();
 
     options = options || {
@@ -102,8 +102,10 @@ export class Server extends EventEmitter {
     this.enableChunkedEncoding =
       options.enableChunkedEncoding === undefined ? true : !!options.enableChunkedEncoding;
     this.callback = options.callback ? options.callback : () => { };
-    if (path[path.length - 1] !== '/') {
+    if (typeof path === 'string' && path[path.length - 1] !== '/') {
       path += '/';
+    } else if (path instanceof RegExp && path.source[path.source.length - 1] !== '/') {
+      path = new RegExp(path.source + '(?:\\/|)');
     }
     wsdl.onReady((err) => {
       if (isExpress(server)) {
@@ -132,7 +134,7 @@ export class Server extends EventEmitter {
           if (reqPath[reqPath.length - 1] !== '/') {
             reqPath += '/';
           }
-          if (path === reqPath) {
+          if (path === reqPath || (path instanceof RegExp && reqPath.match(path))) {
             this._requestListener(req, res);
           } else {
             for (let i = 0, len = listeners.length; i < len; i++) {
@@ -173,29 +175,29 @@ export class Server extends EventEmitter {
 
   private _processSoapHeader(soapHeader, name, namespace, xmlns) {
     switch (typeof soapHeader) {
-    case 'object':
-      return this.wsdl.objectToXML(soapHeader, name, namespace, xmlns, true);
-    case 'function':
-      const _this = this;
-      // arrow function does not support arguments variable
-      // tslint:disable-next-line
-      return function() {
-        const result = soapHeader.apply(null, arguments);
+      case 'object':
+        return this.wsdl.objectToXML(soapHeader, name, namespace, xmlns, true);
+      case 'function':
+        const _this = this;
+        // arrow function does not support arguments variable
+        // tslint:disable-next-line
+        return function () {
+          const result = soapHeader.apply(null, arguments);
 
-        if (typeof result === 'object') {
-          return _this.wsdl.objectToXML(result, name, namespace, xmlns, true);
-        } else {
-          return result;
-        }
-      };
-    default:
-      return soapHeader;
+          if (typeof result === 'object') {
+            return _this.wsdl.objectToXML(result, name, namespace, xmlns, true);
+          } else {
+            return result;
+          }
+        };
+      default:
+        return soapHeader;
     }
   }
 
   private _initializeOptions(options: IServerOptions) {
     this.wsdl.options.attributesKey = options.attributesKey || 'attributes';
-    this.onewayOptions.statusCode = this.onewayOptions.responseCode || 200;
+    this.onewayOptions.statusCode = this.onewayOptions.responseCode || 200;
     this.onewayOptions.emptyBody = !!this.onewayOptions.emptyBody;
   }
 

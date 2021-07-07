@@ -45,18 +45,17 @@ it('should allow customization of httpClient, the wsdl file, and associated data
     var self = this;
     var options = self.buildRequest(rurl, data, exheaders, exoptions);
     //Specify agent to use
-    options.agent = this.agent;
+    options.httpAgent = this.agent;
     var headers = options.headers;
-    var req = self._request(options, function(err, res, body) {
-      if (err) {
-        return callback(err);
+    var req = self._request(options).then(function(res) {
+      res.data = self.handleResponse(req, res, res.data);
+      callback(null, res, res.data);
+      if (headers.Connection !== 'keep-alive') {
+        res.request.end(data);
       }
-      body = self.handleResponse(req, res, body);
-      callback(null, res, body);
+    }, (err) => {
+      return callback(err);
     });
-    if (headers.Connection !== 'keep-alive') {
-      req.end(data);
-    }
     return req;
   };
 

@@ -1,3 +1,9 @@
+0.40.0 / 2021-07-06
+===================
+* [DOC] Update Readme.md (#1150)
+* [ENHANCEMENT] Allow server path to be a regex (#1149)
+* [ENHANCEMENT] replace request & httpntlm with axios & axios-ntlm (#1146)
+
 0.39.0 / 2021-06-01
 ===================
 
