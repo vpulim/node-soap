@@ -11,7 +11,7 @@ import { IncomingHttpHeaders } from 'http';
 import * as _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { HttpClient } from './http';
-import { IHeaders, IHttpClient, IOptions, ISecurity, SoapMethod, SoapMethodAsync } from './types';
+import { IHeaders, IHttpClient, IMTOMAttachments, IOptions, ISecurity, SoapMethod, SoapMethodAsync } from './types';
 import { findPrefix } from './utils';
 import { WSDL } from './wsdl';
 import { IPort, OperationElement, ServiceElement } from './wsdl/elements';
@@ -53,6 +53,7 @@ export class Client extends EventEmitter {
   public lastResponse?: any;
   public lastResponseHeaders?: IncomingHttpHeaders;
   public lastElapsedTime?: number;
+  public lastResponseAttachments: IMTOMAttachments;
 
   private wsdl: WSDL;
   private httpClient: IHttpClient;
@@ -230,11 +231,12 @@ export class Client extends EventEmitter {
           rawResponse: any,
           soapHeader: any,
           rawRequest: any,
+          mtomAttachments: any,
         ) => {
           if (err) {
             reject(err);
           } else {
-            resolve([result, rawResponse, soapHeader, rawRequest]);
+            resolve([result, rawResponse, soapHeader, rawRequest, mtomAttachments]);
           }
         };
         method(
@@ -263,8 +265,8 @@ export class Client extends EventEmitter {
         extraHeaders = options;
         options = temp;
       }
-      this._invoke(method, args, location, (error, result, rawResponse, soapHeader, rawRequest) => {
-        callback(error, result, rawResponse, soapHeader, rawRequest);
+      this._invoke(method, args, location, (error, result, rawResponse, soapHeader, rawRequest, mtomAttachments) => {
+        callback(error, result, rawResponse, soapHeader, rawRequest, mtomAttachments);
       }, options, extraHeaders);
     };
   }
@@ -314,7 +316,7 @@ export class Client extends EventEmitter {
 
       if (!output) {
         // one-way, no output expected
-        return callback(null, null, body, obj.Header, xml);
+        return callback(null, null, body, obj.Header, xml, response.mtomResponseAttachments);
       }
 
       // If it's not HTML and Soap Body is empty
@@ -351,7 +353,7 @@ export class Client extends EventEmitter {
         });
       }
 
-      callback(null, result, body, obj.Header, xml);
+      callback(null, result, body, obj.Header, xml, response.mtomResponseAttachments);
     };
 
     const parseSync = (body, response) => {
@@ -372,7 +374,7 @@ export class Client extends EventEmitter {
         error.response = response;
         error.body = body;
         this.emit('soapError', error, eid);
-        return callback(error, response, body, undefined, xml);
+        return callback(error, response, body, undefined, xml, response.mtomResponseAttachments);
       }
       return finish(obj, body, response);
     };
@@ -552,6 +554,7 @@ export class Client extends EventEmitter {
       if (response) {
         this.lastResponseHeaders = response.headers;
         this.lastElapsedTime = response.headers.date;
+        this.lastResponseAttachments = response.mtomResponseAttachments;
         // Added mostly for testability, but possibly useful for debugging
         this.lastRequestHeaders = response.config && response.config.headers;
       }

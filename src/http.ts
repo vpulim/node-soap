@@ -5,11 +5,14 @@
 
 import * as req from 'axios';
 import { NtlmClient } from 'axios-ntlm';
+import * as contentTypeParser from 'content-type-parser';
 import * as debugBuilder from 'debug';
 import { ReadStream } from 'fs';
 import * as url from 'url';
+
 import { v4 as uuidv4 } from 'uuid';
-import { IExOptions, IHeaders, IHttpClient, IOptions } from './types';
+import { IExOptions, IHeaders, IHttpClient, IMTOMAttachments, IOptions } from './types';
+import { parseMTOMResp } from './utils';
 
 const debug = debugBuilder('node-soap');
 const VERSION = require('../package.json').version;
@@ -29,10 +32,13 @@ export interface IAttachment {
  * @constructor
  */
 export class HttpClient implements IHttpClient {
+
   private _request: req.AxiosInstance;
+  private options: IOptions;
 
   constructor(options?: IOptions) {
     options = options || {};
+    this.options = options;
     this._request = options.request || req.default.create();
   }
 
@@ -166,11 +172,41 @@ export class HttpClient implements IHttpClient {
       });
       req = ntlmReq(options);
     } else {
+      if (this.options.parseReponseAttachments) {
+        options.responseType = 'arraybuffer';
+        options.responseEncoding = 'binary';
+      }
       req = this._request(options);
     }
-
+    const _this = this;
     req.then((res) => {
-      res.data = this.handleResponse(req, res, res.data);
+      let body;
+      if (_this.options.parseReponseAttachments) {
+        const isMultipartResp = res.headers['content-type'] && res.headers['content-type'].toLowerCase().indexOf('multipart/related') > -1;
+        if (isMultipartResp) {
+          let boundary;
+          const parsedContentType = contentTypeParser(res.headers['content-type']);
+          if (parsedContentType && parsedContentType.parameterList) {
+            boundary = ((parsedContentType.parameterList as any[]).find((item) => item.key === 'boundary') || {}).value;
+          }
+          if (!boundary) {
+            return callback(new Error('Missing boundary from content-type'));
+          }
+          const multipartResponse = parseMTOMResp(res.data, boundary);
+
+          // first part is the soap response
+          const firstPart = multipartResponse.parts.shift();
+          if (!firstPart || !firstPart.body) {
+            return callback(new Error('Cannot parse multipart response'));
+          }
+          body = firstPart.body.toString('utf8');
+          (res as any).mtomResponseAttachments = multipartResponse;
+        } else {
+          body = res.data.toString('utf8');
+        }
+      }
+
+      res.data = this.handleResponse(req, res, body || res.data);
       callback(null, res, res.data);
       return res;
     }, (err) => {

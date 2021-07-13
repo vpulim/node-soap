@@ -19,16 +19,17 @@ export interface IHttpClient {
 export type ISoapMethod = SoapMethod;
 export type SoapMethod = (
   args: any,
-  callback: (err: any, result: any, rawResponse: any, soapHeader: any, rawRequest: any) => void,
+  callback: (err: any, result: any, rawResponse: any, soapHeader: any, rawRequest: any, mtomAttachments?: IMTOMAttachments) => void,
   options?: any,
   extraHeaders?: any,
+  mtomAttachments?: IMTOMAttachments,
 ) => void;
 
 export type SoapMethodAsync = (
   args: any,
   options?: any,
   extraHeaders?: any,
-) => Promise<[any, any, any, any]>;
+) => Promise<[any, any, any, any, IMTOMAttachments?]>;
 
 export type ISoapServiceMethod = (args: any, callback?: (data: any) => void, headers?: any, req?: any, res?: any, sender?: any) => any;
 
@@ -133,6 +134,8 @@ export interface IOptions extends IWsdlBaseOptions {
   overridePromiseSuffix?: string;
   /** @internal */
   WSDL_CACHE?;
+  /** handle MTOM soapAttachments in response */
+  parseReponseAttachments?: boolean;
 }
 
 export interface IOneWayOptions {
@@ -151,4 +154,11 @@ export interface IServerOptions extends IWsdlBaseOptions {
   oneWay?: IOneWayOptions;
   /** A boolean for controlling chunked transfer encoding in response. Some client (such as Windows 10's MDM enrollment SOAP client) is sensitive to transfer-encoding mode and can't accept chunked response. This option let user disable chunked transfer encoding for such a client. Default to true for backward compatibility. */
   enableChunkedEncoding?: boolean;
+}
+
+export interface IMTOMAttachments {
+  parts: Array<{
+    body: Buffer,
+    headers: { [key: string]: string },
+  }>;
 }
