@@ -779,7 +779,7 @@ export class WSDL {
         }
 
         if (isFirst) {
-          value = this.objectToXML(child, name, nsPrefix, nsURI, false, null, schemaObject, nsContext);
+          value = this.objectToXML(child, name, nsPrefix, nsURI, Array.isArray(child), null, schemaObject, nsContext);
         } else {
 
           if (this.definitions.schemas) {
