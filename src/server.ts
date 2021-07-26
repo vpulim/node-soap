@@ -64,6 +64,7 @@ export interface Server {
 interface IExecuteMethodOptions {
   serviceName?: string;
   portName?: string;
+  soapAction?: string;
   methodName?: string;
   outputName?: string;
   args?: any;
@@ -283,6 +284,13 @@ export class Server extends EventEmitter {
     }
   }
 
+  private _getSoapAction(req: Request) {
+    const soapAction: string = req.headers['soapaction'] as string;
+    return (soapAction.indexOf('"') === 0)
+         ? soapAction.slice(1, -1)
+         : soapAction;
+  }
+
   private _process(input, req: Request, res: Response, cb: (result: any, statusCode?: number) => any) {
     const pathname = url.parse(req.url).pathname.replace(/\/$/, '');
     const obj = this.wsdl.xmlToObject(input);
@@ -360,6 +368,7 @@ export class Server extends EventEmitter {
           this._executeMethod({
             serviceName: serviceName,
             portName: portName,
+            soapAction: this._getSoapAction(req),
             methodName: methodName,
             outputName: methodName + 'Response',
             args: body[methodName],
@@ -380,6 +389,7 @@ export class Server extends EventEmitter {
           this._executeMethod({
             serviceName: serviceName,
             portName: portName,
+            soapAction: this._getSoapAction(req),
             methodName: pair.methodName,
             outputName: pair.outputName,
             args: body[messageElemName],
@@ -464,6 +474,13 @@ export class Server extends EventEmitter {
     }
   }
 
+  private _getMethodNameBySoapAction(binding: BindingElement, soapAction: string) {
+    for (const methodName in binding.methods) {
+        if (binding.methods[methodName].soapAction === soapAction)
+            return methodName;
+    }
+  }
+
   private _executeMethod(
     options: IExecuteMethodOptions,
     req: Request,
@@ -477,7 +494,10 @@ export class Server extends EventEmitter {
     let headers;
     const serviceName = options.serviceName;
     const portName = options.portName;
-    const methodName = options.methodName;
+    const binding = this.wsdl.definitions.services[serviceName].ports[portName].binding;
+    const methodName = options.soapAction 
+        ? this._getMethodNameBySoapAction(binding, options.soapAction) 
+        : options.methodName;
     const outputName = options.outputName;
     const args = options.args;
     const style = options.style;
@@ -523,13 +543,13 @@ export class Server extends EventEmitter {
       if (style === 'rpc') {
         body = this.wsdl.objectToRpcXML(outputName, result, '', this.wsdl.definitions.$targetNamespace);
       } else {
-        const element = this.wsdl.definitions.services[serviceName].ports[portName].binding.methods[methodName].output;
+        const element = binding.methods[methodName].output;
         body = this.wsdl.objectToDocumentXML(outputName, result, element.targetNSAlias, element.targetNamespace);
       }
       callback(this._envelope(body, headers, includeTimestamp));
     };
 
-    if (!this.wsdl.definitions.services[serviceName].ports[portName].binding.methods[methodName].output) {
+    if (!binding.methods[methodName].output) {
       // no output defined = one-way operation so return empty response
       handled = true;
       body = '';
