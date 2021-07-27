@@ -64,7 +64,6 @@ export interface Server {
 interface IExecuteMethodOptions {
   serviceName?: string;
   portName?: string;
-  soapAction?: string;
   methodName?: string;
   outputName?: string;
   args?: any;
@@ -357,9 +356,18 @@ export class Server extends EventEmitter {
       }
 
       try {
-        if (binding.style === 'rpc') {
-          methodName = (Object.keys(body)[0] === 'attributes' ? Object.keys(body)[1] : Object.keys(body)[0]);
+        const soapAction = this._getSoapAction(req);
+        const messageElemName = (Object.keys(body)[0] === 'attributes' ? Object.keys(body)[1] : Object.keys(body)[0]);
+        const pair = binding.topElements[messageElemName];
+        if (soapAction)
+          methodName = this._getMethodNameBySoapAction(binding, soapAction);
+        else {
+          methodName = pair ? pair.methodName : messageElemName;
+        }
+        /** Style can be defined in method. If method has no style then look in binding */
+        const style = binding.methods[methodName].style || binding.style;
 
+        if (style === 'rpc') {
           this.emit('request', obj, methodName);
           if (headers) {
             this.emit('headers', headers, methodName);
@@ -368,28 +376,21 @@ export class Server extends EventEmitter {
           this._executeMethod({
             serviceName: serviceName,
             portName: portName,
-            soapAction: this._getSoapAction(req),
             methodName: methodName,
-            outputName: methodName + 'Response',
-            args: body[methodName],
+            outputName: messageElemName + 'Response',
+            args: body[messageElemName],
             headers: headers,
             style: 'rpc',
           }, req, res, callback);
         } else {
-          const messageElemName = (Object.keys(body)[0] === 'attributes' ? Object.keys(body)[1] : Object.keys(body)[0]);
-          const pair = binding.topElements[messageElemName];
-
           this.emit('request', obj, pair.methodName);
           if (headers) {
             this.emit('headers', headers, pair.methodName);
           }
 
-          methodName = pair.methodName;
-
           this._executeMethod({
             serviceName: serviceName,
             portName: portName,
-            soapAction: this._getSoapAction(req),
             methodName: pair.methodName,
             outputName: pair.outputName,
             args: body[messageElemName],
@@ -495,9 +496,7 @@ export class Server extends EventEmitter {
     const serviceName = options.serviceName;
     const portName = options.portName;
     const binding = this.wsdl.definitions.services[serviceName].ports[portName].binding;
-    const methodName = options.soapAction 
-        ? this._getMethodNameBySoapAction(binding, options.soapAction) 
-        : options.methodName;
+    const methodName = options.methodName; 
     const outputName = options.outputName;
     const args = options.args;
     const style = options.style;
