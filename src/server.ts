@@ -367,12 +367,12 @@ export class Server extends EventEmitter {
         /** Style can be defined in method. If method has no style then look in binding */
         const style = binding.methods[methodName].style || binding.style;
 
-        if (style === 'rpc') {
-          this.emit('request', obj, methodName);
-          if (headers) {
-            this.emit('headers', headers, methodName);
-          }
+        this.emit('request', obj, methodName);
+        if (headers) {
+          this.emit('headers', headers, methodName);
+        }
 
+        if (style === 'rpc') {
           this._executeMethod({
             serviceName: serviceName,
             portName: portName,
@@ -383,15 +383,10 @@ export class Server extends EventEmitter {
             style: 'rpc',
           }, req, res, callback);
         } else {
-          this.emit('request', obj, pair.methodName);
-          if (headers) {
-            this.emit('headers', headers, pair.methodName);
-          }
-
           this._executeMethod({
             serviceName: serviceName,
             portName: portName,
-            methodName: pair.methodName,
+            methodName: methodName,
             outputName: pair.outputName,
             args: body[messageElemName],
             headers: headers,
