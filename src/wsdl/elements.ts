@@ -669,12 +669,19 @@ export class MessageElement extends Element {
       const ns = findNs(nsName.prefix, this.definitionsXmlns, definitions.xmlns);
       let schema = definitions.schemas[ns];
       this.element = schema.elements[nsName.name];
+      let schemaToLookup;
+      if (!this.element) {
+        // Try to find it another way
+        schemaToLookup = part.xmlns;
+        schema = definitions.schemas[schemaToLookup[Object.keys(schemaToLookup)[0]]];
+        this.element = schema.elements[nsName.name];
+      }
       if (!this.element) {
         debug(nsName.name + ' is not present in wsdl and cannot be processed correctly.');
         return;
       }
       this.element.targetNSAlias = nsName.prefix;
-      this.element.targetNamespace = ns;
+      this.element.targetNamespace = (schemaToLookup && schemaToLookup.xsns) || ns;
 
       // set the optional $lookupType to be used within `client#_invoke()` when
       // calling `wsdl#objectToDocumentXML()
