@@ -82,6 +82,6 @@ export class ClientSSLSecurity implements ISecurity {
       httpsAgent = new https.Agent(options);
     }
 
-    options.agent = httpsAgent;
+    options.httpsAgent = httpsAgent;
   }
 }
