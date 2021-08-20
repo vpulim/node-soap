@@ -1,3 +1,10 @@
+0.41.0 / 2021-08-20
+===================
+* [ENHANCEMENT] Support for soap attachments in response. (#1148)
+* [FIX] Correctly add the https agent to axios (#1154)
+* [FIX] prefer SOAPAction header over the body name to get the actual method name (#1152)
+* [MAINTENANCE] Moving to github actions
+
 0.40.0 / 2021-07-06
 ===================
 * [DOC] Update Readme.md (#1150)
