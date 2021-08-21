@@ -86,6 +86,7 @@ export class HttpClient implements IHttpClient {
       method: method,
       headers: headers,
       validateStatus: null,
+      transformResponse: (data) => data,
     };
 
     if (exoptions.forceMTOM || attachments.length > 0) {
