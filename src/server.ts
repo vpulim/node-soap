@@ -492,9 +492,7 @@ export class Server extends EventEmitter {
     const serviceName = options.serviceName;
     const portName = options.portName;
     const binding = this.wsdl.definitions.services[serviceName].ports[portName].binding;
-    const methodName = options.soapAction
-        ? this._getMethodNameBySoapAction(binding, options.soapAction)
-        : options.methodName;
+    const methodName = options.methodName;
     const outputName = options.outputName;
     const args = options.args;
     const style = options.style;
