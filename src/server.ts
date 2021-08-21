@@ -284,7 +284,7 @@ export class Server extends EventEmitter {
   }
 
   private _getSoapAction(req: Request) {
-    const soapAction: string = req.headers['soapaction'] as string;
+    const soapAction: string = req.headers.soapaction as string;
     return (soapAction.indexOf('"') === 0)
          ? soapAction.slice(1, -1)
          : soapAction;
@@ -472,8 +472,9 @@ export class Server extends EventEmitter {
 
   private _getMethodNameBySoapAction(binding: BindingElement, soapAction: string) {
     for (const methodName in binding.methods) {
-        if (binding.methods[methodName].soapAction === soapAction)
-            return methodName;
+      if (binding.methods[methodName].soapAction === soapAction) {
+        return methodName;
+      }
     }
   }
 
@@ -491,7 +492,9 @@ export class Server extends EventEmitter {
     const serviceName = options.serviceName;
     const portName = options.portName;
     const binding = this.wsdl.definitions.services[serviceName].ports[portName].binding;
-    const methodName = options.methodName; 
+    const methodName = options.soapAction
+        ? this._getMethodNameBySoapAction(binding, options.soapAction)
+        : options.methodName;
     const outputName = options.outputName;
     const args = options.args;
     const style = options.style;
