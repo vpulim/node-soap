@@ -129,8 +129,9 @@ export class WSDL {
             const methods = binding.methods;
             const topEls: elements.ITopElements = binding.topElements = {};
             for (const methodName in methods) {
-              if ((methods[methodName].style || binding.style) !== 'document')
+              if ((methods[methodName].style || binding.style) !== 'document') {
                 continue;
+              }
               if (methods[methodName].input) {
                 const inputName = methods[methodName].input.$name;
                 let outputName = '';

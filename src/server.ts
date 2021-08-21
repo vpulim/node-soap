@@ -359,9 +359,9 @@ export class Server extends EventEmitter {
         const soapAction = this._getSoapAction(req);
         const messageElemName = (Object.keys(body)[0] === 'attributes' ? Object.keys(body)[1] : Object.keys(body)[0]);
         const pair = binding.topElements[messageElemName];
-        if (soapAction)
+        if (soapAction) {
           methodName = this._getMethodNameBySoapAction(binding, soapAction);
-        else {
+        } else {
           methodName = pair ? pair.methodName : messageElemName;
         }
         /** Style can be defined in method. If method has no style then look in binding */
