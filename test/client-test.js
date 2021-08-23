@@ -116,7 +116,7 @@ var fs = require('fs'),
         var xmlStr = '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">\n\t<head>\n\t\t<title>404 - Not Found</title>\n\t</head>\n\t<body>\n\t\t<h1>404 - Not Found</h1>\n\t\t<script type="text/javascript" src="http://gp1.wpc.edgecastcdn.net/00222B/beluga/pilot_rtm/beluga_beacon.js"></script>\n\t</body>\n</html>';
         client.MyOperation({ _xml: xmlStr }, function (err, result, raw, soapHeader) {
           assert.ok(err);
-          assert.notEqual(err.response.data.indexOf('html'), -1);
+          assert.notEqual(raw.indexOf('html'), -1);
           done();
         });
       });
@@ -798,10 +798,7 @@ var fs = require('fs'),
           client.MyOperation({}, function (err, result) {
             assert.ok(err);
             assert.ok(err.response);
-            if (typeof err.response.data != 'string') {
-              err.response.data = JSON.stringify(err.response.data)
-            }
-            assert.equal(err.response.data, '{"tempResponse":"temp"}');
+            assert.equal(err.body, '{"tempResponse":"temp"}');
             done();
           });
         }, baseUrl);
@@ -1074,33 +1071,35 @@ var fs = require('fs'),
 
     });
 
-    it('should return error in the call when Fault was returned', function (done) {
-      var server = null;
-      var hostname = '127.0.0.1';
-      var port = 15099;
-      var baseUrl = 'http://' + hostname + ':' + port;
+    [200, 500].forEach(statusCode => {
+      it('should return error in the call when Fault was returned (status code ' + statusCode + ')', function (done) {
+        var server = null;
+        var hostname = '127.0.0.1';
+        var port = 15099;
+        var baseUrl = 'http://' + hostname + ':' + port;
 
-      server = http.createServer(function (req, res) {
-        res.statusCode = 200;
-        res.write("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?><SOAP-ENV:Envelope SOAP-ENV:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"\n  xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\"\n  xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"\n  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n  xmlns:SOAP-ENC=\"http://schemas.xmlsoap.org/soap/encoding/\">\n<SOAP-ENV:Body><SOAP-ENV:Fault><faultcode xsi:type=\"xsd:string\">Test</faultcode><faultactor xsi:type=\"xsd:string\"></faultactor><faultstring xsi:type=\"xsd:string\">test error</faultstring><detail xsi:type=\"xsd:string\">test detail</detail></SOAP-ENV:Fault></SOAP-ENV:Body></SOAP-ENV:Envelope>");
-        res.end();
-      }).listen(port, hostname, function () {
-        soap.createClient(__dirname + '/wsdl/json_response.wsdl', meta.options, function (err, client) {
-          assert.ok(client);
-          assert.ifError(err);
+        server = http.createServer(function (req, res) {
+          res.statusCode = statusCode;
+          res.write("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?><SOAP-ENV:Envelope SOAP-ENV:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"\n  xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\"\n  xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"\n  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n  xmlns:SOAP-ENC=\"http://schemas.xmlsoap.org/soap/encoding/\">\n<SOAP-ENV:Body><SOAP-ENV:Fault><faultcode xsi:type=\"xsd:string\">Test</faultcode><faultactor xsi:type=\"xsd:string\"></faultactor><faultstring xsi:type=\"xsd:string\">test error</faultstring><detail xsi:type=\"xsd:string\">test detail</detail></SOAP-ENV:Fault></SOAP-ENV:Body></SOAP-ENV:Envelope>");
+          res.end();
+        }).listen(port, hostname, function () {
+          soap.createClient(__dirname + '/wsdl/json_response.wsdl', meta.options, function (err, client) {
+            assert.ok(client);
+            assert.ifError(err);
 
-          client.MyOperation({}, function (err, result, body) {
-            server.close();
-            server = null;
-            assert.ok(err);
-            assert.strictEqual(err.message, 'Test: test error: "test detail"');
-            assert.ok(result);
-            assert.ok(body);
-            done();
-          });
-        }, baseUrl);
+            client.MyOperation({}, function (err, result, body) {
+              server.close();
+              server = null;
+              assert.ok(err);
+              assert.strictEqual(err.message, 'Test: test error: "test detail"');
+              assert.ok(result);
+              assert.ok(body);
+              done();
+            });
+          }, baseUrl);
+        });
+
       });
-
     });
 
     it('should return error in the call when Body was returned empty', function (done) {
