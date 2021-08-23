@@ -1,3 +1,10 @@
+0.42.0 / 2021-08-23
+===================
+* [FIX] check method style if exists instead of binding style (#1153)
+* [FIX] update dependency vuln in xmldom via xml-cryoto/xmldom update (#1157)
+* [FIX] update 7 vulnerabilities in the dependency chain (#1156)
+* [FIX] SOAP faults are no longer being passed back in the error callback/promise rejection (#1155)
+
 0.41.0 / 2021-08-20
 ===================
 * [ENHANCEMENT] Support for soap attachments in response. (#1148)
