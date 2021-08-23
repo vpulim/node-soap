@@ -126,12 +126,12 @@ export class WSDL {
             if (typeof binding.style === 'undefined') {
               binding.style = 'document';
             }
-            if (binding.style !== 'document') {
-              continue;
-            }
             const methods = binding.methods;
             const topEls: elements.ITopElements = binding.topElements = {};
             for (const methodName in methods) {
+              if ((methods[methodName].style || binding.style) !== 'document') {
+                continue;
+              }
               if (methods[methodName].input) {
                 const inputName = methods[methodName].input.$name;
                 let outputName = '';
