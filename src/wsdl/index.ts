@@ -952,34 +952,37 @@ export class WSDL {
       child = [];
     }
 
-    const attrObj = child[this.options.attributesKey];
+    const attrObj = child[this.options.attributesKey] || {};
     if (attrObj && attrObj.xsi_type) {
       const xsiType = attrObj.xsi_type;
 
       let prefix = xsiType.prefix || xsiType.namespace;
-      // Generate a new namespace for complex extension if one not provided
-      if (!prefix) {
-        prefix = nsContext.registerNamespace(xsiType.xmlns);
-      } else {
-        nsContext.declareNamespace(prefix, xsiType.xmlns);
-      }
-      xsiType.prefix = prefix;
-    }
-
-    if (attrObj) {
-      for (const attrKey in attrObj) {
-        // handle complex extension separately
-        if (attrKey === 'xsi_type') {
-          const attrValue = attrObj[attrKey];
-          attr += ' xsi:type="' + attrValue.prefix + ':' + attrValue.type + '"';
-          attr += ' xmlns:' + attrValue.prefix + '="' + attrValue.xmlns + '"';
-
-          continue;
+      if (xsiType.xmlns) {
+        // Generate a new namespace for complex extension if one not provided
+        if (!prefix) {
+          prefix = nsContext.registerNamespace(xsiType.xmlns);
         } else {
-          attr += ' ' + attrKey + '="' + xmlEscape(attrObj[attrKey]) + '"';
+          nsContext.declareNamespace(prefix, xsiType.xmlns);
         }
+        xsiType.prefix = prefix;
       }
     }
+
+    Object.keys(attrObj).forEach((k) => {
+      const v = attrObj[k];
+      if (k === 'xsi_type') {
+        let name = v.type;
+        if (v.prefix) {
+          name = `${v.prefix}:${name}`;
+        }
+        attr += ` xsi:type="${name}"`;
+        if (v.xmlns) {
+          attr += ` xmlns:${v.prefix}="${v.xmlns}"`;
+        }
+      } else {
+        attr += ` ${k}="${xmlEscape(v)}"`;
+      }
+    });
 
     return attr;
   }
