@@ -18,6 +18,7 @@
 				<xs:element name="float" nillable="true" type="xs:float"/>
 				<xs:element name="int" nillable="true" type="xs:int"/>
 				<xs:element name="short" nillable="true" type="xs:short"/>
+				<xs:element name="long" nillable="true" type="xs:long"/>
 				<xs:element name="string" nillable="true" type="xs:string"/>
 			</xs:sequence>
 		</xs:complexType>

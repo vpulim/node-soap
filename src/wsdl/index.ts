@@ -436,7 +436,7 @@ export class WSDL {
       if (this.options && this.options.customDeserializer && this.options.customDeserializer[name]) {
         value = this.options.customDeserializer[name](text, top);
       } else {
-        if (name === 'int' || name === 'integer' || name === 'short') {
+        if (name === 'int' || name === 'integer' || name === 'short' || name === 'long') {
           value = parseInt(text, 10);
         } else if (name === 'double' || name === 'float' || name === 'decimal') {
           value = Number(text);
