@@ -753,6 +753,40 @@ var fs = require('fs'),
           });
         }, baseUrl);
       });
+
+      it("should handle xsi:type without xmlns", function (done) {
+        soap.createClient(
+          __dirname + "/wsdl/default_namespace.wsdl",
+          meta.options,
+          function (err, client) {
+            assert.ok(client);
+
+            var data = {
+              element: {
+                attributes: {
+                  xsi_type: {
+                    type: "Ty",
+                  },
+                },
+                $value: "Hello World",
+              },
+            };
+
+            var message =
+              '<Request xmlns="http://www.example.com/v1"><element xsi:type="Ty">Hello World</element></Request>';
+
+            client.MyOperation(data, function (err, result) {
+              assert.ok(client.lastRequest);
+              assert.ok(client.lastMessage);
+              assert.ok(client.lastEndpoint);
+              console.log(client.lastMessage)
+              assert.strictEqual(client.lastMessage, message);
+              done();
+            });
+          },
+          baseUrl
+        );
+      });
     });
 
     describe('Follow even non-standard redirects', function () {
