@@ -85,10 +85,11 @@ export class HttpClient implements IHttpClient {
       url: curl.href,
       method: method,
       headers: headers,
-      validateStatus: null,
       transformResponse: (data) => data,
     };
-
+    if (!exoptions.ntlm) {
+      options.validateStatus = null;
+    }
     if (exoptions.forceMTOM || attachments.length > 0) {
       const start = uuidv4();
       let action = null;
