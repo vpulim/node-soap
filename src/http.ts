@@ -170,7 +170,8 @@ export class HttpClient implements IHttpClient {
       const ntlmReq = NtlmClient({
         username: exoptions.username,
         password: exoptions.password,
-        domain: exoptions.domain,
+        workstation: exoptions.workstation || '',
+        domain: exoptions.domain || '',
       });
       req = ntlmReq(options);
     } else {
