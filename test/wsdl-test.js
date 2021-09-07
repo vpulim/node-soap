@@ -120,11 +120,11 @@ describe('WSDL Parser (strict)', () => {
       });
     });
   });
-  
+
   it('should handle extension base', (done) => {
     var expectedMsg = '<bar:Shipper xmlns:bar="http://example.com/bar/xsd"' +
-      ' xmlns="http://example.com/bar/xsd"><bar:Name>' + 
-      '<bar1:name1 xmlns:bar1="http://example.com/bar1/xsd">ABC</bar1:name1></bar:Name>' + 
+      ' xmlns="http://example.com/bar/xsd"><bar:Name>' +
+      '<bar1:name1 xmlns:bar1="http://example.com/bar1/xsd">ABC</bar1:name1></bar:Name>' +
       '</bar:Shipper>';
     soap.createClient(__dirname + '/wsdl/extensionBase/foo.wsdl', {strict: true}, function(err, client) {
       assert.ifError(err);
@@ -319,5 +319,11 @@ describe('WSDL Parser (non-strict)', () => {
     assert.equal(parsed, '<a>a</a><b>b</b>');
   });
 
-
+  it('Should create client with empty target namespace', (done) => {
+    soap.createClient(__dirname+'/wsdl/emptyTargetNamespace.txt', function(err, client) {
+      assert.equal(err, null);
+      assert.equal(client.wsdl.definitions.schemas[undefined], undefined);
+      done();
+    });
+  });
 });
