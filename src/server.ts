@@ -416,7 +416,7 @@ export class Server extends EventEmitter {
           return this._sendError({
             Code: {
               Value: 'SOAP-ENV:Server',
-              Subcode: { value: 'InternalServerError' },
+              Subcode: { Value: 'InternalServerError' },
             },
             Reason: { Text: authResult.toString() },
             statusCode: 500,
@@ -435,7 +435,7 @@ export class Server extends EventEmitter {
               return this._sendError({
                 Code: {
                   Value: 'SOAP-ENV:Server',
-                  Subcode: { value: 'InternalServerError' },
+                  Subcode: { Value: 'InternalServerError' },
                 },
                 Reason: { Text: error.toString() },
                 statusCode: 500,
@@ -445,7 +445,7 @@ export class Server extends EventEmitter {
             return this._sendError({
               Code: {
                 Value: 'SOAP-ENV:Client',
-                Subcode: { value: 'AuthenticationFailure' },
+                Subcode: { Value: 'AuthenticationFailure' },
               },
               Reason: { Text: 'Invalid username or password' },
               statusCode: 401,
@@ -527,7 +527,7 @@ export class Server extends EventEmitter {
           return this._sendError({
             Code: {
               Value: 'SOAP-ENV:Server',
-              Subcode: { value: 'InternalServerError' },
+              Subcode: { Value: 'InternalServerError' },
             },
             Reason: { Text: error.toString() },
             statusCode: 500,
