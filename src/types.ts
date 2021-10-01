@@ -53,7 +53,7 @@ export interface ISoapFault11 {
 // Role, Node, Detail. Should be added when soap module implements them
 // https://www.w3.org/TR/soap12/#soapfault
 export interface ISoapFault12 {
-  Code: { Value: string; Subcode?: { value: string; }; };
+  Code: { Value: string; Subcode?: { Value: string; }; };
   Reason: { Text: string; };
   statusCode?: number;
 }
