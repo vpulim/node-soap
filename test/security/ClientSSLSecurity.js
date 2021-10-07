@@ -101,7 +101,7 @@ describe('ClientSSLSecurity', function() {
       instance.addOptions(firstOptions);
       instance.addOptions(secondOptions);
 
-      firstOptions.agent.should.not.equal(secondOptions.agent);
+      firstOptions.httpsAgent.should.not.equal(secondOptions.httpsAgent);
     });
 
     it('should return the same agent if parameter is present', function () {
@@ -112,7 +112,7 @@ describe('ClientSSLSecurity', function() {
       instance.addOptions(firstOptions);
       instance.addOptions(secondOptions);
 
-      firstOptions.agent.should.equal(secondOptions.agent);
+      firstOptions.httpsAgent.should.equal(secondOptions.httpsAgent);
     });
 
     it('should return the same agent if set in defaults', function () {
@@ -123,7 +123,7 @@ describe('ClientSSLSecurity', function() {
       instance.addOptions(firstOptions);
       instance.addOptions(secondOptions);
 
-      firstOptions.agent.should.equal(secondOptions.agent);
+      firstOptions.httpsAgent.should.equal(secondOptions.httpsAgent);
     });
   });
 });

@@ -1,0 +1,54 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:tns="http://tempuri.org/"
+  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+  xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"
+  xmlns:urn="urn:hl7-org:v3" name="HL7Service" 
+  targetNamespace="http://tempuri.org/">
+
+  <wsdl:types>
+    <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+      xmlns:tns="urn:hl7-org:v3" elementFormDefault="qualified" targetNamespace="urn:hl7-org:v3">
+      <xs:element name="hl7Message">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:any/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:schema>
+  </wsdl:types>
+
+  <wsdl:message name="opHl7MessageRequest">
+    <wsdl:part name="hl7Message" element="urn:hl7Message"/>
+  </wsdl:message>
+  <wsdl:message name="opHl7MessageResponse">
+    <wsdl:part name="hl7Message" element="urn:hl7Message"/>
+  </wsdl:message>
+
+  <wsdl:portType name="portHl7Message">
+    <wsdl:operation name="opHl7Message">
+      <wsdl:input wsaw:Action="urn:#opHl7Message" name="opHl7MessageRequest" message="tns:opHl7MessageRequest"/>
+      <wsdl:output wsaw:Action="urn:#opHl7MessageResponse" name="opHl7MessageResponse" message="tns:opHl7MessageResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+
+  <wsdl:binding name="Hl7MessageBinding" type="tns:portHl7Message">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="rpc"/>
+    <wsdl:operation name="opHl7Message">
+      <soap:operation soapAction="urn:#opHl7Message" style="document"/>
+      <wsdl:input name="opHl7MessageRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="opHl7MessageResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+
+  <wsdl:service name="HL7Service">
+    <wsdl:port name="Hl7MessageBinding" binding="tns:Hl7MessageBinding">
+      <soap:address location="http://127.0.0.1"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

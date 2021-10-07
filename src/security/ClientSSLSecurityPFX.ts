@@ -51,6 +51,6 @@ export class ClientSSLSecurityPFX implements ISecurity {
       options.passphrase = this.passphrase;
     }
     _.merge(options, this.defaults);
-    options.agent = new https.Agent(options);
+    options.httpsAgent = new https.Agent(options);
   }
 }

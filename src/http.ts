@@ -85,6 +85,8 @@ export class HttpClient implements IHttpClient {
       url: curl.href,
       method: method,
       headers: headers,
+      validateStatus: null,
+      transformResponse: (data) => data,
     };
 
     if (exoptions.forceMTOM || attachments.length > 0) {

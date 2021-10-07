@@ -134,8 +134,8 @@ describe('SOAP Server', function () {
         assert.ok(err);
         assert.ok(err.root.Envelope.Body.Fault.Code.Value);
         assert.equal(err.root.Envelope.Body.Fault.Code.Value, 'SOAP-ENV:Client');
-        assert.ok(err.root.Envelope.Body.Fault.Code.Subcode.value);
-        assert.equal(err.root.Envelope.Body.Fault.Code.Subcode.value, 'AuthenticationFailure');
+        assert.ok(err.root.Envelope.Body.Fault.Code.Subcode.Value);
+        assert.equal(err.root.Envelope.Body.Fault.Code.Subcode.Value, 'AuthenticationFailure');
         done();
       });
     });
@@ -155,8 +155,8 @@ describe('SOAP Server', function () {
         assert.ok(err);
         assert.ok(err.root.Envelope.Body.Fault.Code.Value);
         assert.equal(err.root.Envelope.Body.Fault.Code.Value, 'SOAP-ENV:Client');
-        assert.ok(err.root.Envelope.Body.Fault.Code.Subcode.value);
-        assert.equal(err.root.Envelope.Body.Fault.Code.Subcode.value, 'AuthenticationFailure');
+        assert.ok(err.root.Envelope.Body.Fault.Code.Subcode.Value);
+        assert.equal(err.root.Envelope.Body.Fault.Code.Subcode.Value, 'AuthenticationFailure');
         done();
       });
     });
@@ -178,8 +178,8 @@ describe('SOAP Server', function () {
         assert.ok(err);
         assert.ok(err.root.Envelope.Body.Fault.Code.Value);
         assert.equal(err.root.Envelope.Body.Fault.Code.Value, 'SOAP-ENV:Client');
-        assert.ok(err.root.Envelope.Body.Fault.Code.Subcode.value);
-        assert.equal(err.root.Envelope.Body.Fault.Code.Subcode.value, 'AuthenticationFailure');
+        assert.ok(err.root.Envelope.Body.Fault.Code.Subcode.Value);
+        assert.equal(err.root.Envelope.Body.Fault.Code.Subcode.Value, 'AuthenticationFailure');
         done();
       });
     });
@@ -199,8 +199,8 @@ describe('SOAP Server', function () {
         assert.ok(err);
         assert.ok(err.root.Envelope.Body.Fault.Code.Value);
         assert.equal(err.root.Envelope.Body.Fault.Code.Value, 'SOAP-ENV:Server');
-        assert.ok(err.root.Envelope.Body.Fault.Code.Subcode.value);
-        assert.equal(err.root.Envelope.Body.Fault.Code.Subcode.value, 'InternalServerError');
+        assert.ok(err.root.Envelope.Body.Fault.Code.Subcode.Value);
+        assert.equal(err.root.Envelope.Body.Fault.Code.Subcode.Value, 'InternalServerError');
         done();
       });
     });
@@ -220,8 +220,8 @@ describe('SOAP Server', function () {
         assert.ok(err);
         assert.ok(err.root.Envelope.Body.Fault.Code.Value);
         assert.equal(err.root.Envelope.Body.Fault.Code.Value, 'SOAP-ENV:Server');
-        assert.ok(err.root.Envelope.Body.Fault.Code.Subcode.value);
-        assert.equal(err.root.Envelope.Body.Fault.Code.Subcode.value, 'InternalServerError');
+        assert.ok(err.root.Envelope.Body.Fault.Code.Subcode.Value);
+        assert.equal(err.root.Envelope.Body.Fault.Code.Subcode.Value, 'InternalServerError');
         done();
       });
     });

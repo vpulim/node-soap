@@ -549,11 +549,12 @@ export class Client extends EventEmitter {
       return;
     }
 
+    const startTime = Date.now();
     return this.httpClient.request(location, xml, (err, response, body) => {
       this.lastResponse = body;
       if (response) {
         this.lastResponseHeaders = response.headers;
-        this.lastElapsedTime = response.headers.date;
+        this.lastElapsedTime = Date.now() - startTime;
         this.lastResponseAttachments = response.mtomResponseAttachments;
         // Added mostly for testability, but possibly useful for debugging
         this.lastRequestHeaders = response.config && response.config.headers;

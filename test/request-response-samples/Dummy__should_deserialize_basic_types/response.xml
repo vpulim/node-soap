@@ -8,6 +8,7 @@
 			<n:float>1.321</n:float>
 			<n:int>1</n:int>
 			<n:short>3</n:short>
+			<n:long>60000000000</n:long>
 			<n:string>foo</n:string>
        </n:DummyResponse>
     </soap:Body>
