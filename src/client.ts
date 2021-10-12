@@ -439,7 +439,7 @@ export class Client extends EventEmitter {
       'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ' +
       encoding +
       this.wsdl.xmlnsInEnvelope + '>' +
-      ((decodedHeaders || this.security) ?
+      ((decodedHeaders || this.security && this.security.toXML()) ?
         (
           '<' + envelopeKey + ':Header' + (this.wsdl.xmlnsInHeader ? (' ' + this.wsdl.xmlnsInHeader) : '') + '>' +
           (decodedHeaders ? decodedHeaders : '') +
