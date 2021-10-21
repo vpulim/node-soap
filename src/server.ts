@@ -284,9 +284,10 @@ export class Server extends EventEmitter {
   }
 
   private _getSoapAction(req: Request) {
-    if (typeof req.headers['soapaction'] !== 'undefined')
+    if (typeof req.headers.soapaction === 'undefined') {
          return;
-    const soapAction: string = req.headers['soapaction'] as string;
+     }
+    const soapAction: string = req.headers.soapaction as string;
     return (soapAction.indexOf('"') === 0)
          ? soapAction.slice(1, -1)
          : soapAction;
