@@ -288,10 +288,22 @@ describe('SOAP Server', function () {
     });
   });
 
-
   it('should return correct async results (double argument callback style)', function (done) {
     soap.createClient(test.baseUrl + '/stockquote?wsdl', function (err, client) {
       assert.ifError(err);
+      client.IsValidPrice({ price: 50000 }, function (err, result) {
+        assert.ifError(err);
+        assert.equal(true, !!(result.valid));
+        done();
+      });
+    });
+  });
+
+  it('should return correct result when called without SOAPAction header', function(done) {
+    soap.createClient(test.baseUrl + '/stockquote?wsdl', function (err, client) {
+      assert.ifError(err);
+      // this clears the SOAPAction header
+      client.addHttpHeader('SOAPAction', '');
       client.IsValidPrice({ price: 50000 }, function (err, result) {
         assert.ifError(err);
         assert.equal(true, !!(result.valid));
