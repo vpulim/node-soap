@@ -153,7 +153,7 @@ The `options` argument allows you to customize the client with the following pro
 - returnSaxStream: enables the library to return the sax stream, transferring to the end user the responsibility of parsing the XML. It can be used only in combination with *stream* argument set to `true`. Default: `false`
 - parseReponseAttachments: Treat response as multipart/related response with MTOM attachment. Reach attachments on the `lastResponseAttachments` property of SoapClient. Default: `false`
 
-Note: for versions of node >0.10.X, you may need to specify `{connection: 'keep-alive'}` in SOAP headers to avoid truncation of longer chunked responses. 
+Note: for versions of node >0.10.X, you may need to specify `{connection: 'keep-alive'}` in SOAP headers to avoid truncation of longer chunked responses.
 
 ### soap.listen(*server*, *path*, *services*, *wsdl*, *callback*) - create a new SOAP server that listens on *path* and provides *services*.
 *server* can be a [http](https://nodejs.org/api/http.html) Server or [express](http://expressjs.com/) framework based server
@@ -522,6 +522,7 @@ Interesting properties might be:
   ]
   ```
 * `forceMTOM`: set to True if you want to send the request as MTOM even if you don't have attachments
+* `forceGzip`: force transfer-encoding in gzip
 
 
 ### Client.*method*Async(args, options) - call *method* on the SOAP service.
@@ -553,7 +554,7 @@ Interesting properties might be:
     ...
   ]
   ```
-* `forceMTOM`: set to True if you want to send the request as MTOM even if you don't have attachments
+* `forceMTOM`: set to True if you want to send the request as MTOM even if you don't have attachments (default: ```false```)
 
 ##### Example with JSON for the `args`
 The example above uses `{name: 'value'}` as the args. This may generate a SOAP messages such as:

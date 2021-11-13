@@ -13,6 +13,7 @@ import * as url from 'url';
 import { v4 as uuidv4 } from 'uuid';
 import { IExOptions, IHeaders, IHttpClient, IMTOMAttachments, IOptions } from './types';
 import { parseMTOMResp } from './utils';
+import { gunzipSync, gzipSync } from 'zlib';
 
 const debug = debugBuilder('node-soap');
 const VERSION = require('../package.json').version;
@@ -137,6 +138,13 @@ export class HttpClient implements IHttpClient {
       });
     } else {
       options.data = data;
+    }
+
+    if(exoptions.forceGzip) {
+      options.decompress = true;
+      options.data = gzipSync(options.data);
+      options.headers['Accept-Encoding'] = 'gzip,deflate';
+      options.headers['Content-Encoding'] = 'gzip';
     }
 
     for (const attr in newExoptions) {
