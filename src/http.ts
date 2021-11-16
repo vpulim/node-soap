@@ -11,9 +11,9 @@ import { ReadStream } from 'fs';
 import * as url from 'url';
 
 import { v4 as uuidv4 } from 'uuid';
+import { gzipSync } from 'zlib';
 import { IExOptions, IHeaders, IHttpClient, IMTOMAttachments, IOptions } from './types';
 import { parseMTOMResp } from './utils';
-import { gzipSync } from 'zlib';
 
 const debug = debugBuilder('node-soap');
 const VERSION = require('../package.json').version;
