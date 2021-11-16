@@ -11,6 +11,7 @@ import { ReadStream } from 'fs';
 import * as url from 'url';
 
 import { v4 as uuidv4 } from 'uuid';
+import { gzipSync } from 'zlib';
 import { IExOptions, IHeaders, IHttpClient, IMTOMAttachments, IOptions } from './types';
 import { parseMTOMResp } from './utils';
 
@@ -100,7 +101,8 @@ export class HttpClient implements IHttpClient {
           }
         }
       }
-      headers['Content-Type'] = 'multipart/related; type="application/xop+xml"; start="<' + start + '>"; start-info="text/xml"; boundary=' + uuidv4();
+      const boundary = uuidv4();
+      headers['Content-Type'] = 'multipart/related; type="application/xop+xml"; start="<' + start + '>"; type="text/xml"; boundary=' + boundary;
       if (action) {
         headers['Content-Type'] = headers['Content-Type'] + '; ' + action;
       }
@@ -119,9 +121,30 @@ export class HttpClient implements IHttpClient {
           'body': attachment.body,
         });
       });
-      // options.multipart = multipart;
+      options.data = `--${boundary}\r\n`;
+
+      let multipartCount = 0;
+      multipart.forEach((part) => {
+        Object.keys(part).forEach((key) => {
+          if (key !== 'body') {
+            options.data += `${key}: ${part[key]}\r\n`;
+          }
+        });
+        options.data += '\r\n';
+        options.data += `${part.body}\r\n--${boundary}${
+          multipartCount === multipart.length - 1 ? '--' : ''
+        }\r\n`;
+        multipartCount++;
+      });
     } else {
       options.data = data;
+    }
+
+    if (exoptions.forceGzip) {
+      options.decompress = true;
+      options.data = gzipSync(options.data);
+      options.headers['Accept-Encoding'] = 'gzip,deflate';
+      options.headers['Content-Encoding'] = 'gzip';
     }
 
     for (const attr in newExoptions) {
