@@ -1652,8 +1652,8 @@ it('should add namespace to array of objects', function (done) {
       } else {
         assert.ok(null, `Array object don't have namesapce`)
       }
-      done();
     });
+    done();
   });
 });
 
