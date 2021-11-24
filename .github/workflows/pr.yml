@@ -1,5 +1,5 @@
 name: PR Build
-on: pull_request
+on: push
 jobs:
   code-quality:
     runs-on: ubuntu-latest
