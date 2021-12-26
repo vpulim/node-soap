@@ -5,12 +5,11 @@
 
 import * as req from 'axios';
 import { NtlmClient } from 'axios-ntlm';
-import MIMEType from 'whatwg-mimetype';
 import * as debugBuilder from 'debug';
 import { ReadStream } from 'fs';
 import * as url from 'url';
-
 import { v4 as uuidv4 } from 'uuid';
+import MIMEType from 'whatwg-mimetype';
 import { gzipSync } from 'zlib';
 import { IExOptions, IHeaders, IHttpClient, IMTOMAttachments, IOptions } from './types';
 import { parseMTOMResp } from './utils';
