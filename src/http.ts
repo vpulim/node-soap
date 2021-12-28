@@ -211,7 +211,7 @@ export class HttpClient implements IHttpClient {
         const isMultipartResp = res.headers['content-type'] && res.headers['content-type'].toLowerCase().indexOf('multipart/related') > -1;
         if (isMultipartResp) {
           let boundary;
-          const parsedContentType = new MIMEType(res.headers['content-type']);
+          const parsedContentType = MIMEType.parse(res.headers['content-type']);
           if (parsedContentType && parsedContentType.parameterList) {
             boundary = ((parsedContentType.parameterList as any[]).find((item) => item.key === 'boundary') || {}).value;
           }
