@@ -1,5 +1,7 @@
 
 import * as crypto from 'crypto';
+import { MultipartParser } from 'formidable/lib/multipart_parser.js';
+import { IMTOMAttachments } from './types';
 
 export function passwordDigest(nonce: string, created: string, password: string): string {
   // digest = base64 ( sha1 ( nonce + created + password ) )
@@ -8,7 +10,7 @@ export function passwordDigest(nonce: string, created: string, password: string)
   const NonceBytes = Buffer.from(nonce || '', 'base64');
   const CreatedBytes = Buffer.from(created || '', 'utf8');
   const PasswordBytes = Buffer.from(password || '', 'utf8');
-  const FullBytes = Buffer.concat([NonceBytes, CreatedBytes, PasswordBytes ]);
+  const FullBytes = Buffer.concat([NonceBytes, CreatedBytes, PasswordBytes]);
 
   pwHash.update(FullBytes);
   return pwHash.digest('base64');
@@ -63,4 +65,52 @@ export function xmlEscape(obj) {
   }
 
   return obj;
+}
+
+export function parseMTOMResp(payload: Buffer, boundary: string): IMTOMAttachments {
+  const resp: IMTOMAttachments = {
+    parts: [],
+  };
+  let headerName = '';
+  let headerValue = '';
+  let data: Buffer;
+  let partIndex = 0;
+  const parser = new MultipartParser();
+
+  parser.initWithBoundary(boundary);
+  parser.onPartBegin = () => {
+    resp.parts[partIndex] = {
+      body: null,
+      headers: {},
+    };
+    data = Buffer.from('');
+  };
+
+  parser.onHeaderField = (b: Buffer, start: number, end: number) => {
+    headerName = b.slice(start, end).toString();
+  };
+
+  parser.onHeaderValue = (b: Buffer, start: number, end: number) => {
+    headerValue = b.slice(start, end).toString();
+  };
+
+  parser.onHeaderEnd = () => {
+    resp.parts[partIndex].headers[headerName.toLowerCase()] = headerValue;
+  };
+
+  parser.onHeadersEnd = () => {};
+
+  parser.onPartData = (b: Buffer, start: number, end: number) => {
+      data = Buffer.concat([data, b.slice(start, end)]);
+  };
+
+  parser.onPartEnd = () => {
+    resp.parts[partIndex].body = data;
+    partIndex++;
+  };
+
+  parser.onEnd = () => {};
+  parser.write(payload);
+
+  return resp;
 }

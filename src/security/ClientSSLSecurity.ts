@@ -13,7 +13,7 @@ import { ISecurity } from '../types';
  * @param {Object}          [defaults]
  * @constructor
  */
-export class ClientSSLSecurity implements ISecurity  {
+export class ClientSSLSecurity implements ISecurity {
   private key: Buffer;
   private cert: Buffer;
   private ca;
@@ -82,6 +82,6 @@ export class ClientSSLSecurity implements ISecurity  {
       httpsAgent = new https.Agent(options);
     }
 
-    options.agent = httpsAgent;
+    options.httpsAgent = httpsAgent;
   }
 }

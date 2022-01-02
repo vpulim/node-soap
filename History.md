@@ -1,3 +1,36 @@
+0.43.0 / 2021-11-12
+===================
+* [DOC] Create SECURITY.md (#1165)
+* [ENHANCEMENT] Publicly expose wsdl in Client (#1167)
+* [ENHANCEMENT] add native support for long deserialization (#1160)
+* [FIX] Fix typo in ISoapFault12 (#1166)
+* [FIX] error when soapaction header is not set (#1171)
+* [FIX] lastElapsedTime for non streaming requests (#1162)
+* [FIX] minor fix for ntlm request (#1163)
+* [FIX] undefined targetNamespace (#1161)
+* [FIX] xsi:type currently requires a namespace, resulting in undefined if no XMLNS is defined. Making attributes working without namespace or xmlns definitions. (#1159)
+* [MAINTENANCE] Bump httpntlm, doctoc as well as other dependencies (#1158)
+
+0.42.0 / 2021-08-23
+===================
+* [FIX] check method style if exists instead of binding style (#1153)
+* [FIX] update dependency vuln in xmldom via xml-cryoto/xmldom update (#1157)
+* [FIX] update 7 vulnerabilities in the dependency chain (#1156)
+* [FIX] SOAP faults are no longer being passed back in the error callback/promise rejection (#1155)
+
+0.41.0 / 2021-08-20
+===================
+* [ENHANCEMENT] Support for soap attachments in response. (#1148)
+* [FIX] Correctly add the https agent to axios (#1154)
+* [FIX] prefer SOAPAction header over the body name to get the actual method name (#1152)
+* [MAINTENANCE] Moving to github actions
+
+0.40.0 / 2021-07-06
+===================
+* [DOC] Update Readme.md (#1150)
+* [ENHANCEMENT] Allow server path to be a regex (#1149)
+* [ENHANCEMENT] replace request & httpntlm with axios & axios-ntlm (#1146)
+
 0.39.0 / 2021-06-01
 ===================
 

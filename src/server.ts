@@ -72,7 +72,7 @@ interface IExecuteMethodOptions {
 }
 
 export class Server extends EventEmitter {
-  public path: string;
+  public path: string | RegExp;
   public services: IServices;
   public log: (type: string, data: any) => any;
   public authorizeConnection: (req: Request, res?: Response) => boolean;
@@ -86,7 +86,7 @@ export class Server extends EventEmitter {
   private soapHeaders: any[];
   private callback?: (err: any, res: any) => void;
 
-  constructor(server: ServerType, path: string, services: IServices, wsdl: WSDL, options?: IServerOptions) {
+  constructor(server: ServerType, path: string | RegExp, services: IServices, wsdl: WSDL, options?: IServerOptions) {
     super();
 
     options = options || {
@@ -102,8 +102,10 @@ export class Server extends EventEmitter {
     this.enableChunkedEncoding =
       options.enableChunkedEncoding === undefined ? true : !!options.enableChunkedEncoding;
     this.callback = options.callback ? options.callback : () => { };
-    if (path[path.length - 1] !== '/') {
+    if (typeof path === 'string' && path[path.length - 1] !== '/') {
       path += '/';
+    } else if (path instanceof RegExp && path.source[path.source.length - 1] !== '/') {
+      path = new RegExp(path.source + '(?:\\/|)');
     }
     wsdl.onReady((err) => {
       if (isExpress(server)) {
@@ -132,7 +134,7 @@ export class Server extends EventEmitter {
           if (reqPath[reqPath.length - 1] !== '/') {
             reqPath += '/';
           }
-          if (path === reqPath) {
+          if (path === reqPath || (path instanceof RegExp && reqPath.match(path))) {
             this._requestListener(req, res);
           } else {
             for (let i = 0, len = listeners.length; i < len; i++) {
@@ -173,29 +175,29 @@ export class Server extends EventEmitter {
 
   private _processSoapHeader(soapHeader, name, namespace, xmlns) {
     switch (typeof soapHeader) {
-    case 'object':
-      return this.wsdl.objectToXML(soapHeader, name, namespace, xmlns, true);
-    case 'function':
-      const _this = this;
-      // arrow function does not support arguments variable
-      // tslint:disable-next-line
-      return function() {
-        const result = soapHeader.apply(null, arguments);
+      case 'object':
+        return this.wsdl.objectToXML(soapHeader, name, namespace, xmlns, true);
+      case 'function':
+        const _this = this;
+        // arrow function does not support arguments variable
+        // tslint:disable-next-line
+        return function () {
+          const result = soapHeader.apply(null, arguments);
 
-        if (typeof result === 'object') {
-          return _this.wsdl.objectToXML(result, name, namespace, xmlns, true);
-        } else {
-          return result;
-        }
-      };
-    default:
-      return soapHeader;
+          if (typeof result === 'object') {
+            return _this.wsdl.objectToXML(result, name, namespace, xmlns, true);
+          } else {
+            return result;
+          }
+        };
+      default:
+        return soapHeader;
     }
   }
 
   private _initializeOptions(options: IServerOptions) {
     this.wsdl.options.attributesKey = options.attributesKey || 'attributes';
-    this.onewayOptions.statusCode = this.onewayOptions.responseCode || 200;
+    this.onewayOptions.statusCode = this.onewayOptions.responseCode || 200;
     this.onewayOptions.emptyBody = !!this.onewayOptions.emptyBody;
   }
 
@@ -281,6 +283,16 @@ export class Server extends EventEmitter {
     }
   }
 
+  private _getSoapAction(req: Request) {
+    if (typeof req.headers.soapaction === 'undefined') {
+         return;
+     }
+    const soapAction: string = req.headers.soapaction as string;
+    return (soapAction.indexOf('"') === 0)
+         ? soapAction.slice(1, -1)
+         : soapAction;
+  }
+
   private _process(input, req: Request, res: Response, cb: (result: any, statusCode?: number) => any) {
     const pathname = url.parse(req.url).pathname.replace(/\/$/, '');
     const obj = this.wsdl.xmlToObject(input);
@@ -347,38 +359,37 @@ export class Server extends EventEmitter {
       }
 
       try {
-        if (binding.style === 'rpc') {
-          methodName = (Object.keys(body)[0] === 'attributes' ? Object.keys(body)[1] : Object.keys(body)[0]);
+        const soapAction = this._getSoapAction(req);
+        const messageElemName = (Object.keys(body)[0] === 'attributes' ? Object.keys(body)[1] : Object.keys(body)[0]);
+        const pair = binding.topElements[messageElemName];
+        if (soapAction) {
+          methodName = this._getMethodNameBySoapAction(binding, soapAction);
+        } else {
+          methodName = pair ? pair.methodName : messageElemName;
+        }
+        /** Style can be defined in method. If method has no style then look in binding */
+        const style = binding.methods[methodName].style || binding.style;
 
-          this.emit('request', obj, methodName);
-          if (headers) {
-            this.emit('headers', headers, methodName);
-          }
+        this.emit('request', obj, methodName);
+        if (headers) {
+          this.emit('headers', headers, methodName);
+        }
 
+        if (style === 'rpc') {
           this._executeMethod({
             serviceName: serviceName,
             portName: portName,
             methodName: methodName,
-            outputName: methodName + 'Response',
-            args: body[methodName],
+            outputName: messageElemName + 'Response',
+            args: body[messageElemName],
             headers: headers,
             style: 'rpc',
           }, req, res, callback);
         } else {
-          const messageElemName = (Object.keys(body)[0] === 'attributes' ? Object.keys(body)[1] : Object.keys(body)[0]);
-          const pair = binding.topElements[messageElemName];
-
-          this.emit('request', obj, pair.methodName);
-          if (headers) {
-            this.emit('headers', headers, pair.methodName);
-          }
-
-          methodName = pair.methodName;
-
           this._executeMethod({
             serviceName: serviceName,
             portName: portName,
-            methodName: pair.methodName,
+            methodName: methodName,
             outputName: pair.outputName,
             args: body[messageElemName],
             headers: headers,
@@ -408,7 +419,7 @@ export class Server extends EventEmitter {
           return this._sendError({
             Code: {
               Value: 'SOAP-ENV:Server',
-              Subcode: { value: 'InternalServerError' },
+              Subcode: { Value: 'InternalServerError' },
             },
             Reason: { Text: authResult.toString() },
             statusCode: 500,
@@ -427,7 +438,7 @@ export class Server extends EventEmitter {
               return this._sendError({
                 Code: {
                   Value: 'SOAP-ENV:Server',
-                  Subcode: { value: 'InternalServerError' },
+                  Subcode: { Value: 'InternalServerError' },
                 },
                 Reason: { Text: error.toString() },
                 statusCode: 500,
@@ -437,7 +448,7 @@ export class Server extends EventEmitter {
             return this._sendError({
               Code: {
                 Value: 'SOAP-ENV:Client',
-                Subcode: { value: 'AuthenticationFailure' },
+                Subcode: { Value: 'AuthenticationFailure' },
               },
               Reason: { Text: 'Invalid username or password' },
               statusCode: 401,
@@ -462,6 +473,14 @@ export class Server extends EventEmitter {
     }
   }
 
+  private _getMethodNameBySoapAction(binding: BindingElement, soapAction: string) {
+    for (const methodName in binding.methods) {
+      if (binding.methods[methodName].soapAction === soapAction) {
+        return methodName;
+      }
+    }
+  }
+
   private _executeMethod(
     options: IExecuteMethodOptions,
     req: Request,
@@ -475,6 +494,7 @@ export class Server extends EventEmitter {
     let headers;
     const serviceName = options.serviceName;
     const portName = options.portName;
+    const binding = this.wsdl.definitions.services[serviceName].ports[portName].binding;
     const methodName = options.methodName;
     const outputName = options.outputName;
     const args = options.args;
@@ -510,7 +530,7 @@ export class Server extends EventEmitter {
           return this._sendError({
             Code: {
               Value: 'SOAP-ENV:Server',
-              Subcode: { value: 'InternalServerError' },
+              Subcode: { Value: 'InternalServerError' },
             },
             Reason: { Text: error.toString() },
             statusCode: 500,
@@ -521,13 +541,13 @@ export class Server extends EventEmitter {
       if (style === 'rpc') {
         body = this.wsdl.objectToRpcXML(outputName, result, '', this.wsdl.definitions.$targetNamespace);
       } else {
-        const element = this.wsdl.definitions.services[serviceName].ports[portName].binding.methods[methodName].output;
+        const element = binding.methods[methodName].output;
         body = this.wsdl.objectToDocumentXML(outputName, result, element.targetNSAlias, element.targetNamespace);
       }
       callback(this._envelope(body, headers, includeTimestamp));
     };
 
-    if (!this.wsdl.definitions.services[serviceName].ports[portName].binding.methods[methodName].output) {
+    if (!binding.methods[methodName].output) {
       // no output defined = one-way operation so return empty response
       handled = true;
       body = '';

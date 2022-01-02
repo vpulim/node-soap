@@ -77,7 +77,7 @@ export class WSSecurity implements ISecurity {
     const created = getDate(now);
     let timeStampXml = '';
     if (this._hasTimeStamp) {
-      const expires = getDate( new Date(now.getTime() + (1000 * 600)) );
+      const expires = getDate(new Date(now.getTime() + (1000 * 600)));
       timeStampXml = '<wsu:Timestamp wsu:Id="Timestamp-' + created + '">' +
         '<wsu:Created>' + created + '</wsu:Created>' +
         '<wsu:Expires>' + expires + '</wsu:Expires>' +
@@ -98,8 +98,8 @@ export class WSSecurity implements ISecurity {
         password += '<wsse:Nonce EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary">' + nonce + '</wsse:Nonce>';
       }
     } else {
-    /* Specific Testcase for passwordDigest calculation cover this code
-    /* istanbul ignore next */
+      /* Specific Testcase for passwordDigest calculation cover this code
+      /* istanbul ignore next */
       password = '<wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest">' + passwordDigest(nonce, created, this._password) + '</wsse:Password>' +
         '<wsse:Nonce EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary">' + nonce + '</wsse:Nonce>';
     }
