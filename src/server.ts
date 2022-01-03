@@ -550,7 +550,7 @@ export class Server extends EventEmitter {
           // if targetNamespace is set on the element concatinate it with the outputName
           outputNameWithNamespace = `${elementTargetNamespace}:${outputNameWithNamespace}`;
         }
- 
+
         body = this.wsdl.objectToDocumentXML(outputNameWithNamespace, result, element.targetNSAlias, element.targetNamespace);
       }
       callback(this._envelope(body, headers, includeTimestamp));
