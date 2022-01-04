@@ -540,6 +540,9 @@ export class Server extends EventEmitter {
 
       if (style === 'rpc') {
         body = this.wsdl.objectToRpcXML(outputName, result, '', this.wsdl.definitions.$targetNamespace);
+      } else if (style === 'document') {
+        const element = binding.methods[methodName].output;
+        body = this.wsdl.objectToDocumentXML(outputName, result, element.targetNSAlias, element.targetNamespace);
       } else {
         const element = binding.methods[methodName].output;
         // Check for targetNamespace on the element
