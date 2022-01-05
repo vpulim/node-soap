@@ -1,0 +1,39 @@
+<definitions targetNamespace="http://app.com/app" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:app="http://app.com/app" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   
+  <message name="addPrefixRequest">
+     <part name="TransType" type="xsd:string" />
+  </message>
+
+  <message name="addPrefixResponse" targetNamespace="app">
+    <part name="ResponseCode" type="xsd:string"/>
+    <part name="ResultDesc" type="xsd:string" />
+  </message>
+
+  <portType name="SoapQuery_PortType">
+     <operation name="addPrefix">
+        <input message="addPrefixRequest" />
+        <output message="addPrefixResponse" />
+     </operation>
+  </portType>
+
+  <binding name="SoapQuery_Binding" type="SoapQuery_PortType">
+     <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http" />
+     <operation name="addPrefix" style="document">
+        <soap:operation soapAction="addPrefix" />
+        <soap:input>
+           <soap:body namespace="app" use="literal" />
+        </soap:input>
+
+        <soap:output>
+           <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" use="literal" />
+        </soap:output>
+     </operation>
+  </binding>
+
+  <service name="SoapQueryService">
+     <documentation>WSDL File for SoapQueryService</documentation>
+     <port binding="SoapQuery_Binding" name="SoapQuery_Port">
+        <soap:address location="http://localhost:8002/api/request" />
+     </port>
+  </service>
+</definitions>
