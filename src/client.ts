@@ -396,13 +396,7 @@ export class Client extends EventEmitter {
 
     options = options || {};
 
-    // Add extra headers
-    if (this.httpHeaders === null) {
-      headers = {};
-    } else {
-      for (const header in this.httpHeaders) { headers[header] = this.httpHeaders[header]; }
-      for (const attr in extraHeaders) { headers[attr] = extraHeaders[attr]; }
-    }
+
 
     // Allow the security object to add headers
     if (this.security && this.security.addHeaders) {
@@ -473,6 +467,14 @@ export class Client extends EventEmitter {
 
     this.emit('message', message, eid);
     this.emit('request', xml, eid);
+
+    // Add extra headers
+    if (this.httpHeaders === null) {
+      headers = {};
+    } else {
+      for (const header in this.httpHeaders) { headers[header] = this.httpHeaders[header]; }
+      for (const attr in extraHeaders) { headers[attr] = extraHeaders[attr]; }
+    }
 
     const tryJSONparse = (body) => {
       try {
