@@ -396,8 +396,6 @@ export class Client extends EventEmitter {
 
     options = options || {};
 
-
-
     // Allow the security object to add headers
     if (this.security && this.security.addHeaders) {
       this.security.addHeaders(headers);
