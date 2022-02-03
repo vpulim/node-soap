@@ -22,12 +22,20 @@ interface IExpressApp {
   use;
 }
 
-export type ServerType = http.Server | IExpressApp;
+interface IFastifyApp {
+  register
+}
+
+export type ServerType = http.Server | IExpressApp | IFastifyApp | any;
 type Request = http.IncomingMessage & { body?: any };
 type Response = http.ServerResponse;
 
 function isExpress(server): server is IExpressApp {
   return (typeof server.route === 'function' && typeof server.use === 'function');
+}
+
+function isFastify(server): server is IFastifyApp {
+  return (typeof server.register === 'function');
 }
 
 function isPromiseLike<T>(obj): obj is PromiseLike<T> {
@@ -119,6 +127,23 @@ export class Server extends EventEmitter {
           }
           this._requestListener(req, res);
         });
+        this.callback(err, this);
+      } else if (isFastify(server)) {
+        const fastifyHandler = (request, reply) => {
+          if (typeof this.authorizeConnection === 'function') {
+            if (!this.authorizeConnection(request.raw, reply.raw)) {
+              request.raw.end();
+              return;
+            }
+          }
+          this._requestListener(request.raw, reply.raw);
+        }
+
+        server.register((instance, opts, done) => {
+          instance.get('/', fastifyHandler);
+          instance.post('/', fastifyHandler);
+        }, { prefix: path })
+
         this.callback(err, this);
       } else {
         const listeners = server.listeners('request').slice();
