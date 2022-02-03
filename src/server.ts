@@ -23,10 +23,10 @@ interface IExpressApp {
 }
 
 interface IFastifyApp {
-  register
+  register;
 }
 
-export type ServerType = http.Server | IExpressApp | IFastifyApp | any;
+export type ServerType = http.Server | IExpressApp | IFastifyApp;
 type Request = http.IncomingMessage & { body?: any };
 type Response = http.ServerResponse;
 
@@ -116,7 +116,25 @@ export class Server extends EventEmitter {
       path = new RegExp(path.source + '(?:\\/|)');
     }
     wsdl.onReady((err) => {
-      if (isExpress(server)) {
+      if (isFastify(server)) {
+        const fastifyHandler = (request, reply) => {
+          if (typeof this.authorizeConnection === 'function') {
+            if (!this.authorizeConnection(request.raw, reply.raw)) {
+              reply.raw.end();
+              return;
+            }
+          }
+          this._requestListener(request.raw, reply.raw);
+        }
+
+        server.register((instance, opts, done) => {
+          instance.get('/', fastifyHandler);
+          instance.post('/', fastifyHandler);
+          done();
+        }, { prefix: path });
+
+        this.callback(err, this);
+      } else if (isExpress(server)) {
         // handle only the required URL path for express server
         server.route(path).all((req, res) => {
           if (typeof this.authorizeConnection === 'function') {
@@ -140,8 +158,8 @@ export class Server extends EventEmitter {
         }
 
         server.register((instance, opts, done) => {
-          instance.get('/', fastifyHandler);
-          instance.post('/', fastifyHandler);
+          // instance.get('/', fastifyHandler);
+          // instance.post('/', fastifyHandler);
         }, { prefix: path })
 
         this.callback(err, this);
