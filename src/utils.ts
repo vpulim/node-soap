@@ -1,6 +1,6 @@
 
 import * as crypto from 'crypto';
-import { MultipartParser } from 'formidable/lib/multipart_parser.js';
+import { MultipartParser } from 'formidable';
 import { IMTOMAttachments } from './types';
 
 export function passwordDigest(nonce: string, created: string, password: string): string {
@@ -78,38 +78,34 @@ export function parseMTOMResp(payload: Buffer, boundary: string): IMTOMAttachmen
   const parser = new MultipartParser();
 
   parser.initWithBoundary(boundary);
-  parser.onPartBegin = () => {
-    resp.parts[partIndex] = {
-      body: null,
-      headers: {},
-    };
-    data = Buffer.from('');
-  };
+  parser.on('data', ({ name, buffer, start, end }) => {
+    switch (name) {
+      case 'partBegin':
+        resp.parts[partIndex] = {
+          body: null,
+          headers: {},
+        };
+        data = Buffer.from('');
+        break;
+      case 'headerField':
+        headerName = buffer.slice(start, end).toString();
+        break;
+      case 'headerValue':
+        headerValue = buffer.slice(start, end).toString();
+        break;
+      case 'headerEnd':
+        resp.parts[partIndex].headers[headerName.toLowerCase()] = headerValue;
+        break;
+      case 'partData':
+        data = Buffer.concat([data, buffer.slice(start, end)]);
+        break;
+      case 'partEnd':
+        resp.parts[partIndex].body = data;
+        partIndex++;
+        break;
+    }
+  });
 
-  parser.onHeaderField = (b: Buffer, start: number, end: number) => {
-    headerName = b.slice(start, end).toString();
-  };
-
-  parser.onHeaderValue = (b: Buffer, start: number, end: number) => {
-    headerValue = b.slice(start, end).toString();
-  };
-
-  parser.onHeaderEnd = () => {
-    resp.parts[partIndex].headers[headerName.toLowerCase()] = headerValue;
-  };
-
-  parser.onHeadersEnd = () => {};
-
-  parser.onPartData = (b: Buffer, start: number, end: number) => {
-      data = Buffer.concat([data, b.slice(start, end)]);
-  };
-
-  parser.onPartEnd = () => {
-    resp.parts[partIndex].body = data;
-    partIndex++;
-  };
-
-  parser.onEnd = () => {};
   parser.write(payload);
 
   return resp;
