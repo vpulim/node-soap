@@ -127,7 +127,7 @@ GitHub issues have been disabled to focus on pull requests. ([#731](https://gith
   var url = 'http://example.com/wsdl?wsdl';
   var args = {name: 'value'};
 
-  soap.createClient(url, function(err, client) {
+  soap.createClient(url, {}, function(err, client) {
       client.MyFunction(args, function(err, result) {
           console.log(result);
       });
