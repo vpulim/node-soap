@@ -5,12 +5,12 @@
 
 import * as req from 'axios';
 import { NtlmClient } from 'axios-ntlm';
-import * as contentTypeParser from 'content-type-parser';
 import * as debugBuilder from 'debug';
 import { ReadStream } from 'fs';
 import * as url from 'url';
-
 import { v4 as uuidv4 } from 'uuid';
+import MIMEType = require('whatwg-mimetype');
+import { gzipSync } from 'zlib';
 import { IExOptions, IHeaders, IHttpClient, IMTOMAttachments, IOptions } from './types';
 import { parseMTOMResp } from './utils';
 
@@ -100,7 +100,8 @@ export class HttpClient implements IHttpClient {
           }
         }
       }
-      headers['Content-Type'] = 'multipart/related; type="application/xop+xml"; start="<' + start + '>"; start-info="text/xml"; boundary=' + uuidv4();
+      const boundary = uuidv4();
+      headers['Content-Type'] = 'multipart/related; type="application/xop+xml"; start="<' + start + '>"; type="text/xml"; boundary=' + boundary;
       if (action) {
         headers['Content-Type'] = headers['Content-Type'] + '; ' + action;
       }
@@ -119,9 +120,30 @@ export class HttpClient implements IHttpClient {
           'body': attachment.body,
         });
       });
-      // options.multipart = multipart;
+      options.data = `--${boundary}\r\n`;
+
+      let multipartCount = 0;
+      multipart.forEach((part) => {
+        Object.keys(part).forEach((key) => {
+          if (key !== 'body') {
+            options.data += `${key}: ${part[key]}\r\n`;
+          }
+        });
+        options.data += '\r\n';
+        options.data += `${part.body}\r\n--${boundary}${
+          multipartCount === multipart.length - 1 ? '--' : ''
+        }\r\n`;
+        multipartCount++;
+      });
     } else {
       options.data = data;
+    }
+
+    if (exoptions.forceGzip) {
+      options.decompress = true;
+      options.data = gzipSync(options.data);
+      options.headers['Accept-Encoding'] = 'gzip,deflate';
+      options.headers['Content-Encoding'] = 'gzip';
     }
 
     for (const attr in newExoptions) {
@@ -189,9 +211,9 @@ export class HttpClient implements IHttpClient {
         const isMultipartResp = res.headers['content-type'] && res.headers['content-type'].toLowerCase().indexOf('multipart/related') > -1;
         if (isMultipartResp) {
           let boundary;
-          const parsedContentType = contentTypeParser(res.headers['content-type']);
-          if (parsedContentType && parsedContentType.parameterList) {
-            boundary = ((parsedContentType.parameterList as any[]).find((item) => item.key === 'boundary') || {}).value;
+          const parsedContentType = MIMEType.parse(res.headers['content-type']);
+          if (parsedContentType) {
+            boundary = parsedContentType.parameters.get('boundary');
           }
           if (!boundary) {
             return callback(new Error('Missing boundary from content-type'));

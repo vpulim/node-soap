@@ -284,6 +284,9 @@ export class Server extends EventEmitter {
   }
 
   private _getSoapAction(req: Request) {
+    if (typeof req.headers.soapaction === 'undefined') {
+         return;
+     }
     const soapAction: string = req.headers.soapaction as string;
     return (soapAction.indexOf('"') === 0)
          ? soapAction.slice(1, -1)
@@ -537,9 +540,21 @@ export class Server extends EventEmitter {
 
       if (style === 'rpc') {
         body = this.wsdl.objectToRpcXML(outputName, result, '', this.wsdl.definitions.$targetNamespace);
-      } else {
+      } else if (style === 'document') {
         const element = binding.methods[methodName].output;
         body = this.wsdl.objectToDocumentXML(outputName, result, element.targetNSAlias, element.targetNamespace);
+      } else {
+        const element = binding.methods[methodName].output;
+        // Check for targetNamespace on the element
+        const elementTargetNamespace = element.$targetNamespace;
+        let outputNameWithNamespace = outputName;
+
+        if (elementTargetNamespace) {
+          // if targetNamespace is set on the element concatinate it with the outputName
+          outputNameWithNamespace = `${elementTargetNamespace}:${outputNameWithNamespace}`;
+        }
+
+        body = this.wsdl.objectToDocumentXML(outputNameWithNamespace, result, element.targetNSAlias, element.targetNamespace);
       }
       callback(this._envelope(body, headers, includeTimestamp));
     };
