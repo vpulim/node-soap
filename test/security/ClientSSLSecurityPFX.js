@@ -23,6 +23,14 @@ describe('ClientSSLSecurityPFX', function() {
       instance.addOptions(options);
       options.should.have.property("foo", 5);
     });
+
+    it('should be accepted as the third param', function() {
+      var pfkBuffer = fs.readFileSync(join(__dirname, '..', 'certs', 'client-password.pfx')), 
+        instance;
+
+      instance = new ClientSSLSecurityPFX(pfkBuffer, 'test2est', { foo: 5});
+      instance.should.have.property("defaults", { foo: 5 })
+    })
   });
 
   it('should throw if invalid pfk file is given', function () {

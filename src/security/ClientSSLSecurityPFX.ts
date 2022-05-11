@@ -18,6 +18,7 @@ export class ClientSSLSecurityPFX implements ISecurity {
   private passphrase: string;
 
   constructor(pfx: string | Buffer, defaults?: any);
+  constructor(pfx: string | Buffer, passphrase: string, defaults?: any);
   constructor(pfx: string | Buffer, passphrase: string, defaults?: any) {
     if (typeof passphrase === 'object') {
       defaults = passphrase;
