@@ -161,7 +161,7 @@ Construct a `Promise<Client>` with the given WSDL file.
   // async/await
   var client = await soap.createClientAsync(url);
   var result = await client.MyFunctionAsync(args);
-  console.log(await result);
+  console.log(result);
 ```
 
 Note: for versions of node >0.10.X, you may need to specify `{connection: 'keep-alive'}` in SOAP headers to avoid truncation of longer chunked responses.
