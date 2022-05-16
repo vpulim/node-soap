@@ -236,7 +236,7 @@ export class Client extends EventEmitter {
           if (err) {
             reject(err);
           } else {
-            resolve([result, rawResponse, soapHeader, rawRequest, mtomAttachments]);
+            resolve({result, rawResponse, soapHeader, rawRequest, mtomAttachments});
           }
         };
         method(
