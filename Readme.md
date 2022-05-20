@@ -50,6 +50,7 @@ This module lets you connect to web services using SOAP.  It also provides a ser
   - [ClientSSLSecurityPFX](#clientsslsecuritypfx)
   - [WSSecurity](#wssecurity)
   - [WSSecurityCert](#wssecuritycert)
+  - [WSSecurityCertWithAuth](#wssecuritycertwithauth)
   - [NTLMSecurity](#ntlmsecurity)
 - [Handling XML Attributes, Value and XML (wsdlOptions).](#handling-xml-attributes-value-and-xml-wsdloptions)
   - [Overriding the `value` key](#overriding-the-value-key)
@@ -1057,6 +1058,16 @@ The `options` object is optional and can contain the following properties:
         </Signature>
     </wsse:Security>
 </soap:Header>
+```
+### WSSecurityCertWithAuth
+
+WS-Security X509 Certificate support. Just like WSSecurityCert, except that it accepts and the input properties as a single object, with two properties added `username` and `password`. Which if added, will add a UsernameToken Element to the xml security element.
+
+``` xml
+<wsse:UsernameToken>
+  <wsse:Username>someusername</wsse:Username>
+  <wsse:Password>someusername's password</wsse:Password>
+</wsse:UsernameToken>
 ```
 
 ### NTLMSecurity
