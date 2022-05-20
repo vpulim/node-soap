@@ -205,9 +205,13 @@ describe('WSDL Parser (non-strict)', () => {
     if (!/.wsdl$/.exec(file)) return;
     it('should parse and describe '+file, (done) => {
       soap.createClient(__dirname+'/wsdl/'+file, function(err, client) {
-        assert.ifError(err);
-        client.describe();
-        done();
+        if (err && err.message === 'Root element of WSDL was <html>. This is likely an authentication issue.') {
+          done();
+        } else {
+          assert.ifError(err);
+          client.describe();
+          done();
+        }
       });
     });
   });

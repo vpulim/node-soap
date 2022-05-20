@@ -1272,6 +1272,8 @@ export class WSDL {
           types.addChild(schema);
           root.addChild(types);
           stack.push(schema);
+        } else if (name === 'html') {
+          throw new Error(`Root element of WSDL was <html>. This is likely an authentication issue.`);
         } else {
           throw new Error('Unexpected root element of WSDL or include');
         }
