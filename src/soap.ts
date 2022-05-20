@@ -15,7 +15,7 @@ const debug = debugBuilder('node-soap:soap');
 export const security = _security;
 export { Client } from './client';
 export { HttpClient } from './http';
-export { BasicAuthSecurity, BearerSecurity, ClientSSLSecurity, ClientSSLSecurityPFX, NTLMSecurity, WSSecurity, WSSecurityCert } from './security';
+export { BasicAuthSecurity, BearerSecurity, ClientSSLSecurity, ClientSSLSecurityPFX, NTLMSecurity, WSSecurity, WSSecurityCert, WSSecurityCertWithAuth } from './security';
 export { Server } from './server';
 export { passwordDigest } from './utils';
 export * from './types';
