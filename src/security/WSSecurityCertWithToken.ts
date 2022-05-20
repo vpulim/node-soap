@@ -42,7 +42,7 @@ const bodyXpathPlaceholder = '[[bodyXpath]]';
 
 
 
-export class WSSecurityCertWithAuth implements ISecurity {
+export class WSSecurityCertWithToken implements ISecurity {
   private publicP12PEM: string;
   private signer: any;
   private signerOptions: IXmlSignerOptions = {};
