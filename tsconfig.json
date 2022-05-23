@@ -1,6 +1,9 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
+    "types": [
+      "axios"
+    ],
     "target": "es3",
     "module": "commonjs",
     "outDir": "lib",
