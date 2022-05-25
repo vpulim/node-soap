@@ -55,7 +55,7 @@ export class WSSecurityCertWithToken implements ISecurity {
   private username: string;
   private password: string;
 
-  constructor(props: {privateKey: any, publicKey: any, keyPassword: any, username: string, password: string, options?: IWSSecurityCertOptions}) {
+  constructor(props: {privateKey: Buffer, publicKey: string, keyPassword?: string, username: string, password: string, options?: IWSSecurityCertOptions}) {
     this.publicP12PEM = props.publicKey.toString()
       .replace('-----BEGIN CERTIFICATE-----', '')
       .replace('-----END CERTIFICATE-----', '')
