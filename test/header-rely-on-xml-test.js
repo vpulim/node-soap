@@ -29,7 +29,7 @@ describe('testing adding header rely on completed xml', () => {
     done();
   });
 
-  it('should add header to request, which created from xml before request', function (done) {
+  xit('should add header to request, which created from xml before request', function (done) {
     soap.createClient(__dirname + '/wsdl/complex/registration-common.wsdl', function (err, client) {
       if (err) {
         return void done(err);
