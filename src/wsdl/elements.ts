@@ -485,10 +485,14 @@ export class ComplexTypeElement extends Element {
       if (child instanceof AttributeElement) {
         hasAttributes = true;
         // TODO: Handle simpleType in attribute
+        let childType = 'string';
         if (child.$type !== undefined) {
-          $attributes[child.$name] = child.$type;
-        } else {
-          $attributes[child.$name] = 'string';
+          childType = child.$type;
+        }
+
+        let childName = child.$name ? child.$name : child.$ref;
+        if (childName !== undefined) {
+          $attributes[childName] = childType;
         }
         continue;
       }
@@ -1168,6 +1172,8 @@ export class ImportElement extends Element {
 
 export class AttributeElement extends Element {
   public $type?: string;
+  public $ref?: string;
+  public $use?: string;
 }
 
 const ElementTypeMap: {
