@@ -484,7 +484,12 @@ export class ComplexTypeElement extends Element {
     for (const child of children) {
       if (child instanceof AttributeElement) {
         hasAttributes = true;
-        $attributes[child.$name] = child.$type;
+        // TODO: Handle simpleType in attribute
+        if (child.$type !== undefined) {
+          $attributes[child.$name] = child.$type;
+        } else {
+          $attributes[child.$name] = 'string';
+        }
         continue;
       }
 
