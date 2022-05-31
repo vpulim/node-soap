@@ -467,6 +467,7 @@ export class ComplexTypeElement extends Element {
   public readonly allowedChildren = buildAllowedChildren([
     'all',
     'annotation',
+    'attribute',
     'choice',
     'complexContent',
     'sequence',
@@ -474,17 +475,39 @@ export class ComplexTypeElement extends Element {
   ]);
   public description(definitions: DefinitionsElement, xmlns: IXmlNs) {
     const children = this.children || [];
-    for (const child of children) {
-      if (child instanceof ChoiceElement ||
-        child instanceof SequenceElement ||
-        child instanceof AllElement ||
-        child instanceof SimpleContentElement ||
-        child instanceof ComplexContentElement) {
 
-        return child.description(definitions, xmlns);
+    let hasAttributes = false;
+    let isFirstChild = false;
+    let ret = {};
+    const $attributes = {};
+
+    for (const child of children) {
+      if (child instanceof AttributeElement) {
+        hasAttributes = true;
+        $attributes[child.$name] = child.$type;
+        continue;
+      }
+
+      if (!isFirstChild && (child instanceof ChoiceElement ||
+            child instanceof SequenceElement ||
+            child instanceof AllElement ||
+            child instanceof SimpleContentElement ||
+            child instanceof ComplexContentElement)) {
+        isFirstChild = true;
+        ret = child.description(definitions, xmlns);
       }
     }
-    return {};
+
+    if (hasAttributes) {
+      Object.defineProperty(ret, '$attributes', {
+        value: $attributes,
+        enumerable: true,
+        configurable: false,
+        writable: false,
+      });
+    }
+
+    return ret;
   }
 }
 
@@ -1138,12 +1161,17 @@ export class ImportElement extends Element {
   public $namespace?;
 }
 
+export class AttributeElement extends Element {
+  public $type?: string;
+}
+
 const ElementTypeMap: {
   [k: string]: typeof Element;
 } = {
   // group: [GroupElement, 'element group'],
   all: AllElement,
   any: AnyElement,
+  attribute: AttributeElement,
   binding: BindingElement,
   body: BodyElement,
   choice: ChoiceElement,
