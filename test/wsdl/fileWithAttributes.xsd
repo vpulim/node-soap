@@ -21,6 +21,13 @@
             </element>
           </all>
           <s:attribute name="AttributeInTwo" type="s:boolean" use="required" />
+          <s:attribute name="AttributeInThree" use="required">
+            <simpleType>
+              <restriction base="xsd:string">
+                <maxLength value="20"/>
+              </restriction>
+            </simpleType>
+          </s:attribute>
         </complexType>
       </element>
       <element name="TradePrice">
