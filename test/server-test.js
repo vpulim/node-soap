@@ -561,8 +561,10 @@ describe('SOAP Server', function () {
         AttributeOut: "s:boolean"
       });
 
-      assert.deepEqual(Object.keys(description.StockQuoteService.StockQuotePort.GetLastTradePrice.input), ['tickerSymbol', '$attributes']);
-      assert.deepEqual(Object.keys(description.StockQuoteService.StockQuotePort.GetLastTradePrice.output), ['$attributes']);
+      assert.deepEqual(Object.keys(description.StockQuoteService.StockQuotePort.GetLastTradePrice.input),
+        ['tickerSymbol', 'NestedElement', '$attributes']);
+      assert.deepEqual(Object.keys(description.StockQuoteService.StockQuotePort.GetLastTradePrice.output),
+        ['$attributes']);
       done();
     });
   });

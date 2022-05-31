@@ -14,6 +14,11 @@
           <s:attribute name="AttributeInOne" type="s:boolean" use="required" />
           <all>
             <element name="tickerSymbol" type="string"/>
+            <element name="NestedElement">
+              <complexType name="NestedComplexElement">
+                <s:attribute name="NestedAttributeInOne" type="s:boolean" use="required" />
+              </complexType>
+            </element>
           </all>
           <s:attribute name="AttributeInTwo" type="s:boolean" use="required" />
         </complexType>
