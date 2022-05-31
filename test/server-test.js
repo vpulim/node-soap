@@ -554,6 +554,7 @@ describe('SOAP Server', function () {
       let description = client.describe();
 
       assert.deepEqual(description.StockQuoteService.StockQuotePort.GetLastTradePrice.input.$attributes, {
+        AttributeByRef: "string",
         AttributeInOne: "s:boolean",
         AttributeInThree: "string",
         AttributeInTwo: "s:boolean"

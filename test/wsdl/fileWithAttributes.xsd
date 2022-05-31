@@ -28,6 +28,7 @@
               </restriction>
             </simpleType>
           </s:attribute>
+          <s:attribute ref="AttributeByRef" use="required"/>
         </complexType>
       </element>
       <element name="TradePrice">
