@@ -1,3 +1,16 @@
+0.44.0 / 2022-06-06
+===================
+* [DOC] Readme.md: Rewrite how to get support for conciseness, update mentions of the old request module to Axios, improve documentation of several functions' arguments. (#1175)
+* [ENHANCEMENT] Added override constructor to ClientSSLSecurityPFX class (#1184)
+* [ENHANCEMENT] add optional targetNamespace to output message name (#1176)
+* [FIX] Change axios to be a peer dependency (#1179)
+* [FIX] Continuation PR #1169: change content-type-parser to whatwg-mimetype (#1177)
+* [FIX] Fix missing parameter in example (#1172)
+* [FIX] Fix of client events behavior (#1181)
+* [FIX] correctly serialize MTOM into axios data and add Content-Encoding: gzip support in soap request (#1173)
+* [FIX] double await in async and fixed response (#1185)
+* [FIX] package.json: Change value of engines.node key from ">=10.0.0" to ">=12.0.0". (#1178)
+
 0.43.0 / 2021-11-12
 ===================
 * [DOC] Create SECURITY.md (#1165)
