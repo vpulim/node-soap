@@ -1,3 +1,8 @@
+0.45.0 / 2022-06-15
+===================
+* [FIX] axios peer dependency version (#1188)
+* [MAINTENANCE] Upgrade formidable to v2 (#1183)
+
 0.44.0 / 2022-06-06
 ===================
 * [DOC] Readme.md: Rewrite how to get support for conciseness, update mentions of the old request module to Axios, improve documentation of several functions' arguments. (#1175)
