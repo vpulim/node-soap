@@ -239,7 +239,7 @@ export class ElementElement extends Element {
 
       if (typeElement && !(typeName in Primitives)) {
 
-        if (!(typeName in typeStorage)) {
+        if (!(typeName in typeStorage && (typeStorage[typeName] as ElementElement).targetNamespace === ns)) {
 
           let elem: any = {};
           typeStorage[typeName] = elem;
