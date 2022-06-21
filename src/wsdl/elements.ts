@@ -478,7 +478,6 @@ export class ComplexTypeElement extends Element {
     const children = this.children || [];
 
     let hasAttributes = false;
-    let isFirstChild = false;
     let ret = {};
     const $attributes = {};
 
@@ -498,12 +497,11 @@ export class ComplexTypeElement extends Element {
         continue;
       }
 
-      if (!isFirstChild && (child instanceof ChoiceElement ||
+      if (child instanceof ChoiceElement ||
             child instanceof SequenceElement ||
             child instanceof AllElement ||
             child instanceof SimpleContentElement ||
-            child instanceof ComplexContentElement)) {
-        isFirstChild = true;
+            child instanceof ComplexContentElement) {
         ret = child.description(definitions, xmlns);
       }
     }
