@@ -468,6 +468,7 @@ export class ComplexTypeElement extends Element {
     'all',
     'annotation',
     'attribute',
+    'extension',
     'choice',
     'complexContent',
     'sequence',
