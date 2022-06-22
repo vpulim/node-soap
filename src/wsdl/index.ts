@@ -1186,6 +1186,9 @@ export class WSDL {
     this.options.forceSoap12Headers = options.forceSoap12Headers;
     this.options.customDeserializer = options.customDeserializer;
 
+    if(options.overrideElementKey !== undefined) {
+      this.options.overrideElementKey = options.overrideElementKey;
+    }
     if (options.overrideRootElement !== undefined) {
       this.options.overrideRootElement = options.overrideRootElement;
     }
