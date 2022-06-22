@@ -89,6 +89,7 @@ export interface IWsdlBaseOptions {
   valueKey?: string;
   xmlKey?: string;
   overrideRootElement?: { namespace: string; xmlnsAttributes?: IXmlAttribute[]; };
+  overrideElementKey?: Array<string>
   ignoredNamespaces?: boolean | string[] | { namespaces?: string[]; override?: boolean; };
   ignoreBaseNameSpaces?: boolean;
   /** escape special XML characters in SOAP message (e.g. &, >, < etc), default: true. */

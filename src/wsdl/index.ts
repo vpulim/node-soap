@@ -637,6 +637,17 @@ export class WSDL {
   public objectToXML(obj, name: string, nsPrefix: any, nsURI: string, isFirst?: boolean, xmlnsAttr?, schemaObject?, nsContext?: NamespaceContext) {
     const schema = this.definitions.schemas[nsURI];
 
+    if(this.options.overrideElementKey.length > 0) {
+      for (let key in this.options.overrideElementKey) {
+        const overrideKey = this.options.overrideElementKey[key];
+        if (obj && obj[key]) {
+          Object.defineProperty(obj, overrideKey,
+              Object.getOwnPropertyDescriptor(obj, key));
+          delete obj[key];
+        }
+      }
+    }
+
     let parentNsPrefix = nsPrefix ? nsPrefix.parent : undefined;
     if (typeof parentNsPrefix !== 'undefined') {
       // we got the parentNsPrefix for our array. setting the namespace-variable back to the current namespace string
