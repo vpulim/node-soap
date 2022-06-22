@@ -637,7 +637,7 @@ export class WSDL {
   public objectToXML(obj, name: string, nsPrefix: any, nsURI: string, isFirst?: boolean, xmlnsAttr?, schemaObject?, nsContext?: NamespaceContext) {
     const schema = this.definitions.schemas[nsURI];
 
-    if(this.options.overrideElementKey.length > 0) {
+    if(Object.keys(this.options.overrideElementKey).length > 0) {
       for (let key in this.options.overrideElementKey) {
         const overrideKey = this.options.overrideElementKey[key];
         if (obj && obj[key]) {
