@@ -1,6 +1,6 @@
 {
   "name": "@nguyendon/soap",
-  "version": "0.45.0",
+  "version": "0.45.1",
   "description": "A minimal node SOAP client",
   "engines": {
     "node": ">=14.0.0"
