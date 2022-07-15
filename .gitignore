@@ -7,3 +7,4 @@ yarn.lock
 .idea
 *.iml
 /docs
+lib
