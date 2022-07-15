@@ -17,9 +17,10 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '16.x'
-          registry-url: 'https://npm.pkg.github.com'
       - run: npm ci
       - run: npm run build
-      - run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NGUYENDON_GITHUB_TOKEN }}
+      - uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NGUYENDON_GITHUB_TOKEN }}
+          registry: 'https://npm.pkg.github.com'
+          greater-version-only: true
