@@ -1,11 +1,11 @@
 {
-  "name": "soap",
-  "version": "1.0.3",
+  "name": "@nguyendon/soap",
+  "version": "0.45.0",
   "description": "A minimal node SOAP client",
   "engines": {
     "node": ">=14.0.0"
   },
-  "author": "Vinay Pulim <v@pulim.com>",
+  "author": "Don Nguyen <don@nguyendon.io>",
   "dependencies": {
     "axios": "^1.6.8",
     "axios-ntlm": "^1.4.2",
@@ -21,7 +21,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/vpulim/node-soap.git"
+    "url": "https://github.com/nguyendon/node-soap.git"
+  },
+  "publishConfig": {
+    "registry":"https://npm.pkg.github.com"
   },
   "main": "./index.js",
   "types": "./lib/soap.d.ts",
