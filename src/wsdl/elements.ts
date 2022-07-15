@@ -490,7 +490,7 @@ export class ComplexTypeElement extends Element {
           childType = child.$type;
         }
 
-        let childName = child.$name ? child.$name : child.$ref;
+        const childName = child.$name ? child.$name : child.$ref;
         if (childName !== undefined) {
           $attributes[childName] = childType;
         }
