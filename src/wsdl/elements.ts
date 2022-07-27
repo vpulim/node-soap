@@ -61,6 +61,7 @@ export interface IXmlNs {
 
 export class Element {
   public readonly allowedChildren?: { [k: string]: typeof Element } = {};
+  public $text?: string;
   public $name?: string;
   public $targetNamespace?;
   public children: Element[] = [];
@@ -135,6 +136,10 @@ export class Element {
 
   }
 
+  public setText(text: string) {
+    this.$text = text;
+  }
+
   public endElement(stack: Element[], nsName: string) {
     if (this.nsName === nsName) {
       if (stack.length < 2) {
@@ -185,6 +190,7 @@ export class ElementElement extends Element {
     'complexType',
     'simpleType',
   ]);
+  public annotation: AnnotationElement = null;
   public $minOccurs?: string;
   public $maxOccurs?: string;
   public $type?: string;
@@ -193,6 +199,13 @@ export class ElementElement extends Element {
   public targetNamespace?: string;
   public $lookupType?: string;
   public $lookupTypes?: any[];
+
+  public addChild(child) {
+    if (child instanceof AnnotationElement) {
+      this.annotation = child;
+      this.children.pop();
+    }
+  }
 
   public description(definitions: DefinitionsElement, xmlns?: IXmlNs) {
     let element = {};
@@ -472,6 +485,15 @@ export class ComplexTypeElement extends Element {
     'sequence',
     'simpleContent',
   ]);
+  public annotation: AnnotationElement = null;
+
+  public addChild(child) {
+    if (child instanceof AnnotationElement) {
+      this.annotation = child;
+    }
+    this.children.pop();
+  }
+
   public description(definitions: DefinitionsElement, xmlns: IXmlNs) {
     const children = this.children || [];
     for (const child of children) {
@@ -750,6 +772,21 @@ export class MessageElement extends Element {
   }
 }
 
+export class AnnotationElement extends Element {
+  public readonly allowedChildren = buildAllowedChildren([
+    'documentation',
+  ]);
+  public documentation: DocumentationElement = null;
+
+  public addChild(child) {
+    if (child instanceof DocumentationElement) {
+      this.documentation = child;
+      this.children.pop();
+    }
+  }
+
+}
+
 export class DocumentationElement extends Element {
   // no children
 }
@@ -842,6 +879,7 @@ export class OperationElement extends Element {
     'operation',
     'output',
   ]);
+  public documentation: DocumentationElement = null;
   public input: InputElement = null;
   public output: OutputElement = null;
   public inputSoap = null;
@@ -862,6 +900,11 @@ export class OperationElement extends Element {
   public postProcess(definitions: DefinitionsElement, tag: string) {
     const children = this.children;
     for (let i = 0, child; child = children[i]; i++) {
+      if (child.name === 'documentation') {
+        this.documentation = child;
+        children.splice(i--, 1);
+        continue;
+      }
       if (child.name !== 'input' && child.name !== 'output') {
         continue;
       }
@@ -885,9 +928,11 @@ export class OperationElement extends Element {
   }
 
   public description(definitions: DefinitionsElement) {
+    const documentation = this.documentation ? this.documentation.description() : null;
     const inputDesc = this.input ? this.input.description(definitions) : null;
     const outputDesc = this.output ? this.output.description(definitions) : null;
     return {
+      documentation: documentation,
       input: inputDesc && inputDesc[Object.keys(inputDesc)[0]],
       output: outputDesc && outputDesc[Object.keys(outputDesc)[0]],
     };
@@ -899,6 +944,7 @@ export class PortTypeElement extends Element {
     'documentation',
     'operation',
   ]);
+  public documentation: DocumentationElement = null;
   public methods: {
     [name: string]: OperationElement;
   } = {};
@@ -909,6 +955,11 @@ export class PortTypeElement extends Element {
       return;
     }
     for (let i = 0, child; child = children[i]; i++) {
+      if (child.name === 'documentation') {
+        this.documentation = child;
+        children.splice(i--, 1);
+        continue;
+      }
       if (child.name !== 'operation') {
         continue;
       }
@@ -946,6 +997,7 @@ export class BindingElement extends Element {
     'operation',
     'SecuritySpec',
   ]);
+  public documentation?: DocumentationElement = null;
   public topElements?: ITopElements;
   public transport = '';
   public style = '';
@@ -970,6 +1022,11 @@ export class BindingElement extends Element {
       this.methods = portType.methods;
 
       for (let i = 0, child; child = children[i]; i++) {
+        if (child.name === 'documentation') {
+          this.documentation = child;
+          children.splice(i--, 1);
+          continue;
+        }
         if (child.name !== 'operation') {
           continue;
         }
@@ -1008,11 +1065,16 @@ export class PortElement extends Element {
     'address',
     'documentation',
   ]);
+  public documentation?: DocumentationElement = null; // TODO:
   public location = null;
 
   public addChild(child) {
     if (child.name === 'address' && typeof (child.$location) !== 'undefined') {
       this.location = child.$location;
+    }
+    if (child.name === 'documentation') {
+      // console.log(document);
+      this.documentation = child;
     }
   }
 }
@@ -1027,13 +1089,19 @@ export class ServiceElement extends Element {
     'documentation',
     'port',
   ]);
-  public ports: { [name: string]: IPort } = {};
+  public documentation?: DocumentationElement = null;
+  public ports: {[name: string]: IPort} = {};
 
   public postProcess(definitions: DefinitionsElement) {
     const children = this.children;
     const bindings = definitions.bindings;
     if (children && children.length > 0) {
       for (let i = 0, child; child = children[i]; i++) {
+        if (child.name === 'documentation') {
+          this.documentation = child;
+          children.splice(i--, 1);
+          continue;
+        }
         if (child.name !== 'port') {
           continue;
         }
