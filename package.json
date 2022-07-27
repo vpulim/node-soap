@@ -23,7 +23,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/vpulim/node-soap.git"
+    "url": "https://github.com/JPGygax68/node-soap.git"
   },
   "main": "./index.js",
   "types": "./lib/soap.d.ts",
