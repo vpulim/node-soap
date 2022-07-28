@@ -67,7 +67,7 @@
     "finalhandler": "^1.1.1",
     "glob": "^7.1.7",
     "jshint": "^2.13.1",
-    "mocha": "^6.1.4",
+    "mocha": "^6.2.3",
     "nyc": "^14.1.1",
     "readable-stream": "~2.0.2",
     "semver": "^5.6.0",
