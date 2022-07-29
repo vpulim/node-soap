@@ -6,5 +6,5 @@ yarn.lock
 .vscode
 .idea
 *.iml
-# /lib
+/lib
 /docs
