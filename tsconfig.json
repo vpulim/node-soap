@@ -1,7 +1,7 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
-    "target": "es3",
+    "target": "es5",
     "module": "commonjs",
     "outDir": "lib",
     "sourceMap": true,
