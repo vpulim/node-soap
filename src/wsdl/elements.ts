@@ -490,8 +490,8 @@ export class ComplexTypeElement extends Element {
   public addChild(child) {
     if (child instanceof AnnotationElement) {
       this.annotation = child;
+      this.children.pop();
     }
-    this.children.pop();
   }
 
   public description(definitions: DefinitionsElement, xmlns: IXmlNs) {
