@@ -484,6 +484,7 @@ export class ComplexTypeElement extends Element {
     'complexContent',
     'sequence',
     'simpleContent',
+    'attribute'
   ]);
   public annotation: AnnotationElement = null;
 
