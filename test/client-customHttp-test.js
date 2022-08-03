@@ -49,13 +49,17 @@ it('should allow customization of httpClient and the wsdl file download should p
   socketStream.destroy = function() {
   };
 
+  // axios calls this
+  socketStream.setKeepAlive = function() {
+  };
+
   //Custom httpClient  
-  function MyHttpClient (options, socket){
-    httpClient.call(this,options);
-    this.agent = new CustomAgent(options, socket);
+  class MyHttpClient extends httpClient {
+    constructor(options, socket) {
+      super(options)
+      this.agent = new CustomAgent(options, socket);
+    }
   }
-    
-  util.inherits(MyHttpClient, httpClient);
     
   MyHttpClient.prototype.request = function(rurl, data, callback, exheaders, exoptions) {
     var self = this;

@@ -34,12 +34,12 @@ it('should allow customization of httpClient, the wsdl file, and associated data
   };
 
   //Custom httpClient
-  function MyHttpClient (options, wsdlSocket, xsdSocket){
-    httpClient.call(this,options);
-    this.agent = new CustomAgent(options, wsdlSocket, xsdSocket);
+  class MyHttpClient extends httpClient { 
+    constructor(options, wsdlSocket, xsdSocket) {
+      super(options);
+      this.agent = new CustomAgent(options, wsdlSocket, xsdSocket);
+    }
   }
-
-  util.inherits(MyHttpClient, httpClient);
 
   MyHttpClient.prototype.request = function(rurl, data, callback, exheaders, exoptions) {
     var self = this;
