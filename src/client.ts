@@ -293,7 +293,7 @@ export class Client extends EventEmitter {
     }
   }
 
-  private _invoke(method: OperationElement, args, location: string, callback, options, extraHeaders) {
+  private async _invoke(method: OperationElement, args, location: string, callback, options, extraHeaders) {
     const name = method.$name;
     const input = method.input;
     const output = method.output;
@@ -400,6 +400,11 @@ export class Client extends EventEmitter {
     if (this.security && this.security.addHeaders) {
       this.security.addHeaders(headers);
     }
+    
+    if (this.security && this.security.addHeadersAsync) {
+      await this.security.addHeadersAsync(headers);
+    }
+
     if (this.security && this.security.addOptions) {
       this.security.addOptions(options);
     }

@@ -64,6 +64,7 @@ export interface ISecurity {
   addOptions?(options: any): void;
   toXML?(): string;
   addHeaders?(headers: IHeaders): void;
+  addHeadersAsync?(headers: IHeaders): Promise<void>;
   postProcess?(xml, envelopeKey): string;
 }
 
