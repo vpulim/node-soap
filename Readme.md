@@ -929,6 +929,18 @@ The `options` object is optional and can contain the following properties:
   * `existingPrefixes`: (optional) A hash of prefixes and namespaces prefix: namespace that shouldn't be in the signature because they already exist in the xml (default: `{ 'wsse': 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd' }`)
   * `prefix`: (optional) Adds this value as a prefix for the generated signature tags.
   * `attrs`: (optional) A hash of attributes and values attrName: value to add to the signature root node
+  * `idMode`: (optional) either 'wssecurity' to generate wsse-scoped reference Id on <Body> or undefined for an unscoped reference Id
+
+### WSSecurityPlusCert
+
+Use WSSecurity and WSSecurityCert together.
+
+``` javascript
+  var wsSecurity = new soap.WSSecurity(/* see WSSecurity above */);
+  var wsSecurityCert = new soap.WSSecurityCert(/* see WSSecurityCert above */);
+  var wsSecurityPlusCert = new soap.WSSecurityPlusCert(wsSecurity, wsSecurityCert);
+  client.setSecurity(wsSecurityPlusCert);
+```
 
 #### Option examples
 
