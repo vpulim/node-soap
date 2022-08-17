@@ -1399,7 +1399,12 @@ export function open_wsdl(uri: any, p2: WSDLCallback | IOptions, p3?: WSDLCallba
   const request_options = options.wsdl_options;
 
   let wsdl: WSDL;
-  if (!/^https?:/i.test(uri)) {
+  if (/^\<\?xml[^>]*?>/i.test(uri)) {
+    wsdl = new WSDL(uri, uri, options);
+    WSDL_CACHE[uri] = wsdl;
+    wsdl.WSDL_CACHE = WSDL_CACHE;
+    wsdl.onReady(callback);
+  } else if (!/^https?:/i.test(uri)) {
     debug('Reading file: %s', uri);
     fs.readFile(uri, 'utf8', (err, definition) => {
       if (err) {
