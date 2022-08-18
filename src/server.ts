@@ -296,7 +296,7 @@ export class Server extends EventEmitter {
   private _process(input, req: Request, res: Response, cb: (result: any, statusCode?: number) => any) {
     const pathname = url.parse(req.url).pathname.replace(/\/$/, '');
     const obj = this.wsdl.xmlToObject(input);
-    const body = obj.Body;
+    const body = obj.Body ? obj.Body : obj;
     const headers = obj.Header;
     let binding: BindingElement;
     let methodName: string;
