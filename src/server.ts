@@ -369,7 +369,7 @@ export class Server extends EventEmitter {
             try {
                 const soapAction = this._getSoapAction(req);
                 const messageElemName = (Object.keys(body)[0] === 'attributes' ? Object.keys(body)[1] : Object.keys(body)[0]);
-                const pair = binding.topElements[messageElemName];
+                const pair = binding.topElements[messageElemName] ? binding.topElements[messageElemName]: binding.topElements[soapAction];
                 if (soapAction) {
                     methodName = this._getMethodNameBySoapActionSuffix(binding, soapAction);
                 } else {
