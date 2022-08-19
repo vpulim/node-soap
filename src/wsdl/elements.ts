@@ -589,7 +589,7 @@ export class MessageElement extends Element {
       const nsName = splitQName(part.$element);
       const ns = nsName.prefix;
       let schema = definitions.schemas[definitions.xmlns[ns]];
-      this.element = schema.elements[nsName.name];
+      if(schema) this.element = schema.elements[nsName.name];
       if (!this.element) {
         debug(nsName.name + ' is not present in wsdl and cannot be processed correctly.');
         return;
