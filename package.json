@@ -50,7 +50,7 @@
   "devDependencies": {
     "@types/axios": "^0.14.0",
     "@types/debug": "^4.1.7",
-    "@types/express": "^4.17.13",
+    "@types/express": "^4.17.14",
     "@types/formidable": "^2.0.4",
     "@types/lodash": "^4.14.172",
     "@types/node": "^11.15.54",
