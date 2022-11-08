@@ -1,0 +1,30 @@
+name: Pull Request
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  unit-test:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GH_ADMIN_TOKEN }}
+      NPM_TOKEN: ${{ secrets.GH_ADMIN_TOKEN }}
+      NODE_AUTH_TOKEN: ${{ secrets.GH_ADMIN_TOKEN }}
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+          registry-url: https://npm.pkg.github.com
+          cache: yarn
+
+      - name: Install Dependencies
+        run: yarn install --no-progress --frozen-lockfile
+
+      - name: Lint
+        run: yarn lint
