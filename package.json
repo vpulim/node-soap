@@ -5,6 +5,9 @@
   "engines": {
     "node": ">10.0.0"
   },
+  "resolutions": {
+    "@xmldom/xmldom": "0.7.6"
+  },
   "dependencies": {
     "@types/request": "^2.48.4",
     "concat-stream": "^2.0.0",

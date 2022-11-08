@@ -407,6 +407,11 @@
     semver "^6.3.0"
     tsutils "^3.17.1"
 
+"@xmldom/xmldom@0.7.6", "@xmldom/xmldom@^0.7.0":
+  version "0.7.6"
+  resolved "https://registry.yarnpkg.com/@xmldom/xmldom/-/xmldom-0.7.6.tgz#6f55073fa73e65776bd85826958b98c8cd1457b5"
+  integrity sha512-HHXP9hskkFQHy8QxxUXkS7946FFIhYVfGqsk0WLwllmexN9x/+R4UBLvurHEuyXRfVEObVR8APuQehykLviwSQ==
+
 accepts@~1.3.7:
   version "1.3.7"
   resolved "https://registry.yarnpkg.com/accepts/-/accepts-1.3.7.tgz#531bc726517a3b2b41f850021c6cc15eaab507cd"
@@ -3889,22 +3894,17 @@ x-is-string@^0.1.0:
   integrity sha1-R0tQhlrzpJqcRlfwWs0UVFj3fYI=
 
 xml-crypto@^1.5.3:
-  version "1.5.3"
-  resolved "https://registry.yarnpkg.com/xml-crypto/-/xml-crypto-1.5.3.tgz#a8f500b90f0dfaf0efa3331c345ecb0fff993c34"
-  integrity sha512-uHkmpUtX15xExe5iimPmakAZN+6CqIvjmaJTy4FwqGzaTjrKRBNeqMh8zGEzVNgW0dk6beFYpyQSgqV/J6C5xA==
+  version "1.5.6"
+  resolved "https://registry.yarnpkg.com/xml-crypto/-/xml-crypto-1.5.6.tgz#e8122f0fe8489d7f444a32a45388798684aa7315"
+  integrity sha512-LCLvc59uItSD3QZprq+XaJWXb0umi3g8Ks3pZis1qZ9OYzQuHb4U//u5+vHr4gjn2KFAAAzFlja6OnS2LG/gRw==
   dependencies:
-    xmldom "0.1.27"
-    xpath "0.0.27"
+    "@xmldom/xmldom" "^0.7.0"
+    xpath "0.0.32"
 
-xmldom@0.1.27:
-  version "0.1.27"
-  resolved "https://registry.yarnpkg.com/xmldom/-/xmldom-0.1.27.tgz#d501f97b3bdb403af8ef9ecc20573187aadac0e9"
-  integrity sha1-1QH5ezvbQDr4757MIFcxh6rawOk=
-
-xpath@0.0.27:
-  version "0.0.27"
-  resolved "https://registry.yarnpkg.com/xpath/-/xpath-0.0.27.tgz#dd3421fbdcc5646ac32c48531b4d7e9d0c2cfa92"
-  integrity sha512-fg03WRxtkCV6ohClePNAECYsmpKKTv5L8y/X3Dn1hQrec3POx2jHZ/0P2qQ6HvsrU1BmeqXcof3NGGueG6LxwQ==
+xpath@0.0.32:
+  version "0.0.32"
+  resolved "https://registry.yarnpkg.com/xpath/-/xpath-0.0.32.tgz#1b73d3351af736e17ec078d6da4b8175405c48af"
+  integrity sha512-rxMJhSIoiO8vXcWvSifKqhvV96GjiD5wYb8/QHdoRyQvraTpp4IEv944nhGausZZ3u7dhQXteZuZbaqfpB7uYw==
 
 xtend@^4.0.0, xtend@^4.0.1:
   version "4.0.2"
