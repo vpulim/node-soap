@@ -1,5 +1,5 @@
 
-import * as req from 'axios';
+import {AxiosPromise, AxiosInstance} from 'axios';
 import { ReadStream } from 'fs';
 
 export interface IHeaders {
@@ -11,8 +11,8 @@ export interface IExOptions {
 }
 
 export interface IHttpClient {
-  request(rurl: string, data: any, callback: (error: any, res?: any, body?: any) => any, exheaders?: IHeaders, exoptions?: IExOptions, caller?): req.AxiosPromise;
-  requestStream?(rurl: string, data: any, exheaders?: IHeaders, exoptions?: IExOptions, caller?): req.AxiosPromise<ReadStream>;
+  request(rurl: string, data: any, callback: (error: any, res?: any, body?: any) => any, exheaders?: IHeaders, exoptions?: IExOptions, caller?): AxiosPromise;
+  requestStream?(rurl: string, data: any, exheaders?: IHeaders, exoptions?: IExOptions, caller?): AxiosPromise<ReadStream>;
 }
 
 /** @deprecated use SoapMethod */
@@ -124,7 +124,7 @@ export interface IOptions extends IWsdlBaseOptions {
   /** provide your own http client that implements request(rurl, data, callback, exheaders, exoptions) */
   httpClient?: IHttpClient;
   /** override the request module. */
-  request?: req.AxiosInstance;
+  request?: AxiosInstance;
   stream?: boolean;
   // allows returning the underlying saxStream that parse the SOAP XML response
   returnSaxStream?: boolean;
