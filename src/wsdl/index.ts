@@ -232,7 +232,7 @@ export class WSDL {
       const obj = {};
       const originalName = name;
 
-      if (!objectName && top.name === 'Body' && name !== 'Fault') {
+      if (!objectName && xmlns.soap && top.name === 'Body' && name !== 'Fault') {
         let message = this.definitions.messages[name];
         // Support RPC/literal messages where response body contains one element named
         // after the operation + 'Response'. See http://www.w3.org/TR/wsdl#_names
