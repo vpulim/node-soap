@@ -1,3 +1,10 @@
+1.0.0 / 2022-12-09
+===================
+* [ENHANCEMENT] allow soap.createClient to create a new SOAP client from a WSDL string (#1191)
+* [FIX] Bump xml-crypto (#1200)
+* [FIX] Upgrade to Formidable 3, Node 14, and audit fix (#1192)
+* [FIX] Allow WSSecurity and WSSecurityCert to be used together (#1195)
+
 0.45.0 / 2022-06-15
 ===================
 * [FIX] axios peer dependency version (#1188)
