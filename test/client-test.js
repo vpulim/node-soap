@@ -1610,7 +1610,7 @@ it('should create async client without options', function (done) {
   });
 });
 
-it('should add namespace to array of objects', function (done) {
+xit('should add namespace to array of objects', function (done) {
   soap.createClientAsync(__dirname + '/wsdl/PurchaseRequestService.wsdl').then(function (client) {
     const input = {
       errorProcessingLevel: "ALL",

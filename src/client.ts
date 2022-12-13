@@ -443,7 +443,6 @@ export class Client extends EventEmitter {
       ) +
       '<' + envelopeKey + ':Body' +
       (this.bodyAttributes ? this.bodyAttributes.join(' ') : '') +
-      (this.security && this.security.postProcess ? ' Id="_0"' : '') +
       '>' +
       message +
       '</' + envelopeKey + ':Body>' +
