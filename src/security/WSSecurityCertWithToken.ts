@@ -40,8 +40,6 @@ function resolvePlaceholderInReferences(references: any[], bodyXpath: string) {
 const oasisBaseUri = 'http://docs.oasis-open.org/wss/2004/01';
 const bodyXpathPlaceholder = '[[bodyXpath]]';
 
-
-
 export class WSSecurityCertWithToken implements ISecurity {
   private publicP12PEM: string;
   private signer: any;
@@ -55,7 +53,7 @@ export class WSSecurityCertWithToken implements ISecurity {
   private username: string;
   private password: string;
 
-  constructor(props: {privateKey: Buffer, publicKey: string, keyPassword?: string, username: string, password: string, options?: IWSSecurityCertOptions}) {
+  constructor(props: { privateKey: Buffer, publicKey: string, keyPassword?: string, username: string, password: string, options?: IWSSecurityCertOptions }) {
     this.publicP12PEM = props.publicKey.toString()
       .replace('-----BEGIN CERTIFICATE-----', '')
       .replace('-----END CERTIFICATE-----', '')
@@ -64,7 +62,7 @@ export class WSSecurityCertWithToken implements ISecurity {
     this.password = props.password;
 
     this.signer = new SignedXml();
-    const opts = props.options || {}
+    const opts = props.options || {};
     if (opts.signatureAlgorithm === 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256') {
       this.signer.signatureAlgorithm = opts.signatureAlgorithm;
       this.signer.addReference(
@@ -96,7 +94,7 @@ export class WSSecurityCertWithToken implements ISecurity {
       passphrase: props.keyPassword,
     };
     this.x509Id = `x509-${generateId()}`;
-    this.hasTimeStamp = typeof opts.hasTimeStamp === 'undefined' ? true : !! opts.hasTimeStamp;
+    this.hasTimeStamp = typeof opts.hasTimeStamp === 'undefined' ? true : !!opts.hasTimeStamp;
     this.signatureTransformations = Array.isArray(opts.signatureTransformations) ? opts.signatureTransformations
       : ['http://www.w3.org/2000/09/xmldsig#enveloped-signature', 'http://www.w3.org/2001/10/xml-exc-c14n#'];
 
@@ -120,12 +118,12 @@ export class WSSecurityCertWithToken implements ISecurity {
         `<Expires>${this.expires}</Expires>` +
         `</Timestamp>`;
     }
-    let usernameToken = ''
-    if(this.username ) {
-      usernameToken = `<wsse:UsernameToken wsu:Id="SecurityToken-${this.created}" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">` + 
-      `<wsse:Username>${this.username}</wsse:Username> ` + 
-      `<wsse:Password>${this.password}</wsse:Password> ` +
-      `</wsse:UsernameToken>`
+    let usernameToken = '';
+    if (this.username) {
+      usernameToken = `<wsse:UsernameToken wsu:Id="SecurityToken-${this.created}" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">` +
+        `<wsse:Username>${this.username}</wsse:Username> ` +
+        `<wsse:Password>${this.password}</wsse:Password> ` +
+        `</wsse:UsernameToken>`;
     }
     const secHeader =
       `<wsse:Security xmlns:wsse="${oasisBaseUri}/oasis-200401-wss-wssecurity-secext-1.0.xsd" ` +
