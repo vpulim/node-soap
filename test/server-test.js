@@ -340,9 +340,14 @@ describe('SOAP Server', function () {
     soap.createClient(test.baseUrl + '/stockquote?wsdl', function (err, client) {
       assert.ifError(err);
       client.IsValidPrice({ price: 50000 }, function (err, result) {
-        // node V3.x+ reports addresses as IPV6
-        var addressParts = lastReqAddress.split(':');
-        assert.equal(addressParts[(addressParts.length - 1)], '127.0.0.1');
+        // One of these should match, depending on the network configuration
+        // of the host
+        var localhostAddresses = [
+          '127.0.0.1',
+          '::ffff:127.0.0.1',
+          '::1'
+        ];
+        assert.notEqual(localhostAddresses.indexOf(lastReqAddress), -1);
         done();
       });
     });
