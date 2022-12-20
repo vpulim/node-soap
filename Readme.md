@@ -228,6 +228,7 @@ Note: for versions of node >0.10.X, you may need to specify `{connection: 'keep-
   - `crl` (*string* | *string[]*: PEM encoded CRLs (Certificate Revocation List)
   - `ciphers` (*string*): A description of the ciphers to use or exclude, separated by `:`. The default cipher suite is:
   - `enableChunkedEncoding` (*boolean*): Controls chunked transfer encoding in response. Some clients (such as Windows 10's MDM enrollment SOAP client) are sensitive to transfer-encoding mode and can't accept chunked response. This option lets users disable chunked transfer encoding for such clients. (**Default:** `true`)
+  - `envelopeKey` (*string*): Set a custom envelope key. (**Default:** `'soap'`)
 - `services` (*Object*)
 - `wsdl` (*string*): An XML string that defines the service.
 - `callback` (*Function*): A function to run after the server has been initialized.
