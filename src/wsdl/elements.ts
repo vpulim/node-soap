@@ -285,6 +285,8 @@ export class ElementElement extends Element {
         }
       }
     }
+    element['$minOccurs'] = minOccurs;
+    element['$maxOccurs'] = maxOccurs;
     return element;
   }
 }
