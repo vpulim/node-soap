@@ -391,7 +391,7 @@ export class RestrictionElement extends Element {
     // then simple element
     const base = this.$base ? this.$base + '|' : '';
     const restrictions = this.children.map((child) => {
-      return child.description();
+      return child.description() + '=' + child[child['valueKey']];
     }).join(',');
 
     return [this.$base, restrictions].filter(Boolean).join('|');
