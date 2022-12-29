@@ -281,10 +281,15 @@ export class ElementElement extends Element {
       element[name] = {};
       for (const child of children) {
         if (child instanceof ComplexTypeElement || child instanceof SimpleTypeElement) {
-          element[name] = child.description(definitions, xmlns);
+          let childDesc = child.description(definitions, xmlns);
+          if (child instanceof SimpleTypeElement) {
+            childDesc = [childDesc, 'minOccurs=' + minOccurs, 'maxOccurs=' + maxOccurs].join(',');
+          }
+          element[name] = childDesc;
         }
       }
     }
+
     element['$minOccurs'] = minOccurs;
     element['$maxOccurs'] = maxOccurs;
     return element;
