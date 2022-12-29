@@ -480,6 +480,7 @@ export class ComplexTypeElement extends Element {
     'complexContent',
     'sequence',
     'simpleContent',
+    'simpleType',
   ]);
   public description(definitions: DefinitionsElement, xmlns: IXmlNs) {
     const children = this.children || [];
@@ -491,15 +492,10 @@ export class ComplexTypeElement extends Element {
     for (const child of children) {
       if (child instanceof AttributeElement) {
         hasAttributes = true;
-        // TODO: Handle simpleType in attribute
-        let childType = 'string';
-        if (child.$type !== undefined) {
-          childType = child.$type;
-        }
 
         const childName = child.$name ? child.$name : child.$ref;
         if (childName !== undefined) {
-          $attributes[childName] = childType;
+          $attributes[childName] = child.description(definitions);
         }
         continue;
       }
@@ -1177,9 +1173,37 @@ export class ImportElement extends Element {
 }
 
 export class AttributeElement extends Element {
+  public readonly allowedChildren = buildAllowedChildren([
+    'simpleType',
+  ]);
+
   public $type?: string;
   public $ref?: string;
   public $use?: string;
+
+  public description(definitions: DefinitionsElement) {
+    // Assume an AttributeElement can only have 1 or 0 children. If there is more than that, throw a warning.
+    if (this.children.length > 1) {
+      console.warn(`AttributeElement (${this.$name}) has more than 1 child. This is not expected.`);
+    }
+
+    // Assume the first one will be a hit and that it is always a SimpleTypeElement
+    for (const child of this.children) {
+      if (child instanceof SimpleTypeElement) {
+        return child.description(definitions);
+      } else {
+        console.warn(`AttributeElement (${this.$name}) has a child that is not a SimpleTypeElement. This is not expected.`);
+        console.warn(this);
+      }
+    }
+
+    // Return the type if it exists, else default to string
+    if (this.$type !== undefined) {
+      return this.$type;
+    } else {
+      return 'string';
+    }
+  }
 }
 
 const ElementTypeMap: {
