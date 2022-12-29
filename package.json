@@ -1,6 +1,6 @@
 {
   "name": "@nguyendon/soap",
-  "version": "0.45.1",
+  "version": "0.45.2",
   "description": "A minimal node SOAP client",
   "engines": {
     "node": ">=14.0.0"
@@ -24,7 +24,7 @@
     "url": "https://github.com/nguyendon/node-soap.git"
   },
   "publishConfig": {
-    "registry":"https://npm.pkg.github.com"
+    "registry": "https://npm.pkg.github.com"
   },
   "main": "./index.js",
   "types": "./lib/soap.d.ts",
