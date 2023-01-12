@@ -99,7 +99,7 @@ export class HttpClient implements IHttpClient {
         }
       }
       const boundary = uuidv4();
-      headers['Content-Type'] = 'multipart/related; type="application/xop+xml"; start="<' + start + '>"; type="text/xml"; boundary=' + boundary;
+      headers['Content-Type'] = 'multipart/related; type="application/xop+xml"; start="<' + start + '>"; start-info="text/xml"; boundary=' + boundary;
       if (action) {
         headers['Content-Type'] = headers['Content-Type'] + '; ' + action;
       }
