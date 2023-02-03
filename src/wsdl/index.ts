@@ -356,7 +356,9 @@ export class WSDL {
       const name = splitQName(nsName).name;
 
       if (typeof cur.schema === 'string' && (cur.schema === 'string' || cur.schema.split(':')[1] === 'string')) {
-        if (typeof obj === 'object' && Object.keys(obj).length === 0) { obj = cur.object = ''; }
+        if (typeof obj === 'object' && Object.keys(obj).length === 0) {
+          obj = cur.object = (this.options.preserveWhitespace ? cur.text || '' : '');
+        }
       }
 
       if (cur.nil === true) {
@@ -423,13 +425,17 @@ export class WSDL {
     };
 
     p.ontext = (text) => {
+      const top = stack[stack.length - 1];
+
       const originalText = text;
       text = trim(text);
       if (!text.length) {
+        if (this.options.preserveWhitespace) {
+          top.text = (top.text || '') + originalText;
+        }
         return;
       }
 
-      const top = stack[stack.length - 1];
       const name = splitQName(top.schema).name;
       let value;
 
