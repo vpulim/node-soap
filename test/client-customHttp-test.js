@@ -94,9 +94,9 @@ it('should allow customization of httpClient and the wsdl file download should p
       });
     }
     //Now write the response with the wsdl
-    var state = httpResStream.write('HTTP/1.1 200 OK\r\nContent-Type: text/xml; charset=utf-8\r\nContent-Length: 1904\r\n\r\n'+wsdl);
+    var state = httpResStream.write('HTTP/1.1 200 OK\r\nContent-Type: text/xml; charset=utf-8\r\nContent-Length: '+wsdl.length+'\r\n\r\n'+wsdl);
   });
-
+  
   var httpCustomClient = new MyHttpClient({}, socketStream);
   var url = 'http://localhost:50000/Platform.asmx?wsdl';
   soap.createClient(url,

@@ -60,8 +60,8 @@ it('should allow customization of httpClient, the wsdl file, and associated data
   };
 
   var httpCustomClient = new MyHttpClient({},
-    createSocketStream(__dirname + '/wsdl/xsdinclude/xsd_include_http.wsdl', 2708),
-    createSocketStream(__dirname + '/wsdl/xsdinclude/types.xsd', 982)
+    createSocketStream(__dirname + '/wsdl/xsdinclude/xsd_include_http.wsdl'),
+    createSocketStream(__dirname + '/wsdl/xsdinclude/types.xsd')
   );
   var url = 'http://localhost:50000/Dummy.asmx?wsdl';
   soap.createClient(url,
