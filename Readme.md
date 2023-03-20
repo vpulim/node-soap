@@ -915,6 +915,7 @@ WS-Security X509 Certificate support.
         existingPrefixes: {
             wsse: 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd',
         }
+     }
   }
   var wsSecurity = new soap.WSSecurityCert(privateKey, publicKey, password, options);
   client.setSecurity(wsSecurity);
