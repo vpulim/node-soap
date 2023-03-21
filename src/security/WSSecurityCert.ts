@@ -158,7 +158,7 @@ export class WSSecurityCert implements ISecurity {
     } else {
       const secHeader =
         `<wsse:Security ${secExt} ` +
-        secUtility +
+        `${secUtility} ` +
         `${envelopeKey}:mustUnderstand="1">` +
         binarySecurityToken +
         `</wsse:Security>`;
