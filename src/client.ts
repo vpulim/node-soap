@@ -7,7 +7,7 @@ import * as assert from 'assert';
 import * as debugBuilder from 'debug';
 import { EventEmitter } from 'events';
 import getStream = require('get-stream');
-import { IncomingHttpHeaders } from 'http';
+import { AxiosResponseHeaders, RawAxiosResponseHeaders } from 'axios';
 import * as _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { HttpClient } from './http';
@@ -51,7 +51,7 @@ export class Client extends EventEmitter {
   public lastEndpoint?: string;
   public lastRequestHeaders?: any;
   public lastResponse?: any;
-  public lastResponseHeaders?: IncomingHttpHeaders;
+  public lastResponseHeaders?: AxiosResponseHeaders | RawAxiosResponseHeaders;
   public lastElapsedTime?: number;
   public lastResponseAttachments: IMTOMAttachments;
 

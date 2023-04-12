@@ -39,7 +39,7 @@ export class HttpClient implements IHttpClient {
   constructor(options?: IOptions) {
     options = options || {};
     this.options = options;
-    this._request = options.request || req.default.create();
+    this._request = options.request || req.create();
   }
 
   /**
