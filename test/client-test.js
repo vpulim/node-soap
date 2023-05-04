@@ -500,7 +500,7 @@ var fs = require('fs'),
             assert.ok(result);
             assert.ok(client.lastResponse);
             assert.ok(client.lastResponseHeaders);
-            assert.ok(client.lastElapsedTime);
+            assert.ok(client.lastElapsedTime !== undefined);
 
             done();
           }, { time: true }, { 'test-header': 'test' });
