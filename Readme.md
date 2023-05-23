@@ -623,7 +623,17 @@ You must specify all of the namespaces and namespace prefixes yourself.  The ele
 ``` javascript
   client.MyService.MyPort.MyFunction({name: 'value'}, function(err, result) {
       // client.lastElapsedTime - the elapsed time of the last request in milliseconds
-  }, {proxy: 'http://localhost:8888'})
+  }, {
+      proxy: {
+          protocol: 'https',
+          host: '127.0.0.1',
+          port: 9000,
+          auth: {
+              username: 'mikeymike',
+              password: 'rapunz3l'
+          }
+      }
+  })
 ```
 
 - You can modify xml (string) before call:
