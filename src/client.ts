@@ -503,7 +503,9 @@ export class Client extends EventEmitter {
       this.httpClient.requestStream(location, xml, headers, options, this).then((res) => {
         this.lastRequestHeaders = res.headers;
         if (res.data.on) {
-          res.data.on('error', (err) => onError(err));
+          res.data.on('error', (err) => {
+            onError(err);
+          });
         }
         // When the output element cannot be looked up in the wsdl,
         // play it safe and don't stream

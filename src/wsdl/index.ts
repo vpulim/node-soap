@@ -569,7 +569,21 @@ export class WSDL {
     const args = {};
     args[name] = params;
     const parameterTypeObj = type ? this.findSchemaObject(nsURI, type) : null;
-    return this.objectToXML(args, null, nsPrefix, nsURI, true, null, parameterTypeObj);
+    if (nsURI === 'http://www.symxchange.generated.symitar.com/filemanagement') {
+      return this.objectToXML(args,
+                              null,
+                              nsPrefix,
+                              nsURI,
+                              true,
+                              null,
+                              parameterTypeObj,
+                              undefined,
+                              {
+                                'FileName': 'filemanagementdto:FileName'
+                              });
+    } else {
+      return this.objectToXML(args, null, nsPrefix, nsURI, true, null, parameterTypeObj);
+    }
   }
 
   /**
@@ -637,7 +651,7 @@ export class WSDL {
    * @param {?} parameterTypeObject
    * @param {NamespaceContext} nsContext Namespace context
    */
-  public objectToXML(obj, name: string, nsPrefix: any, nsURI: string, isFirst?: boolean, xmlnsAttr?, schemaObject?, nsContext?: NamespaceContext) {
+  public objectToXML(obj, name: string, nsPrefix: any, nsURI: string, isFirst?: boolean, xmlnsAttr?, schemaObject?, nsContext?: NamespaceContext, hackNamespace?: object) {
     const schema = this.definitions.schemas[nsURI];
 
     let parentNsPrefix = nsPrefix ? nsPrefix.parent : undefined;
@@ -712,7 +726,7 @@ export class WSDL {
         const arrayAttr = this.processAttributes(item, nsContext);
         const correctOuterNsPrefix = nonSubNameSpace || parentNsPrefix || ns; // using the parent namespace prefix if given
 
-        const body = this.objectToXML(item, name, nsPrefix, nsURI, false, null, schemaObject, nsContext);
+        const body = this.objectToXML(item, name, nsPrefix, nsURI, false, null, schemaObject, nsContext, hackNamespace);
 
         let openingTagParts = ['<', name, arrayAttr, xmlnsAttrib];
         if (!emptyNonSubNameSpaceForArray) {
@@ -782,7 +796,7 @@ export class WSDL {
         }
 
         if (isFirst) {
-          value = this.objectToXML(child, name, nsPrefix, nsURI, false, null, schemaObject, nsContext);
+          value = this.objectToXML(child, name, nsPrefix, nsURI, false, null, schemaObject, nsContext, hackNamespace);
         } else {
 
           if (this.definitions.schemas) {
@@ -888,7 +902,7 @@ export class WSDL {
                 }
 
                 value = this.objectToXML(child, name, childNsPrefix, childNsURI,
-                  false, childXmlnsAttrib, resolvedChildSchemaObject, nsContext);
+                  false, childXmlnsAttrib, resolvedChildSchemaObject, nsContext, hackNamespace);
               } else if (obj[this.options.attributesKey] && obj[this.options.attributesKey].xsi_type) {
                 // if parent object has complex type defined and child not found in parent
                 const completeChildParamTypeObject = this.findChildSchemaObject(
@@ -899,7 +913,7 @@ export class WSDL {
                 nsContext.addNamespace(obj[this.options.attributesKey].xsi_type.prefix,
                   obj[this.options.attributesKey].xsi_type.xmlns);
                 value = this.objectToXML(child, name, obj[this.options.attributesKey].xsi_type.prefix,
-                  obj[this.options.attributesKey].xsi_type.xmlns, false, null, null, nsContext);
+                  obj[this.options.attributesKey].xsi_type.xmlns, false, null, null, nsContext, hackNamespace);
               } else {
                 if (Array.isArray(child)) {
                   if (emptyNonSubNameSpace) {
@@ -909,10 +923,10 @@ export class WSDL {
                   }
                 }
 
-                value = this.objectToXML(child, name, nsPrefix, nsURI, false, null, null, nsContext);
+                value = this.objectToXML(child, name, nsPrefix, nsURI, false, null, null, nsContext, hackNamespace);
               }
             } else {
-              value = this.objectToXML(child, name, nsPrefix, nsURI, false, null, null, nsContext);
+              value = this.objectToXML(child, name, nsPrefix, nsURI, false, null, null, nsContext, hackNamespace);
             }
           }
         }
@@ -925,6 +939,9 @@ export class WSDL {
         }
 
         const useEmptyTag = !value && this.options.useEmptyTag;
+        if (hackNamespace && hackNamespace[name]) {
+          name = hackNamespace[name];
+        }
         if (!Array.isArray(child)) {
           // start tag
           parts.push(['<', emptyNonSubNameSpace ? '' : appendColon(nonSubNameSpace || ns), name, attr, xmlnsAttrib,
