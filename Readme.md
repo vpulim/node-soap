@@ -8,16 +8,14 @@ This module lets you connect to web services using SOAP.  It also provides a ser
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-
 - [Features:](#features)
 - [Install](#install)
-- [Why can't I file an issue?](#why-cant-i-file-an-issue)
-- [Where can I find help?](#where-can-i-find-help)
+- [Support](#support)
 - [Module](#module)
   - [soap.createClient(url[, options], callback) - create a new SOAP client from a WSDL url. Also supports a local filesystem path.](#soapcreateclienturl-options-callback---create-a-new-soap-client-from-a-wsdl-url-also-supports-a-local-filesystem-path)
   - [soap.createClientAsync(url[, options]) - create a new SOAP client from a WSDL url. Also supports a local filesystem path.](#soapcreateclientasyncurl-options---create-a-new-soap-client-from-a-wsdl-url-also-supports-a-local-filesystem-path)
   - [soap.listen(*server*, *path*, *services*, *wsdl*, *callback*) - create a new SOAP server that listens on *path* and provides *services*.](#soaplistenserver-path-services-wsdl-callback---create-a-new-soap-server-that-listens-on-path-and-provides-services)
-  - [Options](#options)
+  - [soap.listen(*server*, *options*) - create a new SOAP server that listens on *path* and provides *services*.](#soaplistenserver-options---create-a-new-soap-server-that-listens-on-path-and-provides-services)
   - [Server Logging](#server-logging)
   - [Server Events](#server-events)
   - [Server Response on one-way calls](#server-response-on-one-way-calls)
@@ -129,7 +127,7 @@ GitHub issues have been disabled to focus on pull requests. ([#731](https://gith
   var url = 'http://example.com/wsdl?wsdl';
   var args = {name: 'value'};
 
-  soap.createClient(url, function(err, client) {
+  soap.createClient(url, {}, function(err, client) {
       client.MyFunction(args, function(err, result) {
           console.log(result);
       });
@@ -163,7 +161,7 @@ Construct a `Promise<Client>` with the given WSDL file.
   // async/await
   var client = await soap.createClientAsync(url);
   var result = await client.MyFunctionAsync(args);
-  console.log(await result);
+  console.log(result[0]);
 ```
 
 Note: for versions of node >0.10.X, you may need to specify `{connection: 'keep-alive'}` in SOAP headers to avoid truncation of longer chunked responses.
@@ -931,6 +929,18 @@ The `options` object is optional and can contain the following properties:
   * `existingPrefixes`: (optional) A hash of prefixes and namespaces prefix: namespace that shouldn't be in the signature because they already exist in the xml (default: `{ 'wsse': 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd' }`)
   * `prefix`: (optional) Adds this value as a prefix for the generated signature tags.
   * `attrs`: (optional) A hash of attributes and values attrName: value to add to the signature root node
+  * `idMode`: (optional) either 'wssecurity' to generate wsse-scoped reference Id on <Body> or undefined for an unscoped reference Id
+
+### WSSecurityPlusCert
+
+Use WSSecurity and WSSecurityCert together.
+
+``` javascript
+  var wsSecurity = new soap.WSSecurity(/* see WSSecurity above */);
+  var wsSecurityCert = new soap.WSSecurityCert(/* see WSSecurityCert above */);
+  var wsSecurityPlusCert = new soap.WSSecurityPlusCert(wsSecurity, wsSecurityCert);
+  client.setSecurity(wsSecurityPlusCert);
+```
 
 #### Option examples
 

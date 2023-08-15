@@ -83,6 +83,25 @@ describe('WSSecurityCert', function () {
     xml.should.containEql(instance.signer.getSignatureXml());
   });
 
+  it('should extend an existing Security block', function () {
+    var instance = new WSSecurityCert(keyWithPassword, cert, 'soap');
+    var xml1 = instance.postProcess('<soap:Header><wsse:Security someAttribute="someValue"></wsse:Security></soap:Header><soap:Body></soap:Body>', 'soap');
+    var matches1 = xml1.match(/<wsse:Security [^>]*>/);
+    matches1[0].should.containEql('soap:mustUnderstand="1"');
+    matches1[0].should.containEql('someAttribute="someValue"');
+    matches1[0].should.containEql('http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd');
+    matches1[0].should.containEql('http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd');
+
+    var xml2 = instance.postProcess('<soap:Header><wsse:Security xmlns:wsu="wsu" xmlns:wsse="wsse" soap:mustUnderstand="true" someAttribute="someValue"></wsse:Security></soap:Header><soap:Body></soap:Body>', 'soap');
+    var matches2 = xml2.match(/<wsse:Security [^>]*>/);
+    matches2[0].should.not.containEql('soap:mustUnderstand="1"');
+    matches2[0].should.containEql('soap:mustUnderstand="true"');
+    matches2[0].should.not.containEql('http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd');
+    matches2[0].should.containEql('xmlns:wsse="wsse"');
+    matches2[0].should.not.containEql('http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd');
+    matches2[0].should.containEql('xmlns:wsu="wsu"');
+  });
+
   it('should only add two Reference elements, for Soap Body and Timestamp inside wsse:Security element', function () {
     var instance = new WSSecurityCert(key, cert, '');
     var xml = instance.postProcess('<soap:Header></soap:Header><soap:Body><Body></Body><Timestamp></Timestamp></soap:Body>', 'soap');

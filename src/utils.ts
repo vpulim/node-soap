@@ -1,6 +1,5 @@
 
 import * as crypto from 'crypto';
-import { MultipartParser } from 'formidable/lib/multipart_parser.js';
 import { IMTOMAttachments } from './types';
 
 export function passwordDigest(nonce: string, created: string, password: string): string {
@@ -67,50 +66,50 @@ export function xmlEscape(obj) {
   return obj;
 }
 
-export function parseMTOMResp(payload: Buffer, boundary: string): IMTOMAttachments {
-  const resp: IMTOMAttachments = {
-    parts: [],
-  };
-  let headerName = '';
-  let headerValue = '';
-  let data: Buffer;
-  let partIndex = 0;
-  const parser = new MultipartParser();
+export function parseMTOMResp(payload: Buffer, boundary: string, callback: (err?: Error, resp?: IMTOMAttachments) => void) {
+  return import('formidable')
+    .then(({ MultipartParser }) => {
+      const resp: IMTOMAttachments = {
+        parts: [],
+      };
+      let headerName = '';
+      let headerValue = '';
+      let data: Buffer;
+      let partIndex = 0;
+      const parser = new MultipartParser();
 
-  parser.initWithBoundary(boundary);
-  parser.onPartBegin = () => {
-    resp.parts[partIndex] = {
-      body: null,
-      headers: {},
-    };
-    data = Buffer.from('');
-  };
+      parser.initWithBoundary(boundary);
+      parser.on('data', ({ name, buffer, start, end }) => {
+        switch (name) {
+          case 'partBegin':
+            resp.parts[partIndex] = {
+              body: null,
+              headers: {},
+            };
+            data = Buffer.from('');
+            break;
+          case 'headerField':
+            headerName = buffer.slice(start, end).toString();
+            break;
+          case 'headerValue':
+            headerValue = buffer.slice(start, end).toString();
+            break;
+          case 'headerEnd':
+            resp.parts[partIndex].headers[headerName.toLowerCase()] = headerValue;
+            break;
+          case 'partData':
+            data = Buffer.concat([data, buffer.slice(start, end)]);
+            break;
+          case 'partEnd':
+            resp.parts[partIndex].body = data;
+            partIndex++;
+            break;
+        }
+      });
 
-  parser.onHeaderField = (b: Buffer, start: number, end: number) => {
-    headerName = b.slice(start, end).toString();
-  };
+      parser.write(payload);
 
-  parser.onHeaderValue = (b: Buffer, start: number, end: number) => {
-    headerValue = b.slice(start, end).toString();
-  };
-
-  parser.onHeaderEnd = () => {
-    resp.parts[partIndex].headers[headerName.toLowerCase()] = headerValue;
-  };
-
-  parser.onHeadersEnd = () => {};
-
-  parser.onPartData = (b: Buffer, start: number, end: number) => {
-      data = Buffer.concat([data, b.slice(start, end)]);
-  };
-
-  parser.onPartEnd = () => {
-    resp.parts[partIndex].body = data;
-    partIndex++;
-  };
-
-  parser.onEnd = () => {};
-  parser.write(payload);
-
-  return resp;
+      return callback(null, resp);
+    })
+    .catch(callback);
 }

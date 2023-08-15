@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope
+  xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+  xmlns:app="http://app.com/app">
+  <soap:Body>
+    <app:addPrefixResponse>
+      <ResultCode>0</ResultCode>
+      <ResultDesc>test dest</ResultDesc>
+    </app:addPrefixResponse>
+  </soap:Body>
+</soap:Envelope>
