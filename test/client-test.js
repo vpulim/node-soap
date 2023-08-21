@@ -500,7 +500,8 @@ var fs = require('fs'),
             assert.ok(result);
             assert.ok(client.lastResponse);
             assert.ok(client.lastResponseHeaders);
-            assert.ok(client.lastElapsedTime);
+            assert.ok(typeof client.lastElapsedTime === 'number');
+            assert.ok(!Number.isNaN(client.lastElapsedTime))
 
             done();
           }, { time: true }, { 'test-header': 'test' });
@@ -1734,7 +1735,7 @@ describe('Client posting complex body', () => {
         return void done(err);
       }
       assert.ok(client);
-  
+
       var requestBody = {
         id: 'ID00000000000000000000000000000000',
         lastName: 'Doe',
@@ -1753,7 +1754,7 @@ describe('Client posting complex body', () => {
           companyName: 'ACME'
         }
       }
-  
+
       client.registerUser(requestBody, function (err, result) {
         assert.ok(client.lastRequest);
         assert.ok(client.lastMessage);
@@ -1762,7 +1763,7 @@ describe('Client posting complex body', () => {
         console.log(client.lastMessage);
         const expectedBody = '<registrationMessages:registerUserRequest xmlns:registrationMessages="http://test-soap.com/api/registration/messages" xmlns="http://test-soap.com/api/registration/messages"><registrationMessages:id>ID00000000000000000000000000000000</registrationMessages:id><registrationMessages:lastName>Doe</registrationMessages:lastName><registrationMessages:firstName>John</registrationMessages:firstName><registrationMessages:dateOfBirth>1970-01-01</registrationMessages:dateOfBirth><registrationMessages:correspondenceLanguage>ENG</registrationMessages:correspondenceLanguage><registrationMessages:emailAddress>jdoe@doe.com</registrationMessages:emailAddress><registrationMessages:lookupPermission>ALLOWED</registrationMessages:lookupPermission><registrationMessages:companyAddress><ct:address xmlns:ct="http://test-soap.com/api/common/types"><ct:streetName>Street</ct:streetName><ct:postalCode>Code</ct:postalCode><ct:city>City</ct:city><ct:countryCode>US</ct:countryCode></ct:address><ct:companyName xmlns:ct="http://test-soap.com/api/common/types">ACME</ct:companyName></registrationMessages:companyAddress></registrationMessages:registerUserRequest>';
         assert.strictEqual(client.lastMessage, expectedBody);
-  
+
         done();
       });
     }, baseUrl);
