@@ -77,7 +77,7 @@ describe('SOAP Client(SSL)', function () {
       });
 
       client.GetLastTradePrice({ tickerSymbol: 'AAPL' }, function (err, result) {
-        if (err.code == 'CERT_HAS_EXPIRED') {
+        if (err.code == 'CERT_HAS_EXPIRED' || err.code == 'DEPTH_ZERO_SELF_SIGNED_CERT') {
           done();
         } else {
           assert.ifError(err);

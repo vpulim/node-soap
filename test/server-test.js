@@ -95,19 +95,18 @@ describe('SOAP Server', function () {
   });
 
   beforeEach(function (done) {
-    test.server = http.createServer(function (req, res) {
+    const server = http.createServer(function (req, res) {
       res.statusCode = 404;
       res.end();
     });
-
-    test.server.listen(15099, null, null, function () {
-      var testSv = test.server.address();
-      test.soapServer = soap.listen(test.server, '/stockquote', test.service, test.wsdl);
-      test.baseUrl = `http://${testSv.address}:${testSv.port}`;
+    test.server = server.listen(15099, 'localhost', null, function () {
+      const listening = server.address();
+      test.soapServer = soap.listen(server, '/stockquote', test.service, test.wsdl);
+      test.baseUrl = `http://localhost:15099`;
 
       // windows return 0.0.0.0 as address and that is not valid to use in a request
-      if (testSv.address === '0.0.0.0' || testSv.address === '::') {
-        test.baseUrl = `http://127.0.0.1:${test.server.address().port}`;
+      if (listening.address === '0.0.0.0' || listening.address === '::') {
+        test.baseUrl = `http://localhost:${listening.port}`;
       }
 
       done();
@@ -340,9 +339,11 @@ describe('SOAP Server', function () {
     soap.createClient(test.baseUrl + '/stockquote?wsdl', function (err, client) {
       assert.ifError(err);
       client.IsValidPrice({ price: 50000 }, function (err, result) {
-        // node V3.x+ reports addresses as IPV6
-        var addressParts = lastReqAddress.split(':');
-        assert.equal(addressParts[(addressParts.length - 1)], '127.0.0.1');
+        // node > 16 uses the system priority for name resolution, and commonly
+        // resolves 'localhost' to an ipv6 address, so testing for localhost
+        // or 127.0.0.1 will not work reliably
+        const listening = test.server.address()
+        assert.ok(lastReqAddress.startsWith(listening.address))
         done();
       });
     });
