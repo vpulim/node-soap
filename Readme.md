@@ -290,6 +290,15 @@ If the `log` method is defined, it will be called with 'received' and 'replied' 
   };
 ```
 
+Optionally http request or response context access.
+
+``` javascript
+  server = soap.listen(...)
+  server.log = function(type, data, req, res) {
+    // req -> http.IncomingMessage, res -> http.ServerResponse
+  };
+```
+
 ### Server Events
 
 Server instances emit the following events:
