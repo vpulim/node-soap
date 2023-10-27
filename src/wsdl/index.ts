@@ -502,13 +502,18 @@ export class WSDL {
       if (root.Envelope) {
         const body = root.Envelope.Body;
         if (body && body.Fault) {
-          let code = body.Fault.faultcode && body.Fault.faultcode.$value;
-          let string = body.Fault.faultstring && body.Fault.faultstring.$value;
-          let detail = body.Fault.detail && body.Fault.detail.$value;
+          const fault = body.Fault;
+          let code = fault.faultcode && fault.faultcode.$value;
+          let string = fault.faultstring && fault.faultstring.$value;
+          let detail = fault.detail && fault.detail.$value;
 
-          code = code || body.Fault.faultcode;
-          string = string || body.Fault.faultstring;
-          detail = detail || body.Fault.detail;
+          code = code || fault.faultcode;
+          string = string || fault.faultstring;
+          detail = detail || fault.detail;
+          // SOAP 1.2
+          code = code || fault.Code && `${fault.Code.Value}: ${fault.Code.Subcode && fault.Code.Subcode.Value}`;
+          string = string || fault.Reason && fault.Reason.Text;
+          detail = detail || fault.Detail;
 
           const error: any = new Error(code + ': ' + string + (detail ? ': ' + JSON.stringify(detail) : ''));
 
