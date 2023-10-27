@@ -512,6 +512,7 @@ export class WSDL {
           detail = detail || fault.detail;
           // SOAP 1.2
           code = code || fault.Code && `${fault.Code.Value}: ${fault.Code.Subcode && fault.Code.Subcode.Value}`;
+          string = string || fault.Reason && fault.Reason.Text.$value;
           string = string || fault.Reason && fault.Reason.Text;
           detail = detail || fault.Detail;
 
