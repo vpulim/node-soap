@@ -214,7 +214,7 @@ describe('WSDL Parser (non-strict)', () => {
 
   it('should not parse connection error', (done) => {
     soap.createClient(__dirname+'/wsdl/connection/econnrefused.wsdl', function(err, client) {
-      assert.ok(/EADDRNOTAVAIL|ECONNREFUSED/.test(err), err);
+      assert.ok(/EADDRNOTAVAIL|ECONNREFUSED/.test(err.code), err);
       done();
     });
   });
