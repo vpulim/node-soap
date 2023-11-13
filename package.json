@@ -7,7 +7,7 @@
   },
   "author": "Vinay Pulim <v@pulim.com>",
   "dependencies": {
-    "axios-ntlm": "^1.4.1",
+    "axios-ntlm": "^1.4.2",
     "debug": "^4.3.2",
     "formidable": "^3.2.4",
     "get-stream": "^6.0.1",
@@ -19,7 +19,7 @@
     "xml-crypto": "^3.0.0"
   },
   "peerDependencies": {
-    "axios": "^1.5.0"
+    "axios": "^1.6.1"
   },
   "repository": {
     "type": "git",
