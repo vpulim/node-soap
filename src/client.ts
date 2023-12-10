@@ -4,8 +4,10 @@
  */
 
 import * as assert from 'assert';
+import * as req from 'axios';
 import * as debugBuilder from 'debug';
 import { EventEmitter } from 'events';
+import * as fs from 'fs';
 import getStream = require('get-stream');
 import { IncomingHttpHeaders } from 'http';
 import * as _ from 'lodash';
@@ -266,8 +268,8 @@ export class Client extends EventEmitter {
         options = temp;
       }
       this._invoke(method, args, location, (error, result, rawResponse, soapHeader, rawRequest, mtomAttachments) => {
-        callback(error, result, rawResponse, soapHeader, rawRequest, mtomAttachments);
-      }, options, extraHeaders);
+          callback(error, result, rawResponse, soapHeader, rawRequest, mtomAttachments);
+        }, options, extraHeaders);
     };
   }
 
@@ -417,12 +419,12 @@ export class Client extends EventEmitter {
     let decodedHeaders;
     if (this.soapHeaders) {
       decodedHeaders = this.soapHeaders.map((header) => {
-        if (typeof header === 'function') {
-          return header(method, location, soapAction, args);
-        } else {
-          return header;
-        }
-      }).join(' ');
+          if (typeof header === 'function') {
+            return header(method, location, soapAction, args);
+          } else {
+            return header;
+          }
+        }).join(' ');
     }
 
     xml = '<?xml version="1.0" encoding="utf-8"?>' +
@@ -500,79 +502,79 @@ export class Client extends EventEmitter {
         }
       };
 
-      this.httpClient.requestStream(location, xml, headers, options, this).then((res) => {
-        this.lastRequestHeaders = res.headers;
-        if (res.data.on) {
-          res.data.on('error', (err) => onError(err));
-        }
-        // When the output element cannot be looked up in the wsdl,
-        // play it safe and don't stream
-        if (res.status !== 200 || !output || !output.$lookupTypes) {
-          getStream(res.data).then((body) => {
-            this.lastResponse = body;
-            this.lastElapsedTime = Date.now() - startTime;
-            this.lastResponseHeaders = res && res.headers;
-            // Added mostly for testability, but possibly useful for debugging
-            this.lastRequestHeaders = res.config && res.config.headers || res.headers;
-            this.emit('response', body, res, eid);
+      this.httpClient.requestStream(location, xml, headers, options, this).then((res: req.AxiosResponse<fs.ReadStream>) => {
+          this.lastRequestHeaders = res.headers;
+          if (res.data.on) {
+            res.data.on('error', (err) => onError(err));
+          }
+          // When the output element cannot be looked up in the wsdl,
+          // play it safe and don't stream
+          if (res.status !== 200 || !output || !output.$lookupTypes) {
+            getStream(res.data).then((body) => {
+              this.lastResponse = body;
+              this.lastElapsedTime = Date.now() - startTime;
+              this.lastResponseHeaders = res && (res.headers as IncomingHttpHeaders);
+              // Added mostly for testability, but possibly useful for debugging
+              this.lastRequestHeaders = (res.config && res.config.headers) || res.headers;
+              this.emit('response', body, res, eid);
 
-            return parseSync(body, res);
-          });
-          return;
-        }
-        if (this.returnSaxStream) {
-          // directly return the saxStream allowing the end user to define
-          // the parsing logics and corresponding errors managements
-          const saxStream = this.wsdl.getSaxStream(res.data);
-          return finish({ saxStream }, '<stream>', res.data);
-        } else {
-          this.wsdl.xmlToObject(res.data, (error, obj) => {
-            this.lastResponse = res;
-            this.lastElapsedTime = Date.now() - startTime;
-            this.lastResponseHeaders = res && res.headers;
-            // Added mostly for testability, but possibly useful for debugging
-            this.lastRequestHeaders = res.config.headers;
-            this.emit('response', '<stream>', res.data, eid);
+              return parseSync(body, res);
+            });
+            return;
+          }
+          if (this.returnSaxStream) {
+            // directly return the saxStream allowing the end user to define
+            // the parsing logics and corresponding errors managements
+            const saxStream = this.wsdl.getSaxStream(res.data);
+            return finish({ saxStream }, '<stream>', res.data);
+          } else {
+            this.wsdl.xmlToObject(res.data, (error, obj) => {
+              this.lastResponse = res;
+              this.lastElapsedTime = Date.now() - startTime;
+              this.lastResponseHeaders = res && (res.headers as IncomingHttpHeaders);
+              // Added mostly for testability, but possibly useful for debugging
+              this.lastRequestHeaders = res.config.headers;
+              this.emit('response', '<stream>', res.data, eid);
 
-            if (error) {
-              error.response = res;
-              error.body = '<stream>';
-              this.emit('soapError', error, eid);
-              return callback(error, res, undefined, undefined, xml);
-            }
+              if (error) {
+                error.response = res;
+                error.body = '<stream>';
+                this.emit('soapError', error, eid);
+                return callback(error, res, undefined, undefined, xml);
+              }
 
-            return finish(obj, '<stream>', res);
-          });
-        }
-      }, onError);
+              return finish(obj, '<stream>', res);
+            });
+          }
+        }, onError);
       return;
     }
 
     const startTime = Date.now();
     return this.httpClient.request(location, xml, (err, response, body) => {
-      this.lastResponse = body;
-      if (response) {
-        this.lastResponseHeaders = response.headers;
-        this.lastElapsedTime = Date.now() - startTime;
-        this.lastResponseAttachments = response.mtomResponseAttachments;
-        // Added mostly for testability, but possibly useful for debugging
-        this.lastRequestHeaders = response.config && response.config.headers;
-      }
-      this.emit('response', body, response, eid);
-
-      if (err) {
-        this.lastRequestHeaders = err.config && err.config.headers;
-        try {
-          if (err.response && err.response.data) {
-            this.wsdl.xmlToObject(err.response.data);
-          }
-        } catch (error) {
-          err.root = error.root || error;
+        this.lastResponse = body;
+        if (response) {
+          this.lastResponseHeaders = response.headers;
+          this.lastElapsedTime = Date.now() - startTime;
+          this.lastResponseAttachments = response.mtomResponseAttachments;
+          // Added mostly for testability, but possibly useful for debugging
+          this.lastRequestHeaders = response.config && response.config.headers;
         }
-        callback(err, undefined, undefined, undefined, xml);
-      } else {
-        return parseSync(body, response);
-      }
+        this.emit('response', body, response, eid);
+
+        if (err) {
+          this.lastRequestHeaders = err.config && err.config.headers;
+          try {
+            if (err.response && err.response.data) {
+              this.wsdl.xmlToObject(err.response.data);
+            }
+          } catch (error) {
+            err.root = error.root || error;
+          }
+          callback(err, undefined, undefined, undefined, xml);
+        } else {
+          return parseSync(body, response);
+        }
 
     }, headers, options, this);
   }

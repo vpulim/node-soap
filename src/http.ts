@@ -39,7 +39,7 @@ export class HttpClient implements IHttpClient {
   constructor(options?: IOptions) {
     options = options || {};
     this.options = options;
-    this._request = options.request || req.default.create();
+    this._request = options.request || req.create();
   }
 
   /**
@@ -105,9 +105,9 @@ export class HttpClient implements IHttpClient {
       }
       const multipart: any[] = [{
         'Content-Type': 'application/xop+xml; charset=UTF-8; type="text/xml"',
-        'Content-ID': '<' + start + '>',
+          'Content-ID': '<' + start + '>',
         'body': data,
-      }];
+        }];
 
       attachments.forEach((attachment) => {
         multipart.push({
@@ -194,7 +194,7 @@ export class HttpClient implements IHttpClient {
         workstation: exoptions.workstation || '',
         domain: exoptions.domain || '',
       });
-      req = ntlmReq(options);
+      req = ntlmReq(options) as req.AxiosPromise;
     } else {
       if (this.options.parseReponseAttachments) {
         options.responseType = 'arraybuffer';
@@ -205,44 +205,44 @@ export class HttpClient implements IHttpClient {
     const _this = this;
     req.then((res) => {
 
-      const handleBody = (body?: string) => {
-        res.data = this.handleResponse(req, res, body || res.data);
-        callback(null, res, res.data);
-        return res;
-      };
+        const handleBody = (body?: string) => {
+          res.data = this.handleResponse(req, res, body || res.data);
+          callback(null, res, res.data);
+          return res;
+        };
 
-      if (_this.options.parseReponseAttachments) {
-        const isMultipartResp = res.headers['content-type'] && res.headers['content-type'].toLowerCase().indexOf('multipart/related') > -1;
-        if (isMultipartResp) {
-          let boundary;
-          const parsedContentType = MIMEType.parse(res.headers['content-type']);
-          if (parsedContentType) {
-            boundary = parsedContentType.parameters.get('boundary');
-          }
-          if (!boundary) {
-            return callback(new Error('Missing boundary from content-type'));
-          }
-          return parseMTOMResp(res.data, boundary, (err, multipartResponse) => {
-            if (err) {
-              return callback(err);
+        if (_this.options.parseReponseAttachments) {
+          const isMultipartResp = res.headers['content-type'] && res.headers['content-type'].toLowerCase().indexOf('multipart/related') > -1;
+          if (isMultipartResp) {
+            let boundary;
+            const parsedContentType = MIMEType.parse(res.headers['content-type']);
+            if (parsedContentType) {
+              boundary = parsedContentType.parameters.get('boundary');
             }
-              // first part is the soap response
-            const firstPart = multipartResponse.parts.shift();
-            if (!firstPart || !firstPart.body) {
-              return callback(new Error('Cannot parse multipart response'));
+            if (!boundary) {
+              return callback(new Error('Missing boundary from content-type'));
             }
-            (res as any).mtomResponseAttachments = multipartResponse;
-            return handleBody(firstPart.body.toString('utf8'));
-          });
+            return parseMTOMResp(res.data, boundary, (err, multipartResponse) => {
+                if (err) {
+                  return callback(err);
+                }
+                // first part is the soap response
+                const firstPart = multipartResponse.parts.shift();
+                if (!firstPart || !firstPart.body) {
+                  return callback(new Error('Cannot parse multipart response'));
+                }
+                (res as any).mtomResponseAttachments = multipartResponse;
+                return handleBody(firstPart.body.toString('utf8'));
+              });
+          } else {
+            return handleBody(res.data.toString('utf8'));
+          }
         } else {
-          return handleBody(res.data.toString('utf8'));
+          return handleBody();
         }
-      } else {
-        return handleBody();
-      }
-    }, (err) => {
-      return callback(err);
-    });
+      }, (err) => {
+        return callback(err);
+      });
     return req;
   }
 
