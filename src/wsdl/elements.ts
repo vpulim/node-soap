@@ -225,13 +225,22 @@ export class ElementElement extends Element {
     let type: any = this.$type || this.$ref;
     if (type) {
       type = splitQName(type);
+      const typeStorage = this.$type ? definitions.descriptions.types : definitions.descriptions.elements;
       const typeName: string = type.name;
+      if(typeName in typeStorage){// typeにtypeNameが入ってしまった場合の対応、本来はこのようなことが起きないように対処すべきかもしれない。
+        if (this.$ref) {
+          element = typeStorage[typeName];
+        }
+        else {
+            element[name] = typeStorage[typeName];
+        }
+        return element;
+      }
       const ns: string = xmlns && xmlns[type.prefix] ||
         ((definitions.xmlns[type.prefix] !== undefined || definitions.xmlns[this.targetNSAlias] !== undefined) && this.schemaXmlns[type.prefix]) ||
         definitions.xmlns[type.prefix];
       const schema = definitions.schemas[ns];
       const typeElement = schema && (this.$type ? schema.complexTypes[typeName] || schema.types[typeName] : schema.elements[typeName]);
-      const typeStorage = this.$type ? definitions.descriptions.types : definitions.descriptions.elements;
 
       if (ns && definitions.schemas[ns]) {
         xmlns = definitions.schemas[ns].xmlns;
