@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xmlns:ns1="http://ws.wso2.org/dataservice">
-    <soap:Header></soap:Header>
-    <soap:Body>
-        <ns0:getAppointmentNumber xmlns:ns0="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.w3.org/2001/XMLSchema-instance">
-            <ns0:id>353159</ns0:id>
-        </ns0:getAppointmentNumber>
-    </soap:Body>
-</soap:Envelope>

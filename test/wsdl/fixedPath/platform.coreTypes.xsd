@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:platformCoreTyp="urn:types.core_2019_1.platform.webservices.netsuite.com" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" targetNamespace="urn:types.core_2019_1.platform.webservices.netsuite.com" elementFormDefault="qualified" attributeFormDefault="unqualified">
-    <!-- Record Types -->
-    <simpleType name="RecordType">
-        <restriction base="xsd:string">          
-        </restriction>
-    </simpleType>
-</schema>

@@ -1,9 +1,0 @@
-<soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:examples:MTOMService">
-   <soapenv:Header/>
-   <soapenv:Body>
-      <urn:getAttachmentsResponse soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
-         <attachment1 xsi:type="xsd:base64Binary">cid:1186818862128</attachment1>
-         <attachment2 xsi:type="xsd:base64Binary">cid:536857424511</attachment2>
-      </urn:getAttachmentsResponse>
-   </soapenv:Body>
-</soapenv:Envelope>

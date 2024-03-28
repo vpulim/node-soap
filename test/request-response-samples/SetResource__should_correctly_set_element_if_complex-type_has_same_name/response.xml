@@ -1,1 +1,0 @@
-<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/"><S:Body><ns:SetResourceResponse xmlns="http://www.bigdatacollect.or/Name/Types"><ns:Result resultStatusFlag="SUCCESS"></ns:Result></ns:SetResourceResponse></S:Body></S:Envelope>

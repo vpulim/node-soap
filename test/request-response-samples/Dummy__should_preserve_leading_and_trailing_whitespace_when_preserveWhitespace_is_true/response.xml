@@ -1,8 +1,0 @@
-<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tns="http://www.Dummy.com" xmlns:n="http://www.Dummy.com/Name/Types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <soap:Header></soap:Header>
-    <soap:Body>
-       <n:DummyResponse>
-           <n:DummyResult> foobar </n:DummyResult>
-       </n:DummyResponse>
-    </soap:Body>
-</soap:Envelope>

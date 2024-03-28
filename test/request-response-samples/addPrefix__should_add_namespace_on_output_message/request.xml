@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:app="http://app.com/app">
-    <soap:Body>
-        <app:addPrefix>
-            <TransType>11124</TransType>
-        </app:addPrefix>
-    </soap:Body>
-</soap:Envelope>

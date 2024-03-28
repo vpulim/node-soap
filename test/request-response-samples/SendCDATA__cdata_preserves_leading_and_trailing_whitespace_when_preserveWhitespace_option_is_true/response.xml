@@ -1,1 +1,0 @@
-<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" ><soap:Body><TestResponse><TestResult><![CDATA[ Hello World! & Hello Me! ]]></TestResult></TestResponse></soap:Body></soap:Envelope>

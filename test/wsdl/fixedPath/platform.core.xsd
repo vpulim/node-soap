@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:platformCore="urn:core_2019_1.platform.webservices.netsuite.com" xmlns:platformCoreTyp="urn:types.core_2019_1.platform.webservices.netsuite.com" xmlns:platformFaultTyp="urn:types.faults_2019_1.platform.webservices.netsuite.com" targetNamespace="urn:core_2019_1.platform.webservices.netsuite.com" elementFormDefault="qualified" attributeFormDefault="unqualified">
-    <import namespace="urn:types.core_2019_1.platform.webservices.netsuite.com" schemaLocation="../../../xsd/platform.coreTypes.xsd"/>
-
-</schema>

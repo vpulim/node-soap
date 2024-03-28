@@ -1,6 +1,0 @@
-{
-  "ignoredNamespaces": {
-    "namespaces": ["targetNamespace", "typedNamespace"],
-    "override": "true"
-  }
-}
