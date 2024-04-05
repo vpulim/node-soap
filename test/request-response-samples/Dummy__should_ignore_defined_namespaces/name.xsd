@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:tns="http://www.Dummy.com/Name/Types" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://www.Dummy.com/Name/Types" elementFormDefault="qualified"
+           attributeFormDefault="unqualified" xmlns:c="http://www.Dummy.com/Common/Types">
+    <xs:import namespace="common.xsd" schemaLocation="common.xsd"/>
+    <xs:element name="DummyRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="DummyField1" type="xs:string" minOccurs="0"/>
+                <xs:element name="DummyFilter" type="c:DummyFilter" minOccurs="0"/>
+                <xs:element name="Account" type="tns:DummyAccount" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="DummyResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="DummyResult" type="c:DummyResult"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="DummyAccount">
+        <xs:sequence>
+            <xs:element name="DummyName" type="xs:string"/>
+            <xs:element name="DummyPassword" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

@@ -1,0 +1,1 @@
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" ><soap:Header></soap:Header><soap:Body><Response xmlns="http://www.example.com/v1"></Response></soap:Body></soap:Envelope>

@@ -1,0 +1,24 @@
+{
+  "result": {
+    "records": [
+      {
+      "attributes": {
+        "XMLSchema-instance:type": "CustomObject"
+      },
+      "fullName": "Opportunity",
+      "businessProcesses": [
+        {
+          "fullName": "Some Process",
+          "isActive": true
+        },
+        {
+          "fullName": "Another Process",
+          "isActive": false
+        }
+      ],
+      "enableFeeds": false,
+      "enableHistory": true
+    }
+    ]
+  }
+}

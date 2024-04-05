@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns:tns="urn:platform_2013_2.webservices.netsuite.com" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:platformMsgs="urn:messages_2013_2.platform.webservices.netsuite.com" xmlns:platformFaults="urn:faults_2013_2.platform.webservices.netsuite.com" targetNamespace="urn:platform_2013_2.webservices.netsuite.com">
+    <types>
+        <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+            <xsd:import namespace="urn:core_2013_2.platform.webservices.netsuite.com" schemaLocation="soap.platform.core.xsd"/>
+            <xsd:import namespace="urn:messages_2013_2.platform.webservices.netsuite.com" schemaLocation="soap.platform.messages.xsd"/>
+            <xsd:import namespace="urn:relationships_2013_2.lists.webservices.netsuite.com" schemaLocation="soap.lists.relationships.xsd"/>
+		</xsd:schema>
+    </types>
+     <message name="updateRequest">
+        <part name="parameters" element="platformMsgs:update"/>
+    </message>
+    <message name="updateResponse">
+        <part name="parameters" element="platformMsgs:updateResponse"/>
+    </message>
+    <portType name="NetSuitePortType">
+        <operation name="update">
+            <input name="updateRequest" message="tns:updateRequest"/>
+            <output name="updateResponse" message="tns:updateResponse"/>
+        </operation>
+    </portType>
+	<binding name="NetSuiteBinding" type="tns:NetSuitePortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="update">
+            <soap:operation soapAction="update"/>
+            <input name="updateRequest">
+                <soap:body use="literal"/>
+            </input>
+            <output name="updateResponse">
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+    <service name="NetSuiteService">
+        <port name="NetSuitePort" binding="tns:NetSuiteBinding">
+            <soap:address location="http://localhost:1509"/>
+        </port>
+    </service>
+</definitions>

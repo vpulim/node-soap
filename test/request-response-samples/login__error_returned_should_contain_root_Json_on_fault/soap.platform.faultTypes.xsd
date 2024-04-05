@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:platformFaultTyp="urn:types.faults_2013_2.platform.webservices.netsuite.com" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" targetNamespace="urn:types.faults_2013_2.platform.webservices.netsuite.com" elementFormDefault="qualified" attributeFormDefault="unqualified">
+    <simpleType name="FaultCodeType">
+        <restriction base="xsd:string">
+            <enumeration value="INVALID_LOGIN_CREDENTIALS"/>
+        </restriction>
+    </simpleType>
+</schema>

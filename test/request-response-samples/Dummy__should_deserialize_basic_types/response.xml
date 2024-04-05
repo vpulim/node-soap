@@ -1,0 +1,15 @@
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tns="http://www.Dummy.com" xmlns:n="http://www.Dummy.com/Name/Types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <soap:Header></soap:Header>
+    <soap:Body>
+       <n:DummyResponse>
+			<n:boolean>true</n:boolean>
+			<n:decimal>1.1</n:decimal>
+			<n:double>1.21</n:double>
+			<n:float>1.321</n:float>
+			<n:int>1</n:int>
+			<n:short>3</n:short>
+			<n:long>60000000000</n:long>
+			<n:string>foo</n:string>
+       </n:DummyResponse>
+    </soap:Body>
+</soap:Envelope>

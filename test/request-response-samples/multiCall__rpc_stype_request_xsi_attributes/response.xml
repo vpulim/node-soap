@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SOAP-ENV:Envelope 
+    xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" 
+    xmlns:ns1="urn:Magento" 
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+    xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+    <SOAP-ENV:Body>
+        <ns1:multiCallResponse>
+            <multiCallReturn SOAP-ENC:arrayType="xsd:ur-type[1]" xsi:type="ns1:FixedArray">
+                <item xsi:type="xsd:boolean">true</item>
+            </multiCallReturn>
+        </ns1:multiCallResponse>
+    </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>

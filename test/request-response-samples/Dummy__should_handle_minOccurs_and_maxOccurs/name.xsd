@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.Dummy.com/Name/Types" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="DummyRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="DummyField1" type="xs:string" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="DummyResponse">
+		<xs:complexType>
+			<xs:sequence>
+                <xs:element name="DummyList_MaxUnbounded" minOccurs="1" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="DummyFirst" type="xs:string" />    
+                            <xs:element name="DummySecond" type="xs:string" />
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="DummyList_MaxInt" minOccurs="1" maxOccurs="10">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="DummyFirst" type="xs:string" />    
+                            <xs:element name="DummySecond" type="xs:string" />
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

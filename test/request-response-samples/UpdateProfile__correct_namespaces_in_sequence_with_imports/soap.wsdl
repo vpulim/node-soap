@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.bigdatacollect.or"
+                  xmlns:c="http://www.bigdatacollect.or/Common/Types"
+                  xmlns:n="http://www.bigdatacollect.or/Name/Types"
+                  xmlns:ns="http://schemas.xmlsoap.org/soap/encoding/"
+                  targetNamespace="http://www.bigdatacollect.or">
+    <wsdl:types>
+        <xs:schema>
+            <xs:import namespace="http://www.bigdatacollect.or/Common/Types" schemaLocation="Common.xsd"/>
+            <xs:import namespace="http://www.bigdatacollect.or/Name/Types" schemaLocation="Name.xsd"/>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="UpdateProfileRequest">
+        <wsdl:part name="UpdateProfileRequest" element="n:UpdateProfileRequest"/>
+    </wsdl:message>
+    <wsdl:message name="UpdateProfileResponse">
+        <wsdl:part name="UpdateProfileResponse" element="n:UpdateProfileResponse"/>
+    </wsdl:message>
+    <wsdl:portType name="NamePortType">
+        <wsdl:operation name="UpdateProfile">
+            <wsdl:input message="tns:UpdateProfileRequest"/>
+            <wsdl:output message="tns:UpdateProfileResponse"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="NameBinding" type="tns:NamePortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="UpdateProfile">
+            <soap:operation soapAction="http://www.bigdatacollect.or#UpdateProfile" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="AdvancedHTNGGSSService">
+        <wsdl:port name="NamePortType" binding="tns:NameBinding">
+            <soap:address location="http://www.bigdatacollect.or/"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

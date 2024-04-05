@@ -1,0 +1,71 @@
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" targetNamespace="http://tempuri.org/">
+<wsdl:types>
+<s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+<s:element name="GetNodes">
+<s:complexType/>
+</s:element>
+<s:element name="GetNodesResponse">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="GetNodesResult" type="tns:Node"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:complexType name="Node">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="Children" type="tns:ArrayOfNode"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="ArrayOfNode">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="unbounded" name="Node" nillable="true" type="tns:Node"/>
+</s:sequence>
+</s:complexType>
+</s:schema>
+</wsdl:types>
+<wsdl:message name="GetNodesSoapIn">
+<wsdl:part name="parameters" element="tns:GetNodes"/>
+</wsdl:message>
+<wsdl:message name="GetNodesSoapOut">
+<wsdl:part name="parameters" element="tns:GetNodesResponse"/>
+</wsdl:message>
+<wsdl:portType name="Service1Soap">
+<wsdl:operation name="GetNodes">
+<wsdl:input message="tns:GetNodesSoapIn"/>
+<wsdl:output message="tns:GetNodesSoapOut"/>
+</wsdl:operation>
+</wsdl:portType>
+<wsdl:binding name="Service1Soap" type="tns:Service1Soap">
+<soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+<wsdl:operation name="GetNodes">
+<soap:operation soapAction="http://tempuri.org/GetNodes" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+</wsdl:binding>
+<wsdl:binding name="Service1Soap12" type="tns:Service1Soap">
+<soap12:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+<wsdl:operation name="GetNodes">
+<soap12:operation soapAction="http://tempuri.org/GetNodes" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+</wsdl:binding>
+<wsdl:service name="Service1">
+<wsdl:port name="Service1Soap" binding="tns:Service1Soap">
+<soap:address location="http://localhost:20400/Service1.asmx"/>
+</wsdl:port>
+<wsdl:port name="Service1Soap12" binding="tns:Service1Soap12">
+<soap12:address location="http://localhost:20400/Service1.asmx"/>
+</wsdl:port>
+</wsdl:service>
+</wsdl:definitions>

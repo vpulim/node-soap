@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.Dummy.com/Name/Types" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="DummyRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="DummyField1" type="xs:string" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="DummyResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="boolean" nillable="true" type="xs:boolean"/>
+				<xs:element name="byte" nillable="true" type="xs:byte"/>
+				<xs:element name="dateTime" nillable="true" type="xs:dateTime"/>
+				<xs:element name="decimal" nillable="true" type="xs:decimal"/>
+				<xs:element name="double" nillable="true" type="xs:double"/>
+				<xs:element name="float" nillable="true" type="xs:float"/>
+				<xs:element name="int" nillable="true" type="xs:int"/>
+				<xs:element name="short" nillable="true" type="xs:short"/>
+				<xs:element name="long" nillable="true" type="xs:long"/>
+				<xs:element name="string" nillable="true" type="xs:string"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

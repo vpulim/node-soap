@@ -1,0 +1,630 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:platformCoreTyp="urn:types.core_2011_1.platform.webservices.netsuite.com" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" targetNamespace="urn:types.core_2011_1.platform.webservices.netsuite.com" elementFormDefault="qualified" attributeFormDefault="unqualified">
+    <!-- Record Types -->
+    <simpleType name="RecordType">
+        <restriction base="xsd:string">
+            <enumeration value="account"/>
+            <enumeration value="accountingPeriod"/>
+            <enumeration value="assemblyBuild"/>
+            <enumeration value="assemblyUnbuild"/>
+            <enumeration value="assemblyItem"/>
+            <enumeration value="bin"/>
+            <enumeration value="budget"/>
+            <enumeration value="budgetCategory"/>
+            <enumeration value="calendarEvent"/>
+            <enumeration value="campaign"/>
+            <enumeration value="campaignAudience"/>
+            <enumeration value="campaignCategory"/>
+            <enumeration value="campaignChannel"/>
+            <enumeration value="campaignFamily"/>
+            <enumeration value="campaignOffer"/>
+            <enumeration value="campaignResponse"/>
+            <enumeration value="campaignSearchEngine"/>
+            <enumeration value="campaignSubscription"/>
+            <enumeration value="campaignVertical"/>
+            <enumeration value="cashRefund"/>
+            <enumeration value="cashSale"/>
+            <enumeration value="check"/>
+            <enumeration value="classification"/>
+            <enumeration value="contact"/>
+            <enumeration value="contactCategory"/>
+            <enumeration value="contactRole"/>
+            <enumeration value="creditMemo"/>
+            <enumeration value="crmCustomField"/>
+            <enumeration value="currency"/>
+            <enumeration value="customList"/>
+            <enumeration value="customRecord"/>
+            <enumeration value="customRecordCustomField"/>
+            <enumeration value="customRecordType"/>
+            <enumeration value="customer"/>
+            <enumeration value="customerCategory"/>
+            <enumeration value="customerDeposit"/>
+            <enumeration value="customerPayment"/>
+            <enumeration value="customerRefund"/>
+            <enumeration value="customerStatus"/>
+            <enumeration value="depositApplication"/>
+            <enumeration value="department"/>
+            <enumeration value="descriptionItem"/>
+            <enumeration value="discountItem"/>
+            <enumeration value="downloadItem"/>
+            <enumeration value="employee"/>
+            <enumeration value="entityCustomField"/>
+            <enumeration value="entityGroup"/>
+            <enumeration value="estimate"/>
+            <enumeration value="expenseCategory"/>
+            <enumeration value="expenseReport"/>
+            <enumeration value="file"/>
+            <enumeration value="folder"/>
+            <enumeration value="giftCertificate"/>
+            <enumeration value="giftCertificateItem"/>
+            <enumeration value="interCompanyJournalEntry"/>
+            <enumeration value="interCompanyTransferOrder"/>
+            <enumeration value="inventoryAdjustment"/>
+            <enumeration value="inventoryItem"/>
+            <enumeration value="invoice"/>
+            <enumeration value="itemCustomField"/>
+            <enumeration value="itemFulfillment"/>
+            <enumeration value="itemNumberCustomField"/>
+            <enumeration value="itemOptionCustomField"/>
+            <enumeration value="issue"/>
+            <enumeration value="job"/>
+            <enumeration value="jobStatus"/>
+            <enumeration value="jobType"/>
+            <enumeration value="itemReceipt"/>
+            <enumeration value="journalEntry"/>
+            <enumeration value="kitItem"/>
+            <enumeration value="leadSource"/>
+            <enumeration value="location"/>
+            <enumeration value="lotNumberedInventoryItem"/>
+            <enumeration value="lotNumberedAssemblyItem"/>
+            <enumeration value="markupItem"/>
+            <enumeration value="message"/>
+            <enumeration value="nonInventoryPurchaseItem"/>
+            <enumeration value="nonInventoryResaleItem"/>
+            <enumeration value="nonInventorySaleItem"/>
+            <enumeration value="note"/>
+            <enumeration value="noteType"/>
+            <enumeration value="opportunity"/>
+            <enumeration value="otherChargePurchaseItem"/>
+            <enumeration value="otherChargeResaleItem"/>
+            <enumeration value="otherChargeSaleItem"/>
+            <enumeration value="otherCustomField"/>
+            <enumeration value="partner"/>
+            <enumeration value="partnerCategory"/>
+            <enumeration value="paymentItem"/>
+            <enumeration value="paymentMethod"/>
+            <enumeration value="phoneCall"/>
+            <enumeration value="priceLevel"/>
+            <enumeration value="pricingGroup"/>
+            <enumeration value="projectTask"/>
+            <enumeration value="promotionCode"/>
+            <enumeration value="purchaseOrder"/>
+            <enumeration value="returnAuthorization"/>
+            <enumeration value="salesOrder"/>
+            <enumeration value="salesRole"/>
+            <enumeration value="salesTaxItem"/>
+            <enumeration value="serializedInventoryItem"/>
+            <enumeration value="serializedAssemblyItem"/>
+            <enumeration value="servicePurchaseItem"/>
+            <enumeration value="serviceResaleItem"/>
+            <enumeration value="serviceSaleItem"/>
+            <enumeration value="solution"/>
+            <enumeration value="siteCategory"/>
+            <enumeration value="state"/>
+            <enumeration value="subsidiary"/>
+            <enumeration value="subtotalItem"/>
+            <enumeration value="supportCase"/>
+            <enumeration value="supportCaseIssue"/>
+            <enumeration value="supportCaseOrigin"/>
+            <enumeration value="supportCasePriority"/>
+            <enumeration value="supportCaseStatus"/>
+            <enumeration value="supportCaseType"/>
+            <enumeration value="task"/>
+            <enumeration value="taxGroup"/>
+            <enumeration value="taxType"/>
+            <enumeration value="term"/>
+            <enumeration value="timeBill"/>
+            <enumeration value="topic"/>
+            <enumeration value="transferOrder"/>
+            <enumeration value="transactionBodyCustomField"/>
+            <enumeration value="transactionColumnCustomField"/>
+            <enumeration value="unitsType"/>
+            <enumeration value="vendor"/>
+            <enumeration value="vendorCategory"/>
+            <enumeration value="vendorBill"/>
+            <enumeration value="vendorPayment"/>
+            <enumeration value="winLossReason"/>
+        </restriction>
+    </simpleType>
+    <!-- RecordType constants/end -->
+    <!-- SearchRecordType constants/start -->
+    <simpleType name="SearchRecordType">
+        <restriction base="xsd:string">
+            <enumeration value="account"/>
+            <enumeration value="accountingPeriod"/>
+            <enumeration value="bin"/>
+            <enumeration value="budget"/>
+            <enumeration value="calendarEvent"/>
+            <enumeration value="campaign"/>
+            <enumeration value="classification"/>
+            <enumeration value="contact"/>
+            <enumeration value="customer"/>
+            <enumeration value="customRecord"/>
+            <enumeration value="department"/>
+            <enumeration value="employee"/>
+            <enumeration value="entityGroup"/>
+            <enumeration value="file"/>
+            <enumeration value="folder"/>
+            <enumeration value="giftCertificate"/>
+            <enumeration value="groupMember"/>
+            <enumeration value="item"/>
+            <enumeration value="issue"/>
+            <enumeration value="job"/>
+            <enumeration value="location"/>
+            <enumeration value="message"/>
+            <enumeration value="note"/>
+            <enumeration value="opportunity"/>
+            <enumeration value="partner"/>
+            <enumeration value="phoneCall"/>
+            <enumeration value="priceLevel"/>
+            <enumeration value="pricingGroup"/>
+            <enumeration value="projectTask"/>
+            <enumeration value="promotionCode"/>
+            <enumeration value="salesRole"/>
+            <enumeration value="solution"/>
+            <enumeration value="siteCategory"/>
+            <enumeration value="subsidiary"/>
+            <enumeration value="supportCase"/>
+            <enumeration value="task"/>
+            <enumeration value="timeBill"/>
+            <enumeration value="topic"/>
+            <enumeration value="transaction"/>
+            <enumeration value="vendor"/>
+        </restriction>
+    </simpleType>
+    <!-- SearchRecordType constants/end -->
+    <!-- getAll Record Types -->
+    <simpleType name="GetAllRecordType">
+        <restriction base="xsd:string">
+            <enumeration value="budgetCategory"/>
+            <enumeration value="campaignAudience"/>
+            <enumeration value="campaignCategory"/>
+            <enumeration value="campaignChannel"/>
+            <enumeration value="campaignFamily"/>
+            <enumeration value="campaignOffer"/>
+            <enumeration value="campaignSearchEngine"/>
+            <enumeration value="campaignSubscription"/>
+            <enumeration value="campaignVertical"/>
+            <enumeration value="currency"/>
+            <enumeration value="leadSource"/>
+            <enumeration value="salesTaxItem"/>
+            <enumeration value="state"/>
+            <enumeration value="supportCaseIssue"/>
+            <enumeration value="supportCaseOrigin"/>
+            <enumeration value="supportCasePriority"/>
+            <enumeration value="supportCaseStatus"/>
+            <enumeration value="supportCaseType"/>
+            <enumeration value="taxGroup"/>
+            <enumeration value="taxType"/>
+        </restriction>
+    </simpleType>
+    <!-- getCustomization Record Types -->
+    <simpleType name="GetCustomizationType">
+        <restriction base="xsd:string">
+            <enumeration value="crmCustomField"/>
+            <enumeration value="customList"/>
+            <enumeration value="customRecordType"/>
+            <enumeration value="entityCustomField"/>
+            <enumeration value="itemCustomField"/>
+            <enumeration value="itemNumberCustomField"/>
+            <enumeration value="itemOptionCustomField"/>
+            <enumeration value="otherCustomField"/>
+            <enumeration value="transactionBodyCustomField"/>
+            <enumeration value="transactionColumnCustomField"/>
+        </restriction>
+    </simpleType>
+    <!-- getAll Record Types -->
+    <!-- initialize Types/start -->
+    <simpleType name="InitializeType">
+        <restriction base="xsd:string">
+            <enumeration value="assemblyUnbuild"/>
+            <enumeration value="cashRefund"/>
+            <enumeration value="cashSale"/>
+            <enumeration value="creditMemo"/>
+            <enumeration value="customerPayment"/>
+            <enumeration value="customerRefund"/>
+            <enumeration value="depositApplication"/>
+            <enumeration value="estimate"/>
+            <enumeration value="invoice"/>
+            <enumeration value="itemFulfillment"/>
+            <enumeration value="itemReceipt"/>
+            <enumeration value="returnAuthorization"/>
+            <enumeration value="salesOrder"/>
+            <enumeration value="vendorBill"/>
+            <enumeration value="vendorPayment"/>
+        </restriction>
+    </simpleType>
+    <simpleType name="InitializeRefType">
+        <restriction base="xsd:string">
+            <enumeration value="assemblyBuild"/>
+            <enumeration value="cashSale"/>
+            <enumeration value="creditMemo"/>
+            <enumeration value="customer"/>
+            <enumeration value="customerDeposit"/>
+            <enumeration value="employee"/>
+            <enumeration value="estimate"/>
+            <enumeration value="interCompanyTransferOrder"/>
+            <enumeration value="invoice"/>
+            <enumeration value="opportunity"/>
+            <enumeration value="purchaseOrder"/>
+            <enumeration value="returnAuthorization"/>
+            <enumeration value="salesOrder"/>
+            <enumeration value="transferOrder"/>
+            <enumeration value="vendor"/>
+            <enumeration value="vendorBill"/>
+        </restriction>
+    </simpleType>
+    <simpleType name="InitializeAuxRefType">
+        <restriction base="xsd:string">
+            <enumeration value="shippingGroup"/>
+            <enumeration value="arAccount"/>
+            <enumeration value="apAccount"/>
+        </restriction>
+    </simpleType>
+    <!-- initialize Types/end -->
+    <!-- DeletedRecordType constants/start -->
+    <simpleType name="DeletedRecordType">
+        <restriction base="xsd:string">
+            <enumeration value="assemblyBuild"/>
+            <enumeration value="assemblyUnbuild"/>
+            <enumeration value="calendarEvent"/>
+            <enumeration value="campaign"/>
+            <enumeration value="cashRefund"/>
+            <enumeration value="cashSale"/>
+            <enumeration value="check"/>
+            <enumeration value="contact"/>
+            <enumeration value="contactCategory"/>
+            <enumeration value="creditMemo"/>
+            <enumeration value="customRecord"/>
+            <enumeration value="customer"/>
+            <enumeration value="customerCategory"/>
+            <enumeration value="customerDeposit"/>
+            <enumeration value="customerPayment"/>
+            <enumeration value="customerRefund"/>
+            <enumeration value="customerStatus"/>
+            <enumeration value="depositApplication"/>
+            <enumeration value="employee"/>
+            <enumeration value="expenseReport"/>
+            <enumeration value="estimate"/>
+            <enumeration value="file"/>
+            <enumeration value="folder"/>
+            <enumeration value="interCompanyJournalEntry"/>
+            <enumeration value="interCompanyTransferOrder"/>
+            <enumeration value="inventoryAdjustment"/>
+            <enumeration value="invoice"/>
+            <enumeration value="itemFulfillment"/>
+            <enumeration value="issue"/>
+            <enumeration value="job"/>
+            <enumeration value="jobStatus"/>
+            <enumeration value="itemReceipt"/>
+            <enumeration value="journalEntry"/>
+            <enumeration value="message"/>
+            <enumeration value="note"/>
+            <enumeration value="noteType"/>
+            <enumeration value="opportunity"/>
+            <enumeration value="partner"/>
+            <enumeration value="paymentMethod"/>
+            <enumeration value="phoneCall"/>
+            <enumeration value="priceLevel"/>
+            <enumeration value="pricingGroup"/>
+            <enumeration value="projectTask"/>
+            <enumeration value="promotionCode"/>
+            <enumeration value="purchaseOrder"/>
+            <enumeration value="returnAuthorization"/>
+            <enumeration value="salesOrder"/>
+            <enumeration value="supportCase"/>
+            <enumeration value="supportCaseIssue"/>
+            <enumeration value="supportCaseOrigin"/>
+            <enumeration value="supportCasePriority"/>
+            <enumeration value="supportCaseStatus"/>
+            <enumeration value="supportCaseType"/>
+            <enumeration value="task"/>
+            <enumeration value="term"/>
+            <enumeration value="transferOrder"/>
+            <enumeration value="vendor"/>
+            <enumeration value="vendorBill"/>
+            <enumeration value="vendorPayment"/>
+            <enumeration value="winLossReason"/>
+        </restriction>
+    </simpleType>
+    <!-- DeletedRecordType constants/end -->
+    <!-- Asyc Statuses-->
+    <simpleType name="AsyncStatusType">
+        <restriction base="xsd:string">
+            <enumeration value="failed"/>
+            <enumeration value="finishedWithErrors"/>
+            <enumeration value="pending"/>
+            <enumeration value="processing"/>
+            <enumeration value="finished"/>
+        </restriction>
+    </simpleType>
+    <!-- ******************************************************************** -->
+    <!-- Search Types -->
+    <!-- ******************************************************************** -->
+    <!-- SearchStringField -->
+    <simpleType name="SearchStringFieldOperator">
+        <restriction base="xsd:string">
+            <enumeration value="contains"/>
+            <enumeration value="doesNotContain"/>
+            <enumeration value="doesNotStartWith"/>
+            <enumeration value="empty"/>
+            <enumeration value="hasKeywords"/>
+            <enumeration value="is"/>
+            <enumeration value="isNot"/>
+            <enumeration value="notEmpty"/>
+            <enumeration value="startsWith"/>
+        </restriction>
+    </simpleType>
+    <!-- SearchLongField -->
+    <simpleType name="SearchLongFieldOperator">
+        <restriction base="xsd:string">
+            <enumeration value="between"/>
+            <enumeration value="empty"/>
+            <enumeration value="equalTo"/>
+            <enumeration value="greaterThan"/>
+            <enumeration value="greaterThanOrEqualTo"/>
+            <enumeration value="lessThan"/>
+            <enumeration value="lessThanOrEqualTo"/>
+            <enumeration value="notBetween"/>
+            <enumeration value="notEmpty"/>
+            <enumeration value="notEqualTo"/>
+            <enumeration value="notGreaterThan"/>
+            <enumeration value="notGreaterThanOrEqualTo"/>
+            <enumeration value="notLessThan"/>
+            <enumeration value="notLessThanOrEqualTo"/>
+        </restriction>
+    </simpleType>
+    <!-- SearchTextNumberField -->
+    <simpleType name="SearchTextNumberFieldOperator">
+        <restriction base="xsd:string">
+            <enumeration value="between"/>
+            <enumeration value="empty"/>
+            <enumeration value="equalTo"/>
+            <enumeration value="greaterThan"/>
+            <enumeration value="greaterThanOrEqualTo"/>
+            <enumeration value="lessThan"/>
+            <enumeration value="lessThanOrEqualTo"/>
+            <enumeration value="notBetween"/>
+            <enumeration value="notEmpty"/>
+            <enumeration value="notEqualTo"/>
+            <enumeration value="notGreaterThan"/>
+            <enumeration value="notGreaterThanOrEqualTo"/>
+            <enumeration value="notLessThan"/>
+            <enumeration value="notLessThanOrEqualTo"/>
+        </restriction>
+    </simpleType>
+    <!-- SearchDoubleField -->
+    <simpleType name="SearchDoubleFieldOperator">
+        <restriction base="xsd:string">
+            <enumeration value="between"/>
+            <enumeration value="empty"/>
+            <enumeration value="equalTo"/>
+            <enumeration value="greaterThan"/>
+            <enumeration value="greaterThanOrEqualTo"/>
+            <enumeration value="lessThan"/>
+            <enumeration value="lessThanOrEqualTo"/>
+            <enumeration value="notBetween"/>
+            <enumeration value="notEmpty"/>
+            <enumeration value="notEqualTo"/>
+            <enumeration value="notGreaterThan"/>
+            <enumeration value="notGreaterThanOrEqualTo"/>
+            <enumeration value="notLessThan"/>
+            <enumeration value="notLessThanOrEqualTo"/>
+        </restriction>
+    </simpleType>
+    <!-- SearchDateField -->
+    <simpleType name="SearchDateFieldOperator">
+        <restriction base="xsd:string">
+            <enumeration value="after"/>
+            <enumeration value="before"/>
+            <enumeration value="empty"/>
+            <enumeration value="notAfter"/>
+            <enumeration value="notBefore"/>
+            <enumeration value="notEmpty"/>
+            <enumeration value="notOn"/>
+            <enumeration value="notOnOrAfter"/>
+            <enumeration value="notOnOrBefore"/>
+            <enumeration value="notWithin"/>
+            <enumeration value="on"/>
+            <enumeration value="onOrAfter"/>
+            <enumeration value="onOrBefore"/>
+            <enumeration value="within"/>
+        </restriction>
+    </simpleType>
+    <!-- SearchEnumMultiSelectFieldOperator -->
+    <simpleType name="SearchEnumMultiSelectFieldOperator">
+        <restriction base="xsd:string">
+            <enumeration value="anyOf"/>
+            <enumeration value="noneOf"/>
+        </restriction>
+    </simpleType>
+    <!-- SearchMultiSelectFieldOperator -->
+    <simpleType name="SearchMultiSelectFieldOperator">
+        <restriction base="xsd:string">
+            <enumeration value="anyOf"/>
+            <enumeration value="noneOf"/>
+        </restriction>
+    </simpleType>
+    <!-- predefined search dates -->
+    <simpleType name="SearchDate">
+        <restriction base="xsd:string">
+            <enumeration value="fiscalHalfBeforeLast"/>
+            <enumeration value="fiscalHalfBeforeLastToDate"/>
+            <enumeration value="fiscalQuarterBeforeLast"/>
+            <enumeration value="fiscalQuarterBeforeLastToDate"/>
+            <enumeration value="fiscalYearBeforeLast"/>
+            <enumeration value="fiscalYearBeforeLastToDate"/>
+            <enumeration value="lastBusinessWeek"/>
+            <enumeration value="lastFiscalHalf"/>
+            <enumeration value="lastFiscalHalfOneYearAgo"/>
+            <enumeration value="lastFiscalHalfToDate"/>
+            <enumeration value="lastFiscalQuarter"/>
+            <enumeration value="lastFiscalQuarterOneYearAgo"/>
+            <enumeration value="lastFiscalQuarterToDate"/>
+            <enumeration value="lastFiscalYear"/>
+            <enumeration value="lastFiscalYearToDate"/>
+            <enumeration value="lastMonth"/>
+            <enumeration value="lastMonthOneQuarterAgo"/>
+            <enumeration value="lastMonthOneYearAgo"/>
+            <enumeration value="lastMonthToDate"/>
+            <enumeration value="lastMonthTwoQuartersAgo"/>
+            <enumeration value="lastMonthTwoYearsAgo"/>
+            <enumeration value="lastQuarterTwoYearsAgo"/>
+            <enumeration value="lastRollingHalf"/>
+            <enumeration value="lastRollingQuarter"/>
+            <enumeration value="lastRollingYear"/>
+            <enumeration value="lastWeek"/>
+            <enumeration value="lastWeekToDate"/>
+            <enumeration value="monthBeforeLast"/>
+            <enumeration value="monthBeforeLastToDate"/>
+            <enumeration value="nextBusinessWeek"/>
+            <enumeration value="nextFiscalHalf"/>
+            <enumeration value="nextFiscalQuarter"/>
+            <enumeration value="nextFiscalYear"/>
+            <enumeration value="nextFourWeeks"/>
+            <enumeration value="nextMonth"/>
+            <enumeration value="nextOneHalf"/>
+            <enumeration value="nextOneMonth"/>
+            <enumeration value="nextOneQuarter"/>
+            <enumeration value="nextOneWeek"/>
+            <enumeration value="nextOneYear"/>
+            <enumeration value="nextWeek"/>
+            <enumeration value="oneYearBeforeLast"/>
+            <enumeration value="previousMonthsLastFiscalHalf"/>
+            <enumeration value="previousMonthsLastFiscalQuarter"/>
+            <enumeration value="previousMonthsLastFiscalYear"/>
+            <enumeration value="previousMonthsSameFiscalHalfLastYear"/>
+            <enumeration value="previousMonthsSameFiscalQuartherLastFiscalYear"/>
+            <enumeration value="previousMonthsThisFiscalHalf"/>
+            <enumeration value="previousMonthsThisFiscalQuarter"/>
+            <enumeration value="previousMonthsThisFiscalYear"/>
+            <enumeration value="previousOneDay"/>
+            <enumeration value="previousOneHalf"/>
+            <enumeration value="previousOneMonth"/>
+            <enumeration value="previousOneQuarter"/>
+            <enumeration value="previousOneWeek"/>
+            <enumeration value="previousOneYear"/>
+            <enumeration value="previousQuartersLastFiscalYear"/>
+            <enumeration value="previousQuartersThisFiscalYear"/>
+            <enumeration value="previousRollingHalf"/>
+            <enumeration value="previousRollingQuarter"/>
+            <enumeration value="previousRollingYear"/>
+            <enumeration value="sameDayFiscalQuarterBeforeLast"/>
+            <enumeration value="sameDayFiscalYearBeforeLast"/>
+            <enumeration value="sameDayLastFiscalQuarter"/>
+            <enumeration value="sameDayLastFiscalYear"/>
+            <enumeration value="sameDayLastMonth"/>
+            <enumeration value="sameDayLastWeek"/>
+            <enumeration value="sameDayMonthBeforeLast"/>
+            <enumeration value="sameDayWeekBeforeLast"/>
+            <enumeration value="sameFiscalQuarterFiscalYearBeforeLast"/>
+            <enumeration value="sameHalfLastFiscalYearToDate"/>
+            <enumeration value="sameMonthFiscalQuarterBeforeLast"/>
+            <enumeration value="sameMonthFiscalYearBeforeLast"/>
+            <enumeration value="sameMonthLastFiscalQuarter"/>
+            <enumeration value="sameMonthLastFiscalQuarterToDate"/>
+            <enumeration value="sameMonthLastFiscalYear"/>
+            <enumeration value="sameMonthLastFiscalYearToDate"/>
+            <enumeration value="sameQuarterLastFiscalYear"/>
+            <enumeration value="sameQuarterLastFiscalYearToDate"/>
+            <enumeration value="sameWeekFiscalYearBeforeLast"/>
+            <enumeration value="sameWeekLastFiscalYear"/>
+            <enumeration value="startOfLastBusinessWeek"/>
+            <enumeration value="startOfLastFiscalHalf"/>
+            <enumeration value="startOfLastFiscalQuarter"/>
+            <enumeration value="startOfLastFiscalYear"/>
+            <enumeration value="startOfLastHalfOneYearAgo"/>
+            <enumeration value="startOfLastMonth"/>
+            <enumeration value="startOfLastMonthOneQuarterAgo"/>
+            <enumeration value="startOfLastMonthOneYearAgo"/>
+            <enumeration value="startOfLastQuarterOneYearAgo"/>
+            <enumeration value="startOfLastRollingHalf"/>
+            <enumeration value="startOfLastRollingQuarter"/>
+            <enumeration value="startOfLastRollingYear"/>
+            <enumeration value="startOfLastWeek"/>
+            <enumeration value="startOfNextBusinessWeek"/>
+            <enumeration value="startOfNextFiscalHalf"/>
+            <enumeration value="startOfNextFiscalQuarter"/>
+            <enumeration value="startOfNextMonth"/>
+            <enumeration value="startOfNextWeek"/>
+            <enumeration value="startOfNextYear"/>
+            <enumeration value="startOfPreviousRollingHalf"/>
+            <enumeration value="startOfPreviousRollingQuarter"/>
+            <enumeration value="startOfPreviousRollingYear"/>
+            <enumeration value="startOfSameHalfLastFiscalYear"/>
+            <enumeration value="startOfSameMonthLastFiscalQuarter"/>
+            <enumeration value="startOfSameMonthLastFiscalYear"/>
+            <enumeration value="startOfSameQuarterLastFiscalYear"/>
+            <enumeration value="startOfTheHalfBeforeLast"/>
+            <enumeration value="startOfTheMonthBeforeLast"/>
+            <enumeration value="startOfTheQuarterBeforeLast"/>
+            <enumeration value="startOfTheWeekBeforeLast"/>
+            <enumeration value="startOfTheYearBeforeLast"/>
+            <enumeration value="startOfThisBusinessWeek"/>
+            <enumeration value="startOfThisFiscalHalf"/>
+            <enumeration value="startOfThisFiscalQuarter"/>
+            <enumeration value="startOfThisFiscalYear"/>
+            <enumeration value="startOfThisMonth"/>
+            <enumeration value="startOfThisWeek"/>
+            <enumeration value="startOfThisYear"/>
+            <enumeration value="thisBusinessWeek"/>
+            <enumeration value="thisFiscalHalf"/>
+            <enumeration value="thisFiscalHalfToDate"/>
+            <enumeration value="thisFiscalQuarter"/>
+            <enumeration value="thisFiscalQuarterToDate"/>
+            <enumeration value="thisFiscalYear"/>
+            <enumeration value="thisFiscalYearToDate"/>
+            <enumeration value="thisMonth"/>
+            <enumeration value="thisMonthToDate"/>
+            <enumeration value="thisRollingHalf"/>
+            <enumeration value="thisRollingQuarter"/>
+            <enumeration value="thisRollingYear"/>
+            <enumeration value="thisWeek"/>
+            <enumeration value="thisWeekToDate"/>
+            <enumeration value="thisYear"/>
+            <enumeration value="threeMonthAgo"/>
+            <enumeration value="threeQuartersAgo"/>
+            <enumeration value="threeYearsAgo"/>
+            <enumeration value="today"/>
+            <enumeration value="tomorrow"/>
+            <enumeration value="twoDaysAgo"/>
+            <enumeration value="weekBeforeLast"/>
+            <enumeration value="weekBeforeLastToDate"/>
+            <enumeration value="yesterday"/>
+        </restriction>
+    </simpleType>
+    <simpleType name="DurationUnit">
+        <restriction base="xsd:string">
+            <enumeration value="hour"/>
+        </restriction>
+    </simpleType>
+    <!-- CalendarEventAttendeeResponse/start -->
+    <simpleType name="CalendarEventAttendeeResponse">
+        <restriction base="xsd:string">
+            <enumeration value="_accepted"/>
+            <enumeration value="_declined"/>
+            <enumeration value="_noResponse"/>
+            <enumeration value="_tentative"/>
+        </restriction>
+    </simpleType>
+    <!-- CalendarEventAttendeeResponse/end -->
+    <!-- GetSelectValueSearchOperator/start -->
+    <simpleType name="GetSelectValueFilterOperator">
+        <restriction base="xsd:string">
+            <enumeration value="contains"/>
+            <enumeration value="is"/>
+            <enumeration value="startsWith"/>
+        </restriction>
+    </simpleType>
+    <!-- GetSelectValueSearchOperator/end -->
+</schema>

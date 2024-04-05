@@ -1,0 +1,19 @@
+<xsd:schema targetNamespace="http://example.com/bar/xsd"
+            elementFormDefault="qualified"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:bar1="http://example.com/bar1/xsd"
+            xmlns:bar="http://example.com/bar/xsd">
+    <xsd:import namespace="http://example.com/bar1/xsd"
+                schemaLocation="bar1.xsd"/>
+    <xsd:element name="Shipper" type="bar:ShipperType"/>
+    <xsd:complexType name="ShipperTypeType">
+        <xsd:sequence>
+            <xsd:element name="Name" type="bar1:NameType" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="ShipperType">
+        <xsd:complexContent>
+            <xsd:extension base="bar:ShipperTypeType" />
+        </xsd:complexContent>
+    </xsd:complexType>
+</xsd:schema>

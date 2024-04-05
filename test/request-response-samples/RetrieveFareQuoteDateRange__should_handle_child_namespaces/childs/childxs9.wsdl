@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/Service/Bridge.Request"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://tempuri.org/Service/Bridge.Request">
+    <xs:import schemaLocation="../childs/childxs3.wsdl" namespace="http://tempuri.org/Service/Request"
+    />
+    <xs:complexType name="IataNumberInfo">
+        <xs:complexContent mixed="false">
+            <xs:extension base="q1:BaseFareChargeInfo" xmlns:q1="http://tempuri.org/Service/Request">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="IataNumber" nillable="true" type="xs:string" /></xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:element name="IataNumberInfo" nillable="true" type="tns:IataNumberInfo" /></xs:schema>

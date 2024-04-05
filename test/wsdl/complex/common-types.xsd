@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema targetNamespace="http://test-soap.com/api/common/types"
+            xmlns:tns="http://test-soap.com/api/common/types"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            elementFormDefault="qualified"
+            version="5.0">
+
+  <xsd:annotation>
+    <xsd:documentation>Common Types</xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:simpleType name="mandatoryStringType">
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="1"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="mandatoryStringWithMaxLength35Type">
+    <xsd:restriction base="tns:mandatoryStringType">
+      <xsd:maxLength value="35"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="mandatoryStringWithMaxLength70Type">
+    <xsd:restriction base="tns:mandatoryStringType">
+      <xsd:maxLength value="70"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="emailAddressType">
+    <xsd:restriction base="tns:mandatoryStringType">
+      <xsd:maxLength value="256"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="correspondenceLanguageType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="GER"/>
+      <xsd:enumeration value="ITA"/>
+      <xsd:enumeration value="FRE"/>
+      <xsd:enumeration value="ENG"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="idType">
+    <xsd:restriction base="tns:mandatoryStringType">
+      <xsd:pattern value="ID[A-Z0-9]{32}"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="lookupType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="ALLOWED"/>
+      <xsd:enumeration value="NOT_ALLOWED"/>
+      <xsd:enumeration value="UNDECIDED"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="postalCodeType">
+    <xsd:restriction base="tns:mandatoryStringType">
+      <xsd:maxLength value="9"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="countryCodeType">
+    <xsd:annotation>
+      <xsd:documentation>ISO-3166</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="[A-Z]{2}"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:complexType name="recipientAddress">
+    <xsd:sequence>
+      <xsd:element name="streetName" type="tns:mandatoryStringWithMaxLength70Type"/>
+      <xsd:element name="postalCode" type="tns:postalCodeType"/>
+      <xsd:element name="city" type="tns:mandatoryStringWithMaxLength35Type"/>
+      <xsd:element name="countryCode" type="tns:countryCodeType"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="commonAddress" abstract="true">
+    <xsd:sequence>
+      <xsd:element name="address" type="tns:recipientAddress"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="privateAddress">
+    <xsd:complexContent>
+      <xsd:extension base="tns:commonAddress"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="companyAddress">
+    <xsd:complexContent>
+      <xsd:extension base="tns:commonAddress">
+        <xsd:sequence>
+          <xsd:element name="companyName" type="tns:mandatoryStringWithMaxLength70Type"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+  <xsd:simpleType name="userIdType">
+    <xsd:restriction base="tns:mandatoryStringType">
+      <xsd:pattern value="EBID[A-Z0-9]{32}"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+</xsd:schema>

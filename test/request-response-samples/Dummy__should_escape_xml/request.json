@@ -1,0 +1,6 @@
+{
+  "DummyField1": "foo & bar",
+  "DummyFilter": {
+    "DummyStringFilter": null
+  }
+}

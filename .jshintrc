@@ -1,0 +1,29 @@
+{
+  "bitwise":false,
+  "boss":true,
+  "expr":true,
+  "camelcase":false,
+  "curly":false,
+  "eqeqeq":true,
+  "freeze":true,
+  "immed":true,
+  "indent":2,
+  "latedef":"nofunc",
+  "laxbreak":true,
+  "laxcomma":true,
+  "newcap":true,
+  "noarg":true,
+  "node":true,
+  "strict": true,
+  "trailing":true,
+  "undef":true,
+  "predef": [
+    "describe",         // Used by mocha
+    "it",               // Used by mocha
+    "xit",              // Used by mocha
+    "before",           // Used by mocha
+    "beforeEach",       // Used by mocha
+    "after",            // Used by mocha
+    "afterEach"         // Used by mocha
+  ]
+}
