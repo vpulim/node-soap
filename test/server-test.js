@@ -340,8 +340,7 @@ describe('SOAP Server', function () {
     soap.createClient(test.baseUrl + '/stockquote?wsdl', function (err, client) {
       assert.ifError(err);
       client.IsValidPrice({ price: 50000 }, function (err, result) {
-        // One of these should match, depending on the network configuration
-        // of the host
+        // One of these should match, depending on the network configuration of the host
         var localhostAddresses = [
           '127.0.0.1',
           '::ffff:127.0.0.1',

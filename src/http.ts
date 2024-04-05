@@ -39,7 +39,7 @@ export class HttpClient implements IHttpClient {
   constructor(options?: IOptions) {
     options = options || {};
     this.options = options;
-    this._request = options.request || req.default.create();
+    this._request = options.request || req.create();
   }
 
   /**
@@ -226,7 +226,7 @@ export class HttpClient implements IHttpClient {
             if (err) {
               return callback(err);
             }
-              // first part is the soap response
+            // first part is the soap response
             const firstPart = multipartResponse.parts.shift();
             if (!firstPart || !firstPart.body) {
               return callback(new Error('Cannot parse multipart response'));
