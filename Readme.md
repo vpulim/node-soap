@@ -72,7 +72,7 @@ This module lets you connect to web services using SOAP.  It also provides a ser
 
 * Very simple API
 * Handles both RPC and Document schema types
-* Supports multiRef SOAP messages (thanks to [@kaven276](https://github.com/kaven276))
+* Supports multiRef SOAP messages (thanks to [@amit-iwell](https://github.com/amit-iwell))
 * Support for both synchronous and asynchronous method handlers
 * WS-Security UsernameToken Profile 1.0
 * Supports [Express](http://expressjs.com/) based web server (body parser middleware can be used)
@@ -80,7 +80,7 @@ This module lets you connect to web services using SOAP.  It also provides a ser
 ## Install
 
 ```
-  npm install soap
+  npm i node-soap-iwell
 ```
 
 ## Support
@@ -123,7 +123,7 @@ GitHub issues have been disabled to focus on pull requests. ([#731](https://gith
 #### Example
 
 ``` javascript
-  var soap = require('soap');
+  var soap = require('node-soap-iwell');
   var url = 'http://example.com/wsdl?wsdl';
   var args = {name: 'value'};
 
@@ -147,7 +147,7 @@ Construct a `Promise<Client>` with the given WSDL file.
 #### Example
 
 ``` javascript
-  var soap = require('soap');
+  var soap = require('node-soap-iwell');
   var url = 'http://example.com/wsdl?wsdl';
   var args = {name: 'value'};
 

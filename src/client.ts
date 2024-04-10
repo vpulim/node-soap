@@ -192,6 +192,7 @@ export class Client extends EventEmitter {
       this.wsdl.options.overrideRootElement = options.overrideRootElement;
     }
     this.wsdl.options.forceSoap12Headers = !!options.forceSoap12Headers;
+    this.wsdl.options.headersKeys = options.headersKeys ? options.headersKeys : '';
   }
 
   private _defineService(service: ServiceElement, endpoint?: string) {
@@ -309,8 +310,10 @@ export class Client extends EventEmitter {
     let headers: any = {
       'Content-Type': 'text/xml; charset=utf-8',
     };
+    let headerXMLKeys='';
     let xmlnsSoap = 'xmlns:' + envelopeKey + '="http://schemas.xmlsoap.org/soap/envelope/"';
-
+    const { returnXmlOnly } = args;
+    if(returnXmlOnly) delete args.returnXmlOnly;
     const finish = (obj, body, response) => {
       let result;
 
@@ -394,6 +397,14 @@ export class Client extends EventEmitter {
       headers.SOAPAction = '"' + soapAction + '"';
     }
 
+    if(this.wsdl.options.headersKeys) {
+      for(let i=0; i<=this.wsdl.options.headersKeys.length; i++){
+        for(let key in this.wsdl.options.headersKeys[i]){
+          headerXMLKeys += `${key}="${this.wsdl.options.headersKeys[i][key]}" `
+        }
+      }
+    }
+
     options = options || {};
 
     // Allow the security object to add headers
@@ -428,12 +439,13 @@ export class Client extends EventEmitter {
     xml = '<?xml version="1.0" encoding="utf-8"?>' +
       '<' + envelopeKey + ':Envelope ' +
       xmlnsSoap + ' ' +
+      headerXMLKeys +
       'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ' +
       encoding +
       this.wsdl.xmlnsInEnvelope + '>' +
       ((decodedHeaders || this.security) ?
         (
-          '<' + envelopeKey + ':Header' + (this.wsdl.xmlnsInHeader ? (' ' + this.wsdl.xmlnsInHeader) : '') + '>' +
+          "<" + envelopeKey + ":Header xmlns:wsa='http://www.w3.org/2005/08/addressing'>" +
           (decodedHeaders ? decodedHeaders : '') +
           (this.security && !this.security.postProcess ? this.security.toXML() : '') +
           '</' + envelopeKey + ':Header>'
@@ -546,6 +558,12 @@ export class Client extends EventEmitter {
         }
       }, onError);
       return;
+    }
+
+    if(location == 'https://intools.morningstar.com/ondemandtpimportservice/MorningstarPortfolioImportService.svc')
+      console.log(`MORNING_STAR_AWS:${xml}`)
+    if (returnXmlOnly) {
+      return callback(undefined, xml, undefined, undefined, undefined);
     }
 
     const startTime = Date.now();
