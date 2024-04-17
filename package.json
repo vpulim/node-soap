@@ -19,7 +19,7 @@
     "xml-crypto": "^3.0.0"
   },
   "peerDependencies": {
-    "axios": "^1.6.1"
+    "axios": "^1.6.8"
   },
   "repository": {
     "type": "git",
