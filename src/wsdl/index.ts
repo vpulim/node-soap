@@ -23,11 +23,8 @@ const debug = debugBuilder('node-soap');
 
 const XSI_URI = 'http://www.w3.org/2001/XMLSchema-instance';
 
-const trimLeft = /^[\s\xA0]+/;
-const trimRight = /[\s\xA0]+$/;
-
-function trim(text) {
-  return text.replace(trimLeft, '').replace(trimRight, '');
+export function trim(text) {
+  return text.trim();
 }
 
 function deepMerge<A, B>(destination: A, source: B): A & B {
