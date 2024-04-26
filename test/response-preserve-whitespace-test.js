@@ -9,7 +9,6 @@ var port;
 
 describe('Preverse whitespace', function() {
   var wsdl = __dirname + '/wsdl/hello.wsdl';
-  var xml = require('fs').readFileSync(wsdl, 'utf8');
 
   before(function(done) {
     server = http.createServer(function(req, res) {
@@ -34,6 +33,7 @@ describe('Preverse whitespace', function() {
         wsdl,
         {
           endpoint: url,
+          disableCache: true, // disable wsdl cache, otherwise 'mocha test/client-response-options-test.js test/response-preserve-whitespace-test.js' will fail.
           preserveWhitespace: true
         },
         function(err, client) {
