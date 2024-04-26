@@ -110,9 +110,9 @@ function cbCaller(client, methodName, requestJSON, responseJSON, responseSoapHea
           assert.deepEqual(err.root, responseJSON);
         } else {
           // assert.deepEqual(json, responseJSON);
-          assert.equal(JSON.stringify(typeof json === 'undefined' ? null : json), JSON.stringify(responseJSON));
+          assert.deepEqual(json ?? null, responseJSON);
           if(responseSoapHeaderJSON){
-            assert.equal(JSON.stringify(soapHeader), JSON.stringify(responseSoapHeaderJSON));
+            assert.deepEqual(soapHeader, responseSoapHeaderJSON);
           }
           if(client.lastResponseAttachments){
             assert.deepEqual(client.lastResponseAttachments.parts,attachmentParts)
