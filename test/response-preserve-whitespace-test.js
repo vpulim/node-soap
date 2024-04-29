@@ -5,9 +5,8 @@ var assert = require('assert');
 var http = require('http');
 var soap = require('../');
 var server;
-var port;
 
-describe('Preverse whitespace', function() {
+describe('Preserse whitespace', function() {
   var wsdl = __dirname + '/wsdl/hello.wsdl';
 
   before(function(done) {
