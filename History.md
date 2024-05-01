@@ -1,3 +1,16 @@
+1.0.2 / 2024-04-29
+===================
+* [ENHANCEMENT] Preserves leading and trailing whitespace when preserveWhitespace option is true (#1211)
+* [ENHANCEMENT] Improve trim speed during XML parsing (#1216)
+* [FIX] Change axios back as a dependency, bump axios to 1.6.8 (#1237)
+* [FIX] Update proxy example in docs (#1220)
+* [FIX] Add missing closing bracket in docs example (#1214)
+
+1.0.1 / 2024-04-18
+===================
+* [FIX] Upgrade axios to 1.6.1 and axios-ntlm to 1.4.2 (#1212)
+* [FIX] Fix build in Node.js 18 by re-encrypting test key (#1206)
+
 1.0.0 / 2022-12-09
 ===================
 * [ENHANCEMENT] allow soap.createClient to create a new SOAP client from a WSDL string (#1191)

@@ -23,11 +23,8 @@ const debug = debugBuilder('node-soap');
 
 const XSI_URI = 'http://www.w3.org/2001/XMLSchema-instance';
 
-const trimLeft = /^[\s\xA0]+/;
-const trimRight = /[\s\xA0]+$/;
-
-function trim(text) {
-  return text.replace(trimLeft, '').replace(trimRight, '');
+export function trim(text) {
+  return text.trim();
 }
 
 function deepMerge<A, B>(destination: A, source: B): A & B {
@@ -356,7 +353,9 @@ export class WSDL {
       const name = splitQName(nsName).name;
 
       if (typeof cur.schema === 'string' && (cur.schema === 'string' || cur.schema.split(':')[1] === 'string')) {
-        if (typeof obj === 'object' && Object.keys(obj).length === 0) { obj = cur.object = ''; }
+        if (typeof obj === 'object' && Object.keys(obj).length === 0) {
+          obj = cur.object = (this.options.preserveWhitespace ? cur.text || '' : '');
+        }
       }
 
       if (cur.nil === true) {
@@ -423,13 +422,17 @@ export class WSDL {
     };
 
     p.ontext = (text) => {
+      const top = stack[stack.length - 1];
+
       const originalText = text;
       text = trim(text);
       if (!text.length) {
+        if (this.options.preserveWhitespace) {
+          top.text = (top.text || '') + originalText;
+        }
         return;
       }
 
-      const top = stack[stack.length - 1];
       const name = splitQName(top.schema).name;
       let value;
 
@@ -846,7 +849,7 @@ export class WSDL {
                 let resolvedChildSchemaObject;
                 if (childSchemaObject.$type) {
                   const typeQName = splitQName(childSchemaObject.$type);
-                  const typePrefix = typeQName.prefix;
+                  const typePrefix = childSchemaObject.$baseNameSpace || typeQName.prefix;
                   const typeURI = schema.xmlns[typePrefix] || this.definitions.xmlns[typePrefix];
                   childNsURI = typeURI;
                   if (typeURI !== 'http://www.w3.org/2001/XMLSchema' && typePrefix !== TNS_PREFIX) {
@@ -1099,7 +1102,6 @@ export class WSDL {
 
             if (found) {
               found.$baseNameSpace = childNameSpace;
-              found.$type = childNameSpace + ':' + childName;
               break;
             }
           }
