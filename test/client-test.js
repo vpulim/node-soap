@@ -619,6 +619,23 @@ var fs = require('fs'),
           });
         }, baseUrl);
       });
+
+      it('should have exactly 1 type parameter when the request uses MTOM', function (done) {
+        soap.createClient(__dirname + '/wsdl/attachments.wsdl', meta.options, function (err, client) {
+          assert.ifError(err);
+
+          client.MyOperation({}, function (error, response, body, soapHeader, rawRequest) {
+            assert.ifError(error);
+
+            const contentTypeSplit = client.lastRequestHeaders['Content-Type'].split(';');
+            
+            assert.equal(contentTypeSplit[0], 'multipart/related');
+            assert.ok(contentTypeSplit.filter(function(e) { return e.trim().startsWith('type=') }).length === 1);
+
+            done();
+          }, { forceMTOM: true })
+        }, baseUrl)
+      });
     });
 
     it('should add soap headers', function (done) {
