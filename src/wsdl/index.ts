@@ -849,7 +849,7 @@ export class WSDL {
                 let resolvedChildSchemaObject;
                 if (childSchemaObject.$type) {
                   const typeQName = splitQName(childSchemaObject.$type);
-                  const typePrefix = typeQName.prefix;
+                  const typePrefix = childSchemaObject.$baseNameSpace || typeQName.prefix;
                   const typeURI = schema.xmlns[typePrefix] || this.definitions.xmlns[typePrefix];
                   childNsURI = typeURI;
                   if (typeURI !== 'http://www.w3.org/2001/XMLSchema' && typePrefix !== TNS_PREFIX) {
@@ -1102,7 +1102,6 @@ export class WSDL {
 
             if (found) {
               found.$baseNameSpace = childNameSpace;
-              found.$type = childNameSpace + ':' + childName;
               break;
             }
           }
