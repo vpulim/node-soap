@@ -1,3 +1,10 @@
+1.0.3 / 2024-05-14
+===================
+* [ENHANCEMENT] Add WSSecurity Protocol with user/pass token element (#1187)
+* [ENHANCEMENT] Prevent mutating $type in the schema while processing requests (#1238)
+* [FIX] Add space after `xmlns:wsu` to prevent xmldom warning (#1215)
+* [FIX] Fix invalid multipart/related Content-Type (#1198)
+
 1.0.2 / 2024-04-29
 ===================
 * [ENHANCEMENT] Preserves leading and trailing whitespace when preserveWhitespace option is true (#1211)
