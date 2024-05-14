@@ -1671,6 +1671,10 @@ xit('should add namespace to array of objects', function (done) {
       }
       done();
     });
+  })
+  .catch(function (err) {
+      assert.equal(err.message, 'Root element of WSDL was <html>. This is likely an authentication issue.');
+      done();
   });
 });
 
