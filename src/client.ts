@@ -177,6 +177,7 @@ export class Client extends EventEmitter {
     this.overridePromiseSuffix = options.overridePromiseSuffix || 'Async';
     this.wsdl.options.attributesKey = options.attributesKey || 'attributes';
     this.wsdl.options.envelopeKey = options.envelopeKey || 'soap';
+    this.wsdl.options.envelopeSoapUrl = options.envelopeSoapUrl || 'http://schemas.xmlsoap.org/soap/envelope/';
     this.wsdl.options.preserveWhitespace = !!options.preserveWhitespace;
     const igNs = options.ignoredNamespaces;
     if (igNs !== undefined && typeof igNs === 'object') {
@@ -300,6 +301,7 @@ export class Client extends EventEmitter {
     const style = method.style;
     const defs = this.wsdl.definitions;
     const envelopeKey = this.wsdl.options.envelopeKey;
+    const envelopeSoapUrl = this.wsdl.options.envelopeSoapUrl;
     const ns: string = defs.$targetNamespace;
     let encoding = '';
     let message = '';
@@ -309,7 +311,7 @@ export class Client extends EventEmitter {
     let headers: any = {
       'Content-Type': 'text/xml; charset=utf-8',
     };
-    let xmlnsSoap = 'xmlns:' + envelopeKey + '="http://schemas.xmlsoap.org/soap/envelope/"';
+    let xmlnsSoap = 'xmlns:' + envelopeKey + '="'+ envelopeSoapUrl + '"';
 
     const finish = (obj, body, response) => {
       let result;
