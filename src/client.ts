@@ -311,7 +311,7 @@ export class Client extends EventEmitter {
     let headers: any = {
       'Content-Type': 'text/xml; charset=utf-8',
     };
-    let xmlnsSoap = 'xmlns:' + envelopeKey + '="'+ envelopeSoapUrl + '"';
+    let xmlnsSoap = 'xmlns:' + envelopeKey + '="' + envelopeSoapUrl + '"';
 
     const finish = (obj, body, response) => {
       let result;
