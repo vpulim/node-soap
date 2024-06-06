@@ -65,12 +65,18 @@ export class WSSecurityCertWithToken implements ISecurity {
     const opts = props.options || {};
     if (opts.signatureAlgorithm === 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256') {
       this.signer.signatureAlgorithm = opts.signatureAlgorithm;
-      this.signer.addReference(
-        bodyXpathPlaceholder,
-        ['http://www.w3.org/2001/10/xml-exc-c14n#'],
-        'http://www.w3.org/2001/04/xmlenc#sha256',
-      );
+      this.signer.addReference({
+        xpath: bodyXpathPlaceholder,
+        transforms: ['http://www.w3.org/2001/10/xml-exc-c14n#'],
+        digestAlgorithm: 'http://www.w3.org/2001/04/xmlenc#sha256',
+      });
     }
+
+    if (!opts.signatureAlgorithm) {
+      this.signer.signatureAlgorithm = 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256';
+    }
+
+    this.signer.canonicalizationAlgorithm = 'http://www.w3.org/2001/10/xml-exc-c14n#';
 
     if (opts.additionalReferences && opts.additionalReferences.length > 0) {
       this.additionalReferences = opts.additionalReferences;
@@ -89,17 +95,18 @@ export class WSSecurityCertWithToken implements ISecurity {
       this.signerOptions = { existingPrefixes: { wsse: `${oasisBaseUri}/oasis-200401-wss-wssecurity-secext-1.0.xsd` } };
     }
 
-    this.signer.signingKey = {
+    this.signer.privateKey = {
       key: props.privateKey,
       passphrase: props.keyPassword,
     };
+
     this.x509Id = `x509-${generateId()}`;
     this.hasTimeStamp = typeof opts.hasTimeStamp === 'undefined' ? true : !!opts.hasTimeStamp;
     this.signatureTransformations = Array.isArray(opts.signatureTransformations) ? opts.signatureTransformations
       : ['http://www.w3.org/2000/09/xmldsig#enveloped-signature', 'http://www.w3.org/2001/10/xml-exc-c14n#'];
 
     this.signer.keyInfoProvider = {};
-    this.signer.keyInfoProvider.getKeyInfo = (key) => {
+    this.signer.getKeyInfo = (key) => {
       return `<wsse:SecurityTokenReference>` +
         `<wsse:Reference URI="#${this.x509Id}" ValueType="${oasisBaseUri}/oasis-200401-wss-x509-token-profile-1.0#X509v3"/>` +
         `</wsse:SecurityTokenReference>`;
@@ -145,19 +152,19 @@ export class WSSecurityCertWithToken implements ISecurity {
     resolvePlaceholderInReferences(this.signer.references, bodyXpath);
 
     if (!(this.signer.references.filter((ref) => (ref.xpath === bodyXpath)).length > 0)) {
-      this.signer.addReference(bodyXpath, references);
+      this.signer.addReference({ xpath: bodyXpath, transforms: references, digestAlgorithm: 'http://www.w3.org/2001/04/xmlenc#sha256' });
     }
 
     for (const name of this.additionalReferences) {
       const xpath = `//*[name(.)='${name}']`;
       if (!(this.signer.references.filter((ref) => (ref.xpath === xpath)).length > 0)) {
-        this.signer.addReference(xpath, references);
+        this.signer.addReference({ xpath: xpath, transforms: references, digestAlgorithm: 'http://www.w3.org/2001/04/xmlenc#sha256' });
       }
     }
 
     const timestampXpath = `//*[name(.)='wsse:Security']/*[local-name(.)='Timestamp']`;
     if (this.hasTimeStamp && !(this.signer.references.filter((ref) => (ref.xpath === timestampXpath)).length > 0)) {
-      this.signer.addReference(timestampXpath, references);
+      this.signer.addReference({ xpath: timestampXpath, transforms: references, digestAlgorithm: 'http://www.w3.org/2001/04/xmlenc#sha256' });
     }
 
     this.signer.computeSignature(xmlWithSec, this.signerOptions);

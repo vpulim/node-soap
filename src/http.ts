@@ -5,7 +5,7 @@
 
 import * as req from 'axios';
 import { NtlmClient } from 'axios-ntlm';
-import * as debugBuilder from 'debug';
+import debugBuilder from 'debug';
 import { ReadStream } from 'fs';
 import * as url from 'url';
 import { v4 as uuidv4 } from 'uuid';

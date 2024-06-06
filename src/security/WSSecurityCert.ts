@@ -71,15 +71,22 @@ export class WSSecurityCert implements ISecurity {
       .replace('-----END CERTIFICATE-----', '')
       .replace(/(\r\n|\n|\r)/gm, '');
 
-    this.signer = new SignedXml(options?.signerOptions?.idMode);
+    this.signer = new SignedXml({ idMode: options?.signerOptions?.idMode });
+
     if (options.signatureAlgorithm === 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256') {
       this.signer.signatureAlgorithm = options.signatureAlgorithm;
-      this.signer.addReference(
-        bodyXpathPlaceholder,
-        ['http://www.w3.org/2001/10/xml-exc-c14n#'],
-        'http://www.w3.org/2001/04/xmlenc#sha256',
-      );
+      this.signer.addReference({
+        xpath: bodyXpathPlaceholder,
+        transforms: ['http://www.w3.org/2001/10/xml-exc-c14n#'],
+        digestAlgorithm: 'http://www.w3.org/2001/04/xmlenc#sha256',
+      });
     }
+
+    if (!options.signatureAlgorithm) {
+      this.signer.signatureAlgorithm = 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256';
+    }
+
+    this.signer.canonicalizationAlgorithm = 'http://www.w3.org/2001/10/xml-exc-c14n#';
 
     if (options.additionalReferences && options.additionalReferences.length > 0) {
       this.additionalReferences = options.additionalReferences;
@@ -98,7 +105,7 @@ export class WSSecurityCert implements ISecurity {
       this.signerOptions = { existingPrefixes: { wsse: `${oasisBaseUri}/oasis-200401-wss-wssecurity-secext-1.0.xsd` } };
     }
 
-    this.signer.signingKey = {
+    this.signer.privateKey = {
       key: privatePEM,
       passphrase: password,
     };
@@ -107,15 +114,14 @@ export class WSSecurityCert implements ISecurity {
     this.signatureTransformations = Array.isArray(options.signatureTransformations) ? options.signatureTransformations
       : ['http://www.w3.org/2000/09/xmldsig#enveloped-signature', 'http://www.w3.org/2001/10/xml-exc-c14n#'];
 
-    this.signer.keyInfoProvider = {};
-    this.signer.keyInfoProvider.getKeyInfo = (key) => {
+    this.signer.getKeyInfo = (key) => {
       return `<wsse:SecurityTokenReference>` +
         `<wsse:Reference URI="#${this.x509Id}" ValueType="${oasisBaseUri}/oasis-200401-wss-x509-token-profile-1.0#X509v3"/>` +
         `</wsse:SecurityTokenReference>`;
     };
   }
 
-  public postProcess(xml, envelopeKey) {
+  public postProcess(xml: string, envelopeKey: string) {
     this.created = generateCreated();
     this.expires = generateExpires();
 
@@ -134,7 +140,7 @@ export class WSSecurityCert implements ISecurity {
       `wsu:Id="${this.x509Id}">${this.publicP12PEM}</wsse:BinarySecurityToken>` +
       timestampStr;
 
-    let xmlWithSec;
+    let xmlWithSec: string;
     const secExt = `xmlns:wsse="${oasisBaseUri}/oasis-200401-wss-wssecurity-secext-1.0.xsd"`;
     const secUtility = `xmlns:wsu="${oasisBaseUri}/oasis-200401-wss-wssecurity-utility-1.0.xsd"`;
     const endOfSecurityHeader = xml.indexOf('</wsse:Security>');
@@ -171,20 +177,20 @@ export class WSSecurityCert implements ISecurity {
     const bodyXpath = `//*[name(.)='${envelopeKey}:Body']`;
     resolvePlaceholderInReferences(this.signer.references, bodyXpath);
 
-    if (!(this.signer.references.filter((ref) => (ref.xpath === bodyXpath)).length > 0)) {
-      this.signer.addReference(bodyXpath, references);
+    if (!(this.signer.references.filter((ref: { xpath: string; }) => (ref.xpath === bodyXpath)).length > 0)) {
+      this.signer.addReference({ xpath: bodyXpath, transforms: references, digestAlgorithm: 'http://www.w3.org/2001/04/xmlenc#sha256' });
     }
 
     for (const name of this.additionalReferences) {
       const xpath = `//*[name(.)='${name}']`;
-      if (!(this.signer.references.filter((ref) => (ref.xpath === xpath)).length > 0)) {
-        this.signer.addReference(xpath, references);
+      if (!(this.signer.references.filter((ref: { xpath: string; }) => (ref.xpath === xpath)).length > 0)) {
+        this.signer.addReference({ xpath: xpath, transforms: references, digestAlgorithm: 'http://www.w3.org/2001/04/xmlenc#sha256' });
       }
     }
 
     const timestampXpath = `//*[name(.)='wsse:Security']/*[local-name(.)='Timestamp']`;
-    if (this.hasTimeStamp && !(this.signer.references.filter((ref) => (ref.xpath === timestampXpath)).length > 0)) {
-      this.signer.addReference(timestampXpath, references);
+    if (this.hasTimeStamp && !(this.signer.references.filter((ref: { xpath: string; }) => (ref.xpath === timestampXpath)).length > 0)) {
+      this.signer.addReference({ xpath: timestampXpath, transforms: references, digestAlgorithm: 'http://www.w3.org/2001/04/xmlenc#sha256' });
     }
 
     this.signer.computeSignature(xmlWithSec, this.signerOptions);

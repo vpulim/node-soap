@@ -5,7 +5,7 @@
 
 import * as assert from 'assert';
 import { AxiosResponseHeaders, RawAxiosResponseHeaders } from 'axios';
-import * as debugBuilder from 'debug';
+import debugBuilder from 'debug';
 import { EventEmitter } from 'events';
 import getStream = require('get-stream');
 import * as _ from 'lodash';
