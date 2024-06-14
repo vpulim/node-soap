@@ -2,6 +2,15 @@
 import * as crypto from 'crypto';
 import { IMTOMAttachments } from './types';
 
+export function stripBom(string) {
+  if (typeof string !== 'string') {
+    throw new TypeError(`Expected a string, got ${typeof string}`);
+  }
+  // Catches EFBBBF (UTF-8 BOM) because the buffer-to-string
+  // conversion translates it to FEFF (UTF-16 BOM).
+  return string.charCodeAt(0) === 0xFEFF ? string.slice(1) : string;
+}
+
 export function passwordDigest(nonce: string, created: string, password: string): string {
   // digest = base64 ( sha1 ( nonce + created + password ) )
   const pwHash = crypto.createHash('sha1');
