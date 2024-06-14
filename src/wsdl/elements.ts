@@ -872,14 +872,16 @@ export class OperationElement extends Element {
       }
       const messageName = splitQName(child.$message).name;
       const message = definitions.messages[messageName];
-      message.postProcess(definitions);
-      if (message.element) {
-        definitions.messages[message.element.$name] = message;
-        this[child.name] = message.element;
-      } else {
-        this[child.name] = message;
+      if (message) {
+        message.postProcess(definitions);
+        if (message.element) {
+          definitions.messages[message.element.$name] = message;
+          this[child.name] = message.element;
+        } else {
+          this[child.name] = message;
+        }
+        children.splice(i--, 1);
       }
-      children.splice(i--, 1);
     }
     this.deleteFixedAttrs();
   }
