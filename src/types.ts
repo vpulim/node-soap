@@ -121,6 +121,8 @@ export interface IOptions extends IWsdlBaseOptions {
   endpoint?: string;
   /** set specific key instead of <pre><soap:Body></soap:Body></pre>. */
   envelopeKey?: string;
+  /** set specific SOAP Schema Url; will not be used with forceSoap12Headers option */
+  envelopeSoapUrl?: string;
   /** provide your own http client that implements request(rurl, data, callback, exheaders, exoptions) */
   httpClient?: IHttpClient;
   /** override the request module. */

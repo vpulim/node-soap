@@ -330,4 +330,12 @@ describe('WSDL Parser (non-strict)', () => {
       done();
     });
   });
+
+
+  it('Should create client even if the some of message definitions are missing', function (done) {
+    soap.createClient(__dirname+'/wsdl/missing_message_definition.wsdl', function(err, client) {
+      assert.equal(err, null);
+      done();
+    });
+  });
 });
