@@ -158,7 +158,7 @@ var fs = require('fs'),
         mimetype: 'image/png',
         contentId: 'file_0',
         name: 'nodejs.png',
-        body: fs.createReadStream(__dirname + '/static/nodejs.png')
+        body: fs.readFileSync(__dirname + '/static/nodejs.png')
       };
 
       function parsePartHeaders(part) {
@@ -239,7 +239,7 @@ var fs = require('fs'),
         mimetype: 'image/png',
         contentId: 'file_0',
         name: 'nodejs.png',
-        body: fs.createReadStream(__dirname + '/static/nodejs.png')
+        body: fs.readFileSync(__dirname + '/static/nodejs.png')
       };
 
       function parsePartHeaders(part) {
