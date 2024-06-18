@@ -2,12 +2,9 @@
 
 var fs = require('fs'),
     soap = require('..'),
-    http = require('http'),
     assert = require('assert'),
   duplexer = require('duplexer'),
-  req = require('request'),
   httpClient = require('../lib/http.js').HttpClient,
- // stream = require('stream'),
   stream = require('readable-stream'),
   util = require('util'),
   events = require('events'),

@@ -1,7 +1,7 @@
-import { v4 as uuidv4 } from 'uuid';
 import { SignedXml } from 'xml-crypto';
 import { ISecurity } from '../types';
 import { IWSSecurityCertOptions, IXmlSignerOptions } from './WSSecurityCert';
+import { randomUUID } from 'crypto';
 
 function addMinutes(date: Date, minutes: number) {
   return new Date(date.getTime() + minutes * 60000);
@@ -26,7 +26,7 @@ function insertStr(src: string, dst: string, pos: number): string {
 }
 
 function generateId(): string {
-  return uuidv4().replace(/-/gm, '');
+  return randomUUID().replace(/-/gm, '');
 }
 
 function resolvePlaceholderInReferences(references: any[], bodyXpath: string) {

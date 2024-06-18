@@ -9,12 +9,12 @@ import debugBuilder from 'debug';
 import { EventEmitter } from 'events';
 import getStream = require('get-stream');
 import * as _ from 'lodash';
-import { v4 as uuidv4 } from 'uuid';
 import { HttpClient } from './http';
 import { IHeaders, IHttpClient, IMTOMAttachments, IOptions, ISecurity, SoapMethod, SoapMethodAsync } from './types';
 import { findPrefix } from './utils';
 import { WSDL } from './wsdl';
 import { IPort, OperationElement, ServiceElement } from './wsdl/elements';
+import { randomUUID } from 'crypto';
 
 const debug = debugBuilder('node-soap');
 
@@ -462,7 +462,7 @@ export class Client extends EventEmitter {
     this.lastRequest = xml;
     this.lastEndpoint = location;
 
-    const eid: string = options.exchangeId || uuidv4();
+    const eid: string = options.exchangeId || randomUUID();
 
     this.emit('message', message, eid);
     this.emit('request', xml, eid);

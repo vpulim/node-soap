@@ -8,11 +8,11 @@ import { NtlmClient } from 'axios-ntlm';
 import debugBuilder from 'debug';
 import { ReadStream } from 'fs';
 import * as url from 'url';
-import { v4 as uuidv4 } from 'uuid';
 import MIMEType = require('whatwg-mimetype');
 import { gzipSync } from 'zlib';
 import { IExOptions, IHeaders, IHttpClient, IOptions } from './types';
 import { parseMTOMResp } from './utils';
+import { randomUUID } from 'crypto';
 
 const debug = debugBuilder('node-soap');
 const VERSION = require('../package.json').version;
@@ -89,7 +89,7 @@ export class HttpClient implements IHttpClient {
       options.validateStatus = null;
     }
     if (exoptions.forceMTOM || attachments.length > 0) {
-      const start = uuidv4();
+      const start = randomUUID();
       let action = null;
       if (headers['Content-Type'].indexOf('action') > -1) {
         for (const ct of headers['Content-Type'].split('; ')) {
@@ -98,7 +98,7 @@ export class HttpClient implements IHttpClient {
           }
         }
       }
-      const boundary = uuidv4();
+      const boundary = randomUUID();
       headers['Content-Type'] = 'multipart/related; type="application/xop+xml"; start="<' + start + '>"; start-info="text/xml"; boundary=' + boundary;
       if (action) {
         headers['Content-Type'] = headers['Content-Type'] + '; ' + action;
