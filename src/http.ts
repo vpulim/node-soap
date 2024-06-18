@@ -5,6 +5,7 @@
 
 import * as req from 'axios';
 import { NtlmClient } from 'axios-ntlm';
+import { randomUUID } from 'crypto';
 import debugBuilder from 'debug';
 import { ReadStream } from 'fs';
 import * as url from 'url';
@@ -12,7 +13,6 @@ import MIMEType = require('whatwg-mimetype');
 import { gzipSync } from 'zlib';
 import { IExOptions, IHeaders, IHttpClient, IOptions } from './types';
 import { parseMTOMResp } from './utils';
-import { randomUUID } from 'crypto';
 
 const debug = debugBuilder('node-soap');
 const VERSION = require('../package.json').version;

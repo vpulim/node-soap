@@ -5,6 +5,7 @@
 
 import * as assert from 'assert';
 import { AxiosResponseHeaders, RawAxiosResponseHeaders } from 'axios';
+import { randomUUID } from 'crypto';
 import debugBuilder from 'debug';
 import { EventEmitter } from 'events';
 import getStream = require('get-stream');
@@ -14,7 +15,6 @@ import { IHeaders, IHttpClient, IMTOMAttachments, IOptions, ISecurity, SoapMetho
 import { findPrefix } from './utils';
 import { WSDL } from './wsdl';
 import { IPort, OperationElement, ServiceElement } from './wsdl/elements';
-import { randomUUID } from 'crypto';
 
 const debug = debugBuilder('node-soap');
 

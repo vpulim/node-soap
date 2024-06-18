@@ -1,7 +1,7 @@
+import { randomUUID } from 'crypto';
 import { SignedXml } from 'xml-crypto';
 import { ISecurity } from '../types';
 import { IWSSecurityCertOptions, IXmlSignerOptions } from './WSSecurityCert';
-import { randomUUID } from 'crypto';
 
 function addMinutes(date: Date, minutes: number) {
   return new Date(date.getTime() + minutes * 60000);
