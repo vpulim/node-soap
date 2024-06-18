@@ -1,9 +1,7 @@
 'use strict';
 
 var soap = require('..'),
-    http = require('http'),
     assert = require('assert'),
-  req = require('request'),
   httpClient = require('../lib/http.js').HttpClient,
   util = require('util'),
   events = require('events'),
