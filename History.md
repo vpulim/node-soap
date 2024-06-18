@@ -1,3 +1,9 @@
+1.0.4 / 2024-06-18
+===================
+* [ENHANCEMENT] Speed up WSDL parsing (#1218)
+* [ENHANCEMENT] Add envelopeSoapUrl option to change the URL in xmlns:soap attribute (#1239)
+* [ENHANCEMENT] Handle missing message definitions when creating SOAP client (#1241)
+
 1.0.3 / 2024-05-14
 ===================
 * [ENHANCEMENT] Add WSSecurity Protocol with user/pass token element (#1187)
