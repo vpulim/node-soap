@@ -97,7 +97,7 @@ GitHub issues have been disabled to focus on pull requests. ([#731](https://gith
 
 ### soap.createClient(url[, options], callback) - create a new SOAP client from a WSDL url. Also supports a local filesystem path.
 
-- `url` (*string*): A HTTP/HTTPS URL or a local filesystem path.
+- `url` (*string*): A HTTP/HTTPS URL, XML or a local filesystem path.
 - `options` (*Object*):
   - `endpoint` (*string*): Override the host specified by the SOAP service in the WSDL file.
   - `envelopeKey` (*string*): Set a custom envelope key. (**Default:** `'soap'`)
@@ -124,6 +124,7 @@ GitHub issues have been disabled to focus on pull requests. ([#731](https://gith
 
 #### Example
 
+HTTP/HTTPS:
 ``` javascript
   var soap = require('soap');
   var url = 'http://example.com/wsdl?wsdl';
@@ -136,13 +137,55 @@ GitHub issues have been disabled to focus on pull requests. ([#731](https://gith
   });
 ```
 
+XML string format:
+``` javascript
+  var soap = require('soap');
+  var xml = `
+    <?xml version="1.0" encoding="UTF-8"?>
+    <definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+       <message name="MyFunctionRequest"/>
+       <message name="MyFunctionResponse"/>
+    
+       <portType name="MyFunctionPortType">
+          <operation name="MyFunction">
+             <input message="MyFunctionRequest"/>
+             <output message="MyFunctionResponse"/>
+          </operation>
+       </portType>
+    
+       <binding name="MyFunctionBinding" type="MyFunctionPortType">
+          <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+          <operation name="MyFunction">
+             <soap:operation soapAction="MyFunction"/>
+             <input><soap:body use="encoded"/></input>
+             <output><soap:body use="encoded"/></output>
+          </operation>
+       </binding>
+    
+       <service name="MyService">
+          <port binding="MyFunctionBinding" name="MyFunctionPort">
+             <soap:address location="http://www.examples.com/MyFunction/" />
+          </port>
+       </service>
+    </definitions>
+  `;
+  var args = {name: 'value'};
+
+  soap.createClient(xml, {}, function(err, client) {
+      client.MyFunction(args, function(err, result) {
+          console.log(result);
+      });
+  });
+```
+
+
 Note: for versions of node >0.10.X, you may need to specify `{connection: 'keep-alive'}` in SOAP headers to avoid truncation of longer chunked responses.
 
 ### soap.createClientAsync(url[, options]) - create a new SOAP client from a WSDL url. Also supports a local filesystem path.
 
 Construct a `Promise<Client>` with the given WSDL file.
 
-- `url` (*string*): A HTTP/HTTPS URL or a local filesystem path.
+- `url` (*string*): A HTTP/HTTPS URL, XML or a local filesystem path.
 - `options` (*Object*): See [soap.createClient(url[, options], callback)](#soapcreateclienturl-options-callback---create-a-new-soap-client-from-a-wsdl-url-also-supports-a-local-filesystem-path) for a description.
 - Returns: `Promise<Client>`
 
