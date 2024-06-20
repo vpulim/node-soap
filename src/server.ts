@@ -199,6 +199,7 @@ export class Server extends EventEmitter {
     this.wsdl.options.attributesKey = options.attributesKey || 'attributes';
     this.onewayOptions.statusCode = this.onewayOptions.responseCode || 200;
     this.onewayOptions.emptyBody = !!this.onewayOptions.emptyBody;
+    this.wsdl.options.envelopeKey = options.envelopeKey || 'soap';
   }
 
   private _processRequestXml(req: Request, res: Response, xml) {
@@ -599,13 +600,14 @@ export class Server extends EventEmitter {
     const ns = defs.$targetNamespace;
     const encoding = '';
     const alias = findPrefix(defs.xmlns, ns);
+    const envelopeKey = this.wsdl.options.envelopeKey;
 
     const envelopeDefinition = this.wsdl.options.forceSoap12Headers
       ? 'http://www.w3.org/2003/05/soap-envelope'
       : 'http://schemas.xmlsoap.org/soap/envelope/';
 
     let xml = '<?xml version="1.0" encoding="utf-8"?>' +
-      '<soap:Envelope xmlns:soap="' + envelopeDefinition + '" ' +
+      '<' + envelopeKey + ':Envelope' + ' xmlns:' + envelopeKey + '=' + ' "' + envelopeDefinition + '" ' +
       encoding +
       this.wsdl.xmlnsInEnvelope + '>';
 
@@ -627,12 +629,10 @@ export class Server extends EventEmitter {
     }
 
     if (headers !== '') {
-      xml += '<soap:Header>' + headers + '</soap:Header>';
+      xml += '<' + envelopeKey + ':Header>' + headers + '</' + envelopeKey + ':Header>';
     }
-
-    xml += body ? '<soap:Body>' + body + '</soap:Body>' : '<soap:Body/>';
-
-    xml += '</soap:Envelope>';
+    xml += body ? '<' + envelopeKey + ':Body>' + body + '</' + envelopeKey + ':Body>' : '<' + envelopeKey + ':Body/>';
+    xml += '</' + envelopeKey + ':Envelope>';
     return xml;
   }
 
