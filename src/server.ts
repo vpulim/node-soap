@@ -74,7 +74,7 @@ interface IExecuteMethodOptions {
 export class Server extends EventEmitter {
   public path: string | RegExp;
   public services: IServices;
-  public log: (type: string, data: any) => any;
+  public log: (type: string, data: any, req?: Request, res?: Response) => any;
   public authorizeConnection: (req: Request, res?: Response) => boolean;
   public authenticate: (security: any, processAuthResult?: (result: boolean) => void, req?: Request, obj?: any) => boolean | void | Promise<boolean>;
 
@@ -205,12 +205,12 @@ export class Server extends EventEmitter {
     let error;
     try {
       if (typeof this.log === 'function') {
-        this.log('received', xml);
+        this.log('received', xml, req, res);
       }
       this._process(xml, req, res, (result, statusCode) => {
         this._sendHttpResponse(res, statusCode, result);
         if (typeof this.log === 'function') {
-          this.log('replied', result);
+          this.log('replied', result, req, res);
         }
       });
     } catch (err) {
@@ -218,14 +218,14 @@ export class Server extends EventEmitter {
         return this._sendError(err.Fault, (result, statusCode) => {
           this._sendHttpResponse(res, statusCode || 500, result);
           if (typeof this.log === 'function') {
-            this.log('error', err);
+            this.log('error', err, req, res);
           }
         }, new Date().toISOString());
       } else {
         error = err.stack ? (this.suppressStack === true ? err.message : err.stack) : err;
         this._sendHttpResponse(res, /* statusCode */ 500, error);
         if (typeof this.log === 'function') {
-          this.log('error', error);
+          this.log('error', error, req, res);
         }
       }
     }
@@ -237,14 +237,14 @@ export class Server extends EventEmitter {
     const reqQuery = reqParse.search;
 
     if (typeof this.log === 'function') {
-      this.log('info', 'Handling ' + req.method + ' on ' + req.url);
+      this.log('info', 'Handling ' + req.method + ' on ' + req.url, req, res);
     }
 
     if (req.method === 'GET') {
 
       if (reqQuery && reqQuery.toLowerCase().startsWith('?wsdl')) {
         if (typeof this.log === 'function') {
-          this.log('info', 'Wants the WSDL');
+          this.log('info', 'Wants the WSDL', req, res);
         }
         res.setHeader('Content-Type', 'application/xml');
         res.write(this.wsdl.toXML());
@@ -314,7 +314,7 @@ export class Server extends EventEmitter {
     const process = () => {
 
       if (typeof this.log === 'function') {
-        this.log('info', 'Attempting to bind to ' + pathname);
+        this.log('info', 'Attempting to bind to ' + pathname, req, res);
       }
 
       // Avoid Cannot convert undefined or null to object due to Object.keys(body)
@@ -338,7 +338,7 @@ export class Server extends EventEmitter {
             const portPathname = url.parse(port.location).pathname.replace(/\/$/, '');
 
             if (typeof this.log === 'function') {
-              this.log('info', 'Trying ' + portName + ' from path ' + portPathname);
+              this.log('info', 'Trying ' + portName + ' from path ' + portPathname, req, res);
             }
 
             if (portPathname === pathname) {
