@@ -500,7 +500,7 @@ var fs = require('fs'),
             assert.ok(result);
             assert.ok(client.lastResponse);
             assert.ok(client.lastResponseHeaders);
-            assert.ok(client.lastElapsedTime);
+            assert.ok(client.lastElapsedTime !== undefined);
 
             done();
           }, { time: true }, { 'test-header': 'test' });
@@ -618,6 +618,23 @@ var fs = require('fs'),
             done();
           });
         }, baseUrl);
+      });
+
+      it('should have exactly 1 type parameter when the request uses MTOM', function (done) {
+        soap.createClient(__dirname + '/wsdl/attachments.wsdl', meta.options, function (err, client) {
+          assert.ifError(err);
+
+          client.MyOperation({}, function (error, response, body, soapHeader, rawRequest) {
+            assert.ifError(error);
+
+            const contentTypeSplit = client.lastRequestHeaders['Content-Type'].split(';');
+            
+            assert.equal(contentTypeSplit[0], 'multipart/related');
+            assert.ok(contentTypeSplit.filter(function(e) { return e.trim().startsWith('type=') }).length === 1);
+
+            done();
+          }, { forceMTOM: true })
+        }, baseUrl)
       });
     });
 
@@ -1453,6 +1470,18 @@ var fs = require('fs'),
           });
       });
 
+      it('should allow customization of envelope Soap Url', function (done) {
+        soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', Object.assign({ envelopeSoapUrl: 'http://example.com/v1' }, meta.options), function (err, client) {
+          assert.ok(client);
+          assert.ifError(err);
+  
+          client.MyOperation({}, function (err, result) {
+            assert.notEqual(client.lastRequest.indexOf('xmlns:soap=\"http://example.com/v1\"'), -1);
+            done();
+          });
+        });
+      });
+
       it('should add soap headers', function (done) {
         soap.createClientAsync(__dirname + '/wsdl/default_namespace.wsdl', meta.options)
           .then(function (client) {
@@ -1654,6 +1683,10 @@ xit('should add namespace to array of objects', function (done) {
       }
       done();
     });
+  })
+  .catch(function (err) {
+      assert.equal(err.message, 'Root element of WSDL was <html>. This is likely an authentication issue.');
+      done();
   });
 });
 

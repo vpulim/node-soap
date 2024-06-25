@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { SignedXml } from 'xml-crypto';
 import { ISecurity } from '../types';
+import { IWSSecurityCertOptions, IXmlSignerOptions } from './WSSecurityCert';
 
 function addMinutes(date: Date, minutes: number) {
   return new Date(date.getTime() + minutes * 60000);
@@ -39,22 +40,7 @@ function resolvePlaceholderInReferences(references: any[], bodyXpath: string) {
 const oasisBaseUri = 'http://docs.oasis-open.org/wss/2004/01';
 const bodyXpathPlaceholder = '[[bodyXpath]]';
 
-export interface IWSSecurityCertOptions {
-  hasTimeStamp?: boolean;
-  signatureTransformations?: string[];
-  signatureAlgorithm?: string;
-  additionalReferences?: string[];
-  signerOptions?: IXmlSignerOptions;
-}
-
-export interface IXmlSignerOptions {
-  prefix?: string;
-  attrs?: { [key: string]: string };
-  existingPrefixes?: { [key: string]: string };
-  idMode?: 'wssecurity';
-}
-
-export class WSSecurityCert implements ISecurity {
+export class WSSecurityCertWithToken implements ISecurity {
   private publicP12PEM: string;
   private signer: any;
   private signerOptions: IXmlSignerOptions = {};
@@ -64,16 +50,21 @@ export class WSSecurityCert implements ISecurity {
   private created: string;
   private expires: string;
   private additionalReferences: string[] = [];
+  private username: string;
+  private password: string;
 
-  constructor(privatePEM: any, publicP12PEM: any, password: any, options: IWSSecurityCertOptions = {}) {
-    this.publicP12PEM = publicP12PEM.toString()
+  constructor(props: { privateKey: Buffer, publicKey: string, keyPassword?: string, username: string, password: string, options?: IWSSecurityCertOptions }) {
+    this.publicP12PEM = props.publicKey.toString()
       .replace('-----BEGIN CERTIFICATE-----', '')
       .replace('-----END CERTIFICATE-----', '')
       .replace(/(\r\n|\n|\r)/gm, '');
+    this.username = props.username;
+    this.password = props.password;
 
-    this.signer = new SignedXml(options?.signerOptions?.idMode);
-    if (options.signatureAlgorithm === 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256') {
-      this.signer.signatureAlgorithm = options.signatureAlgorithm;
+    this.signer = new SignedXml();
+    const opts = props.options || {};
+    if (opts.signatureAlgorithm === 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256') {
+      this.signer.signatureAlgorithm = opts.signatureAlgorithm;
       this.signer.addReference(
         bodyXpathPlaceholder,
         ['http://www.w3.org/2001/10/xml-exc-c14n#'],
@@ -81,12 +72,12 @@ export class WSSecurityCert implements ISecurity {
       );
     }
 
-    if (options.additionalReferences && options.additionalReferences.length > 0) {
-      this.additionalReferences = options.additionalReferences;
+    if (opts.additionalReferences && opts.additionalReferences.length > 0) {
+      this.additionalReferences = opts.additionalReferences;
     }
 
-    if (options.signerOptions) {
-      const { signerOptions } = options;
+    if (opts.signerOptions) {
+      const { signerOptions } = props.options;
       this.signerOptions = signerOptions;
       if (!this.signerOptions.existingPrefixes) {
         this.signerOptions.existingPrefixes = {};
@@ -99,12 +90,12 @@ export class WSSecurityCert implements ISecurity {
     }
 
     this.signer.signingKey = {
-      key: privatePEM,
-      passphrase: password,
+      key: props.privateKey,
+      passphrase: props.keyPassword,
     };
     this.x509Id = `x509-${generateId()}`;
-    this.hasTimeStamp = typeof options.hasTimeStamp === 'undefined' ? true : !!options.hasTimeStamp;
-    this.signatureTransformations = Array.isArray(options.signatureTransformations) ? options.signatureTransformations
+    this.hasTimeStamp = typeof opts.hasTimeStamp === 'undefined' ? true : !!opts.hasTimeStamp;
+    this.signatureTransformations = Array.isArray(opts.signatureTransformations) ? opts.signatureTransformations
       : ['http://www.w3.org/2000/09/xmldsig#enveloped-signature', 'http://www.w3.org/2001/10/xml-exc-c14n#'];
 
     this.signer.keyInfoProvider = {};
@@ -127,44 +118,26 @@ export class WSSecurityCert implements ISecurity {
         `<Expires>${this.expires}</Expires>` +
         `</Timestamp>`;
     }
-
-    const binarySecurityToken = `<wsse:BinarySecurityToken ` +
+    let usernameToken = '';
+    if (this.username) {
+      usernameToken = `<wsse:UsernameToken wsu:Id="SecurityToken-${this.created}" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">` +
+        `<wsse:Username>${this.username}</wsse:Username> ` +
+        `<wsse:Password>${this.password}</wsse:Password> ` +
+        `</wsse:UsernameToken>`;
+    }
+    const secHeader =
+      `<wsse:Security xmlns:wsse="${oasisBaseUri}/oasis-200401-wss-wssecurity-secext-1.0.xsd" ` +
+      `xmlns:wsu="${oasisBaseUri}/oasis-200401-wss-wssecurity-utility-1.0.xsd" ` +
+      `${envelopeKey}:mustUnderstand="1">` +
+      `<wsse:BinarySecurityToken ` +
       `EncodingType="${oasisBaseUri}/oasis-200401-wss-soap-message-security-1.0#Base64Binary" ` +
       `ValueType="${oasisBaseUri}/oasis-200401-wss-x509-token-profile-1.0#X509v3" ` +
       `wsu:Id="${this.x509Id}">${this.publicP12PEM}</wsse:BinarySecurityToken>` +
-      timestampStr;
+      usernameToken +
+      timestampStr +
+      `</wsse:Security>`;
 
-    let xmlWithSec;
-    const secExt = `xmlns:wsse="${oasisBaseUri}/oasis-200401-wss-wssecurity-secext-1.0.xsd"`;
-    const secUtility = `xmlns:wsu="${oasisBaseUri}/oasis-200401-wss-wssecurity-utility-1.0.xsd"`;
-    const endOfSecurityHeader = xml.indexOf('</wsse:Security>');
-    if (endOfSecurityHeader > -1) {
-      const securityHeaderRegexp = /<wsse:Security( [^>]*)?>/;
-      const match = xml.match(securityHeaderRegexp);
-      let insertHeaderAttributes = '';
-      if (!match[0].includes(` ${envelopeKey}:mustUnderstand="`)) {
-        insertHeaderAttributes += `${envelopeKey}:mustUnderstand="1" `;
-      }
-      if (!match[0].includes(secExt.substring(0, secExt.indexOf('=')))) {
-        insertHeaderAttributes += `${secExt} `;
-      }
-      if (!match[0].includes(secUtility.substring(0, secExt.indexOf('=')))) {
-        insertHeaderAttributes += `${secUtility} `;
-      }
-      const headerMarker = '<wsse:Security ';
-      const startOfSecurityHeader = xml.indexOf(headerMarker);
-      xml = insertStr(binarySecurityToken, xml, endOfSecurityHeader);
-      xmlWithSec = insertStr(insertHeaderAttributes, xml, startOfSecurityHeader + headerMarker.length);
-    } else {
-      const secHeader =
-        `<wsse:Security ${secExt} ` +
-        `${secUtility} ` +
-        `${envelopeKey}:mustUnderstand="1">` +
-        binarySecurityToken +
-        `</wsse:Security>`;
-
-      xmlWithSec = insertStr(secHeader, xml, xml.indexOf(`</${envelopeKey}:Header>`));
-    }
+    const xmlWithSec = insertStr(secHeader, xml, xml.indexOf(`</${envelopeKey}:Header>`));
 
     const references = this.signatureTransformations;
 
@@ -189,8 +162,6 @@ export class WSSecurityCert implements ISecurity {
 
     this.signer.computeSignature(xmlWithSec, this.signerOptions);
 
-    const originalXmlWithIds = this.signer.getOriginalXmlWithIds();
-    const signatureXml = this.signer.getSignatureXml();
-    return insertStr(signatureXml, originalXmlWithIds, originalXmlWithIds.indexOf('</wsse:Security>'));
+    return insertStr(this.signer.getSignatureXml(), xmlWithSec, xmlWithSec.indexOf('</wsse:Security>'));
   }
 }
