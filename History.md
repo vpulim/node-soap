@@ -1,3 +1,10 @@
+1.1.0 / 2024-07-16
+===================
+* [ENHANCEMENT] Upgrade dependencies and refactor code to work with the xml-crypto 6.0.0, use built-in randomUUID instead of uuid (#1242)
+* [ENHANCEMENT] Add express request object as parameter to the log method. (#1210)
+* [ENHANCEMENT] Make error messages useful when using SOAP 1.2 (#1228)
+* [ENHANCEMENT] Update Readme.md add example for xml string parameter (#1244)
+
 1.0.4 / 2024-06-18
 ===================
 * [ENHANCEMENT] Speed up WSDL parsing (#1218)
