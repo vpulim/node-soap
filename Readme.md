@@ -283,12 +283,15 @@ soap.listen(server, {
 
 ### Server Logging
 
-If the `log` method is defined, it will be called with 'received' and 'replied' along with the data.
+If the `log` method is defined, it will be called with:
+- `type`: 'received', 'replied', 'info' or 'error'.
+- `data`: The data to be logged which will be an XML for 'received' and 'replied' or a message for the other types.
+- `req`: The original request object
 
 ``` javascript
   server = soap.listen(...)
-  server.log = function(type, data) {
-    // type is 'received' or 'replied'
+  server.log = function(type, data, req) {
+    // type is 'received', 'replied', 'info' or 'error'
   };
 ```
 
