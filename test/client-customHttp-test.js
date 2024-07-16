@@ -2,12 +2,9 @@
 
 var fs = require('fs'),
     soap = require('..'),
-    http = require('http'),
     assert = require('assert'),
   duplexer = require('duplexer'),
-  req = require('request'),
   httpClient = require('../lib/http.js').HttpClient,
- // stream = require('stream'),
   stream = require('readable-stream'),
   util = require('util'),
   events = require('events'),
@@ -15,8 +12,7 @@ var fs = require('fs'),
   should = require('should');
 
 it('should allow customization of httpClient and the wsdl file download should pass through it', function(done) {
-  
-//Make a custom http agent to use streams instead on net socket
+  //Make a custom http agent to use streams instead on net socket
   function CustomAgent(options, socket){
     var self = this;
     events.EventEmitter.call(this);
@@ -28,31 +24,31 @@ it('should allow customization of httpClient and the wsdl file download should p
   }
   
   util.inherits(CustomAgent, events.EventEmitter);
-    
+  
   CustomAgent.prototype.addRequest = function(req, options) {
     req.onSocket(this.proxyStream);
   };
-
+  
   //Create a duplex stream 
     
   var httpReqStream = new stream.PassThrough();
   var httpResStream = new stream.PassThrough();
   var socketStream = duplexer(httpReqStream, httpResStream);
-
+  
   // Node 4.x requires cork/uncork
   socketStream.cork = function() {
   };
-
+  
   socketStream.uncork = function() {
   };
-
+  
   socketStream.destroy = function() {
   };
-
+  
   // axios calls this
   socketStream.setKeepAlive = function() {
   };
-
+  
   //Custom httpClient  
   class MyHttpClient extends httpClient {
     constructor(options, socket) {
@@ -60,7 +56,7 @@ it('should allow customization of httpClient and the wsdl file download should p
       this.agent = new CustomAgent(options, socket);
     }
   }
-    
+  
   MyHttpClient.prototype.request = function(rurl, data, callback, exheaders, exoptions) {
     var self = this;
     var options = self.buildRequest(rurl, data, exheaders, exoptions);

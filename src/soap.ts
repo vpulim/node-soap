@@ -3,7 +3,7 @@
  * MIT Licensed
  */
 
-import * as debugBuilder from 'debug';
+import debugBuilder from 'debug';
 import { Client } from './client';
 import * as _security from './security';
 import { Server, ServerType } from './server';

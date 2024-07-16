@@ -6,7 +6,7 @@
 /*jshint proto:true*/
 
 import { ok as assert } from 'assert';
-import * as debugBuilder from 'debug';
+import debugBuilder from 'debug';
 import * as fs from 'fs';
 import * as _ from 'lodash';
 import * as path from 'path';
