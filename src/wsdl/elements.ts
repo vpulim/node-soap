@@ -241,6 +241,7 @@ export class ElementElement extends Element {
       type = splitQName(type);
       const typeName: string = type.name;
       const ns: string = xmlns && xmlns[type.prefix] ||
+        this.xmlns[type.prefix] ||
         ((definitions.xmlns[type.prefix] !== undefined || definitions.xmlns[this.targetNSAlias] !== undefined) && this.schemaXmlns[type.prefix]) ||
         definitions.xmlns[type.prefix];
       const schema = definitions.schemas[ns];

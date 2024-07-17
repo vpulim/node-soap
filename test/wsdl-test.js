@@ -246,6 +246,15 @@ describe('WSDL Parser (non-strict)', () => {
     });
   });
 
+  it('should load same namespace from included xsd with inline xmlns ', (done) => {
+    var expected = '{"DummyService":{"DummyPortType":{"Dummy":{"input":{"ID":"IdType|xs:string|pattern","Name":"NameType|xs:string|minLength,maxLength"},"output":{"Result":"dummy:DummyList"}}}}}';
+    soap.createClient(__dirname + '/wsdl/xsdinclude/xsd_include_inline_xmlns.wsdl', function(err, client) {
+      assert.ifError(err);
+      assert.equal(JSON.stringify(client.describe()), expected);
+      done();
+    });
+  });
+
   it('should all attributes to root elements', (done) => {
     var expectedMsg = '<ns1:fooRq xmlns:ns1="http://example.com/bar/xsd"' +
       ' xmlns="http://example.com/bar/xsd"><bar1:paymentRq bar1:test="attr"' +

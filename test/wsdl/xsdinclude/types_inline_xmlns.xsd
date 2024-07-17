@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://www.dummy.com/Types"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:dummy="http://www.dummy.com/Types"
+           elementFormDefault="qualified" attributeFormDefault="unqualified">
+    <xs:include schemaLocation="types.xsd"/>
+    <xs:element name="DummyRequest">
+        <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ID" type="ns1:IdType" xmlns:ns1="http://www.dummy.com/Types"/>
+              <xs:element name="Name" type="ns2:NameType" xmlns:ns2="http://www.dummy.com/Types"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="DummyResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Result" type="dummy:DummyList"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
