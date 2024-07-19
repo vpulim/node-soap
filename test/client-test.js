@@ -184,6 +184,9 @@ var fs = require('fs'),
             const body = Buffer.concat(bufs).toString().trim();
             const headers = req.headers;
             const boundary = headers['content-type'].match(/boundary="?([^"]*"?)/)[1];
+
+            assert.ok(body.includes(`PNG\r\n\u001a\n\u0000\u0000\u0000\rIHDR`), `Body does not contain part of binary data`);
+
             const parts = body.split(new RegExp('--' + boundary + '-{0,2}'))
               .filter(part => part)
               .map(parsePartHeaders);
@@ -208,18 +211,17 @@ var fs = require('fs'),
               });
               assert.equal(contentType.rootType, 'multipart/related');
 
-              /* does not handle attachements */
-              // assert.equal(body.parts.length, 2);
+              assert.equal(body.parts.length, 2);
 
-              // const dataHeaders = body.parts[0];
-              // assert(dataHeaders['Content-Type'].indexOf('application/xop+xml') > -1);
-              // assert.equal(dataHeaders['Content-ID'], contentType.start);
+              const dataHeaders = body.parts[0];
+              assert(dataHeaders['Content-Type'].indexOf('application/xop+xml') > -1);
+              assert.equal(dataHeaders['Content-ID'], contentType.start);
 
-              // const attachmentHeaders = body.parts[1];
-              // assert.equal(attachmentHeaders['Content-Type'], attachment.mimetype);
-              // assert.equal(attachmentHeaders['Content-Transfer-Encoding'], 'binary');
-              // assert.equal(attachmentHeaders['Content-ID'], '<' + attachment.contentId + '>');
-              // assert(attachmentHeaders['Content-Disposition'].indexOf(attachment.name) > -1);
+              const attachmentHeaders = body.parts[1];
+              assert.equal(attachmentHeaders['Content-Type'], attachment.mimetype);
+              assert.equal(attachmentHeaders['Content-Transfer-Encoding'], 'binary');
+              assert.equal(attachmentHeaders['Content-ID'], '<' + attachment.contentId + '>');
+              assert(attachmentHeaders['Content-Disposition'].indexOf(attachment.name) > -1);
 
               server.close();
               done();
@@ -308,12 +310,11 @@ var fs = require('fs'),
               }
             });
             assert.equal(contentType.rootType, 'multipart/related');
-            /** does not handle attachements */
-            // assert.equal(body.parts.length, 1);
+            assert.equal(body.parts.length, 1);
 
-            // const dataHeaders = body.parts[0];
-            // assert(dataHeaders['Content-Type'].indexOf('application/xop+xml') > -1);
-            // assert.equal(dataHeaders['Content-ID'], contentType.start);
+            const dataHeaders = body.parts[0];
+            assert(dataHeaders['Content-Type'].indexOf('application/xop+xml') > -1);
+            assert.equal(dataHeaders['Content-ID'], contentType.start);
             done();
           }, { forceMTOM: true })
         }, baseUrl)
@@ -628,9 +629,9 @@ var fs = require('fs'),
             assert.ifError(error);
 
             const contentTypeSplit = client.lastRequestHeaders['Content-Type'].split(';');
-            
+
             assert.equal(contentTypeSplit[0], 'multipart/related');
-            assert.ok(contentTypeSplit.filter(function(e) { return e.trim().startsWith('type=') }).length === 1);
+            assert.ok(contentTypeSplit.filter(function (e) { return e.trim().startsWith('type=') }).length === 1);
 
             done();
           }, { forceMTOM: true })
@@ -1474,7 +1475,7 @@ var fs = require('fs'),
         soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', Object.assign({ envelopeSoapUrl: 'http://example.com/v1' }, meta.options), function (err, client) {
           assert.ok(client);
           assert.ifError(err);
-  
+
           client.MyOperation({}, function (err, result) {
             assert.notEqual(client.lastRequest.indexOf('xmlns:soap=\"http://example.com/v1\"'), -1);
             done();
@@ -1684,10 +1685,10 @@ xit('should add namespace to array of objects', function (done) {
       done();
     });
   })
-  .catch(function (err) {
+    .catch(function (err) {
       assert.equal(err.message, 'Root element of WSDL was <html>. This is likely an authentication issue.');
       done();
-  });
+    });
 });
 
 
@@ -1767,7 +1768,7 @@ describe('Client posting complex body', () => {
         return void done(err);
       }
       assert.ok(client);
-  
+
       var requestBody = {
         id: 'ID00000000000000000000000000000000',
         lastName: 'Doe',
@@ -1786,7 +1787,7 @@ describe('Client posting complex body', () => {
           companyName: 'ACME'
         }
       }
-  
+
       client.registerUser(requestBody, function (err, result) {
         assert.ok(client.lastRequest);
         assert.ok(client.lastMessage);
@@ -1795,7 +1796,7 @@ describe('Client posting complex body', () => {
         console.log(client.lastMessage);
         const expectedBody = '<registrationMessages:registerUserRequest xmlns:registrationMessages="http://test-soap.com/api/registration/messages" xmlns="http://test-soap.com/api/registration/messages"><registrationMessages:id>ID00000000000000000000000000000000</registrationMessages:id><registrationMessages:lastName>Doe</registrationMessages:lastName><registrationMessages:firstName>John</registrationMessages:firstName><registrationMessages:dateOfBirth>1970-01-01</registrationMessages:dateOfBirth><registrationMessages:correspondenceLanguage>ENG</registrationMessages:correspondenceLanguage><registrationMessages:emailAddress>jdoe@doe.com</registrationMessages:emailAddress><registrationMessages:lookupPermission>ALLOWED</registrationMessages:lookupPermission><registrationMessages:companyAddress><ct:address xmlns:ct="http://test-soap.com/api/common/types"><ct:streetName>Street</ct:streetName><ct:postalCode>Code</ct:postalCode><ct:city>City</ct:city><ct:countryCode>US</ct:countryCode></ct:address><ct:companyName xmlns:ct="http://test-soap.com/api/common/types">ACME</ct:companyName></registrationMessages:companyAddress></registrationMessages:registerUserRequest>';
         assert.strictEqual(client.lastMessage, expectedBody);
-  
+
         done();
       });
     }, baseUrl);
