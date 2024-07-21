@@ -463,9 +463,6 @@ describe('SOAP Server', function () {
         assert.ok(err);
         assert.strictEqual(err.response, response);
         assert.strictEqual(err.body, body);
-        // console.log(test.logMessages);
-        // assert.strictEqual(test.logMessages.length, 1);
-        // assert.notStrictEqual(test.logMessages[0].tyoe, {});
         done();
       });
     });
