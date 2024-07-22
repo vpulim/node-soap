@@ -1,7 +1,7 @@
 
+import { deepmergeInto } from 'deepmerge-ts';
 import * as fs from 'fs';
 import * as https from 'https';
-import * as _ from 'lodash';
 import { ISecurity } from '../types';
 
 /**
@@ -39,7 +39,7 @@ export class ClientSSLSecurityPFX implements ISecurity {
       }
     }
     this.defaults = {};
-    _.merge(this.defaults, defaults);
+    deepmergeInto(this.defaults, defaults);
   }
 
   public toXML(): string {
@@ -51,7 +51,7 @@ export class ClientSSLSecurityPFX implements ISecurity {
     if (this.passphrase) {
       options.passphrase = this.passphrase;
     }
-    _.merge(options, this.defaults);
+    deepmergeInto(options, this.defaults);
     options.httpsAgent = new https.Agent(options);
   }
 }

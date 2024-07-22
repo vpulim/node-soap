@@ -5,7 +5,6 @@ var fs = require('fs'),
   http = require('http'),
   stream = require('stream'),
   assert = require('assert'),
-  _ = require('lodash'),
   sinon = require('sinon'),
   wsdl = require('../lib/wsdl');
 
@@ -628,9 +627,9 @@ var fs = require('fs'),
             assert.ifError(error);
 
             const contentTypeSplit = client.lastRequestHeaders['Content-Type'].split(';');
-            
+
             assert.equal(contentTypeSplit[0], 'multipart/related');
-            assert.ok(contentTypeSplit.filter(function(e) { return e.trim().startsWith('type=') }).length === 1);
+            assert.ok(contentTypeSplit.filter(function (e) { return e.trim().startsWith('type=') }).length === 1);
 
             done();
           }, { forceMTOM: true })
@@ -1210,8 +1209,7 @@ var fs = require('fs'),
       it('shall generate correct payload for methods with array parameter', function (done) {
         soap.createClient(__dirname + '/wsdl/list_parameter.wsdl', function (err, client) {
           assert.ok(client);
-          var pathToArrayContainer = 'TimesheetV201511Mobile.TimesheetV201511MobileSoap.AddTimesheet.input.input.PeriodList';
-          var arrayParameter = _.get(client.describe(), pathToArrayContainer)['PeriodType[]'];
+          var arrayParameter = client.describe().TimesheetV201511Mobile.TimesheetV201511MobileSoap.AddTimesheet.input.input.PeriodList['PeriodType[]'];
           assert.ok(arrayParameter);
           client.AddTimesheet({ input: { PeriodList: { PeriodType: [{ PeriodId: '1' }] } } }, function () {
             var sentInputContent = client.lastRequest.substring(client.lastRequest.indexOf('<input>') + '<input>'.length, client.lastRequest.indexOf('</input>'));
@@ -1224,8 +1222,7 @@ var fs = require('fs'),
       it('shall generate correct payload for methods with array parameter with colon override', function (done) {
         soap.createClient(__dirname + '/wsdl/array_namespace_override.wsdl', function (err, client) {
           assert.ok(client);
-          var pathToArrayContainer = 'SampleArrayServiceImplService.SampleArrayServiceImplPort.createWebOrder.input.order';
-          var arrayParameter = _.get(client.describe(), pathToArrayContainer)['orderDetails[]'];
+          var arrayParameter = client.describe().SampleArrayServiceImplService.SampleArrayServiceImplPort.createWebOrder.input.order['orderDetails[]'];
           assert.ok(arrayParameter);
           const input = {
             ':clientId': 'test',
@@ -1247,8 +1244,7 @@ var fs = require('fs'),
       it('shall generate correct payload for methods with array parameter with parent namespace', function (done) {
         soap.createClient(__dirname + '/wsdl/array_namespace_override.wsdl', function (err, client) {
           assert.ok(client);
-          var pathToArrayContainer = 'SampleArrayServiceImplService.SampleArrayServiceImplPort.createWebOrder.input.order';
-          var arrayParameter = _.get(client.describe(), pathToArrayContainer)['orderDetails[]'];
+          var arrayParameter = client.describe().SampleArrayServiceImplService.SampleArrayServiceImplPort.createWebOrder.input.order['orderDetails[]'];
           assert.ok(arrayParameter);
           const input = {
             ':clientId': 'test',
@@ -1271,8 +1267,7 @@ var fs = require('fs'),
         // used for servers that cannot aggregate individually namespaced array elements
         soap.createClient(__dirname + '/wsdl/list_parameter.wsdl', { disableCache: true, namespaceArrayElements: false }, function (err, client) {
           assert.ok(client);
-          var pathToArrayContainer = 'TimesheetV201511Mobile.TimesheetV201511MobileSoap.AddTimesheet.input.input.PeriodList';
-          var arrayParameter = _.get(client.describe(), pathToArrayContainer)['PeriodType[]'];
+          var arrayParameter = client.describe().TimesheetV201511Mobile.TimesheetV201511MobileSoap.AddTimesheet.input.input.PeriodList['PeriodType[]'];
           assert.ok(arrayParameter);
           client.AddTimesheet({ input: { PeriodList: { PeriodType: [{ PeriodId: '1' }, { PeriodId: '2' }] } } }, function () {
             var sentInputContent = client.lastRequest.substring(client.lastRequest.indexOf('<input>') + '<input>'.length, client.lastRequest.indexOf('</input>'));
@@ -1287,8 +1282,7 @@ var fs = require('fs'),
         soap.createClient(__dirname + '/wsdl/list_parameter.wsdl', { disableCache: true, namespaceArrayElements: true }, function (err, client) {
           assert.ok(client);
           assert.ok(client.wsdl.options.namespaceArrayElements === true);
-          var pathToArrayContainer = 'TimesheetV201511Mobile.TimesheetV201511MobileSoap.AddTimesheet.input.input.PeriodList';
-          var arrayParameter = _.get(client.describe(), pathToArrayContainer)['PeriodType[]'];
+          var arrayParameter = client.describe().TimesheetV201511Mobile.TimesheetV201511MobileSoap.AddTimesheet.input.input.PeriodList['PeriodType[]'];
           assert.ok(arrayParameter);
           client.AddTimesheet({ input: { PeriodList: { PeriodType: [{ PeriodId: '1' }, { PeriodId: '2' }] } } }, function () {
             var sentInputContent = client.lastRequest.substring(client.lastRequest.indexOf('<input>') + '<input>'.length, client.lastRequest.indexOf('</input>'));
@@ -1474,7 +1468,7 @@ var fs = require('fs'),
         soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', Object.assign({ envelopeSoapUrl: 'http://example.com/v1' }, meta.options), function (err, client) {
           assert.ok(client);
           assert.ifError(err);
-  
+
           client.MyOperation({}, function (err, result) {
             assert.notEqual(client.lastRequest.indexOf('xmlns:soap=\"http://example.com/v1\"'), -1);
             done();
@@ -1684,10 +1678,10 @@ xit('should add namespace to array of objects', function (done) {
       done();
     });
   })
-  .catch(function (err) {
+    .catch(function (err) {
       assert.equal(err.message, 'Root element of WSDL was <html>. This is likely an authentication issue.');
       done();
-  });
+    });
 });
 
 
@@ -1767,7 +1761,7 @@ describe('Client posting complex body', () => {
         return void done(err);
       }
       assert.ok(client);
-  
+
       var requestBody = {
         id: 'ID00000000000000000000000000000000',
         lastName: 'Doe',
@@ -1786,7 +1780,7 @@ describe('Client posting complex body', () => {
           companyName: 'ACME'
         }
       }
-  
+
       client.registerUser(requestBody, function (err, result) {
         assert.ok(client.lastRequest);
         assert.ok(client.lastMessage);
@@ -1795,7 +1789,7 @@ describe('Client posting complex body', () => {
         console.log(client.lastMessage);
         const expectedBody = '<registrationMessages:registerUserRequest xmlns:registrationMessages="http://test-soap.com/api/registration/messages" xmlns="http://test-soap.com/api/registration/messages"><registrationMessages:id>ID00000000000000000000000000000000</registrationMessages:id><registrationMessages:lastName>Doe</registrationMessages:lastName><registrationMessages:firstName>John</registrationMessages:firstName><registrationMessages:dateOfBirth>1970-01-01</registrationMessages:dateOfBirth><registrationMessages:correspondenceLanguage>ENG</registrationMessages:correspondenceLanguage><registrationMessages:emailAddress>jdoe@doe.com</registrationMessages:emailAddress><registrationMessages:lookupPermission>ALLOWED</registrationMessages:lookupPermission><registrationMessages:companyAddress><ct:address xmlns:ct="http://test-soap.com/api/common/types"><ct:streetName>Street</ct:streetName><ct:postalCode>Code</ct:postalCode><ct:city>City</ct:city><ct:countryCode>US</ct:countryCode></ct:address><ct:companyName xmlns:ct="http://test-soap.com/api/common/types">ACME</ct:companyName></registrationMessages:companyAddress></registrationMessages:registerUserRequest>';
         assert.strictEqual(client.lastMessage, expectedBody);
-  
+
         done();
       });
     }, baseUrl);

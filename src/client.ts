@@ -9,7 +9,6 @@ import { randomUUID } from 'crypto';
 import debugBuilder from 'debug';
 import { EventEmitter } from 'events';
 import getStream = require('get-stream');
-import * as _ from 'lodash';
 import { HttpClient } from './http';
 import { IHeaders, IHttpClient, IMTOMAttachments, IOptions, ISecurity, SoapMethod, SoapMethodAsync } from './types';
 import { findPrefix } from './utils';
@@ -368,7 +367,7 @@ export class Client extends EventEmitter {
         if (!output || !output.$lookupTypes) {
           debug('Response element is not present. Unable to convert response xml to json.');
           //  If the response is JSON then return it as-is.
-          const json = _.isObject(body) ? body : tryJSONparse(body);
+          const json = body !== null && typeof body === 'object' ? body : tryJSONparse(body);
           if (json) {
             return callback(null, response, json, undefined, xml);
           }
@@ -482,7 +481,13 @@ export class Client extends EventEmitter {
     };
 
     if (this.streamAllowed && typeof this.httpClient.requestStream === 'function') {
-      callback = _.once(callback);
+      callback = (cb) => {
+        let lastResult;
+        return (...args) => {
+          if (lastResult === undefined) { lastResult = cb(...args); }
+          return lastResult;
+        };
+      };
       const startTime = Date.now();
       const onError = (err) => {
         this.lastResponse = null;

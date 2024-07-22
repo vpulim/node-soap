@@ -1,6 +1,6 @@
+import { deepmergeInto } from 'deepmerge-ts';
 import * as fs from 'fs';
 import * as https from 'https';
-import * as _ from 'lodash';
 import { ISecurity } from '../types';
 
 /**
@@ -53,7 +53,7 @@ export class ClientSSLSecurity implements ISecurity {
     }
 
     this.defaults = {};
-    _.merge(this.defaults, defaults);
+    deepmergeInto(this.defaults, defaults);
 
     this.agent = null;
   }
@@ -68,7 +68,7 @@ export class ClientSSLSecurity implements ISecurity {
     options.key = this.key;
     options.cert = this.cert;
     options.ca = this.ca;
-    _.merge(options, this.defaults);
+    deepmergeInto(options, this.defaults);
 
     if (!!options.forever) {
       if (!this.agent) {

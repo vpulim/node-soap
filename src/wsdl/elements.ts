@@ -1,7 +1,7 @@
 
 import { ok as assert } from 'assert';
 import debugBuilder from 'debug';
-import * as _ from 'lodash';
+import { deepmergeInto, deepmergeIntoCustom } from 'deepmerge-ts';
 import { IWsdlBaseOptions } from '../types';
 import { splitQName, TNS_PREFIX } from '../utils';
 
@@ -146,7 +146,13 @@ export class Element {
       }
       const parent = stack[stack.length - 2];
       if (this !== stack[0]) {
-        _.defaultsDeep(stack[0].xmlns, this.xmlns);
+        const defaultsDeep = deepmergeIntoCustom({
+          mergeOthers: (target, values) => {
+            // Multiple values means value was already present ⇒ keeping original
+            if (values.length > 1) { target.value = values[0]; }
+          },
+        });
+        defaultsDeep(stack[0].xmlns, this.xmlns);
         // delete this.xmlns;
         parent.children.push(this);
         parent.addChild(this);
@@ -444,7 +450,7 @@ export class ExtensionElement extends Element {
         );
         if (typeElement) {
           const base = typeElement.description(definitions, schema.xmlns);
-          desc = typeof base === 'string' ? base : _.defaults(base, desc);
+          desc = typeof base === 'string' ? base : Object.assign(base, desc);
         }
       }
     }
@@ -791,15 +797,15 @@ export class SchemaElement extends Element {
   public merge(source: SchemaElement) {
     assert(source instanceof SchemaElement);
 
-    _.merge(this.complexTypes, source.complexTypes);
-    _.merge(this.types, source.types);
-    _.merge(this.elements, source.elements);
-    _.merge(this.xmlns, source.xmlns);
+    deepmergeInto(this.complexTypes, source.complexTypes);
+    deepmergeInto(this.types, source.types);
+    deepmergeInto(this.elements, source.elements);
+    deepmergeInto(this.xmlns, source.xmlns);
 
     // Merge attributes from source without overwriting our's
-    _.merge(this, _.pickBy(source, (value, key) => {
-      return key.startsWith('$') && !this.hasOwnProperty(key);
-    }));
+    deepmergeInto(this,
+      Object.fromEntries(Object.entries(source).filter(([key]) => key.startsWith('$') && !this.hasOwnProperty(key))),
+    );
 
     return this;
   }
@@ -1115,7 +1121,7 @@ export class DefinitionsElement extends Element {
   public addChild(child) {
     if (child instanceof TypesElement) {
       // Merge types.schemas into definitions.schemas
-      _.merge(this.schemas, child.schemas);
+      deepmergeInto(this.schemas, child.schemas);
     } else if (child instanceof MessageElement) {
       this.messages[child.$name] = child;
     } else if (child.name === 'import') {
