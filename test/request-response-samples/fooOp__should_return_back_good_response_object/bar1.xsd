@@ -1,0 +1,27 @@
+<xsd:schema targetNamespace="http://example.com/bar1/xsd" elementFormDefault="qualified" version="2.1.4"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:bar1="http://example.com/bar1/xsd">
+    <xsd:simpleType name="UUID">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:complexType name="RequestHeader">
+        <xsd:sequence>
+            <xsd:element name="requestId" type="bar1:UUID" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="RequestHeader" type="bar1:RequestHeader"/>
+    <xsd:complexType name="ResponseHeader">
+        <xsd:sequence>
+            <xsd:element name="requestId" type="bar1:UUID" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="ResponseHeader" type="bar1:ResponseHeader"/>
+    <xsd:complexType name="ErrorInformation">
+        <xsd:sequence>
+            <xsd:element name="message" type="xsd:string"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="ErrorInformation" type="bar1:ErrorInformation"/>
+</xsd:schema>

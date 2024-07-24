@@ -1,0 +1,18 @@
+<xsd:schema targetNamespace="http://example.com/bar/xsd" elementFormDefault="qualified"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:bar="http://example.com/bar/xsd"
+    xmlns:bar1="http://example.com/bar1/xsd">
+    <xsd:import schemaLocation="bar1.xsd" namespace="http://example.com/bar1/xsd"/>
+        <xsd:complexType name="Request1">
+            <xsd:sequence minOccurs="0" maxOccurs="1">
+                <xsd:element name="requestHeader" type="bar1:RequestHeader"/>
+            </xsd:sequence>
+        </xsd:complexType>
+        <xsd:element name="Request1" type="bar:Request1" />
+        <xsd:complexType name="Response1">
+            <xsd:sequence minOccurs="0" maxOccurs="1">
+                <xsd:element name="responseHeader" type="bar1:ResponseHeader"/>
+            </xsd:sequence>
+        </xsd:complexType>
+        <xsd:element name="Response1" type="bar:Response1"/>
+    </xsd:schema>
