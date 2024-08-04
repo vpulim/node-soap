@@ -1,3 +1,9 @@
+1.1.1 / 2024-08-04
+===================
+* [ENHANCEMENT] ASupport binary data in MTOM (#1245)
+* [ENHANCEMENT] Pass the error object to log (#1246)
+* [Fix] Fix including xsd from another xsd while using inline xmlns (#1202)
+
 1.1.0 / 2024-07-16
 ===================
 * [ENHANCEMENT] Upgrade dependencies and refactor code to work with the xml-crypto 6.0.0, use built-in randomUUID instead of uuid (#1242)
