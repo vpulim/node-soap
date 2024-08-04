@@ -5,7 +5,6 @@ var fs = require('fs'),
   http = require('http'),
   stream = require('stream'),
   assert = require('assert'),
-  _ = require('lodash'),
   sinon = require('sinon'),
   wsdl = require('../lib/wsdl');
 
@@ -1211,8 +1210,7 @@ var fs = require('fs'),
       it('shall generate correct payload for methods with array parameter', function (done) {
         soap.createClient(__dirname + '/wsdl/list_parameter.wsdl', function (err, client) {
           assert.ok(client);
-          var pathToArrayContainer = 'TimesheetV201511Mobile.TimesheetV201511MobileSoap.AddTimesheet.input.input.PeriodList';
-          var arrayParameter = _.get(client.describe(), pathToArrayContainer)['PeriodType[]'];
+          var arrayParameter = client.describe().TimesheetV201511Mobile.TimesheetV201511MobileSoap.AddTimesheet.input.input.PeriodList['PeriodType[]'];
           assert.ok(arrayParameter);
           client.AddTimesheet({ input: { PeriodList: { PeriodType: [{ PeriodId: '1' }] } } }, function () {
             var sentInputContent = client.lastRequest.substring(client.lastRequest.indexOf('<input>') + '<input>'.length, client.lastRequest.indexOf('</input>'));
@@ -1225,8 +1223,7 @@ var fs = require('fs'),
       it('shall generate correct payload for methods with array parameter with colon override', function (done) {
         soap.createClient(__dirname + '/wsdl/array_namespace_override.wsdl', function (err, client) {
           assert.ok(client);
-          var pathToArrayContainer = 'SampleArrayServiceImplService.SampleArrayServiceImplPort.createWebOrder.input.order';
-          var arrayParameter = _.get(client.describe(), pathToArrayContainer)['orderDetails[]'];
+          var arrayParameter = client.describe().SampleArrayServiceImplService.SampleArrayServiceImplPort.createWebOrder.input.order['orderDetails[]'];
           assert.ok(arrayParameter);
           const input = {
             ':clientId': 'test',
@@ -1248,8 +1245,7 @@ var fs = require('fs'),
       it('shall generate correct payload for methods with array parameter with parent namespace', function (done) {
         soap.createClient(__dirname + '/wsdl/array_namespace_override.wsdl', function (err, client) {
           assert.ok(client);
-          var pathToArrayContainer = 'SampleArrayServiceImplService.SampleArrayServiceImplPort.createWebOrder.input.order';
-          var arrayParameter = _.get(client.describe(), pathToArrayContainer)['orderDetails[]'];
+          var arrayParameter = client.describe().SampleArrayServiceImplService.SampleArrayServiceImplPort.createWebOrder.input.order['orderDetails[]'];
           assert.ok(arrayParameter);
           const input = {
             ':clientId': 'test',
@@ -1272,8 +1268,7 @@ var fs = require('fs'),
         // used for servers that cannot aggregate individually namespaced array elements
         soap.createClient(__dirname + '/wsdl/list_parameter.wsdl', { disableCache: true, namespaceArrayElements: false }, function (err, client) {
           assert.ok(client);
-          var pathToArrayContainer = 'TimesheetV201511Mobile.TimesheetV201511MobileSoap.AddTimesheet.input.input.PeriodList';
-          var arrayParameter = _.get(client.describe(), pathToArrayContainer)['PeriodType[]'];
+          var arrayParameter = client.describe().TimesheetV201511Mobile.TimesheetV201511MobileSoap.AddTimesheet.input.input.PeriodList['PeriodType[]'];
           assert.ok(arrayParameter);
           client.AddTimesheet({ input: { PeriodList: { PeriodType: [{ PeriodId: '1' }, { PeriodId: '2' }] } } }, function () {
             var sentInputContent = client.lastRequest.substring(client.lastRequest.indexOf('<input>') + '<input>'.length, client.lastRequest.indexOf('</input>'));
@@ -1288,8 +1283,7 @@ var fs = require('fs'),
         soap.createClient(__dirname + '/wsdl/list_parameter.wsdl', { disableCache: true, namespaceArrayElements: true }, function (err, client) {
           assert.ok(client);
           assert.ok(client.wsdl.options.namespaceArrayElements === true);
-          var pathToArrayContainer = 'TimesheetV201511Mobile.TimesheetV201511MobileSoap.AddTimesheet.input.input.PeriodList';
-          var arrayParameter = _.get(client.describe(), pathToArrayContainer)['PeriodType[]'];
+          var arrayParameter = client.describe().TimesheetV201511Mobile.TimesheetV201511MobileSoap.AddTimesheet.input.input.PeriodList['PeriodType[]'];
           assert.ok(arrayParameter);
           client.AddTimesheet({ input: { PeriodList: { PeriodType: [{ PeriodId: '1' }, { PeriodId: '2' }] } } }, function () {
             var sentInputContent = client.lastRequest.substring(client.lastRequest.indexOf('<input>') + '<input>'.length, client.lastRequest.indexOf('</input>'));

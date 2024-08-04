@@ -7,8 +7,8 @@
 
 import { ok as assert } from 'assert';
 import debugBuilder from 'debug';
+import { deepmergeCustom, deepmergeIntoCustom } from 'deepmerge-ts';
 import * as fs from 'fs';
-import * as _ from 'lodash';
 import * as path from 'path';
 import * as sax from 'sax';
 import * as stripBom from 'strip-bom';
@@ -25,12 +25,6 @@ const XSI_URI = 'http://www.w3.org/2001/XMLSchema-instance';
 
 export function trim(text) {
   return text.trim();
-}
-
-function deepMerge<A, B>(destination: A, source: B): A & B {
-  return _.mergeWith(destination, source, (a, b) => {
-    return Array.isArray(a) ? a.concat(b) : undefined;
-  });
 }
 
 function appendColon(ns: string): string {
@@ -366,7 +360,7 @@ export class WSDL {
         }
       }
 
-      if (_.isPlainObject(obj) && !Object.keys(obj).length) {
+      if (obj !== undefined && typeof obj === 'object' && !Object.keys(obj).length) {
         obj = null;
       }
 
@@ -1226,9 +1220,12 @@ export class WSDL {
       this._includesWsdl.push(wsdl);
 
       if (wsdl.definitions instanceof elements.DefinitionsElement) {
-        _.mergeWith(this.definitions, wsdl.definitions, (a, b) => {
-          return (a instanceof elements.SchemaElement) ? a.merge(b) : undefined;
+        const mergeFunction = deepmergeCustom({
+          mergeOthers: (values, utils) => {
+            return (values[0] instanceof elements.SchemaElement) ? utils.defaultMergeFunctions.mergeOthers(values) : undefined;
+          },
         });
+        this.definitions = mergeFunction(this.definitions, wsdl.definitions);
       } else {
         return callback(new Error('wsdl.defintions is not an instance of elements.DefinitionsElement'));
       }
