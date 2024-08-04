@@ -225,7 +225,7 @@ export class Server extends EventEmitter {
         error = err.stack ? (this.suppressStack === true ? err.message : err.stack) : err;
         this._sendHttpResponse(res, /* statusCode */ 500, error);
         if (typeof this.log === 'function') {
-          this.log('error', error, req);
+          this.log('error', err, req);
         }
       }
     }
