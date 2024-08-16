@@ -1,5 +1,5 @@
 
-import * as _ from 'lodash';
+import { deepmergeInto } from 'deepmerge-ts';
 import { IHeaders, ISecurity } from '../types';
 
 export class NTLMSecurity implements ISecurity {
@@ -30,6 +30,6 @@ export class NTLMSecurity implements ISecurity {
   }
 
   public addOptions(options: any): void {
-    _.merge(options, this.defaults);
+    deepmergeInto(options, this.defaults);
   }
 }

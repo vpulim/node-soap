@@ -1,5 +1,5 @@
 
-import * as _ from 'lodash';
+import { deepmergeInto } from 'deepmerge-ts';
 import { IHeaders, ISecurity } from '../types';
 
 export class BearerSecurity implements ISecurity {
@@ -9,7 +9,7 @@ export class BearerSecurity implements ISecurity {
   constructor(token: string, defaults?: any) {
     this._token = token;
     this.defaults = {};
-    _.merge(this.defaults, defaults);
+    deepmergeInto(this.defaults, defaults);
   }
 
   public addHeaders(headers: IHeaders): void {
@@ -21,6 +21,6 @@ export class BearerSecurity implements ISecurity {
   }
 
   public addOptions(options: any): void {
-    _.merge(options, this.defaults);
+    deepmergeInto(options, this.defaults);
   }
 }
