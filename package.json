@@ -7,7 +7,7 @@
   },
   "author": "Vinay Pulim <v@pulim.com>",
   "dependencies": {
-    "axios": "^1.7.2",
+    "axios": "^1.7.4",
     "axios-ntlm": "^1.4.2",
     "debug": "^4.3.5",
     "formidable": "^3.5.1",
