@@ -7,6 +7,9 @@ var fs = require('fs'),
     sinon = require('sinon');
 
 describe('WSDL Parser (strict)', () => {
+
+  const baseUrl = 'http://localhost:80';
+
   fs.readdirSync(__dirname+'/wsdl/strict').forEach(function(file) {
     if (!/.wsdl$/.exec(file)) return;
     it('should parse and describe '+file, (done) => {
@@ -81,7 +84,7 @@ describe('WSDL Parser (strict)', () => {
         }, function() {
           done();
         });
-    });
+    }, baseUrl);
   });
 
   it('should describe extended elements in correct order', (done) => {
