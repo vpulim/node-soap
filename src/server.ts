@@ -607,7 +607,7 @@ export class Server extends EventEmitter {
       : 'http://schemas.xmlsoap.org/soap/envelope/';
 
     let xml = '<?xml version="1.0" encoding="utf-8"?>' +
-      '<' + envelopeKey + ':Envelope' + ' xmlns:' + envelopeKey + '=' + ' "' + envelopeDefinition + '" ' +
+      '<' + envelopeKey + ':Envelope' + ' xmlns:' + envelopeKey + '=' + '"' + envelopeDefinition + '" ' +
       encoding +
       this.wsdl.xmlnsInEnvelope + '>';
 
