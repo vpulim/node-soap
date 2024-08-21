@@ -4,7 +4,8 @@ var fs = require('fs'),
     soap = require('..'),
     WSDL = require('../lib/wsdl').WSDL,
     assert = require('assert'),
-    sinon = require('sinon');
+    sinon = require('sinon'),
+    elements = require('../lib/wsdl/elements');
 
 describe('WSDL Parser (strict)', () => {
 
@@ -347,6 +348,25 @@ describe('WSDL Parser (non-strict)', () => {
   it('Should create client even if the some of message definitions are missing', function (done) {
     soap.createClient(__dirname+'/wsdl/missing_message_definition.wsdl', function(err, client) {
       assert.equal(err, null);
+      done();
+    });
+  });
+
+  it('Should describe return correct result for attributes in complexTypeElement', function(done) {
+    soap.createClient(__dirname+ '/wsdl/wsdl_with_attributes.wsdl', function(err,client){
+      assert.ifError(err);
+      var description = client.describe();
+
+      assert.deepEqual(description.StockQuoteService.StockQuotePort.GetLastTradePrice.input[elements.AttributeElement.Symbol], {
+        AttributeInOne: { type: "s:boolean", required: false },
+        AttributeInTwo: { type: "s:boolean", required: true },
+      });
+      assert.deepEqual(description.StockQuoteService.StockQuotePort.GetLastTradePrice.output[elements.AttributeElement.Symbol], {
+        AttributeOut: { type: "s:boolean", required: true },
+      });
+
+      assert.deepEqual(Object.keys(description.StockQuoteService.StockQuotePort.GetLastTradePrice.input), ['tickerSymbol']);
+      assert.deepEqual(Object.keys(description.StockQuoteService.StockQuotePort.GetLastTradePrice.output), []);
       done();
     });
   });

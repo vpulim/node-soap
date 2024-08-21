@@ -266,6 +266,11 @@ export class ElementElement extends Element {
             Object.keys(description).forEach((key) => {
               elem[key] = description[key];
             });
+
+            const $attributes = description[AttributeElement.Symbol];
+            if ($attributes) {
+              elem[AttributeElement.Symbol] = $attributes;
+            }
           }
 
           if (this.$ref) {
@@ -486,20 +491,34 @@ export class ComplexTypeElement extends Element {
     'complexContent',
     'sequence',
     'simpleContent',
+    'attribute',
   ]);
   public description(definitions: DefinitionsElement, xmlns: IXmlNs) {
+    let ret = {};
+    let isFirstChild = false;
+    const $attributes = {};
     const children = this.children || [];
     for (const child of children) {
-      if (child instanceof ChoiceElement ||
+      if (child instanceof AttributeElement) {
+        $attributes[child.$name] = child.description(definitions);
+        continue;
+      }
+
+      if (!isFirstChild && (child instanceof ChoiceElement ||
         child instanceof SequenceElement ||
         child instanceof AllElement ||
         child instanceof SimpleContentElement ||
-        child instanceof ComplexContentElement) {
-
-        return child.description(definitions, xmlns);
+        child instanceof ComplexContentElement)) {
+        isFirstChild = true;
+        ret = child.description(definitions, xmlns);
       }
     }
-    return {};
+
+    if (Object.keys($attributes).length > 0) {
+      ret[AttributeElement.Symbol] = $attributes;
+    }
+
+    return ret;
   }
 }
 
@@ -550,6 +569,19 @@ export class SequenceElement extends Element {
       }
     }
     return sequence;
+  }
+}
+
+export class AttributeElement extends Element {
+  public static Symbol = Symbol('$attributes');
+  public $type?: string;
+  public $use?: string;
+
+  public description(definitions: DefinitionsElement) {
+    return {
+      type: this.$type,
+      required: this.$use === 'required',
+    };
   }
 }
 
@@ -1187,6 +1219,7 @@ const ElementTypeMap: {
   simpleContent: SimpleContentElement,
   simpleType: SimpleTypeElement,
   types: TypesElement,
+  attribute: AttributeElement,
 };
 
 function buildAllowedChildren(elementList: string[]): { [k: string]: typeof Element } {
