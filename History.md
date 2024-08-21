@@ -1,6 +1,14 @@
+1.1.2 / 2024-08-21
+===================
+* [ENHANCEMENT] Update Axios to 1.7.4 (#1248)
+* [MAINTENANCE] Remove unused coveralls, replace request with Axios in tests (#1250)
+* [MAINTENANCE] Speed up tests execution (#1249)
+* [Fix] Add missing attributes (#1251)
+
+
 1.1.1 / 2024-08-04
 ===================
-* [ENHANCEMENT] ASupport binary data in MTOM (#1245)
+* [ENHANCEMENT] Support binary data in MTOM (#1245)
 * [ENHANCEMENT] Pass the error object to log (#1246)
 * [Fix] Fix including xsd from another xsd while using inline xmlns (#1202)
 
