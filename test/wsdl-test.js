@@ -370,4 +370,19 @@ describe('WSDL Parser (non-strict)', () => {
       done();
     });
   });
+
+  it('Should describe return correct result for attributes in complexTypeElement with restrictions', function(done) {
+    soap.createClient(__dirname+ '/wsdl/wsdl_with_restriction_attributes.wsdl', function(err,client){
+      assert.ifError(err);
+      var description = client.describe();
+      assert.deepStrictEqual(description.SampleService.SamplePort.GetPerson.output.ObjectDetails[elements.AttributeElement.Symbol], {
+        id: { type: 'xsd:string', required: true },
+        type: { type: 'xsd:long', required: true },
+        internalName: { type: 'xsd:string', required: false },
+        key: { type: 'xsd:string', required: false },
+        origin: { type: 'xsd:string', required: false }
+      });
+      done();
+    });
+  });
 });
