@@ -383,18 +383,32 @@ export class RestrictionElement extends Element {
     'choice',
     'enumeration',
     'sequence',
+    'attribute',
   ]);
   public $base: string;
 
   public description(definitions?: DefinitionsElement, xmlns?: IXmlNs) {
     const children = this.children;
     let desc;
-    for (let i = 0, child; child = children[i]; i++) {
-      if (child instanceof SequenceElement || child instanceof ChoiceElement) {
+    let isFirstChild = false;
+    const $attributes = {};
+
+    for (const child of children) {
+      if (child instanceof AttributeElement) {
+        $attributes[child.$name] = child.description(definitions);
+        continue;
+      }
+      if (!isFirstChild && (child instanceof SequenceElement || child instanceof ChoiceElement)) {
+        isFirstChild = true;
         desc = child.description(definitions, xmlns);
-        break;
       }
     }
+
+    if (Object.keys($attributes).length > 0) {
+      desc = desc ?? {};
+      desc[AttributeElement.Symbol] = $attributes;
+    }
+
     if (desc && this.$base) {
       const type = splitQName(this.$base);
       const typeName = type.name;
@@ -405,11 +419,16 @@ export class RestrictionElement extends Element {
       desc.getBase = () => {
         return typeElement.description(definitions, schema.xmlns);
       };
+      if (typeElement) {
+        const baseDescription = typeElement.description(definitions, schema.xmlns);
+        if (baseDescription[AttributeElement.Symbol]) {
+          _.defaults($attributes, baseDescription[AttributeElement.Symbol]);
+        }
+        desc = _.defaults(desc, baseDescription);
+      }
       return desc;
     }
 
-    // then simple element
-    const base = this.$base ? this.$base + '|' : '';
     const restrictions = this.children.map((child) => {
       return child.description();
     }).join(',');
@@ -525,10 +544,12 @@ export class ComplexTypeElement extends Element {
 export class ComplexContentElement extends Element {
   public readonly allowedChildren = buildAllowedChildren([
     'extension',
+    'restriction',
   ]);
+
   public description(definitions: DefinitionsElement, xmlns: IXmlNs) {
     for (const child of this.children) {
-      if (child instanceof ExtensionElement) {
+      if (child instanceof ExtensionElement || child instanceof RestrictionElement) {
         return child.description(definitions, xmlns);
       }
     }
