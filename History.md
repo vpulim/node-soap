@@ -1,6 +1,11 @@
+1.1.3 / 2024-09-03
+===================
+* [ENHANCEMENT] Allow ComplexContentElement to have a restriction as a child element and parse attributes for RestrictionElement (#1252)
+* [MAINTENANCE] Bump axios to 1.7.7 and debug to 4.3.6 (#1253)
+
 1.1.2 / 2024-08-21
 ===================
-* [ENHANCEMENT] Update Axios to 1.7.4 (#1248)
+* [MAINTENANCE] Update Axios to 1.7.4 (#1248)
 * [MAINTENANCE] Remove unused coveralls, replace request with Axios in tests (#1250)
 * [MAINTENANCE] Speed up tests execution (#1249)
 * [Fix] Add missing attributes (#1251)
