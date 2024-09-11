@@ -234,4 +234,22 @@ describe('WSSecurityCert', function () {
     }
     should(xml).not.be.ok();
   });
+   
+  it('should use rsa-sha1 signature method when the signatureAlgorithm option is set to WSSecurityCert', function () {
+      var instance = new WSSecurityCert(key, cert, '', {
+         hasTimeStamp: false,
+         signatureAlgorithm: 'http://www.w3.org/2000/09/xmldsig#rsa-sha1'
+      });
+      var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body></soap:Body></soap:Envelope>', 'soap');
+      xml.should.containEql('SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"');
+  });
+
+  it('should use rsa-sha512 signature method when the signatureAlgorithm option is set to WSSecurityCert', function () {
+      var instance = new WSSecurityCert(key, cert, '', {
+         hasTimeStamp: false,
+         signatureAlgorithm: 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha512'
+      });
+      var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body></soap:Body></soap:Envelope>', 'soap');
+      xml.should.containEql('SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"');
+  });
 });
