@@ -58,6 +58,7 @@ export class WSSecurityCert implements ISecurity {
   private publicP12PEM: string;
   private signer: any;
   private signerOptions: IXmlSignerOptions = {};
+  private keyInfoId: string;
   private x509Id: string;
   private hasTimeStamp: boolean;
   private signatureTransformations: string[];
@@ -111,15 +112,19 @@ export class WSSecurityCert implements ISecurity {
       key: privatePEM,
       passphrase: password,
     };
+    this.keyInfoId = `KI-${generateId()}`;
     this.x509Id = `x509-${generateId()}`;
     this.hasTimeStamp = typeof options.hasTimeStamp === 'undefined' ? true : !!options.hasTimeStamp;
     this.signatureTransformations = Array.isArray(options.signatureTransformations) ? options.signatureTransformations
       : ['http://www.w3.org/2000/09/xmldsig#enveloped-signature', 'http://www.w3.org/2001/10/xml-exc-c14n#'];
 
     this.signer.getKeyInfo = (key) => {
-      return `<wsse:SecurityTokenReference>` +
+      const prefix = !key || key === '' ? '' : `${key}:`;
+      return `<${prefix}KeyInfo Id="${this.keyInfoId}">` +
+        `<wsse:SecurityTokenReference>` +
         `<wsse:Reference URI="#${this.x509Id}" ValueType="${oasisBaseUri}/oasis-200401-wss-x509-token-profile-1.0#X509v3"/>` +
-        `</wsse:SecurityTokenReference>`;
+        `</wsse:SecurityTokenReference>` +
+        `</${prefix}KeyInfo>`;
     };
   }
 
