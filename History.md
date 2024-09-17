@@ -1,3 +1,8 @@
+1.1.4 / 2024-09-17
+===================
+* [ENHANCEMENT] Add feature to set signatureAlgorithm (#1254)
+* [MAINTENANCE] Update dependencies, remove unused dependencies (#1256)
+
 1.1.3 / 2024-09-03
 ===================
 * [ENHANCEMENT] Allow ComplexContentElement to have a restriction as a child element and parse attributes for RestrictionElement (#1252)
