@@ -1209,14 +1209,18 @@ export class WSDL {
       includePath = url.resolve(this.uri || '', include.location);
     }
 
-    if (this.options.wsdl_options !== undefined && typeof this.options.wsdl_options.overrideImportLocation === 'function') {
-      includePath = this.options.wsdl_options.overrideImportLocation(includePath);
-    }
-
     const options = Object.assign({}, this.options);
     // follow supplied ignoredNamespaces option
     options.ignoredNamespaces = this._originalIgnoredNamespaces || this.options.ignoredNamespaces;
     options.WSDL_CACHE = this.WSDL_CACHE;
+
+    if (this.options.wsdl_options !== undefined && typeof this.options.wsdl_options.overrideImportLocation === 'function') {
+      try {
+        includePath = this.options.wsdl_options.overrideImportLocation(includePath, this.uri, include.location, options);
+      } catch (e) {
+        return callback(e);
+      }
+    }
 
     open_wsdl_recursive(includePath, options, (err, wsdl) => {
       if (err) {
