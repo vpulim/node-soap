@@ -1,3 +1,8 @@
+1.1.5 / 2024-09-29
+===================
+* [ENHANCEMENT] Add missing KeyInfo tag around SecurityTokenReference (#1255)
+* [ENHANCEMENT] Catch errors when overrideImportLocation fails (#1257)
+
 1.1.4 / 2024-09-17
 ===================
 * [ENHANCEMENT] Add feature to set signatureAlgorithm (#1254)
