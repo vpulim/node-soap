@@ -173,7 +173,7 @@ export class HttpClient implements IHttpClient {
     if (typeof body === 'string') {
       // Remove any extra characters that appear before or after the SOAP envelope.
       const regex = /(?:<\?[^?]*\?>[\s]*)?<([^:]*):Envelope([\S\s]*)<\/\1:Envelope>/i;
-      const match = body.replace(/<!--(?:(?!<!--[\s\S])*?)-->/, '').match(regex);
+      const match = body.replace(/<!--[\s\S]*?-->/, '').match(regex);
       if (match) {
         body = match[0];
       }
