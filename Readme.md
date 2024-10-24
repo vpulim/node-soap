@@ -1485,6 +1485,7 @@ describe('myService', function() {
 
  * Author: [Vinay Pulim](https://github.com/vpulim)
  * Maintainers:
+   - [Vasily Martynov](https://github.com/w666)
    - [Joe Spencer](https://github.com/jsdevel)
    - [Heinz Romirer](https://github.com/herom)
  * [All Contributors](https://github.com/vpulim/node-soap/graphs/contributors)
