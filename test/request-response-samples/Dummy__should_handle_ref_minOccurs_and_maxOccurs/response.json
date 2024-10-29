@@ -1,8 +1,10 @@
 {
-  "DummyList_MaxUnbounded": [
-    {
-      "DummyItemFirstChild": "foo",
-      "DummyItemSecondChild": "foo"
-    }
-  ]
+  "DummyList_MaxUnbounded": {
+    "DummyItem": [
+      {
+        "DummyItemFirstChild": "foo",
+        "DummyItemSecondChild": "foo"
+      }
+    ]
+  }
 }
