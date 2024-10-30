@@ -61,7 +61,7 @@ export class HttpClient implements IHttpClient {
       'Accept': 'text/html,application/xhtml+xml,application/xml,text/xml;q=0.9,*/*;q=0.8',
       'Accept-Encoding': 'none',
       'Accept-Charset': 'utf-8',
-      ...(exoptions.forever && { 'Connection': 'keep-alive' }),
+      ...(exoptions.forever && { Connection: 'keep-alive' }),
       'Host': host + (isNaN(port) ? '' : ':' + port),
     };
     const mergeOptions = ['headers'];
