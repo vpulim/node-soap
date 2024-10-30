@@ -1,6 +1,7 @@
 
 import * as crypto from 'crypto';
-import { IMTOMAttachments } from './types';
+import { IMTOMAttachments, IWSDLCache } from './types';
+import { WSDL } from './wsdl';
 
 export function passwordDigest(nonce: string, created: string, password: string): string {
   // digest = base64 ( sha1 ( nonce + created + password ) )
@@ -113,3 +114,29 @@ export function parseMTOMResp(payload: Buffer, boundary: string, callback: (err?
     })
     .catch(callback);
 }
+
+class DefaultWSDLCache implements IWSDLCache {
+  private cache: {
+    [key: string]: WSDL,
+  };
+  constructor() {
+    this.cache = {};
+  }
+
+  public has(key: string): boolean {
+    return !!this.cache[key];
+  }
+
+  public get(key: string): WSDL {
+    return this.cache[key];
+  }
+
+  public set(key: string, wsdl: WSDL) {
+    this.cache[key] = wsdl;
+  }
+
+  public clear() {
+    this.cache = {};
+  }
+}
+export const wsdlCacheSingleton = new DefaultWSDLCache();

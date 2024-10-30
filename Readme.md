@@ -111,6 +111,7 @@ GitHub issues have been disabled to focus on pull requests. ([#731](https://gith
   - `wsdl_headers` (*Object*): Set HTTP headers with values to be sent on WSDL requests.
   - `wsdl_options` (*Object*): Set options for the request module on WSDL requests. If using the default request module, see [Request Config | Axios Docs](https://axios-http.com/docs/req_config).
   - `disableCache` (*boolean*): Prevents caching WSDL files and option objects.
+  - `wsdlCache` (*IWSDLCache*): Custom cache implementation. If not provided, defaults to caching WSDLs indefinitely.
   - `overridePromiseSuffix` (*string*): Override the default method name suffix of WSDL operations for Promise-based methods. If any WSDL operation name ends with `Async', you must use this option. (**Default:** `Async`)
   - `normalizeNames` (*boolean*): Replace non-identifier characters (`[^a-z$_0-9]`) with `_` in WSDL operation names. Note: Clients using WSDLs with two operations like `soap:method` and `soap-method` will be overwritten. In this case, you must use bracket notation instead (`client['soap:method']()`).
   - `namespaceArrayElements` (*boolean*): Support non-standard array semantics. JSON arrays of the form `{list: [{elem: 1}, {elem: 2}]}` will be marshalled into XML as `<list><elem>1</elem></list> <list><elem>2</elem></list>`. If `false`, it would be marshalled into `<list> <elem>1</elem> <elem>2</elem> </list>`. (**Default:** `true`)
