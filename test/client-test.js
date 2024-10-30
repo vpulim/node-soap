@@ -1833,3 +1833,58 @@ describe('Client posting complex body', () => {
     }, baseUrl);
   });
 });
+
+describe('Connection header', () => {
+  var server = null;
+  var hostname = '127.0.0.1';
+  var port = 15099;
+  var baseUrl = 'http://' + hostname + ':' + port;
+
+  before(function (done) {
+    server = http.createServer(function (req, res) {
+      res.statusCode = 200;
+      res.write(JSON.stringify({ tempResponse: 'temp' }), 'utf8');
+      res.end();
+    }).listen(port, hostname, done);
+  });
+
+  after(function (done) {
+    server.close();
+    server = null;
+    done();
+  });
+
+  it('should set Connection header to keep-alive when forever option is true', function (done) {
+    soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', function (err, client) {
+      assert.ok(client);
+      assert.ifError(err);
+      client.MyOperation({}, { forever: true }, function () {
+        assert.strictEqual(client.lastRequestHeaders.Connection, 'keep-alive');
+        done();
+      }, null, null);
+    }, baseUrl);
+  });
+
+  it('should not set Connection header when forever option is false', function (done) {
+    soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', function (err, client) {
+      assert.ok(client);
+      assert.ifError(err);
+      client.MyOperation({}, { forever: false }, function () {
+        assert.strictEqual(client.lastRequestHeaders.Connection, undefined);
+        done();
+      }, null, null);
+    }, baseUrl);
+  });
+
+  it('should not set Connection header when forever option is not set', function (done) {
+    soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', function (err, client) {
+      assert.ok(client);
+      assert.ifError(err);
+
+      client.MyOperation({}, function () {
+        assert.strictEqual(client.lastRequestHeaders.Connection, undefined);
+        done();
+      }, null, null);
+    }, baseUrl);
+  });
+});
