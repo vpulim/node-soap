@@ -259,6 +259,11 @@ export class ElementElement extends Element {
           let elem: any = {};
           typeStorage[typeName] = elem;
 
+          if (this.$ref && isMany) {
+            typeElement['$maxOccurs'] = this.$maxOccurs;
+            typeElement['$minOccurs'] = this.$minOccurs;
+          }
+
           const description = typeElement.description(definitions, xmlns);
           if (typeof description === 'string') {
             elem = description;
