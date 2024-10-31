@@ -1,32 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    targetNamespace="http://www.Dummy.com/Name/Types" xmlns:tns="http://www.Dummy.com/Name/Types"
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://www.Dummy.com/Name/Types" xmlns:DUM="http://www.Dummy.com/Name/Types"
     elementFormDefault="qualified" attributeFormDefault="unqualified">
-    <xs:element name="DummyRequest">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="DummyField1" type="xs:string" minOccurs="0" />
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="DummyResponse">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="DummyList_MaxUnbounded">
-                    <xs:complexType>
-                        <xs:sequence>
-                            <xs:element ref="tns:DummyItem" minOccurs="0" maxOccurs="unbounded" />
-                        </xs:sequence>
-                    </xs:complexType>
-                </xs:element>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-    <xs:complexType name="DummyItemType">
-        <xs:sequence>
-            <xs:element name="DummyItemFirstChild" type="xs:string" />
-            <xs:element name="DummyItemSecondChild" type="xs:string" />
-        </xs:sequence>
-    </xs:complexType>
-    <xs:element name="DummyItem" type="tns:DummyItemType" />
-</xs:schema>
+    <element name="DummyRequest">
+        <complexType>
+            <sequence>
+                <element name="DummyField1" type="string" minOccurs="0" />
+            </sequence>
+        </complexType>
+    </element>
+    <element name="DummyResponse">
+        <complexType>
+            <sequence>
+                <element name="Status"/>
+                <element name="DummyList">
+                    <complexType>
+                        <sequence>
+                            <element ref="DUM:DummyItem" minOccurs="0" maxOccurs="unbounded" />
+                        </sequence>
+                    </complexType>
+                </element>
+            </sequence>
+        </complexType>
+    </element>
+    <complexType name="DummyItemType">
+        <sequence>
+            <element name="DummyItemFirstChild" type="string" />
+            <element name="DummyItemSecondChild" type="string" />
+        </sequence>
+    </complexType>
+    <element name="DummyItem" type="DUM:DummyItemType" />
+</schema>

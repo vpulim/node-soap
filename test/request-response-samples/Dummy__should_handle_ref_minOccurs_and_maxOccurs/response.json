@@ -1,5 +1,6 @@
 {
-  "DummyList_MaxUnbounded": {
+  "Status": { "Result": "OK" },
+  "DummyList": {
     "DummyItem": [
       {
         "DummyItemFirstChild": "foo",

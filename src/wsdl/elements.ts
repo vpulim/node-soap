@@ -236,9 +236,9 @@ export class ElementElement extends Element {
     if (xmlns && xmlns[TNS_PREFIX]) {
       this.$targetNamespace = xmlns[TNS_PREFIX];
     }
-    let type: any = this.$type || this.$ref;
-    if (type) {
-      type = splitQName(type);
+    const inferredType: string = this.$type || this.$ref;
+    if (inferredType) {
+      const type = splitQName(inferredType);
       const typeName: string = type.name;
       const ns: string = xmlns && xmlns[type.prefix] ||
         this.xmlns[type.prefix] ||
@@ -259,7 +259,7 @@ export class ElementElement extends Element {
           let elem: any = {};
           typeStorage[typeName] = elem;
 
-          if ((this.$ref ) && isMany && typeElement instanceof ElementElement) {
+          if (this.$ref && isMany && typeElement instanceof ElementElement) {
             typeElement.$maxOccurs = this.$maxOccurs;
             typeElement.$minOccurs = this.$minOccurs;
           }

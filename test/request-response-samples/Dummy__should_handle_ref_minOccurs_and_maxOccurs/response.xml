@@ -4,12 +4,15 @@
     <soap:Header></soap:Header>
     <soap:Body>
         <n:DummyResponse>
-            <n:DummyList_MaxUnbounded>
+            <n:Status>
+                <n:Result>OK</n:Result>
+            </n:Status>
+            <n:DummyList>
                 <n:DummyItem>
                     <n:DummyItemFirstChild>foo</n:DummyItemFirstChild>
                     <n:DummyItemSecondChild>foo</n:DummyItemSecondChild>
                 </n:DummyItem>
-            </n:DummyList_MaxUnbounded>
+            </n:DummyList>
         </n:DummyResponse>
     </soap:Body>
 </soap:Envelope>
