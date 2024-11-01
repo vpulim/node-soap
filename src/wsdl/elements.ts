@@ -259,11 +259,6 @@ export class ElementElement extends Element {
           let elem: any = {};
           typeStorage[typeName] = elem;
 
-          if (this.$ref && isMany && typeElement instanceof ElementElement) {
-            typeElement.$maxOccurs = this.$maxOccurs;
-            typeElement.$minOccurs = this.$minOccurs;
-          }
-
           const description = typeElement.description(definitions, xmlns);
           if (typeof description === 'string') {
             elem = description;
@@ -292,7 +287,14 @@ export class ElementElement extends Element {
           typeStorage[typeName] = elem;
         } else {
           if (this.$ref) {
-            element = typeStorage[typeName];
+            // Differentiate between a ref for an array of elements and a ref for a single element
+            if (isMany) {
+              const refTypeName = typeName + '[]';
+              typeStorage[refTypeName] = typeStorage[typeName];
+              element[refTypeName] = typeStorage[refTypeName];
+            } else {
+              element = typeStorage[typeName];
+            }
           } else {
             element[name] = typeStorage[typeName];
           }
