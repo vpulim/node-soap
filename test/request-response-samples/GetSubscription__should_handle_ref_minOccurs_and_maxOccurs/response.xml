@@ -2,16 +2,8 @@
 <S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
     <S:Body>
         <ns11:GetSubscriptionResponse xmlns:ns2="http://ws.gematik.de/conn/ConnectorCommon/v5.0"
-            xmlns:ns3="http://ws.gematik.de/conn/CardServiceCommon/v2.0"
-            xmlns:ns4="http://ws.gematik.de/conn/CardService/v8.1"
-            xmlns:ns5="http://ws.gematik.de/tel/error/v2.0"
-            xmlns:ns6="http://ws.gematik.de/conn/ConnectorContext/v2.0"
-            xmlns:ns7="urn:oasis:names:tc:dss:1.0:core:schema"
-            xmlns:ns8="http://www.w3.org/2000/09/xmldsig#"
-            xmlns:ns9="http://ws.gematik.de/int/version/ProductInformation/v1.1"
-            xmlns:ns10="http://ws.gematik.de/conn/CardTerminalInfo/v8.0"
             xmlns:ns11="http://ws.gematik.de/conn/EventService/v7.2"
-            xmlns:ns12="urn:oasis:names:tc:SAML:1.0:assertion">
+        >
             <ns2:Status>
                 <ns2:Result>OK</ns2:Result>
             </ns2:Status>
@@ -19,8 +11,6 @@
                 <ns11:Subscription>
                     <ns11:SubscriptionID>a24610ec-4069-4efc-a87e-5ab1d944ec5f</ns11:SubscriptionID>
                     <ns11:TerminationTime>2024-10-31T20:00:27.567+01:00</ns11:TerminationTime>
-                    <ns11:EventTo>cetp://0.0.0.0:8085</ns11:EventTo>
-                    <ns11:Topic>OPERATIONAL_STATE</ns11:Topic>
                 </ns11:Subscription>
             </ns11:Subscriptions>
         </ns11:GetSubscriptionResponse>

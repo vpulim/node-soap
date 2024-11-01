@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+<soap:Envelope
+    xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:EVT="http://ws.gematik.de/conn/EventService/v7.2"
     xmlns:EVTW="http://ws.gematik.de/conn/EventService/WSDL/v7.2"
-    xmlns:CCTX="http://ws.gematik.de/conn/ConnectorContext/v2.0"
-    xmlns:GERROR="http://ws.gematik.de/tel/error/v2.0">
+>
     <soap:Body>
         <EVT:GetSubscription xmlns:EVT="http://ws.gematik.de/conn/EventService/v7.2"
             xmlns="http://ws.gematik.de/conn/EventService/v7.2">
