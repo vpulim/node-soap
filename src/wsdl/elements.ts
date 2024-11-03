@@ -229,7 +229,7 @@ export class ElementElement extends Element {
 
     const isMany = maxOccurs > 1;
 
-    if (isMany) {
+    if (isMany && name) {
       name += '[]';
     }
 
@@ -287,7 +287,14 @@ export class ElementElement extends Element {
           typeStorage[typeName] = elem;
         } else {
           if (this.$ref) {
-            element = typeStorage[typeName];
+            // Differentiate between a ref for an array of elements and a ref for a single element
+            if (isMany) {
+              const refTypeName = typeName + '[]';
+              typeStorage[refTypeName] = typeStorage[typeName];
+              element[refTypeName] = typeStorage[refTypeName];
+            } else {
+              element = typeStorage[typeName];
+            }
           } else {
             element[name] = typeStorage[typeName];
           }
