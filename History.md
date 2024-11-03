@@ -1,3 +1,8 @@
+1.1.6 / 2024-11-04
+===================
+* [ENHANCEMENT] Add custom cache option (#1261)
+* [Fix] Fix usage of ref maxoccurs and minoccurs attributes (#1260)
+
 1.1.5 / 2024-09-29
 ===================
 * [ENHANCEMENT] Add missing KeyInfo tag around SecurityTokenReference (#1255)
