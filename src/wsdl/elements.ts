@@ -236,9 +236,9 @@ export class ElementElement extends Element {
     if (xmlns && xmlns[TNS_PREFIX]) {
       this.$targetNamespace = xmlns[TNS_PREFIX];
     }
-    const inferredType: string = this.$type || this.$ref;
-    if (inferredType) {
-      const type = splitQName(inferredType);
+    let type: any = this.$type || this.$ref;
+    if (type) {
+      type = splitQName(type);
       const typeName: string = type.name;
       const ns: string = xmlns && xmlns[type.prefix] ||
         this.xmlns[type.prefix] ||
