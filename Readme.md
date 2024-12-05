@@ -1,4 +1,4 @@
-# Soap [![NPM version][npm-image]][npm-url] [![Downloads][downloads-image]][npm-url] [![Coveralls Status][coveralls-image]][coveralls-url] [![Gitter chat][gitter-image]][gitter-url]
+# Soap [![NPM version][npm-image]][npm-url] [![Downloads][downloads-image]][npm-url] [![Coveralls Status][coveralls-image]][coveralls-url]
 
 > A SOAP client and server for node.js.
 
@@ -87,11 +87,8 @@ This module lets you connect to web services using SOAP.  It also provides a ser
 
 ## Support
 
-Community support is available at Gitter: [![Gitter chat][gitter-image]][gitter-url]
-
-Some maintainers provide paid support, which can be request through our [Google Form](https://docs.google.com/forms/d/e/1FAIpQLSdj5EXxd5flcukLInmpFQhEvQYeERaReFFh9F0nqC_4EUmeLg/viewform)
-
-GitHub issues have been disabled to focus on pull requests. ([#731](https://github.com/vpulim/node-soap/pull/731))
+Community support is available through GitHub issues tab.
+Paid support can be provided as well, please contact one of the active maintainers.
 
 ## Module
 
@@ -1485,8 +1482,9 @@ describe('myService', function() {
 ## Contributors
 
  * Author: [Vinay Pulim](https://github.com/vpulim)
- * Maintainers:
+ * Active maintainers:
    - [Vasily Martynov](https://github.com/w666)
+ * Previous maintainers (not active for a long time):
    - [Joe Spencer](https://github.com/jsdevel)
    - [Heinz Romirer](https://github.com/herom)
  * [All Contributors](https://github.com/vpulim/node-soap/graphs/contributors)
@@ -1494,9 +1492,6 @@ describe('myService', function() {
 [downloads-image]: http://img.shields.io/npm/dm/soap.svg
 [npm-url]: https://npmjs.org/package/soap
 [npm-image]: http://img.shields.io/npm/v/soap.svg
-
-[gitter-url]: https://gitter.im/vpulim/node-soap
-[gitter-image]: https://badges.gitter.im/vpulim/node-soap.png
 
 [coveralls-url]: https://coveralls.io/r/vpulim/node-soap
 [coveralls-image]: http://img.shields.io/coveralls/vpulim/node-soap/master.svg
