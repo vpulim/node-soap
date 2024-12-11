@@ -1,3 +1,7 @@
+1.1.7 / 2024-12-11
+===================
+* [MAINTENANCE] Update dependencies, bump axios to 1.7.9 (#1264)
+
 1.1.6 / 2024-11-04
 ===================
 * [ENHANCEMENT] Add custom cache option (#1261)
