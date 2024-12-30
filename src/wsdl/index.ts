@@ -604,17 +604,21 @@ export class WSDL {
       }
       if (key !== nsAttrName) {
         const value = params[key];
-        const prefixedKey = (isParts ? '' : nsPrefix) + key;
-        const attributes = [];
-        if (typeof value === 'object' && value.hasOwnProperty(this.options.attributesKey)) {
-          const attrs = value[this.options.attributesKey];
-          for (const n in attrs) {
-            attributes.push(' ' + n + '=' + '"' + attrs[n] + '"');
+        if (key === this.options.xmlKey) {
+          parts.push(this.objectToXML({[key]: value}, null, nsPrefix, nsURI));
+        } else {
+          const prefixedKey = (isParts ? '' : nsPrefix) + key;
+          const attributes = [];
+          if (typeof value === 'object' && value.hasOwnProperty(this.options.attributesKey)) {
+            const attrs = value[this.options.attributesKey];
+            for (const n in attrs) {
+              attributes.push(' ' + n + '=' + '"' + attrs[n] + '"');
+            }
           }
+          parts.push(['<', prefixedKey].concat(attributes).concat('>').join(''));
+          parts.push((typeof value === 'object') ? this.objectToXML(value, key, nsPrefix, nsURI) : xmlEscape(value));
+          parts.push(['</', prefixedKey, '>'].join(''));
         }
-        parts.push(['<', prefixedKey].concat(attributes).concat('>').join(''));
-        parts.push((typeof value === 'object') ? this.objectToXML(value, key, nsPrefix, nsURI) : xmlEscape(value));
-        parts.push(['</', prefixedKey, '>'].join(''));
       }
     }
     parts.push(['</', nsPrefix, name, '>'].join(''));
