@@ -414,7 +414,7 @@ export class Client extends EventEmitter {
       assert.ok(!style || style === 'document', 'invalid message definition for rpc style binding');
 
       let useName = input.$name;
-      let useNSAlias = input.targetNSAlias;
+      let useNSAlias: any = input.targetNSAlias;
 
       // [workaround-1] if <wsdl:input> element has part as children use it.
       if (input.children && input.children.length == 1 && input.children[0].nsName == "wsdl:part" && input.children[0]["$element"]) {
