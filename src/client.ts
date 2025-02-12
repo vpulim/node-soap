@@ -412,8 +412,26 @@ export class Client extends EventEmitter {
       (method.inputSoap === 'encoded') && (encoding = 'soap:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" ');
     } else {
       assert.ok(!style || style === 'document', 'invalid message definition for rpc style binding');
+
+      let useName = input.$name;
+      let useNSAlias = input.targetNSAlias;
+
+      // [workaround-1] if <wsdl:input> element has part as children use it.
+      if (input.children && input.children.length == 1 && input.children[0].nsName == "wsdl:part" && input.children[0]["$element"]) {
+        let nameparts = input.children[0]["$element"].split(":");
+        useName = nameparts.pop();
+
+        // [workaround-2] resolve namespace when there are multiple-wsdl import having tns / targetNamespace reset
+        if (nameparts.length && this.wsdl.isIgnoredNameSpace(nameparts.pop())) {
+          // Usually i0, i1... import marker would be available in WSDL
+          if (this.wsdl.definitions.xmlns.i0) {
+              useNSAlias = {current: "i0", parent: this.wsdl.definitions.xmlns.i0}
+          }
+        }
+      }
+      
       // pass `input.$lookupType` if `input.$type` could not be found
-      message = this.wsdl.objectToDocumentXML(input.$name, args, input.targetNSAlias, input.targetNamespace, (input.$type || input.$lookupType));
+      message = this.wsdl.objectToDocumentXML(useName, args, useNSAlias, input.targetNamespace, (input.$type || input.$lookupType));
     }
 
     let decodedHeaders;
