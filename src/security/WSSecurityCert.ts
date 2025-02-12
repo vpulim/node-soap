@@ -43,6 +43,7 @@ export interface IWSSecurityCertOptions {
   hasTimeStamp?: boolean;
   signatureTransformations?: string[];
   signatureAlgorithm?: string;
+  digestAlgorithm?: string;
   additionalReferences?: string[];
   signerOptions?: IXmlSignerOptions;
 }
@@ -73,8 +74,10 @@ export class WSSecurityCert implements ISecurity {
 
     this.signer = new SignedXml({
       idMode: options?.signerOptions?.idMode,
-      signatureAlgorithm: options?.signatureAlgorithm });
+      signatureAlgorithm: options?.signatureAlgorithm,
+    });
 
+    this.signer.digestAlgorithm = options.digestAlgorithm ?? 'http://www.w3.org/2001/04/xmlenc#sha256';
     if (options.signatureAlgorithm === 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256') {
       this.signer.signatureAlgorithm = options.signatureAlgorithm;
       this.signer.addReference({
@@ -180,19 +183,19 @@ export class WSSecurityCert implements ISecurity {
     resolvePlaceholderInReferences(this.signer.references, bodyXpath);
 
     if (!(this.signer.references.filter((ref: { xpath: string; }) => (ref.xpath === bodyXpath)).length > 0)) {
-      this.signer.addReference({ xpath: bodyXpath, transforms: references, digestAlgorithm: 'http://www.w3.org/2001/04/xmlenc#sha256' });
+      this.signer.addReference({ xpath: bodyXpath, transforms: references, digestAlgorithm: this.signer.digestAlgorithm });
     }
 
     for (const name of this.additionalReferences) {
       const xpath = `//*[name(.)='${name}']`;
       if (!(this.signer.references.filter((ref: { xpath: string; }) => (ref.xpath === xpath)).length > 0)) {
-        this.signer.addReference({ xpath: xpath, transforms: references, digestAlgorithm: 'http://www.w3.org/2001/04/xmlenc#sha256' });
+        this.signer.addReference({ xpath: xpath, transforms: references, digestAlgorithm: this.signer.digestAlgorithm });
       }
     }
 
     const timestampXpath = `//*[name(.)='wsse:Security']/*[local-name(.)='Timestamp']`;
     if (this.hasTimeStamp && !(this.signer.references.filter((ref: { xpath: string; }) => (ref.xpath === timestampXpath)).length > 0)) {
-      this.signer.addReference({ xpath: timestampXpath, transforms: references, digestAlgorithm: 'http://www.w3.org/2001/04/xmlenc#sha256' });
+      this.signer.addReference({ xpath: timestampXpath, transforms: references, digestAlgorithm: this.signer.digestAlgorithm });
     }
 
     this.signer.computeSignature(xmlWithSec, this.signerOptions);

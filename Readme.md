@@ -981,6 +981,7 @@ The `options` object is optional and can contain the following properties:
 * `hasTimeStamp`: Includes Timestamp tags (default: `true`)
 * `signatureTransformations`: sets the Reference Transforms Algorithm (default ['http://www.w3.org/2000/09/xmldsig#enveloped-signature', 'http://www.w3.org/2001/10/xml-exc-c14n#']). Type is a string array
 * `signatureAlgorithm`: set to `http://www.w3.org/2001/04/xmldsig-more#rsa-sha256` to use sha256
+* `digestAlgorithm`: set to `http://www.w3.org/2000/09/xmldsig#sha1` to use sha1 (default `http://www.w3.org/2001/04/xmlenc#sha256`)
 * `additionalReferences` : (optional) Array of Soap headers that need to be signed.  This need to be added using `client.addSoapHeader('header')`
 * `signerOptions`: (optional) passes options to the XML Signer package - from (https://github.com/yaronn/xml-crypto)
   * `existingPrefixes`: (optional) A hash of prefixes and namespaces prefix: namespace that shouldn't be in the signature because they already exist in the xml (default: `{ 'wsse': 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd' }`)
