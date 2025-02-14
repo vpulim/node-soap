@@ -1,3 +1,9 @@
+1.1.8 / 2024-12-11
+===================
+* [ENHANCEMENT] Add option for digest algorithm, default value is sha256, update documentation (#1273)
+* [MAINTENANCE] Fix minimal Node.js version in package.json (#1268)
+* [MAINTENANCE] Update security.md (#1270)
+
 1.1.7 / 2024-12-11
 ===================
 * [MAINTENANCE] Update dependencies, bump axios to 1.7.9 (#1264)
