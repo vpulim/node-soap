@@ -604,11 +604,17 @@ export class Server extends EventEmitter {
       ? 'http://www.w3.org/2003/05/soap-envelope'
       : 'http://schemas.xmlsoap.org/soap/envelope/';
 
+    // let xml = '<?xml version="1.0" encoding="utf-8"?>' +
+    //   '<soap:Envelope xmlns:soap="' + envelopeDefinition + '" ' +
+    //   encoding +
+    //   this.wsdl.xmlnsInEnvelope + '>';
+    /*PALLET-TRACK CHANGES*/
+    const addiNamespaces = ' xmlns:xsi=' + '"http://www.w3.org/2001/XMLSchema-instance"' + ' xmlns:s=' + '"http://www.w3.org/2001/XMLSchema"';
     let xml = '<?xml version="1.0" encoding="utf-8"?>' +
-      '<soap:Envelope xmlns:soap="' + envelopeDefinition + '" ' +
-      encoding +
-      this.wsdl.xmlnsInEnvelope + '>';
-
+        '<soap-env:Envelope xmlns:soap-env="' + envelopeDefinition + '" ' +
+        encoding +
+        this.wsdl.xmlnsInEnvelope + addiNamespaces + '>';
+    /*PALLET-TRACK CHANGES*/
     headers = headers || '';
 
     if (includeTimestamp) {
@@ -630,9 +636,9 @@ export class Server extends EventEmitter {
       xml += '<soap:Header>' + headers + '</soap:Header>';
     }
 
-    xml += body ? '<soap:Body>' + body + '</soap:Body>' : '<soap:Body/>';
+    xml += body ? '<soap-env:Body>' + body + '</soap-env:Body>' : '<soap:Body/>';
 
-    xml += '</soap:Envelope>';
+    xml += '</soap-env:Envelope>';
     return xml;
   }
 
