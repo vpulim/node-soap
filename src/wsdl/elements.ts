@@ -70,6 +70,7 @@ export class Element {
   public nsName?;
   public prefix?: string;
   public schemaXmlns?;
+  public effectiveXmlns?: IXmlNs;
   public valueKey: string;
   public xmlKey;
   public xmlns?: IXmlNs;
@@ -109,6 +110,8 @@ export class Element {
       this.xmlns[TNS_PREFIX] = this.$targetNamespace;
     }
 
+    this.effectiveXmlns = { ...this.xmlns };
+
     this.init();
   }
 
@@ -132,6 +135,10 @@ export class Element {
     if (ChildClass) {
       const child = new ChildClass(nsName, attrs, options, schemaXmlns);
       child.init();
+      child.effectiveXmlns = {
+        ...this.effectiveXmlns,
+        ...child.effectiveXmlns,
+      };
       stack.push(child);
     } else {
       this.unexpected(nsName);
@@ -662,15 +669,15 @@ export class MessageElement extends Element {
       delete this.parts;
 
       const nsName = splitQName(part.$element);
-      const ns = nsName.prefix;
-      let schema = definitions.schemas[definitions.xmlns[ns]];
+      const ns = this.effectiveXmlns?.[nsName.prefix] || definitions.xmlns[nsName.prefix];
+      let schema = definitions.schemas[ns];
       this.element = schema.elements[nsName.name];
       if (!this.element) {
         debug(nsName.name + ' is not present in wsdl and cannot be processed correctly.');
         return;
       }
-      this.element.targetNSAlias = ns;
-      this.element.targetNamespace = definitions.xmlns[ns];
+      this.element.targetNSAlias = nsName.prefix;
+      this.element.targetNamespace = ns;
 
       // set the optional $lookupType to be used within `client#_invoke()` when
       // calling `wsdl#objectToDocumentXML()

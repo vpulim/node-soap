@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:tns="http://tempuri.org"
+    name="TestService"
+    targetNamespace="http://tempuri.org">
+
+  <wsdl:import namespace="foo" location="foo.wsdl"/>
+  <wsdl:import namespace="bar" location="bar.wsdl"/>
+
+  <wsdl:service name="TestService">
+    <wsdl:port name="TestPort" binding="tns:TestBinding">
+      <soap:address location="http://example.com/TestService"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
