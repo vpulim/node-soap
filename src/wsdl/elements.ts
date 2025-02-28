@@ -70,6 +70,7 @@ export class Element {
   public nsName?;
   public prefix?: string;
   public schemaXmlns?;
+  public definitionsXmlns?: IXmlNs;
   public valueKey: string;
   public xmlKey;
   public xmlns?: IXmlNs;
@@ -132,6 +133,10 @@ export class Element {
     if (ChildClass) {
       const child = new ChildClass(nsName, attrs, options, schemaXmlns);
       child.init();
+      const root = stack[0];
+      if (root instanceof DefinitionsElement) {
+        child.definitionsXmlns = root.xmlns;
+      }
       stack.push(child);
     } else {
       this.unexpected(nsName);
@@ -240,10 +245,9 @@ export class ElementElement extends Element {
     if (type) {
       type = splitQName(type);
       const typeName: string = type.name;
-      const ns: string = xmlns && xmlns[type.prefix] ||
-        this.xmlns[type.prefix] ||
-        ((definitions.xmlns[type.prefix] !== undefined || definitions.xmlns[this.targetNSAlias] !== undefined) && this.schemaXmlns[type.prefix]) ||
-        definitions.xmlns[type.prefix];
+      const useSchemaXmlns = !!findNs(type.prefix, this.definitionsXmlns, definitions.xmlns) ||
+        !!findNs(this.targetNSAlias, this.definitionsXmlns, definitions.xmlns);
+      const ns = findNs(type.prefix, xmlns, this.xmlns, useSchemaXmlns ? this.schemaXmlns : undefined, this.definitionsXmlns, definitions.xmlns);
       const schema = definitions.schemas[ns];
       const typeElement = schema && (this.$type ? schema.complexTypes[typeName] || schema.types[typeName] : schema.elements[typeName]);
       const typeStorage = this.$type ? definitions.descriptions.types : definitions.descriptions.elements;
@@ -419,7 +423,7 @@ export class RestrictionElement extends Element {
     if (desc && this.$base) {
       const type = splitQName(this.$base);
       const typeName = type.name;
-      const ns = xmlns && xmlns[type.prefix] || definitions.xmlns[type.prefix];
+      const ns = findNs(type.prefix, xmlns, this.definitionsXmlns, definitions.xmlns);
       const schema = definitions.schemas[ns];
       const typeElement = schema && (schema.complexTypes[typeName] || schema.types[typeName] || schema.elements[typeName]);
 
@@ -462,7 +466,7 @@ export class ExtensionElement extends Element {
     if (this.$base) {
       const type = splitQName(this.$base);
       const typeName = type.name;
-      const ns = xmlns && xmlns[type.prefix] || definitions.xmlns[type.prefix];
+      const ns = findNs(type.prefix, xmlns, this.definitionsXmlns, definitions.xmlns);
       const schema = definitions.schemas[ns];
 
       if (typeName in Primitives) {
@@ -662,15 +666,15 @@ export class MessageElement extends Element {
       delete this.parts;
 
       const nsName = splitQName(part.$element);
-      const ns = nsName.prefix;
-      let schema = definitions.schemas[definitions.xmlns[ns]];
+      const ns = findNs(nsName.prefix, this.definitionsXmlns, definitions.xmlns);
+      let schema = definitions.schemas[ns];
       this.element = schema.elements[nsName.name];
       if (!this.element) {
         debug(nsName.name + ' is not present in wsdl and cannot be processed correctly.');
         return;
       }
-      this.element.targetNSAlias = ns;
-      this.element.targetNamespace = definitions.xmlns[ns];
+      this.element.targetNSAlias = nsName.prefix;
+      this.element.targetNamespace = ns;
 
       // set the optional $lookupType to be used within `client#_invoke()` when
       // calling `wsdl#objectToDocumentXML()
@@ -705,7 +709,7 @@ export class MessageElement extends Element {
 
       if (this.element.$type) {
         const type = splitQName(this.element.$type);
-        const typeNs = schema.xmlns && schema.xmlns[type.prefix] || definitions.xmlns[type.prefix];
+        const typeNs = findNs(type.prefix, schema.xmlns, this.definitionsXmlns, definitions.xmlns);
 
         if (typeNs) {
           if (type.name in Primitives) {
@@ -737,7 +741,7 @@ export class MessageElement extends Element {
         }
         assert(part.name === 'part', 'Expected part element');
         const nsName = splitQName(part.$type);
-        const ns = definitions.xmlns[nsName.prefix];
+        const ns = findNs(nsName.prefix, this.definitionsXmlns, definitions.xmlns);
         const type = nsName.name;
         const schemaDefinition = definitions.schemas[ns];
         if (typeof schemaDefinition !== 'undefined') {
@@ -1256,4 +1260,15 @@ function buildAllowedChildren(elementList: string[]): { [k: string]: typeof Elem
     rtn[element.replace(/^_/, '')] = ElementTypeMap[element] || Element;
   }
   return rtn;
+}
+
+/**
+ * Return the first matching namespace for the provided prefix.
+ */
+function findNs(prefix: string, ...xmlnss: Array<IXmlNs | undefined>): string | undefined {
+  for (const xmlns of xmlnss) {
+    if (xmlns?.[prefix]) {
+      return xmlns[prefix];
+    }
+  }
 }
