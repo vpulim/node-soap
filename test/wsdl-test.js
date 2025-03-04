@@ -407,4 +407,16 @@ describe('WSDL Parser (non-strict)', () => {
       done();
     });
   });
+
+  it('should describe correct service input/output when imports have different tns namespaces', function(done) {
+    soap.createClient(__dirname + '/wsdl/tnsImportConflict/root.wsdl', function(err, client) {
+      assert.ifError(err);
+      var description = client.describe();
+      assert.deepStrictEqual(description.TestService.TestPort.Test, {
+        input: { val: 'xsd:string' },
+        output: { val: 'xsd:string' },
+      });
+      done();
+    });
+  });
 });
