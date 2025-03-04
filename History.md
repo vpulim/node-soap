@@ -1,3 +1,7 @@
+1.1.9 / 2025-03-04
+===================
+* [ENHANCEMENT] Use wsdl xmlns prefix mappings, so several wsdl files can be imported with different namespace prefixes (#1279)
+
 1.1.8 / 2024-12-11
 ===================
 * [ENHANCEMENT] Add option for digest algorithm, default value is sha256, update documentation (#1273)
