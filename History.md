@@ -1,3 +1,7 @@
+1.1.10 / 2025-03-17
+===================
+* [MAINTENANCE] Update axios to 1.8.3, xml-crypto to 6.0.1 and some other deps to address security issues
+
 1.1.9 / 2025-03-04
 ===================
 * [ENHANCEMENT] Use wsdl xmlns prefix mappings, so several wsdl files can be imported with different namespace prefixes (#1279)
