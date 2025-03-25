@@ -1,6 +1,7 @@
 "use strict";
 
 var fs = require('fs'),
+    path = require('path'),
     soap = require('..'),
     WSDL = require('../lib/wsdl').WSDL,
     assert = require('assert'),
@@ -80,9 +81,9 @@ describe('WSDL Parser (strict)', () => {
       strict: true,
       wsdl_options: {
         overrideImportLocation: (location, parent, include, options) => {
-          assert.equal(location, __dirname+'/wsdl/wsdlImport/sub.wsdl');
+          assert.equal(path.resolve(location), path.resolve(__dirname+'/wsdl/wsdlImport/sub.wsdl'));
           assert.equal(parent, __dirname+'/wsdl/wsdlImport/main.wsdl');
-          assert.equal(include, 'sub.wsdl')
+          assert.equal(include, 'sub.wsdl');
           assert.notEqual(options, null);
           throw new Error(`user error`);
         }
