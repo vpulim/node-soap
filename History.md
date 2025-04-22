@@ -1,3 +1,10 @@
+# 1.1.11 / 2025-04-22
+
+- [ENHANCEMENT] Allow xml key in first level for rpc (#1219)
+- [ENHANCEMENT] Do not set Connection header when forever is not set (#1259)
+- [MAINTENANCE] Packages updates, tsconfig changes, fix test path on Windows (#1280)
+- [MAINTENANCE] Bump xml-crypto to 6.1.1 (#1283)
+
 1.1.10 / 2025-03-17
 ===================
 * [MAINTENANCE] Update axios to 1.8.3, xml-crypto to 6.0.1 and some other deps to address security issues
