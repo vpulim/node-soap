@@ -110,6 +110,18 @@ describe('WSSecurityCert', function () {
     xml.match(/<Reference URI="#/g).should.have.length(2);
   });
 
+  it('should not only add Body Reference elements, for Soap inside wsse:Security element if Body is excluded from references', function () {
+    var instance = new WSSecurityCert(key, cert, '', {excludedReferences: ['Body']});
+    var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body><Timestamp></Timestamp></soap:Body></soap:Envelope>', 'soap');
+    xml.match(/<Reference URI="#/g).should.have.length(1);
+  });
+
+  it('should not only add Timestamp Reference elements, for Soap inside wsse:Security element if Timestamp is excluded from references', function () {
+    var instance = new WSSecurityCert(key, cert, '',{excludedReferences: ['Timestamp']});
+    var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body><Timestamp></Timestamp></soap:Body></soap:Envelope>', 'soap');
+    xml.match(/<Reference URI="#/g).should.have.length(1);
+  });
+
   it('should only add one Reference elements, for Soap Body wsse:Security element when addTimestamp is false', function () {
     var instance = new WSSecurityCert(key, cert, '', { hasTimeStamp: false });
     var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body><Timestamp></Timestamp></soap:Body></soap:Envelope>', 'soap');
@@ -238,7 +250,7 @@ describe('WSSecurityCert', function () {
     }
     should(xml).not.be.ok();
   });
-   
+
   it('should use rsa-sha1 signature method when the signatureAlgorithm option is set to WSSecurityCert', function () {
       var instance = new WSSecurityCert(key, cert, '', {
          hasTimeStamp: false,
