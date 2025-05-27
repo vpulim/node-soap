@@ -110,16 +110,16 @@ describe('WSSecurityCert', function () {
     xml.match(/<Reference URI="#/g).should.have.length(2);
   });
 
-  it('should not only add Body Reference elements, for Soap inside wsse:Security element if Body is excluded from references', function () {
-    var instance = new WSSecurityCert(key, cert, '', {excludedReferences: ['Body']});
+  it('Verifies that only Soap Timestamp reference added to wsse:Security when the Soap Body is excluded from signing', function () {
+    var instance = new WSSecurityCert(key, cert, '', {excludeReferencesFromSigning: ['Body']});
     var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body><Timestamp></Timestamp></soap:Body></soap:Envelope>', 'soap');
     xml.match(/<Reference URI="#/g).should.have.length(1);
   });
 
-  it('should not only add Timestamp Reference elements, for Soap inside wsse:Security element if Timestamp is excluded from references', function () {
-    var instance = new WSSecurityCert(key, cert, '',{excludedReferences: ['Timestamp']});
+  it('Verifies that Soap Timestamp reference is not added to wsse:Security when it is excluded from signing', function () {
+    var instance = new WSSecurityCert(key, cert, '',{excludeReferencesFromSigning: ['Timestamp']});
     var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body><Timestamp></Timestamp></soap:Body></soap:Envelope>', 'soap');
-    xml.match(/<Reference URI="#/g).should.have.length(1);
+    xml.should.not.containEql('<Reference URI="#Timestamp">');
   });
 
   it('should only add one Reference elements, for Soap Body wsse:Security element when addTimestamp is false', function () {
@@ -224,6 +224,18 @@ describe('WSSecurityCert', function () {
     var xml = instance.postProcess('<soap:Envelope><soap:Header><To Id="To">localhost.com</To><Action Id="action-1234">testing</Action></soap:Header><soap:Body><Body></Body></soap:Body></soap:Envelope>', 'soap');
     xml.should.containEql('<Reference URI="#To">');
     xml.should.containEql('<Reference URI="#action-1234">');
+  });
+
+  it('should not sign additional headers that are excluded from signing', function () {
+    var instance = new WSSecurityCert(key, cert, '', {
+      excludedReferences: [
+        'To',
+        'Action'
+      ]
+    });
+    var xml = instance.postProcess('<soap:Envelope><soap:Header><To Id="To">localhost.com</To><Action Id="action-1234">testing</Action></soap:Header><soap:Body><Body></Body></soap:Body></soap:Envelope>', 'soap');
+    xml.should.not.containEql('<Reference URI="#To">');
+    xml.should.not.containEql('<Reference URI="#action-1234">');
   });
 
   it('should add a WSSecurity signing block when valid envelopeKey is passed', function () {

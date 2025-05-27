@@ -46,7 +46,7 @@ export interface IWSSecurityCertOptions {
   digestAlgorithm?: string;
   additionalReferences?: string[];
   signerOptions?: IXmlSignerOptions;
-  excludedReferences?: string[];
+  excludeReferencesFromSigning?: string[];
 }
 
 export interface IXmlSignerOptions {
@@ -66,7 +66,7 @@ export class WSSecurityCert implements ISecurity {
   private created: string;
   private expires: string;
   private additionalReferences: string[] = [];
-  private excludedReferences: string[] = [];
+  private excludeReferencesFromSigning: string[] = [];
 
   constructor(privatePEM: any, publicP12PEM: any, password: any, options: IWSSecurityCertOptions = {}) {
     this.publicP12PEM = publicP12PEM.toString()
@@ -99,8 +99,8 @@ export class WSSecurityCert implements ISecurity {
       this.additionalReferences = options.additionalReferences;
     }
 
-    if (options.excludedReferences && options.excludedReferences.length > 0) {
-      this.excludedReferences = options.excludedReferences;
+    if (options.excludeReferencesFromSigning && options.excludeReferencesFromSigning.length > 0) {
+      this.excludeReferencesFromSigning = options.excludeReferencesFromSigning;
     }
 
     if (options.signerOptions) {
@@ -188,19 +188,19 @@ export class WSSecurityCert implements ISecurity {
     const bodyXpath = `//*[name(.)='${envelopeKey}:Body']`;
     resolvePlaceholderInReferences(this.signer.references, bodyXpath);
 
-    if (!this.excludedReferences.some((ref) => ref === 'Body') && !(this.signer.references.filter((ref: { xpath: string; }) => (ref.xpath === bodyXpath)).length > 0)) {
-      this.signer.addReference({ xpath: bodyXpath, transforms: references, digestAlgorithm: this.signer.digestAlgorithm });
+    if (!this.excludeReferencesFromSigning.some((ref) => ref === 'Body') && !(this.signer.references.filter((ref: { xpath: string; }) => (ref.xpath === bodyXpath)).length > 0)) {
+        this.signer.addReference({ xpath: bodyXpath, transforms: references, digestAlgorithm: this.signer.digestAlgorithm });
     }
 
     for (const name of this.additionalReferences) {
       const xpath = `//*[name(.)='${name}']`;
-      if (!this.excludedReferences.some((ref) => ref === name) && !(this.signer.references.filter((ref: { xpath: string; }) => (ref.xpath === xpath)).length > 0)) {
+      if (!this.excludeReferencesFromSigning.some((ref) => ref === name) && !(this.signer.references.filter((ref: { xpath: string; }) => (ref.xpath === xpath)).length > 0)) {
         this.signer.addReference({ xpath: xpath, transforms: references, digestAlgorithm: this.signer.digestAlgorithm });
       }
     }
 
     const timestampXpath = `//*[name(.)='wsse:Security']/*[local-name(.)='Timestamp']`;
-    if (!this.excludedReferences.some((ref) => ref === 'Timestamp') && this.hasTimeStamp && !(this.signer.references.filter((ref: { xpath: string; }) => (ref.xpath === timestampXpath)).length > 0)) {
+    if (!this.excludeReferencesFromSigning.some((ref) => ref === 'Timestamp') && this.hasTimeStamp && !(this.signer.references.filter((ref: { xpath: string; }) => (ref.xpath === timestampXpath)).length > 0)) {
       this.signer.addReference({ xpath: timestampXpath, transforms: references, digestAlgorithm: this.signer.digestAlgorithm });
     }
 
