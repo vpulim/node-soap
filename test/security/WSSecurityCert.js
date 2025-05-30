@@ -110,6 +110,18 @@ describe('WSSecurityCert', function () {
     xml.match(/<Reference URI="#/g).should.have.length(2);
   });
 
+  it('Verifies that only Soap Timestamp reference added to wsse:Security when the Soap Body is excluded from signing', function () {
+    var instance = new WSSecurityCert(key, cert, '', {excludeReferencesFromSigning: ['Body']});
+    var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body><Timestamp></Timestamp></soap:Body></soap:Envelope>', 'soap');
+    xml.match(/<Reference URI="#/g).should.have.length(1);
+  });
+
+  it('Verifies that Soap Timestamp reference is not added to wsse:Security when it is excluded from signing', function () {
+    var instance = new WSSecurityCert(key, cert, '',{excludeReferencesFromSigning: ['Timestamp']});
+    var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body><Timestamp></Timestamp></soap:Body></soap:Envelope>', 'soap');
+    xml.should.not.containEql('<Reference URI="#Timestamp">');
+  });
+
   it('should only add one Reference elements, for Soap Body wsse:Security element when addTimestamp is false', function () {
     var instance = new WSSecurityCert(key, cert, '', { hasTimeStamp: false });
     var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body><Timestamp></Timestamp></soap:Body></soap:Envelope>', 'soap');
@@ -214,6 +226,18 @@ describe('WSSecurityCert', function () {
     xml.should.containEql('<Reference URI="#action-1234">');
   });
 
+  it('should not sign additional headers that are excluded from signing', function () {
+    var instance = new WSSecurityCert(key, cert, '', {
+      excludedReferences: [
+        'To',
+        'Action'
+      ]
+    });
+    var xml = instance.postProcess('<soap:Envelope><soap:Header><To Id="To">localhost.com</To><Action Id="action-1234">testing</Action></soap:Header><soap:Body><Body></Body></soap:Body></soap:Envelope>', 'soap');
+    xml.should.not.containEql('<Reference URI="#To">');
+    xml.should.not.containEql('<Reference URI="#action-1234">');
+  });
+
   it('should add a WSSecurity signing block when valid envelopeKey is passed', function () {
     var instance = new WSSecurityCert(key, cert, '');
     var xml = instance.postProcess('<soap:Envelope><soapenv:Header></soapenv:Header><soapenv:Body></soapenv:Body></soap:Envelope>', 'soapenv');
@@ -238,7 +262,7 @@ describe('WSSecurityCert', function () {
     }
     should(xml).not.be.ok();
   });
-   
+
   it('should use rsa-sha1 signature method when the signatureAlgorithm option is set to WSSecurityCert', function () {
       var instance = new WSSecurityCert(key, cert, '', {
          hasTimeStamp: false,
