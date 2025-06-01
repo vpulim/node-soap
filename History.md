@@ -1,3 +1,8 @@
+# 1.1.12 / 2025-06-01
+
+- [ENHANCEMENT] Add optional `excludeReferencesFromSigning` property to exclude elements (e.g., Body, Timestamp) from SOAP message signing (#1288)
+- [MAINTENANCE] Bump deps axios 1.9.0, debug 4.4.1, formidable 3.5.4 and xml-crypto 6.1.2
+
 # 1.1.11 / 2025-04-22
 
 - [ENHANCEMENT] Allow xml key in first level for rpc (#1219)

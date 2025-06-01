@@ -7,16 +7,16 @@
   },
   "author": "Vinay Pulim <v@pulim.com>",
   "dependencies": {
-    "axios": "^1.8.4",
+    "axios": "^1.9.0",
     "axios-ntlm": "^1.4.4",
-    "debug": "^4.4.0",
+    "debug": "^4.4.1",
     "formidable": "^3.5.4",
     "get-stream": "^6.0.1",
     "lodash": "^4.17.21",
     "sax": "^1.4.1",
     "strip-bom": "^3.0.0",
     "whatwg-mimetype": "4.0.0",
-    "xml-crypto": "^6.1.1"
+    "xml-crypto": "^6.1.2"
   },
   "repository": {
     "type": "git",
