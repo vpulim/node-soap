@@ -240,8 +240,6 @@ describe('WSSecurityCert', function () {
     xml.should.containEql('<Reference URI="#_3">'); // For Timestamp element
   });
 
-
-
   it('should not sign additional headers that are excluded from signing', function () {
     var instance = new WSSecurityCert(key, cert, '', {
       excludedReferences: [
