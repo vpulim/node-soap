@@ -139,7 +139,7 @@ export class WSSecurityCert implements ISecurity {
     let timestampStr = '';
     if (this.hasTimeStamp) {
       timestampStr =
-        `<Timestamp xmlns="${oasisBaseUri}/oasis-200401-wss-wssecurity-utility-1.0.xsd" Id="_1">` +
+        `<Timestamp xmlns="${oasisBaseUri}/oasis-200401-wss-wssecurity-utility-1.0.xsd">` +
         `<Created>${this.created}</Created>` +
         `<Expires>${this.expires}</Expires>` +
         `</Timestamp>`;
