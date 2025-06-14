@@ -648,7 +648,7 @@ describe('SOAP Server with Options', function () {
         ' xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"' +
         ' xmlns:soap="http://service.applicationsnet.com/soap/">' +
         '  <soapenv:Header/>' +
-        '  <soapenv:Body>' +
+        '  <soapenv:Body/>' +
         '</soapenv:Envelope>'
       ).then(res => {
         assert.ok(res.data.indexOf('soapenv:Envelope') > -1);
