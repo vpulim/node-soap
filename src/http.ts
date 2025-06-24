@@ -39,7 +39,7 @@ export class HttpClient implements IHttpClient {
   constructor(options?: IOptions) {
     options = options || {};
     this.options = options;
-    this._request = options.request || req.default.create();
+    this._request = options.request || req.create();
   }
 
   /**
@@ -194,7 +194,7 @@ export class HttpClient implements IHttpClient {
         workstation: exoptions.workstation || '',
         domain: exoptions.domain || '',
       });
-      req = ntlmReq(options);
+      req = ntlmReq(options) as import("axios").AxiosPromise<any>;
     } else {
       if (this.options.parseReponseAttachments) {
         options.responseType = 'arraybuffer';

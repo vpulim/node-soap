@@ -1,5 +1,5 @@
 {
-  "name": "node-soap-iwell",
+  "name": "soap-client-iwell",
   "version": "1.0.1",
   "description": "A minimal node SOAP client",
   "engines": {
@@ -7,7 +7,7 @@
   },
   "author": "Amit Kumar <amit.kumar@investwellonline.com>",
   "dependencies": {
-    "axios-ntlm": "^1.2.0",
+    "axios-ntlm": "1.4.4",
     "debug": "^4.3.2",
     "formidable": "^3.2.4",
     "get-stream": "^6.0.1",
@@ -19,7 +19,7 @@
     "xml-crypto": "^3.0.0"
   },
   "peerDependencies": {
-    "axios": "^0.27.2"
+    "axios": "1.8.4"
   },
   "repository": {
     "type": "git",
