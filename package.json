@@ -1,5 +1,5 @@
 {
-  "name": "soap-client-iwell",
+  "name": "node-soap-iwell",
   "version": "1.0.1",
   "description": "A minimal node SOAP client",
   "engines": {
