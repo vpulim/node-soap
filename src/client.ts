@@ -4,12 +4,12 @@
  */
 
 import * as assert from 'assert';
-import * as debugBuilder from 'debug';
+import { AxiosResponseHeaders, RawAxiosResponseHeaders } from 'axios';
+import { randomUUID } from 'crypto';
+import debugBuilder from 'debug';
 import { EventEmitter } from 'events';
 import getStream = require('get-stream');
-import { IncomingHttpHeaders } from 'http';
 import * as _ from 'lodash';
-import { v4 as uuidv4 } from 'uuid';
 import { HttpClient } from './http';
 import { IHeaders, IHttpClient, IMTOMAttachments, IOptions, ISecurity, SoapMethod, SoapMethodAsync } from './types';
 import { findPrefix } from './utils';
@@ -51,7 +51,7 @@ export class Client extends EventEmitter {
   public lastEndpoint?: string;
   public lastRequestHeaders?: any;
   public lastResponse?: any;
-  public lastResponseHeaders?: IncomingHttpHeaders;
+  public lastResponseHeaders?: AxiosResponseHeaders | RawAxiosResponseHeaders;
   public lastElapsedTime?: number;
   public lastResponseAttachments: IMTOMAttachments;
 
@@ -177,6 +177,7 @@ export class Client extends EventEmitter {
     this.overridePromiseSuffix = options.overridePromiseSuffix || 'Async';
     this.wsdl.options.attributesKey = options.attributesKey || 'attributes';
     this.wsdl.options.envelopeKey = options.envelopeKey || 'soap';
+    this.wsdl.options.envelopeSoapUrl = options.envelopeSoapUrl || 'http://schemas.xmlsoap.org/soap/envelope/';
     this.wsdl.options.preserveWhitespace = !!options.preserveWhitespace;
     const igNs = options.ignoredNamespaces;
     if (igNs !== undefined && typeof igNs === 'object') {
@@ -301,6 +302,7 @@ export class Client extends EventEmitter {
     const style = method.style;
     const defs = this.wsdl.definitions;
     const envelopeKey = this.wsdl.options.envelopeKey;
+    const envelopeSoapUrl = this.wsdl.options.envelopeSoapUrl;
     const ns: string = defs.$targetNamespace;
     let encoding = '';
     let message = '';
@@ -311,7 +313,7 @@ export class Client extends EventEmitter {
       'Content-Type': 'text/xml; charset=utf-8',
     };
     let headerXMLKeys='';
-    let xmlnsSoap = 'xmlns:' + envelopeKey + '="http://schemas.xmlsoap.org/soap/envelope/"';
+    let xmlnsSoap = 'xmlns:' + envelopeKey + '="' + envelopeSoapUrl + '"';
     const { returnXmlOnly } = args;
     if(returnXmlOnly) delete args.returnXmlOnly;
     const finish = (obj, body, response) => {
@@ -472,7 +474,7 @@ export class Client extends EventEmitter {
     this.lastRequest = xml;
     this.lastEndpoint = location;
 
-    const eid: string = options.exchangeId || uuidv4();
+    const eid: string = options.exchangeId || randomUUID();
 
     this.emit('message', message, eid);
     this.emit('request', xml, eid);

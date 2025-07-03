@@ -1,6 +1,5 @@
 'use strict';
 
-var request = require('request');
 var assert = require('assert');
 var http = require('http');
 var soap = require('..');

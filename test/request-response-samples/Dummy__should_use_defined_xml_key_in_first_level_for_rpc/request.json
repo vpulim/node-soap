@@ -1,0 +1,3 @@
+{
+  "$xml": "<tns:DummyXML><myObject attr='myAttr'></myObject></tns:DummyXML>"
+}

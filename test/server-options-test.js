@@ -1,9 +1,11 @@
 "use strict";
 
+const { default: axios } = require('axios');
+const { log } = require('console');
+
 var fs = require('fs'),
   soap = require('..'),
   assert = require('assert'),
-  request = require('request'),
   http = require('http'),
   lastReqAddress;
 
@@ -150,11 +152,11 @@ describe('SOAP Server with Options', function () {
       if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
         test.baseUrl = 'http://127.0.0.1:' + test.server.address().port;
       }
-      // console.log(test.baseUrl);
-      request(test.baseUrl, function (err, res, body) {
+      axios.get(test.baseUrl + "/stockquote").then(res => {
+        assert.equal(res.status, 200);
+        done()
+      }).catch(err => {
         assert.ifError(err);
-        console.log(body);
-        done();
       });
     });
   });
@@ -176,10 +178,11 @@ describe('SOAP Server with Options', function () {
         test.baseUrl =
           'http://127.0.0.1:' + test.server.address().port;
       }
-      request(test.baseUrl, function (err, res, body) {
+      axios.get(test.baseUrl + "/stockquote").then(res => {
+        assert.equal(res.status, 200);
+        done()
+      }).catch(err => {
         assert.ifError(err);
-        console.log(body);
-        done();
       });
     });
   });
@@ -257,24 +260,25 @@ describe('SOAP Server with Options', function () {
         test.baseUrl = 'http://127.0.0.1:' + test.server.address().port;
       }
 
-      request.post({
-        url: test.baseUrl + '/stockquote?wsdl',
-        body: '<soapenv:Envelope' +
-          ' xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"' +
-          ' xmlns:soap="http://service.applicationsnet.com/soap/">' +
-          '  <soapenv:Header/>' +
-          '  <soapenv:Body>' +
-          '    <soap:WrongTag/>' +
-          '  </soapenv:Body>' +
-          '</soapenv:Envelope>',
-        headers: { 'Content-Type': 'text/xml' }
-      }, function (err, res, body) {
-        assert.ifError(err);
-        assert.equal(res.statusCode, 500);
-        assert.ok(body.indexOf('\n    at') !== -1);
-        done();
-      }
-      );
+      axios.post(
+        test.baseUrl + '/stockquote?wsdl',
+        '<soapenv:Envelope' +
+        ' xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"' +
+        ' xmlns:soap="http://service.applicationsnet.com/soap/">' +
+        '  <soapenv:Header/>' +
+        '  <soapenv:Body>' +
+        '    <soap:WrongTag/>' +
+        '  </soapenv:Body>' +
+        '</soapenv:Envelope>',
+        {
+          headers: { 'Content-Type': 'text/xml' }
+        }).then(res => {
+          // should not go this path, will fail by timeout
+        }).catch(err => {
+          assert.equal(err.response.status, 500);
+          assert.ok(err.response.data.indexOf('\n    at') !== -1);
+          done();
+        })
     });
   });
 
@@ -295,24 +299,25 @@ describe('SOAP Server with Options', function () {
         test.baseUrl = 'http://127.0.0.1:' + test.server.address().port;
       }
 
-      request.post({
-        url: test.baseUrl + '/stockquote?wsdl',
-        body: '<soapenv:Envelope' +
-          ' xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"' +
-          ' xmlns:soap="http://service.applicationsnet.com/soap/">' +
-          '  <soapenv:Header/>' +
-          '  <soapenv:Body>' +
-          '    <soap:WrongTag/>' +
-          '  </soapenv:Body>' +
-          '</soapenv:Envelope>',
-        headers: { 'Content-Type': 'text/xml' }
-      }, function (err, res, body) {
-        assert.ifError(err);
-        assert.equal(res.statusCode, 500);
-        assert.equal(body.indexOf('\n    at'), -1);
-        done();
-      }
-      );
+      axios.post(
+        test.baseUrl + '/stockquote?wsdl',
+        '<soapenv:Envelope' +
+        ' xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"' +
+        ' xmlns:soap="http://service.applicationsnet.com/soap/">' +
+        '  <soapenv:Header/>' +
+        '  <soapenv:Body>' +
+        '    <soap:WrongTag/>' +
+        '  </soapenv:Body>' +
+        '</soapenv:Envelope>',
+        {
+          headers: { 'Content-Type': 'text/xml' }
+        }).then(res => {
+          // should not go this path, will fail by timeout
+        }).catch(err => {
+          assert.equal(err.response.status, 500);
+          assert.equal(err.response.data.indexOf('\n    at'), -1);
+          done();
+        })
     });
   });
 
@@ -333,25 +338,46 @@ describe('SOAP Server with Options', function () {
         test.baseUrl = 'http://127.0.0.1:' + test.server.address().port;
       }
 
-      request.post({
-        url: test.baseUrl + '/stockquote?wsdl',
-        body: '<soapenv:Envelope' +
-          ' xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"' +
-          ' xmlns:soap="http://service.applicationsnet.com/soap/">' +
-          '  <soapenv:Header/>' +
-          '  <soapenv:Body>' +
-          '    <soap:WrongTag/>' +
-          '  </soapenv:Body>' +
-          '</soapenv:Envelope>',
-        headers: { 'Content-Type': 'text/xml' }
-      }, function (err, res, body) {
-        assert.ifError(err);
-        assert.equal(res.statusCode, 500);
-        assert.ok(body.match(/<faultcode>.*<\/faultcode>/g),
-          "Invalid XML");
-        done();
-      }
+      axios.post(
+        test.baseUrl + '/stockquote?wsdl',
+        {
+          body: '<soapenv:Envelope' +
+            ' xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"' +
+            ' xmlns:soap="http://service.applicationsnet.com/soap/">' +
+            '  <soapenv:Header/>' +
+            '  <soapenv:Body>' +
+            '    <soap:WrongTag/>' +
+            '  </soapenv:Body>' +
+            '</soapenv:Envelope>',
+          headers: { 'Content-Type': 'text/xml' }
+        }, function (err, res, body) {
+          assert.ifError(err);
+          assert.equal(res.statusCode, 500);
+          assert.ok(body.match(/<faultcode>.*<\/faultcode>/g),
+            "Invalid XML");
+          done();
+        }
       );
+      axios.post(
+        test.baseUrl + '/stockquote?wsdl',
+        '<soapenv:Envelope' +
+        ' xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"' +
+        ' xmlns:soap="http://service.applicationsnet.com/soap/">' +
+        '  <soapenv:Header/>' +
+        '  <soapenv:Body>' +
+        '    <soap:WrongTag/>' +
+        '  </soapenv:Body>' +
+        '</soapenv:Envelope>',
+        {
+          headers: { 'Content-Type': 'text/xml' }
+        }).then(res => {
+          // should not go this path, will fail by timeout
+        }).catch(err => {
+          assert.equal(err.response.status, 500);
+          assert.ok(err.response.data.match(/<faultcode>.*<\/faultcode>/g),
+            "Invalid XML");
+          done();
+        })
     });
   });
   it('should not return a SOAP 12 envelope when headers are not forced', function (done) {
@@ -369,22 +395,25 @@ describe('SOAP Server with Options', function () {
       if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
         test.baseUrl = 'http://127.0.0.1:' + test.server.address().port;
       }
-      // console.log(test.baseUrl);
-      request.post({
-        url: test.baseUrl + '/stockquote',
-        body: '<soapenv:Envelope' +
-          ' xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"' +
-          ' xmlns:soap="http://service.applicationsnet.com/soap/">' +
-          '  <soapenv:Header/>' +
-          '  <soapenv:Body>' +
-          '</soapenv:Envelope>'
-      }, function (err, res, body) {
-        assert.ifError(err);
+      axios.post(
+        test.baseUrl + '/stockquote',
+        '<soapenv:Envelope' +
+        ' xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"' +
+        ' xmlns:soap="http://service.applicationsnet.com/soap/">' +
+        '  <soapenv:Header/>' +
+        '  <soapenv:Body>' +
+        '</soapenv:Envelope>',
+        {
+          headers: { 'Content-Type': 'text/xml' }
+        }
+      ).then(res => {
+        // should not go this path, will fail by timeout
+      }).catch(err => {
         assert.ok(
-          body.indexOf('xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"') > -1
-        );
+          err.response.data.indexOf('xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"') > -1
+        )
         done();
-      });
+      })
     });
   });
   it('should return a SOAP 12 envelope when headers are forced', function (done) {
@@ -402,24 +431,28 @@ describe('SOAP Server with Options', function () {
       if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
         test.baseUrl = 'http://127.0.0.1:' + test.server.address().port;
       }
-      // console.log(test.baseUrl);
-      request.post({
-        url: test.baseUrl + '/stockquote',
-        body: '<soapenv:Envelope' +
-          ' xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"' +
-          ' xmlns:soap="http://service.applicationsnet.com/soap/">' +
-          '  <soapenv:Header/>' +
-          '  <soapenv:Body>' +
-          '</soapenv:Envelope>'
-      }, function (err, res, body) {
-        assert.ifError(err);
+      axios.post(
+        test.baseUrl + '/stockquote',
+        '<soapenv:Envelope' +
+        ' xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"' +
+        ' xmlns:soap="http://service.applicationsnet.com/soap/">' +
+        '  <soapenv:Header/>' +
+        '  <soapenv:Body>' +
+        '</soapenv:Envelope>',
+        {
+          headers: { 'Content-Type': 'text/xml' }
+        }
+      ).then(res => {
+        // should not go this path, will fail by timeout
+      }).catch(err => {
         assert.ok(
-          body.indexOf('xmlns:soap="http://www.w3.org/2003/05/soap-envelope"') > -1
-        );
+          err.response.data.indexOf('xmlns:soap="http://www.w3.org/2003/05/soap-envelope"') > -1
+        )
         done();
-      });
+      })
     });
   });
+
   it('should return configured statusCode on one-way operations', function (done) {
     test.server.listen(15099, null, null, function () {
       test.soapServer = soap.listen(test.server, {
@@ -573,19 +606,19 @@ describe('SOAP Server with Options', function () {
     });
   });
 
-  it('should accept regex as path', function(done) {
-    test.server.listen(15099, null, null, function() {
+  it('should accept regex as path', function (done) {
+    test.server.listen(15099, null, null, function () {
       test.soapServer = soap.listen(test.server, {
         path: /test\/.*/,
         services: test.service,
         xml: test.wsdl
       }, test.service, test.wsdl);
 
-      soap.createClient(test.baseUrl + '/test/te?wsdl', function(err, client) {
+      soap.createClient(test.baseUrl + '/test/te?wsdl', function (err, client) {
         assert.ifError(err);
       });
 
-      soap.createClient(test.baseUrl + '/teste/az?wsdl', function(err, client) {
+      soap.createClient(test.baseUrl + '/teste/az?wsdl', function (err, client) {
         assert.notStrictEqual(err, null);
         done()
       });
