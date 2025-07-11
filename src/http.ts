@@ -236,10 +236,10 @@ export class HttpClient implements IHttpClient {
               return callback(new Error('Cannot parse multipart response'));
             }
             (res as any).mtomResponseAttachments = multipartResponse;
-            return handleBody(firstPart.body.toString('utf8'));
+            return handleBody(firstPart.body.toString(_this.options.encoding || 'utf8'));
           });
         } else {
-          return handleBody(res.data.toString('utf8'));
+          return handleBody(res.data.toString(_this.options.encoding || 'utf8'));
         }
       } else {
         return handleBody();
