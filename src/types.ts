@@ -142,7 +142,7 @@ export interface IOptions extends IWsdlBaseOptions {
   /** handle MTOM soapAttachments in response */
   parseReponseAttachments?: boolean;
   /** handle endpoint response.data enconding when using parseReponseAttachments **/
-  encoding?: string;
+  encoding?: BufferEncoding;
 }
 
 export interface IOneWayOptions {
