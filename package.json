@@ -63,7 +63,7 @@
     "nyc": "^17.1.0",
     "readable-stream": "^4.7.0",
     "semver": "^7.7.1",
-    "serve-static": "^1.15.0",
+    "serve-static": "^2.2.0",
     "should": "^13.2.3",
     "sinon": "^20.0.0",
     "source-map-support": "^0.5.21",
