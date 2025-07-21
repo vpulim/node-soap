@@ -115,6 +115,7 @@ Paid support can be provided as well, please contact one of the active maintaine
   - `stream` (*boolean*): Use streams to parse the XML SOAP responses. (**Default:** `false`)
   - `returnSaxStream` (*boolean*): Return the SAX stream, transferring responsibility of parsing XML to the end user. Only valid when the *stream* option is set to `true`. (**Default:** `false`)
   - `parseReponseAttachments` (*boolean*): Treat response as multipart/related response with MTOM attachment. Reach attachments on the `lastResponseAttachments` property of SoapClient. (**Default:** `false`)
+  - `encoding` (_string_): response data enconding, used with `parseReponseAttachments`. (**Default:** `utf8`)
 - `callback` (*Function*):
   - `err` (*Error* | *<AggregateError>*)
   - `result` (*Any*)
