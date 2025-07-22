@@ -1,3 +1,13 @@
+# 1.2.0 / 2025-07-22
+
+- [ENHANCEMENT] Remove hardcoded ID in timestamp (#1290)
+- [ENHANCEMENT] Allows SchemaElement instance to use import namespace as targetNamespace (#1296)
+- [ENHANCEMENT] Add optional parameter for response data encoding (#1303)
+- [MAINTENANCE] Bump axios to 1.10.0 and other minor deps (#1312)
+- [MAINTENANCE] Bump serve-static from 1.16.2 to 2.2.0 (#1308)
+- [MAINTENANCE] Bump semver from 7.7.1 to 7.7.2 (#1310)
+- [MAINTENANCE] Add dependabot workflow for deps and actions (#1301)
+
 # 1.1.12 / 2025-06-01
 
 - [ENHANCEMENT] Add optional `excludeReferencesFromSigning` property to exclude elements (e.g., Body, Timestamp) from SOAP message signing (#1288)
