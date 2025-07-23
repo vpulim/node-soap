@@ -186,6 +186,7 @@ function cbCaller(client, methodName, requestJSON, responseJSON, responseSoapHea
       if (err) {
         assert.notEqual('undefined: undefined', err.message);
         assert.deepEqual(err.root, responseJSON);
+        done(err);
       } else {
         // assert.deepEqual(json, responseJSON);
         assert.equal(JSON.stringify(typeof json === 'undefined' ? null : json), JSON.stringify(responseJSON));
@@ -195,9 +196,10 @@ function cbCaller(client, methodName, requestJSON, responseJSON, responseSoapHea
         if(client.lastResponseAttachments){
           assert.deepEqual(client.lastResponseAttachments.parts,attachmentParts)
         }
+        done();
       }
     }
-    done();
+    //done();
   }, options);
 }
 
@@ -236,7 +238,7 @@ describe('Request Response Sampling', function() {
     Math.random = function() { return 1; };
     server = http.createServer(requestContext.requestHandler);
     server.listen(0, function(e){
-      if(e)return done(e);
+      if(e) return done(e);
       port = server.address().port;
       done();
     });
