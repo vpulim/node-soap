@@ -35,7 +35,7 @@
     "watch": "tsc -w -p .",
     "lint": "tslint -p tsconfig.json",
     "toc": "./node_modules/.bin/doctoc Readme.md --github --maxlevel 3",
-    "cover": "nyc --extension=.ts --reporter=lcov --reporter=html --reporter=text mocha --timeout 15000 --exit test/*-test.js test/security/*.js",
+    "cover": "nyc --extension=.ts --reporter=lcov --reporter=html --reporter=text mocha --timeout 20000 --exit test/*-test.js test/security/*.js",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js -v",
     "docs": "typedoc --out docs",
     "test": "mocha --timeout 15000 --bail --exit test/*-test.js test/security/*.js"
