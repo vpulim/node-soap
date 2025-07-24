@@ -1,13 +1,13 @@
 {
   "name": "soap",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "A minimal node SOAP client",
   "engines": {
     "node": ">=14.17.0"
   },
   "author": "Vinay Pulim <v@pulim.com>",
   "dependencies": {
-    "axios": "^1.10.0",
+    "axios": "^1.11.0",
     "axios-ntlm": "^1.4.4",
     "debug": "^4.4.1",
     "formidable": "^3.5.4",
