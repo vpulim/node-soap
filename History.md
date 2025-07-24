@@ -1,3 +1,7 @@
+# 1.2.1 / 2025-07-24
+
+- [MAINTENANCE] Bump axios to 1.11.0 (#1314)
+
 # 1.2.0 / 2025-07-22
 
 - [ENHANCEMENT] Remove hardcoded ID in timestamp (#1290)
