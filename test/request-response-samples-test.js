@@ -236,7 +236,7 @@ describe('Request Response Sampling', function() {
     Math.random = function() { return 1; };
     server = http.createServer(requestContext.requestHandler);
     server.listen(0, function(e){
-      if(e)return done(e);
+      if(e) return done(e);
       port = server.address().port;
       done();
     });
