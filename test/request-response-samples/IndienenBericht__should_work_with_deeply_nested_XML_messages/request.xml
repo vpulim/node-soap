@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope
+   xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+   xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+   xmlns:v3="http://schemas.vecozo.nl/berichtuitwisseling/v3"
+   xmlns:v31="http://schemas.vecozo.nl/berichtuitwisseling/header/v3"
+   xmlns:v32="http://schemas.vecozo.nl/berichtuitwisseling/messages/v3">
+   <soap:Header>
+      <v3:ReferentieHeader>
+         <v31:ReferentieId>?</v31:ReferentieId>
+      </v3:ReferentieHeader>
+   </soap:Header>
+   <soap:Body>
+      <v3:IndienenBericht>
+         <v3:Request>
+            <!--Optional:-->
+            <v32:BerichtInfo>
+               <!--You may enter ANY elements at this point-->
+            </v32:BerichtInfo>
+            <v32:Bericht/>
+         </v3:Request>
+      </v3:IndienenBericht>
+   </soap:Body>
+</soap:Envelope>
+
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope
+   xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+   xmlns:v3="http://schemas.vecozo.nl/berichtuitwisseling/v3"
+   xmlns:v31="http://schemas.vecozo.nl/berichtuitwisseling/header/v3"
+   xmlns:v32="http://schemas.vecozo.nl/berichtuitwisseling/messages/v3">
+   <soap:Header>
+      <v3:ReferentieHeader>
+         <v31:ReferentieId>?</v31:ReferentieId>
+      </v3:ReferentieHeader>
+   </soap:Header>
+   <soap:Body>
+      <v3:IndienenBericht>
+         <v3:Request>
+            <!--Optional:--><v32:BerichtInfo><!--You may enter ANY elements at this point--></v32:BerichtInfo><v32:Bericht/></v3:Request></v3:IndienenBericht></soap:Body></soap:Envelope>
