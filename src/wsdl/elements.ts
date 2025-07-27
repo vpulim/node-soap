@@ -669,19 +669,50 @@ export class MessageElement extends Element {
       const ns = findNs(nsName.prefix, this.definitionsXmlns, definitions.xmlns);
       let schema = definitions.schemas[ns];
       this.element = schema.elements[nsName.name];
+      //console.log("(1)this.element=");
+      //console.log(this.element);
+      
       let schemaToLookup;
       if (!this.element) {
+        console.log("(3)this.element=null");
+        //console.log(this.element);
         // Try to find it another way
         schemaToLookup = part.xmlns;
+        console.log("schemaToLookup=");
+        console.log(schemaToLookup);
+        console.log("schema before=");
+        console.log(schema);
+        let oldschema = schema;
         schema = definitions.schemas[schemaToLookup[Object.keys(schemaToLookup)[0]]];
-        this.element = schema.elements[nsName.name];
+        console.log("schema after=");
+        console.log(schema);
+        console.log("schema before === schema after?" + (oldschema === schema));
+        if(schema) {
+          //this.element = schema.elements[nsName.name];
+          //console.log("(5)this.element=");
+          //console.log(this.element);
+        }
       }
+      //console.log("(2)this.element=");
+      //console.log(this.element);
+      //console.log("nsName=");
+      //console.log(nsName);
+      //console.log("nsName.name="+nsName.name);
+      //console.log("nsName.prefix="+nsName.prefix);
+      //console.log("ns="+ns);
+      //console.log("schemaToLookup="+schemaToLookup);
+      //if (schemaToLookup) {console.log("schemaToLookup.xsns="+schemaToLookup.xsns)};
+      //console.log("definitions.xmlns[ns]="+definitions.xmlns[ns]);
+      
       if (!this.element) {
+        console.log("(4)this.element=null");
         debug(nsName.name + ' is not present in wsdl and cannot be processed correctly.');
         return;
       }
+      
       this.element.targetNSAlias = nsName.prefix;
       this.element.targetNamespace = (schemaToLookup && schemaToLookup.xsns) || ns;
+      //this.element.targetNamespace = ns;
 
       // set the optional $lookupType to be used within `client#_invoke()` when
       // calling `wsdl#objectToDocumentXML()
