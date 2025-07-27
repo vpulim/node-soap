@@ -669,13 +669,10 @@ export class MessageElement extends Element {
       const ns = findNs(nsName.prefix, this.definitionsXmlns, definitions.xmlns);
       let schema = definitions.schemas[ns];
       this.element = schema.elements[nsName.name];
-      
       if (!this.element) {
-        console.log("(4)this.element=null");
         debug(nsName.name + ' is not present in wsdl and cannot be processed correctly.');
         return;
       }
-      
       this.element.targetNSAlias = nsName.prefix;
       this.element.targetNamespace = ns;
 
