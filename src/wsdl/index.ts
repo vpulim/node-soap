@@ -214,6 +214,7 @@ export class WSDL {
       },
     };
     const stack: any[] = [{ name: null, object: root, schema: schema }];
+    const xsiPrefixes: Map<any, any> = new Map();
     const xmlns: any = {};
 
     const refs = {};
@@ -247,12 +248,17 @@ export class WSDL {
 
       // Handle element attributes
       for (attributeName in attrs) {
+        const value = attrs[attributeName];
         if (/^xmlns:|^xmlns$/.test(attributeName)) {
-          xmlns[splitQName(attributeName).name] = attrs[attributeName];
+          const name = splitQName(attributeName).name;
+          xmlns[name] = value;
+          if (value === XSI_URI) {
+              xsiPrefixes.set(name, value);
+          }
           continue;
         }
         hasNonXmlnsAttribute = true;
-        elementAttributes[attributeName] = attrs[attributeName];
+        elementAttributes[attributeName] = value;
       }
 
       for (attributeName in elementAttributes) {
@@ -316,8 +322,8 @@ export class WSDL {
       let xsiTypeSchema;
       let xsiType;
 
-      for (const prefix in xmlns) {
-        if (xmlns[prefix] === XSI_URI && (`${prefix}:type` in elementAttributes)) {
+      for (const prefix of xsiPrefixes.keys()) {
+        if (`${prefix}:type` in elementAttributes) {
           xsiType = elementAttributes[`${prefix}:type`];
           break;
         }
