@@ -821,7 +821,8 @@ var fs = require('fs'),
               assert.ok(client.lastRequest);
               assert.ok(client.lastMessage);
               assert.ok(client.lastEndpoint);
-              console.log(client.lastMessage)
+              // Commented out for production test due to verbosity.
+              //console.log(client.lastMessage)
               assert.strictEqual(client.lastMessage, message);
               done();
             });
@@ -1824,7 +1825,8 @@ describe('Client posting complex body', () => {
         assert.ok(client.lastMessage);
         assert.ok(client.lastEndpoint);
 
-        console.log(client.lastMessage);
+        // Commented out for production test due to verbosity.
+        //console.log(client.lastMessage);
         const expectedBody = '<registrationMessages:registerUserRequest xmlns:registrationMessages="http://test-soap.com/api/registration/messages" xmlns="http://test-soap.com/api/registration/messages"><registrationMessages:id>ID00000000000000000000000000000000</registrationMessages:id><registrationMessages:lastName>Doe</registrationMessages:lastName><registrationMessages:firstName>John</registrationMessages:firstName><registrationMessages:dateOfBirth>1970-01-01</registrationMessages:dateOfBirth><registrationMessages:correspondenceLanguage>ENG</registrationMessages:correspondenceLanguage><registrationMessages:emailAddress>jdoe@doe.com</registrationMessages:emailAddress><registrationMessages:lookupPermission>ALLOWED</registrationMessages:lookupPermission><registrationMessages:companyAddress><ct:address xmlns:ct="http://test-soap.com/api/common/types"><ct:streetName>Street</ct:streetName><ct:postalCode>Code</ct:postalCode><ct:city>City</ct:city><ct:countryCode>US</ct:countryCode></ct:address><ct:companyName xmlns:ct="http://test-soap.com/api/common/types">ACME</ct:companyName></registrationMessages:companyAddress></registrationMessages:registerUserRequest>';
         assert.strictEqual(client.lastMessage, expectedBody);
 
