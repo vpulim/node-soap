@@ -1,6 +1,8 @@
-# Soap [![NPM version][npm-image]][npm-url] [![Downloads][downloads-image]][npm-url] [![Coveralls Status][coveralls-image]][coveralls-url]
+[![NPM version][npm-image]][npm-url] [![Downloads][downloads-image]][npm-url] [![Coveralls Status][coveralls-image]][coveralls-url]
 
-> A SOAP client and server for node.js.
+[![Support][buy-me-a-coffee-image]][buy-me-a-coffee-url]
+
+# SOAP client and server for node.js.
 
 This module lets you connect to web services using SOAP.  It also provides a server that allows you to run your own SOAP services.
 
@@ -1498,3 +1500,6 @@ describe('myService', function() {
 
 [coveralls-url]: https://coveralls.io/r/vpulim/node-soap
 [coveralls-image]: http://img.shields.io/coveralls/vpulim/node-soap/master.svg
+
+[buy-me-a-coffee-url]: https://coff.ee/vasily.m
+[buy-me-a-coffee-image]: https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png
