@@ -641,7 +641,7 @@ describe('SOAP Server with Options', function () {
       if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
         test.baseUrl = 'http://127.0.0.1:' + test.server.address().port;
       }
-      // console.log(test.baseUrl);
+      console.log(test.baseUrl);
       axios.post(
         test.baseUrl + '/stockquote',
         '<soapenv:Envelope' +
@@ -651,9 +651,13 @@ describe('SOAP Server with Options', function () {
         '  <soapenv:Body/>' +
         '</soapenv:Envelope>'
       ).then(res => {
+        console.log("RESPONSE:");
+        console.log(res);
         assert.ok(res.data.indexOf('soapenv:Envelope') > -1);
         done();
       }).catch(err => {
+        console.log("ERR:");
+        console.log(err);
         throw err;
       });
     });
@@ -675,7 +679,7 @@ describe('SOAP Server with Options', function () {
       if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
         test.baseUrl = 'http://127.0.0.1:' + test.server.address().port;
       }
-      // console.log(test.baseUrl);
+      console.log(test.baseUrl);
       axios.post(
         test.baseUrl + '/stockquote',
         '<soapenv:Envelope' +
@@ -685,9 +689,13 @@ describe('SOAP Server with Options', function () {
         '  <soapenv:Body/>' +
         '</soapenv:Envelope>'
       ).then(res => {
+        console.log("RESPONSE:");
+        console.log(res);
         assert.ok(res.data.indexOf('soap:Envelope') > -1);
         done();
       }).catch(err => {
+        console.log("ERR:");
+        console.log(err);
         throw err;
       });
     });
