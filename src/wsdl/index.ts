@@ -269,18 +269,6 @@ export class WSDL {
         obj[this.options.attributesKey] = elementAttributes;
       }
 
-      /*
-      // Debug instrumentation
-      console.log("==============================XMLNS/=================================");
-      console.log("top.name=" + top.name);
-      console.log("name=" + name);
-      console.log("objectName=" + objectName);
-      console.log("xmlns=");
-      console.log(xmlns);
-      console.log("xmlns.soap=" + xmlns.soap);
-      console.log("==============================/XMLNS=================================");
-      */
-
       if (!objectName && (xmlns.soap || xmlns.soapenv || xmlns.S) && top.name === 'Body' && name !== 'Fault') {
         let message = this.definitions.messages[name];
         // Support RPC/literal messages where response body contains one element named
