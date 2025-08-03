@@ -6,7 +6,7 @@
 import { EventEmitter } from 'events';
 import * as http from 'http';
 import * as url from 'url';
-import { IOneWayOptions, IServerOptions, IServicePort, IServices, ISoapFault, ISoapServiceMethod } from './types';
+import { IOneWayOptions, IServerOptions, IServices, ISoapFault, ISoapServiceMethod } from './types';
 import { findPrefix } from './utils';
 import { WSDL } from './wsdl';
 import { BindingElement, IPort } from './wsdl/elements';
@@ -489,7 +489,6 @@ export class Server extends EventEmitter {
     includeTimestamp?,
   ) {
     options = options || {};
-    let port: IServicePort;
     let method: ISoapServiceMethod;
     let body;
     let headers;
@@ -513,7 +512,6 @@ export class Server extends EventEmitter {
 
     try {
       method = this.services[serviceName][portName][methodName];
-      port = this.services[serviceName][portName];
     } catch (error) {
       return callback(this._envelope('', headers, includeTimestamp));
     }
