@@ -1,7 +1,6 @@
 {
-  "Result":{
-    "attributes": {
-      "resultStatusFlag": "SUCCESS"
-    }
+  "IndienenBerichtResult": {
+    "ConversatieId": "12345",
+    "TraceerId": "56789"
   }
 }

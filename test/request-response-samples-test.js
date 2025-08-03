@@ -182,20 +182,25 @@ function generateTest(name, methodName, wsdlPath, headerJSON, securityJSON, requ
 
 function cbCaller(client, methodName, requestJSON, responseJSON, responseSoapHeaderJSON, options, attachmentParts, done){
   client[methodName](requestJSON, function(err, json, body, soapHeader){
-    if(requestJSON){
-      if (err) {
-        assert.notEqual('undefined: undefined', err.message);
-        assert.deepEqual(err.root, responseJSON);
-      } else {
-        // assert.deepEqual(json, responseJSON);
-        assert.equal(JSON.stringify(typeof json === 'undefined' ? null : json), JSON.stringify(responseJSON));
-        if(responseSoapHeaderJSON){
-          assert.equal(JSON.stringify(soapHeader), JSON.stringify(responseSoapHeaderJSON));
-        }
-        if(client.lastResponseAttachments){
-          assert.deepEqual(client.lastResponseAttachments.parts,attachmentParts)
+    try {
+      if(requestJSON){
+        if (err) {
+          assert.notEqual('undefined: undefined', err.message);
+          assert.deepEqual(err.root, responseJSON);
+        } else {
+          // assert.deepEqual(json, responseJSON);
+          assert.equal(JSON.stringify(typeof json === 'undefined' ? null : json), JSON.stringify(responseJSON));
+          if(responseSoapHeaderJSON){
+            assert.equal(JSON.stringify(soapHeader), JSON.stringify(responseSoapHeaderJSON));
+          }
+          if(client.lastResponseAttachments){
+            assert.deepEqual(client.lastResponseAttachments.parts,attachmentParts)
+          }
         }
       }
+    } catch (err) {
+      done(err);
+      throw err
     }
     done();
   }, options);
