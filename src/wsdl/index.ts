@@ -232,7 +232,44 @@ export class WSDL {
       const obj = {};
       const originalName = name;
 
-      if (!objectName && top.name === 'Body' && name !== 'Fault') {
+      if (attrs.href) {
+        id = attrs.href.substr(1);
+        if (!refs[id]) {
+          refs[id] = { hrefs: [], obj: null };
+        }
+        refs[id].hrefs.push({ par: top.object, key: name, obj: obj });
+      }
+      if (id = attrs.id) {
+        if (!refs[id]) {
+          refs[id] = { hrefs: [], obj: null };
+        }
+      }
+
+      // Handle element attributes
+      for (attributeName in attrs) {
+        if (/^xmlns:|^xmlns$/.test(attributeName)) {
+          xmlns[splitQName(attributeName).name] = attrs[attributeName];
+          continue;
+        }
+        hasNonXmlnsAttribute = true;
+        elementAttributes[attributeName] = attrs[attributeName];
+      }
+
+      for (attributeName in elementAttributes) {
+        const res = splitQName(attributeName);
+        if (res.name === 'nil' && xmlns[res.prefix] === XSI_URI && elementAttributes[attributeName] &&
+          (elementAttributes[attributeName].toLowerCase() === 'true' || elementAttributes[attributeName] === '1')
+        ) {
+          hasNilAttribute = true;
+          break;
+        }
+      }
+
+      if (hasNonXmlnsAttribute) {
+        obj[this.options.attributesKey] = elementAttributes;
+      }
+
+      if (!objectName && (xmlns.soap || xmlns.soapenv || xmlns.S) && top.name === 'Body' && name !== 'Fault') {
         let message = this.definitions.messages[name];
         // Support RPC/literal messages where response body contains one element named
         // after the operation + 'Response'. See http://www.w3.org/TR/wsdl#_names
@@ -273,43 +310,6 @@ export class WSDL {
 
         topSchema = message.description(this.definitions);
         objectName = originalName;
-      }
-
-      if (attrs.href) {
-        id = attrs.href.substr(1);
-        if (!refs[id]) {
-          refs[id] = { hrefs: [], obj: null };
-        }
-        refs[id].hrefs.push({ par: top.object, key: name, obj: obj });
-      }
-      if (id = attrs.id) {
-        if (!refs[id]) {
-          refs[id] = { hrefs: [], obj: null };
-        }
-      }
-
-      // Handle element attributes
-      for (attributeName in attrs) {
-        if (/^xmlns:|^xmlns$/.test(attributeName)) {
-          xmlns[splitQName(attributeName).name] = attrs[attributeName];
-          continue;
-        }
-        hasNonXmlnsAttribute = true;
-        elementAttributes[attributeName] = attrs[attributeName];
-      }
-
-      for (attributeName in elementAttributes) {
-        const res = splitQName(attributeName);
-        if (res.name === 'nil' && xmlns[res.prefix] === XSI_URI && elementAttributes[attributeName] &&
-          (elementAttributes[attributeName].toLowerCase() === 'true' || elementAttributes[attributeName] === '1')
-        ) {
-          hasNilAttribute = true;
-          break;
-        }
-      }
-
-      if (hasNonXmlnsAttribute) {
-        obj[this.options.attributesKey] = elementAttributes;
       }
 
       // Pick up the schema for the type specified in element's xsi:type attribute.
