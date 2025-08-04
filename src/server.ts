@@ -6,7 +6,7 @@
 import { EventEmitter } from 'events';
 import * as http from 'http';
 import * as url from 'url';
-import { IOneWayOptions, ISecurity, IServerOptions, IServices, ISoapFault, ISoapServiceMethod } from './types';
+import { IOneWayOptions, IServerOptions, IServices, ISoapFault, ISoapServiceMethod } from './types';
 import { findPrefix } from './utils';
 import { WSDL } from './wsdl';
 import { BindingElement, IPort } from './wsdl/elements';
@@ -580,7 +580,7 @@ export class Server extends EventEmitter {
       handleResult(error, result);
     };
 
-    const result = method(args, methodCallback, options.headers, req, res, this);
+    const result = method.apply(this, [args, methodCallback, options.headers, req, res]);
     if (typeof result !== 'undefined') {
       if (isPromiseLike<any>(result)) {
         result.then((value) => {
