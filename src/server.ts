@@ -638,6 +638,7 @@ export class Server extends EventEmitter {
 
   private _sendError(soapFault: ISoapFault, callback: (result: any, statusCode?: number) => any, includeTimestamp) {
     let fault;
+    const envelopeKey = this.wsdl.options.envelopeKey;
 
     let statusCode: number;
     if (soapFault.statusCode) {
@@ -649,12 +650,12 @@ export class Server extends EventEmitter {
       // Soap 1.1 error style
       // Root element will be prependend with the soap NS
       // It must match the NS defined in the Envelope (set by the _envelope method)
-      fault = this.wsdl.objectToDocumentXML('soap:Fault', soapFault, undefined);
+      fault = this.wsdl.objectToDocumentXML(envelopeKey + ':Fault', soapFault, undefined);
     } else {
       // Soap 1.2 error style.
       // 3rd param is the NS prepended to all elements
       // It must match the NS defined in the Envelope (set by the _envelope method)
-      fault = this.wsdl.objectToDocumentXML('Fault', soapFault, 'soap');
+      fault = this.wsdl.objectToDocumentXML('Fault', soapFault, envelopeKey);
     }
 
     return callback(this._envelope(fault, '', includeTimestamp), statusCode);
