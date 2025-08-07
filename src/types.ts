@@ -161,6 +161,7 @@ export interface IServerOptions extends IWsdlBaseOptions {
   oneWay?: IOneWayOptions;
   /** A boolean for controlling chunked transfer encoding in response. Some client (such as Windows 10's MDM enrollment SOAP client) is sensitive to transfer-encoding mode and can't accept chunked response. This option let user disable chunked transfer encoding for such a client. Default to true for backward compatibility. */
   enableChunkedEncoding?: boolean;
+  envelopeKey?: string;
 }
 
 export interface IMTOMAttachments {
