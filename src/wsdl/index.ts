@@ -6,12 +6,12 @@
 /*jshint proto:true*/
 
 import { ok as assert } from 'assert';
-import * as debugBuilder from 'debug';
+import debugBuilder from 'debug';
 import * as fs from 'fs';
 import * as _ from 'lodash';
 import * as path from 'path';
 import * as sax from 'sax';
-import * as stripBom from 'strip-bom';
+import stripBom from 'strip-bom';
 import * as url from 'url';
 import { HttpClient } from '../http';
 import { NamespaceContext } from '../nscontext';
@@ -23,11 +23,8 @@ const debug = debugBuilder('node-soap');
 
 const XSI_URI = 'http://www.w3.org/2001/XMLSchema-instance';
 
-const trimLeft = /^[\s\xA0]+/;
-const trimRight = /[\s\xA0]+$/;
-
-function trim(text) {
-  return text.replace(trimLeft, '').replace(trimRight, '');
+export function trim(text) {
+  return text.trim();
 }
 
 function deepMerge<A, B>(destination: A, source: B): A & B {
@@ -217,6 +214,7 @@ export class WSDL {
       },
     };
     const stack: any[] = [{ name: null, object: root, schema: schema }];
+    const xsiPrefixes: Map<any, any> = new Map();
     const xmlns: any = {};
 
     const refs = {};
@@ -235,7 +233,49 @@ export class WSDL {
       const obj = {};
       const originalName = name;
 
-      if (!objectName && top.name === 'Body' && name !== 'Fault') {
+      if (attrs.href) {
+        id = attrs.href.substr(1);
+        if (!refs[id]) {
+          refs[id] = { hrefs: [], obj: null };
+        }
+        refs[id].hrefs.push({ par: top.object, key: name, obj: obj });
+      }
+      if (id = attrs.id) {
+        if (!refs[id]) {
+          refs[id] = { hrefs: [], obj: null };
+        }
+      }
+
+      // Handle element attributes
+      for (attributeName in attrs) {
+        const value = attrs[attributeName];
+        if (/^xmlns:|^xmlns$/.test(attributeName)) {
+          const name = splitQName(attributeName).name;
+          xmlns[name] = value;
+          if (value === XSI_URI) {
+              xsiPrefixes.set(name, value);
+          }
+          continue;
+        }
+        hasNonXmlnsAttribute = true;
+        elementAttributes[attributeName] = value;
+      }
+
+      for (attributeName in elementAttributes) {
+        const res = splitQName(attributeName);
+        if (res.name === 'nil' && xmlns[res.prefix] === XSI_URI && elementAttributes[attributeName] &&
+          (elementAttributes[attributeName].toLowerCase() === 'true' || elementAttributes[attributeName] === '1')
+        ) {
+          hasNilAttribute = true;
+          break;
+        }
+      }
+
+      if (hasNonXmlnsAttribute) {
+        obj[this.options.attributesKey] = elementAttributes;
+      }
+
+      if (!objectName && (xmlns.soap || xmlns.soapenv || xmlns.S) && top.name === 'Body' && name !== 'Fault') {
         let message = this.definitions.messages[name];
         // Support RPC/literal messages where response body contains one element named
         // after the operation + 'Response'. See http://www.w3.org/TR/wsdl#_names
@@ -278,49 +318,12 @@ export class WSDL {
         objectName = originalName;
       }
 
-      if (attrs.href) {
-        id = attrs.href.substr(1);
-        if (!refs[id]) {
-          refs[id] = { hrefs: [], obj: null };
-        }
-        refs[id].hrefs.push({ par: top.object, key: name, obj: obj });
-      }
-      if (id = attrs.id) {
-        if (!refs[id]) {
-          refs[id] = { hrefs: [], obj: null };
-        }
-      }
-
-      // Handle element attributes
-      for (attributeName in attrs) {
-        if (/^xmlns:|^xmlns$/.test(attributeName)) {
-          xmlns[splitQName(attributeName).name] = attrs[attributeName];
-          continue;
-        }
-        hasNonXmlnsAttribute = true;
-        elementAttributes[attributeName] = attrs[attributeName];
-      }
-
-      for (attributeName in elementAttributes) {
-        const res = splitQName(attributeName);
-        if (res.name === 'nil' && xmlns[res.prefix] === XSI_URI && elementAttributes[attributeName] &&
-          (elementAttributes[attributeName].toLowerCase() === 'true' || elementAttributes[attributeName] === '1')
-        ) {
-          hasNilAttribute = true;
-          break;
-        }
-      }
-
-      if (hasNonXmlnsAttribute) {
-        obj[this.options.attributesKey] = elementAttributes;
-      }
-
       // Pick up the schema for the type specified in element's xsi:type attribute.
       let xsiTypeSchema;
       let xsiType;
 
-      for (const prefix in xmlns) {
-        if (xmlns[prefix] === XSI_URI && (`${prefix}:type` in elementAttributes)) {
+      for (const prefix of xsiPrefixes.keys()) {
+        if (`${prefix}:type` in elementAttributes) {
           xsiType = elementAttributes[`${prefix}:type`];
           break;
         }
@@ -356,7 +359,9 @@ export class WSDL {
       const name = splitQName(nsName).name;
 
       if (typeof cur.schema === 'string' && (cur.schema === 'string' || cur.schema.split(':')[1] === 'string')) {
-        if (typeof obj === 'object' && Object.keys(obj).length === 0) { obj = cur.object = ''; }
+        if (typeof obj === 'object' && Object.keys(obj).length === 0) {
+          obj = cur.object = (this.options.preserveWhitespace ? cur.text || '' : '');
+        }
       }
 
       if (cur.nil === true) {
@@ -423,13 +428,17 @@ export class WSDL {
     };
 
     p.ontext = (text) => {
+      const top = stack[stack.length - 1];
+
       const originalText = text;
       text = trim(text);
       if (!text.length) {
+        if (this.options.preserveWhitespace) {
+          top.text = (top.text || '') + originalText;
+        }
         return;
       }
 
-      const top = stack[stack.length - 1];
       const name = splitQName(top.schema).name;
       let value;
 
@@ -502,13 +511,19 @@ export class WSDL {
       if (root.Envelope) {
         const body = root.Envelope.Body;
         if (body && body.Fault) {
-          let code = body.Fault.faultcode && body.Fault.faultcode.$value;
-          let string = body.Fault.faultstring && body.Fault.faultstring.$value;
-          let detail = body.Fault.detail && body.Fault.detail.$value;
+          const fault = body.Fault;
+          let code = fault.faultcode && fault.faultcode.$value;
+          let string = fault.faultstring && fault.faultstring.$value;
+          let detail = fault.detail && fault.detail.$value;
 
-          code = code || body.Fault.faultcode;
-          string = string || body.Fault.faultstring;
-          detail = detail || body.Fault.detail;
+          code = code || fault.faultcode;
+          string = string || fault.faultstring;
+          detail = detail || fault.detail;
+          // SOAP 1.2
+          code = code || fault.Code && `${fault.Code.Value}: ${fault.Code.Subcode && fault.Code.Subcode.Value}`;
+          string = string || fault.Reason && fault.Reason.Text.$value;
+          string = string || fault.Reason && fault.Reason.Text;
+          detail = detail || fault.Detail;
 
           const error: any = new Error(code + ': ' + string + (detail ? ': ' + JSON.stringify(detail) : ''));
 
@@ -595,17 +610,21 @@ export class WSDL {
       }
       if (key !== nsAttrName) {
         const value = params[key];
-        const prefixedKey = (isParts ? '' : nsPrefix) + key;
-        const attributes = [];
-        if (typeof value === 'object' && value.hasOwnProperty(this.options.attributesKey)) {
-          const attrs = value[this.options.attributesKey];
-          for (const n in attrs) {
-            attributes.push(' ' + n + '=' + '"' + attrs[n] + '"');
+        if (key === this.options.xmlKey) {
+          parts.push(this.objectToXML({[key]: value}, null, nsPrefix, nsURI));
+        } else {
+          const prefixedKey = (isParts ? '' : nsPrefix) + key;
+          const attributes = [];
+          if (typeof value === 'object' && value.hasOwnProperty(this.options.attributesKey)) {
+            const attrs = value[this.options.attributesKey];
+            for (const n in attrs) {
+              attributes.push(' ' + n + '=' + '"' + attrs[n] + '"');
+            }
           }
+          parts.push(['<', prefixedKey].concat(attributes).concat('>').join(''));
+          parts.push((typeof value === 'object') ? this.objectToXML(value, key, nsPrefix, nsURI) : xmlEscape(value));
+          parts.push(['</', prefixedKey, '>'].join(''));
         }
-        parts.push(['<', prefixedKey].concat(attributes).concat('>').join(''));
-        parts.push((typeof value === 'object') ? this.objectToXML(value, key, nsPrefix, nsURI) : xmlEscape(value));
-        parts.push(['</', prefixedKey, '>'].join(''));
       }
     }
     parts.push(['</', nsPrefix, name, '>'].join(''));
@@ -857,7 +876,7 @@ export class WSDL {
                 let resolvedChildSchemaObject;
                 if (childSchemaObject.$type) {
                   const typeQName = splitQName(childSchemaObject.$type);
-                  const typePrefix = typeQName.prefix;
+                  const typePrefix = childSchemaObject.$baseNameSpace || typeQName.prefix;
                   const typeURI = schema.xmlns[typePrefix] || this.definitions.xmlns[typePrefix];
                   childNsURI = typeURI;
                   if (typeURI !== 'http://www.w3.org/2001/XMLSchema' && typePrefix !== TNS_PREFIX) {
@@ -1110,7 +1129,6 @@ export class WSDL {
 
             if (found) {
               found.$baseNameSpace = childNameSpace;
-              found.$type = childNameSpace + ':' + childName;
               break;
             }
           }
@@ -1215,14 +1233,18 @@ export class WSDL {
       includePath = url.resolve(this.uri || '', include.location);
     }
 
-    if (this.options.wsdl_options !== undefined && typeof this.options.wsdl_options.overrideImportLocation === 'function') {
-      includePath = this.options.wsdl_options.overrideImportLocation(includePath);
-    }
-
     const options = Object.assign({}, this.options);
     // follow supplied ignoredNamespaces option
     options.ignoredNamespaces = this._originalIgnoredNamespaces || this.options.ignoredNamespaces;
     options.WSDL_CACHE = this.WSDL_CACHE;
+
+    if (this.options.wsdl_options !== undefined && typeof this.options.wsdl_options.overrideImportLocation === 'function') {
+      try {
+        includePath = this.options.wsdl_options.overrideImportLocation(includePath, this.uri, include.location, options);
+      } catch (e) {
+        return callback(e);
+      }
+    }
 
     open_wsdl_recursive(includePath, options, (err, wsdl) => {
       if (err) {
@@ -1286,6 +1308,8 @@ export class WSDL {
           types.addChild(schema);
           root.addChild(types);
           stack.push(schema);
+        } else if (name === 'html') {
+          throw new Error(`Root element of WSDL was <html>. This is likely an authentication issue.`);
         } else {
           throw new Error('Unexpected root element of WSDL or include');
         }
@@ -1413,7 +1437,12 @@ export function open_wsdl(uri: any, p2: WSDLCallback | IOptions, p3?: WSDLCallba
   const request_options = options.wsdl_options;
 
   let wsdl: WSDL;
-  if (!/^https?:/i.test(uri)) {
+  if (/^\<\?xml[^>]*?>/i.test(uri)) {
+    wsdl = new WSDL(uri, uri, options);
+    WSDL_CACHE[uri] = wsdl;
+    wsdl.WSDL_CACHE = WSDL_CACHE;
+    wsdl.onReady(callback);
+  } else if (!/^https?:/i.test(uri)) {
     debug('Reading file: %s', uri);
     fs.readFile(uri, 'utf8', (err, definition) => {
       if (err) {

@@ -24,6 +24,10 @@ module.exports = function createSocketStream(file, length) {
   socketStream.destroy = function() {
   };
 
+  // axios calls this
+  socketStream.setKeepAlive = function() {
+  };
+
   socketStream.req = httpReqStream;
   socketStream.res = httpResStream;
 
@@ -33,7 +37,7 @@ module.exports = function createSocketStream(file, length) {
     var chunk = socketStream.req.read();
     should.exist(chunk);
 
-    var header = 'HTTP/1.1 200 OK\r\nContent-Type: text/xml; charset=utf-8\r\nContent-Length: ' + length + '\r\n\r\n';
+    var header = 'HTTP/1.1 200 OK\r\nContent-Type: text/xml; charset=utf-8\r\nContent-Length: ' + (!length ? wsdl.length : length) + '\r\n\r\n';
 
     //This is for compatibility with old node releases <= 0.10
     //Hackish

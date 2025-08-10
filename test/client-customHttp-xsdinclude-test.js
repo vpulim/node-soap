@@ -1,9 +1,7 @@
 'use strict';
 
 var soap = require('..'),
-    http = require('http'),
     assert = require('assert'),
-  req = require('request'),
   httpClient = require('../lib/http.js').HttpClient,
   util = require('util'),
   events = require('events'),
@@ -34,12 +32,12 @@ it('should allow customization of httpClient, the wsdl file, and associated data
   };
 
   //Custom httpClient
-  function MyHttpClient (options, wsdlSocket, xsdSocket){
-    httpClient.call(this,options);
-    this.agent = new CustomAgent(options, wsdlSocket, xsdSocket);
+  class MyHttpClient extends httpClient { 
+    constructor(options, wsdlSocket, xsdSocket) {
+      super(options);
+      this.agent = new CustomAgent(options, wsdlSocket, xsdSocket);
+    }
   }
-
-  util.inherits(MyHttpClient, httpClient);
 
   MyHttpClient.prototype.request = function(rurl, data, callback, exheaders, exoptions) {
     var self = this;
@@ -60,8 +58,8 @@ it('should allow customization of httpClient, the wsdl file, and associated data
   };
 
   var httpCustomClient = new MyHttpClient({},
-    createSocketStream(__dirname + '/wsdl/xsdinclude/xsd_include_http.wsdl', 2708),
-    createSocketStream(__dirname + '/wsdl/xsdinclude/types.xsd', 982)
+    createSocketStream(__dirname + '/wsdl/xsdinclude/xsd_include_http.wsdl'),
+    createSocketStream(__dirname + '/wsdl/xsdinclude/types.xsd')
   );
   var url = 'http://localhost:50000/Dummy.asmx?wsdl';
   soap.createClient(url,

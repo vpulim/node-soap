@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'crypto';
 import { SignedXml } from 'xml-crypto';
 import { ISecurity } from '../types';
 
@@ -25,7 +25,7 @@ function insertStr(src: string, dst: string, pos: number): string {
 }
 
 function generateId(): string {
-  return uuidv4().replace(/-/gm, '');
+  return randomUUID().replace(/-/gm, '');
 }
 
 function resolvePlaceholderInReferences(references: any[], bodyXpath: string) {
@@ -43,14 +43,17 @@ export interface IWSSecurityCertOptions {
   hasTimeStamp?: boolean;
   signatureTransformations?: string[];
   signatureAlgorithm?: string;
+  digestAlgorithm?: string;
   additionalReferences?: string[];
   signerOptions?: IXmlSignerOptions;
+  excludeReferencesFromSigning?: string[];
 }
 
 export interface IXmlSignerOptions {
   prefix?: string;
   attrs?: { [key: string]: string };
   existingPrefixes?: { [key: string]: string };
+  idMode?: 'wssecurity';
 }
 
 export class WSSecurityCert implements ISecurity {
@@ -63,6 +66,7 @@ export class WSSecurityCert implements ISecurity {
   private created: string;
   private expires: string;
   private additionalReferences: string[] = [];
+  private excludeReferencesFromSigning: string[] = [];
 
   constructor(privatePEM: any, publicP12PEM: any, password: any, options: IWSSecurityCertOptions = {}) {
     this.publicP12PEM = publicP12PEM.toString()
@@ -70,18 +74,33 @@ export class WSSecurityCert implements ISecurity {
       .replace('-----END CERTIFICATE-----', '')
       .replace(/(\r\n|\n|\r)/gm, '');
 
-    this.signer = new SignedXml();
+    this.signer = new SignedXml({
+      idMode: options?.signerOptions?.idMode,
+      signatureAlgorithm: options?.signatureAlgorithm,
+    });
+
+    this.signer.digestAlgorithm = options.digestAlgorithm ?? 'http://www.w3.org/2001/04/xmlenc#sha256';
     if (options.signatureAlgorithm === 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256') {
       this.signer.signatureAlgorithm = options.signatureAlgorithm;
-      this.signer.addReference(
-        bodyXpathPlaceholder,
-        ['http://www.w3.org/2001/10/xml-exc-c14n#'],
-        'http://www.w3.org/2001/04/xmlenc#sha256',
-      );
+      this.signer.addReference({
+        xpath: bodyXpathPlaceholder,
+        transforms: ['http://www.w3.org/2001/10/xml-exc-c14n#'],
+        digestAlgorithm: 'http://www.w3.org/2001/04/xmlenc#sha256',
+      });
     }
+
+    if (!options.signatureAlgorithm) {
+      this.signer.signatureAlgorithm = 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256';
+    }
+
+    this.signer.canonicalizationAlgorithm = 'http://www.w3.org/2001/10/xml-exc-c14n#';
 
     if (options.additionalReferences && options.additionalReferences.length > 0) {
       this.additionalReferences = options.additionalReferences;
+    }
+
+    if (options.excludeReferencesFromSigning && options.excludeReferencesFromSigning.length > 0) {
+      this.excludeReferencesFromSigning = options.excludeReferencesFromSigning;
     }
 
     if (options.signerOptions) {
@@ -97,7 +116,7 @@ export class WSSecurityCert implements ISecurity {
       this.signerOptions = { existingPrefixes: { wsse: `${oasisBaseUri}/oasis-200401-wss-wssecurity-secext-1.0.xsd` } };
     }
 
-    this.signer.signingKey = {
+    this.signer.privateKey = {
       key: privatePEM,
       passphrase: password,
     };
@@ -106,63 +125,89 @@ export class WSSecurityCert implements ISecurity {
     this.signatureTransformations = Array.isArray(options.signatureTransformations) ? options.signatureTransformations
       : ['http://www.w3.org/2000/09/xmldsig#enveloped-signature', 'http://www.w3.org/2001/10/xml-exc-c14n#'];
 
-    this.signer.keyInfoProvider = {};
-    this.signer.keyInfoProvider.getKeyInfo = (key) => {
+    this.signer.getKeyInfoContent = (key) => {
       return `<wsse:SecurityTokenReference>` +
         `<wsse:Reference URI="#${this.x509Id}" ValueType="${oasisBaseUri}/oasis-200401-wss-x509-token-profile-1.0#X509v3"/>` +
         `</wsse:SecurityTokenReference>`;
     };
   }
 
-  public postProcess(xml, envelopeKey) {
+  public postProcess(xml: string, envelopeKey: string) {
     this.created = generateCreated();
     this.expires = generateExpires();
 
     let timestampStr = '';
     if (this.hasTimeStamp) {
       timestampStr =
-        `<Timestamp xmlns="${oasisBaseUri}/oasis-200401-wss-wssecurity-utility-1.0.xsd" Id="_1">` +
+        `<Timestamp xmlns="${oasisBaseUri}/oasis-200401-wss-wssecurity-utility-1.0.xsd">` +
         `<Created>${this.created}</Created>` +
         `<Expires>${this.expires}</Expires>` +
         `</Timestamp>`;
     }
 
-    const secHeader =
-      `<wsse:Security xmlns:wsse="${oasisBaseUri}/oasis-200401-wss-wssecurity-secext-1.0.xsd" ` +
-      `xmlns:wsu="${oasisBaseUri}/oasis-200401-wss-wssecurity-utility-1.0.xsd" ` +
-      `${envelopeKey}:mustUnderstand="1">` +
-      `<wsse:BinarySecurityToken ` +
+    const binarySecurityToken = `<wsse:BinarySecurityToken ` +
       `EncodingType="${oasisBaseUri}/oasis-200401-wss-soap-message-security-1.0#Base64Binary" ` +
       `ValueType="${oasisBaseUri}/oasis-200401-wss-x509-token-profile-1.0#X509v3" ` +
       `wsu:Id="${this.x509Id}">${this.publicP12PEM}</wsse:BinarySecurityToken>` +
-      timestampStr +
-      `</wsse:Security>`;
+      timestampStr;
 
-    const xmlWithSec = insertStr(secHeader, xml, xml.indexOf(`</${envelopeKey}:Header>`));
+    let xmlWithSec: string;
+    const secExt = `xmlns:wsse="${oasisBaseUri}/oasis-200401-wss-wssecurity-secext-1.0.xsd"`;
+    const secUtility = `xmlns:wsu="${oasisBaseUri}/oasis-200401-wss-wssecurity-utility-1.0.xsd"`;
+    const endOfSecurityHeader = xml.indexOf('</wsse:Security>');
+    if (endOfSecurityHeader > -1) {
+      const securityHeaderRegexp = /<wsse:Security( [^>]*)?>/;
+      const match = xml.match(securityHeaderRegexp);
+      let insertHeaderAttributes = '';
+      if (!match[0].includes(` ${envelopeKey}:mustUnderstand="`)) {
+        insertHeaderAttributes += `${envelopeKey}:mustUnderstand="1" `;
+      }
+      if (!match[0].includes(secExt.substring(0, secExt.indexOf('=')))) {
+        insertHeaderAttributes += `${secExt} `;
+      }
+      if (!match[0].includes(secUtility.substring(0, secExt.indexOf('=')))) {
+        insertHeaderAttributes += `${secUtility} `;
+      }
+      const headerMarker = '<wsse:Security ';
+      const startOfSecurityHeader = xml.indexOf(headerMarker);
+      xml = insertStr(binarySecurityToken, xml, endOfSecurityHeader);
+      xmlWithSec = insertStr(insertHeaderAttributes, xml, startOfSecurityHeader + headerMarker.length);
+    } else {
+      const secHeader =
+        `<wsse:Security ${secExt} ` +
+        `${secUtility} ` +
+        `${envelopeKey}:mustUnderstand="1">` +
+        binarySecurityToken +
+        `</wsse:Security>`;
+
+      xmlWithSec = insertStr(secHeader, xml, xml.indexOf(`</${envelopeKey}:Header>`));
+    }
 
     const references = this.signatureTransformations;
 
     const bodyXpath = `//*[name(.)='${envelopeKey}:Body']`;
     resolvePlaceholderInReferences(this.signer.references, bodyXpath);
 
-    if (!(this.signer.references.filter((ref) => (ref.xpath === bodyXpath)).length > 0)) {
-      this.signer.addReference(bodyXpath, references);
+    if (!this.excludeReferencesFromSigning.some((ref) => ref === 'Body') && !(this.signer.references.filter((ref: { xpath: string; }) => (ref.xpath === bodyXpath)).length > 0)) {
+        this.signer.addReference({ xpath: bodyXpath, transforms: references, digestAlgorithm: this.signer.digestAlgorithm });
     }
 
     for (const name of this.additionalReferences) {
       const xpath = `//*[name(.)='${name}']`;
-      if (!(this.signer.references.filter((ref) => (ref.xpath === xpath)).length > 0)) {
-        this.signer.addReference(xpath, references);
+      if (!this.excludeReferencesFromSigning.some((ref) => ref === name) && !(this.signer.references.filter((ref: { xpath: string; }) => (ref.xpath === xpath)).length > 0)) {
+        this.signer.addReference({ xpath: xpath, transforms: references, digestAlgorithm: this.signer.digestAlgorithm });
       }
     }
 
     const timestampXpath = `//*[name(.)='wsse:Security']/*[local-name(.)='Timestamp']`;
-    if (this.hasTimeStamp && !(this.signer.references.filter((ref) => (ref.xpath === timestampXpath)).length > 0)) {
-      this.signer.addReference(timestampXpath, references);
+    if (!this.excludeReferencesFromSigning.some((ref) => ref === 'Timestamp') && this.hasTimeStamp && !(this.signer.references.filter((ref: { xpath: string; }) => (ref.xpath === timestampXpath)).length > 0)) {
+      this.signer.addReference({ xpath: timestampXpath, transforms: references, digestAlgorithm: this.signer.digestAlgorithm });
     }
 
     this.signer.computeSignature(xmlWithSec, this.signerOptions);
 
-    return insertStr(this.signer.getSignatureXml(), xmlWithSec, xmlWithSec.indexOf('</wsse:Security>'));
+    const originalXmlWithIds = this.signer.getOriginalXmlWithIds();
+    const signatureXml = this.signer.getSignatureXml();
+    return insertStr(signatureXml, originalXmlWithIds, originalXmlWithIds.indexOf('</wsse:Security>'));
   }
 }

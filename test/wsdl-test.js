@@ -1,12 +1,17 @@
 "use strict";
 
 var fs = require('fs'),
+    path = require('path'),
     soap = require('..'),
     WSDL = require('../lib/wsdl').WSDL,
     assert = require('assert'),
-    sinon = require('sinon');
+    sinon = require('sinon'),
+    elements = require('../lib/wsdl/elements');
 
 describe('WSDL Parser (strict)', () => {
+
+  const baseUrl = 'http://localhost:80';
+
   fs.readdirSync(__dirname+'/wsdl/strict').forEach(function(file) {
     if (!/.wsdl$/.exec(file)) return;
     it('should parse and describe '+file, (done) => {
@@ -71,6 +76,28 @@ describe('WSDL Parser (strict)', () => {
     });
   });
 
+  it('should catch error on overrideImportLocation option', (done) => {
+    const options = {
+      strict: true,
+      wsdl_options: {
+        overrideImportLocation: (location, parent, include, options) => {
+          assert.equal(path.resolve(location), path.resolve(__dirname+'/wsdl/wsdlImport/sub.wsdl'));
+          assert.equal(parent, __dirname+'/wsdl/wsdlImport/main.wsdl');
+          assert.equal(include, 'sub.wsdl');
+          assert.notEqual(options, null);
+          throw new Error(`user error`);
+        }
+      },
+      disableCache: true,
+    };
+
+    soap.createClient(__dirname+'/wsdl/wsdlImport/main.wsdl', options, function(err, client){
+      assert.notEqual(err, null);
+      assert.equal(err.message, 'user error');
+      done();
+    });
+  });
+
   it('should get the parent namespace when parent namespace is empty string', (done) => {
     soap.createClient(__dirname+'/wsdl/marketo.wsdl', {strict: true}, function(err, client){
       assert.ifError(err);
@@ -81,7 +108,7 @@ describe('WSDL Parser (strict)', () => {
         }, function() {
           done();
         });
-    });
+    }, baseUrl);
   });
 
   it('should describe extended elements in correct order', (done) => {
@@ -205,16 +232,20 @@ describe('WSDL Parser (non-strict)', () => {
     if (!/.wsdl$/.exec(file)) return;
     it('should parse and describe '+file, (done) => {
       soap.createClient(__dirname+'/wsdl/'+file, function(err, client) {
-        assert.ifError(err);
-        client.describe();
-        done();
+        if (err && err.message === 'Root element of WSDL was <html>. This is likely an authentication issue.') {
+          done();
+        } else {
+          assert.ifError(err);
+          client.describe();
+          done();
+        }
       });
     });
   });
 
   it('should not parse connection error', (done) => {
     soap.createClient(__dirname+'/wsdl/connection/econnrefused.wsdl', function(err, client) {
-      assert.ok(/EADDRNOTAVAIL|ECONNREFUSED/.test(err), err);
+      assert.ok(/EADDRNOTAVAIL|ECONNREFUSED/.test(err.code), err);
       done();
     });
   });
@@ -236,6 +267,15 @@ describe('WSDL Parser (non-strict)', () => {
   it('should load same namespace from included xsd', (done) => {
     var expected = '{"DummyService":{"DummyPortType":{"Dummy":{"input":{"ID":"IdType|xs:string|pattern","Name":"NameType|xs:string|minLength,maxLength"},"output":{"Result":"dummy:DummyList"}}}}}';
     soap.createClient(__dirname + '/wsdl/xsdinclude/xsd_include.wsdl', function(err, client) {
+      assert.ifError(err);
+      assert.equal(JSON.stringify(client.describe()), expected);
+      done();
+    });
+  });
+
+  it('should load same namespace from included xsd with inline xmlns ', (done) => {
+    var expected = '{"DummyService":{"DummyPortType":{"Dummy":{"input":{"ID":"IdType|xs:string|pattern","Name":"NameType|xs:string|minLength,maxLength"},"output":{"Result":"dummy:DummyList"}}}}}';
+    soap.createClient(__dirname + '/wsdl/xsdinclude/xsd_include_inline_xmlns.wsdl', function(err, client) {
       assert.ifError(err);
       assert.equal(JSON.stringify(client.describe()), expected);
       done();
@@ -326,4 +366,81 @@ describe('WSDL Parser (non-strict)', () => {
       done();
     });
   });
+
+
+  it('Should create client even if the some of message definitions are missing', function (done) {
+    soap.createClient(__dirname+'/wsdl/missing_message_definition.wsdl', function(err, client) {
+      assert.equal(err, null);
+      done();
+    });
+  });
+
+  it('Should describe return correct result for attributes in complexTypeElement', function(done) {
+    soap.createClient(__dirname+ '/wsdl/wsdl_with_attributes.wsdl', function(err,client){
+      assert.ifError(err);
+      var description = client.describe();
+
+      assert.deepEqual(description.StockQuoteService.StockQuotePort.GetLastTradePrice.input[elements.AttributeElement.Symbol], {
+        AttributeInOne: { type: "s:boolean", required: false },
+        AttributeInTwo: { type: "s:boolean", required: true },
+      });
+      assert.deepEqual(description.StockQuoteService.StockQuotePort.GetLastTradePrice.output[elements.AttributeElement.Symbol], {
+        AttributeOut: { type: "s:boolean", required: true },
+      });
+
+      assert.deepEqual(Object.keys(description.StockQuoteService.StockQuotePort.GetLastTradePrice.input), ['tickerSymbol']);
+      assert.deepEqual(Object.keys(description.StockQuoteService.StockQuotePort.GetLastTradePrice.output), []);
+      done();
+    });
+  });
+
+  it('Should describe return correct result for attributes in complexTypeElement with restrictions', function(done) {
+    soap.createClient(__dirname+ '/wsdl/wsdl_with_restriction_attributes.wsdl', function(err,client){
+      assert.ifError(err);
+      var description = client.describe();
+      assert.deepStrictEqual(description.SampleService.SamplePort.GetPerson.output.ObjectDetails[elements.AttributeElement.Symbol], {
+        id: { type: 'xsd:string', required: true },
+        type: { type: 'xsd:long', required: true },
+        internalName: { type: 'xsd:string', required: false },
+        key: { type: 'xsd:string', required: false },
+        origin: { type: 'xsd:string', required: false }
+      });
+      done();
+    });
+  });
+
+  it('should describe correct service input/output when imports have different tns namespaces', function(done) {
+    soap.createClient(__dirname + '/wsdl/tnsImportConflict/root.wsdl', function(err, client) {
+      assert.ifError(err);
+      var description = client.describe();
+      assert.deepStrictEqual(description.TestService.TestPort.Test, {
+        input: { val: 'xsd:string' },
+        output: { val: 'xsd:string' },
+      });
+      done();
+    });
+  });
+
+  it('should return the right amount of schemas with no targetNamespace', (done) => {
+    soap.createClient(__dirname+'/wsdl/schema_with_no_targetnamespace.wsdl', function(err, client) {
+      assert.ifError(err);
+      assert.equal(Object.keys(client.wsdl.definitions.schemas).length, 2);
+      assert.ok(
+        client.wsdl.definitions.schemas.hasOwnProperty('http://www.Dummy.com/Common/Types') &&
+        client.wsdl.definitions.schemas.hasOwnProperty('http://www.Dummy.com/Name/Types')
+      )
+      done();
+    });
+  });
+
+  it('should not return both schemas when targetNamespace is undefined (no imports)', (done) => {
+    soap.createClient(
+      __dirname + "/wsdl/schemas_without_targetnamespace.wsdl",
+      function(err, client) {
+        assert.ifError(err);
+        assert.equal(Object.keys(client.wsdl.definitions.schemas).length, 1);
+        done();
+      }
+    );
+  })
 });

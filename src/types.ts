@@ -1,6 +1,7 @@
 
 import * as req from 'axios';
 import { ReadStream } from 'fs';
+import { WSDL } from './wsdl';
 
 export interface IHeaders {
   [k: string]: any;
@@ -118,10 +119,14 @@ export type Option = IOptions;
 export interface IOptions extends IWsdlBaseOptions {
   /** don't cache WSDL files, request them every time. */
   disableCache?: boolean;
+  /** Custom cache implementation. If not provided, defaults to caching WSDLs indefinitely. */
+  wsdlCache?: IWSDLCache;
   /** override the SOAP service's host specified in the .wsdl file. */
   endpoint?: string;
   /** set specific key instead of <pre><soap:Body></soap:Body></pre>. */
   envelopeKey?: string;
+  /** set specific SOAP Schema Url; will not be used with forceSoap12Headers option */
+  envelopeSoapUrl?: string;
   /** provide your own http client that implements request(rurl, data, callback, exheaders, exoptions) */
   httpClient?: IHttpClient;
   /** override the request module. */
@@ -137,6 +142,8 @@ export interface IOptions extends IWsdlBaseOptions {
   WSDL_CACHE?;
   /** handle MTOM soapAttachments in response */
   parseReponseAttachments?: boolean;
+  /** handle endpoint response.data enconding when using parseReponseAttachments */
+  encoding?: BufferEncoding;
 }
 
 export interface IOneWayOptions {
@@ -162,4 +169,10 @@ export interface IMTOMAttachments {
     body: Buffer,
     headers: { [key: string]: string },
   }>;
+}
+
+export interface IWSDLCache {
+    has(key: string): boolean;
+    get(key: string): WSDL;
+    set(key: string, wsdl: WSDL): void;
 }
