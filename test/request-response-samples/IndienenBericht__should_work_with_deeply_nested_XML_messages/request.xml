@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope
+   xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+   xmlns:messages="http://schemas.vecozo.nl/berichtuitwisseling/messages/v3"
+   xmlns:header="http://schemas.vecozo.nl/berichtuitwisseling/header/v3"
+   xmlns:types="http://schemas.vecozo.nl/berichtuitwisseling/types/v3"
+   xmlns:tns="http://schemas.vecozo.nl/berichtuitwisseling/v3"
+   xmlns:wsi="http://ws-i.org/schemas/conformanceClaim/">
+   <soap:Body>
+      <IndienenBericht xmlns="http://schemas.vecozo.nl/berichtuitwisseling/v3">
+         <tns:Request>
+            <messages:BerichtInfo
+               xmlns:messages="http://schemas.vecozo.nl/berichtuitwisseling/messages/v3">
+            </messages:BerichtInfo>
+         </tns:Request>
+      </IndienenBericht>
+   </soap:Body>
+</soap:Envelope>

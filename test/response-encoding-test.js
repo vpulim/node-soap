@@ -5,7 +5,7 @@ var http = require('http');
 var soap = require('../lib/soap');
 var server;
 
-describe('Preserse data encoding from endpoint response', function() {
+describe('Preserve data encoding from endpoint response', function() {
   var wsdl = __dirname + '/wsdl/hello.wsdl';
   var expectedString = "àáÁÉÈÀçãü";
   var xml = `<?xml version=\"1.0\" encoding=\"iso-8859-1\"?><soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"  xmlns:tns=\"http://www.examples.com/wsdl/HelloService.wsdl\"><soap:Body><tns:sayHelloResponse>${expectedString}</tns:sayHelloResponse></soap:Body></soap:Envelope>`;

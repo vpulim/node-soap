@@ -5,7 +5,7 @@ var http = require('http');
 var soap = require('../');
 var server;
 
-describe('Preserse whitespace', function() {
+describe('Preserve whitespace', function() {
   var wsdl = __dirname + '/wsdl/hello.wsdl';
 
   before(function(done) {
