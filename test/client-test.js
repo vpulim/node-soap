@@ -124,7 +124,7 @@ var fs = require('fs'),
         xml.should.be.exactly('');
 
         client.setSecurity(instance);
-        client.addSoapHeader('')
+        client.addSoapHeader('');
 
         assert.ok(client);
         assert.ifError(err);
