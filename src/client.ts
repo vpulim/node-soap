@@ -190,7 +190,7 @@ export class Client extends EventEmitter {
       }
     }
 
-    if(options.overrideElementKey !== undefined) {
+    if (options.overrideElementKey !== undefined) {
       this.wsdl.options.overrideElementKey = options.overrideElementKey;
     }
     if (options.overrideRootElement !== undefined) {

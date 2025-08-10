@@ -656,8 +656,8 @@ export class WSDL {
   public objectToXML(obj, name: string, nsPrefix: any, nsURI: string, isFirst?: boolean, xmlnsAttr?, schemaObject?, nsContext?: NamespaceContext) {
     const schema = this.definitions.schemas[nsURI];
 
-    if(this.options.overrideElementKey && Object.keys(this.options.overrideElementKey).length > 0) {
-      for (let key in this.options.overrideElementKey) {
+    if (this.options.overrideElementKey && Object.keys(this.options.overrideElementKey).length > 0) {
+      for (const key in this.options.overrideElementKey) {
         const overrideKey = this.options.overrideElementKey[key];
         if (obj && obj[key]) {
           Object.defineProperty(obj, overrideKey,
@@ -1204,7 +1204,7 @@ export class WSDL {
     this.options.forceSoap12Headers = options.forceSoap12Headers;
     this.options.customDeserializer = options.customDeserializer;
 
-    if(options.overrideElementKey !== undefined) {
+    if (options.overrideElementKey !== undefined) {
       this.options.overrideElementKey = options.overrideElementKey;
     }
     if (options.overrideRootElement !== undefined) {
