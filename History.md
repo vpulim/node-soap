@@ -1,3 +1,18 @@
+# 1.3.0 / 2025-08-13
+
+- [ENHANCEMENT] Speed up parsing with many namespaces (#1322)
+- [ENHANCEMENT] Add `*.ts` to editorconfig (#1324)
+- [ENHANCEMENT] Call method using apply to enable access to it through "this" context (#1315)
+- [ENHANCEMENT] Handle deeply nested messages (#1313)
+- [ENHANCEMENT] Add test for redefined namespace in element (#1316)
+- [MAINTENANCE] Bump express from 4.21.2 to 5.1.0 (#1327)
+- [MAINTENANCE] Bump diff from 7.0.0 to 8.0.2 (#1326)
+- [MAINTENANCE] Bump sinon from 20.0.0 to 21.0.0 (#1321)
+- [MAINTENANCE] Bump @types/lodash from 4.17.16 to 4.17.20 (#1320)
+- [MAINTENANCE] Bump mocha from 11.1.0 to 11.7.1 (#1319)
+- [MAINTENANCE] Bump body-parser from 1.20.3 to 2.2.0 (#1317)
+- [DOC] Update Readme to improve header
+
 # 1.2.1 / 2025-07-24
 
 - [MAINTENANCE] Bump axios to 1.11.0 (#1314)
