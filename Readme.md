@@ -1334,6 +1334,24 @@ var wsdlOptions = {
 
 To see it in practice, have a look at the sample files in: [test/request-response-samples/addPets__force_namespaces](https://github.com/vpulim/node-soap/tree/master/test/request-response-samples/addPets__force_namespaces)
 
+### Overriding element key specification in XML
+
+In very rare cases ([external implementation isn't matching exactly the WSDL spec?](https://github.com/vpulim/node-soap/pull/1189)),
+you may want to override element XML keys in requests and/or responses.
+
+You can specify the key definitions by setting the `overrideElementKey` key in the `wsdlOptions` like so:
+```javascript
+var wsdlOptions = {
+  overrideElementKey: {
+    Nom: 'Name',
+    Commande: 'Order',
+    SillyResponse: 'DummyResponse'
+  };
+};
+```
+
+Test sample files covering this are in [test/request-response-samples/Dummy__ref_element_should_have_correct_namespace_with_overrideElementKey](https://github.com/vpulim/node-soap/tree/master/test/request-response-samples/Dummy__ref_element_should_have_correct_namespace_with_overrideElementKey)
+
 ### Custom Deserializer
 
 Sometimes it's useful to handle deserialization in your code instead of letting node-soap do it.
