@@ -10,7 +10,7 @@ This module lets you connect to web services using SOAP.  It also provides a ser
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [Features:](#features)
+- [Features](#features)
 - [Install](#install)
 - [Support](#support)
 - [Module](#module)
@@ -62,6 +62,7 @@ This module lets you connect to web services using SOAP.  It also provides a ser
   - [Overriding imports relative paths](#overriding-imports-relative-paths)
   - [Overriding import locations](#overriding-import-locations)
   - [Specifying the exact namespace definition of the root element](#specifying-the-exact-namespace-definition-of-the-root-element)
+  - [Overriding element key specification in XML](#overriding-element-key-specification-in-xml)
   - [Custom Deserializer](#custom-deserializer)
   - [Changing the tag formats to use self-closing (empty element) tags](#changing-the-tag-formats-to-use-self-closing-empty-element-tags)
 - [Handling "ignored" namespaces](#handling-ignored-namespaces)
@@ -72,7 +73,7 @@ This module lets you connect to web services using SOAP.  It also provides a ser
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## Features:
+## Features
 
 * Very simple API
 * Handles both RPC and Document schema types
