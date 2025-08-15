@@ -189,6 +189,10 @@ export class Client extends EventEmitter {
         }
       }
     }
+
+    if (options.overrideElementKey !== undefined) {
+      this.wsdl.options.overrideElementKey = options.overrideElementKey;
+    }
     if (options.overrideRootElement !== undefined) {
       this.wsdl.options.overrideRootElement = options.overrideRootElement;
     }

@@ -119,7 +119,7 @@ tests.forEach(function(test){
   requestJSON = require(requestJSON);
 
   //options is optional
-  if (fs.existsSync(options))options = require(options);
+  if (fs.existsSync(options)) options = require(options);
   else options = {};
 
   //wsdlOptions is optional
@@ -150,11 +150,23 @@ function generateTest(name, methodName, wsdlPath, headerJSON, securityJSON, requ
   }
 
   suite[name] = function(done){
-    if(requestXML) requestContext.expectedRequest = requestXML;
+    if (requestXML) {
+      // Override the expect request's keys to match
+      if (wsdlOptions.overrideElementKey) {
+         requestXML = requestXML.replace(/:Commande/g, ':Order');
+         requestXML = requestXML.replace(/:Nom/g, ':Name');
+      }
+      requestContext.expectedRequest = requestXML;
+    }
+
     if (responseXML) {
       if (wsdlOptions.parseReponseAttachments) {//all LF to CRLF
           responseXML = responseXML.replace(/\r\n/g, "\n");
           responseXML = responseXML.replace(/\n/g, "\r\n");
+      }
+      // Override the expect request's keys to match
+      if (wsdlOptions.overrideElementKey) {
+         responseXML = responseXML.replace(/SillyResponse/g, 'DummyResponse');
       }
       requestContext.responseToSend = responseXML;
     }
@@ -171,7 +183,7 @@ function generateTest(name, methodName, wsdlPath, headerJSON, securityJSON, requ
       }
 
       //throw more meaningful error
-      if(typeof client[methodName] !== 'function'){
+      if (typeof client[methodName] !== 'function'){
         throw new Error('method ' + methodName + ' does not exists in wsdl specified in test wsdl: ' + wsdlPath);
       }
 
