@@ -1,6 +1,8 @@
-# Soap [![NPM version][npm-image]][npm-url] [![Downloads][downloads-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Coveralls Status][coveralls-image]][coveralls-url] [![Gitter chat][gitter-image]][gitter-url]
+[![NPM version][npm-image]][npm-url] [![Downloads][downloads-image]][npm-url] [![Coveralls Status][coveralls-image]][coveralls-url]
 
-> A SOAP client and server for node.js.
+[![Support][buy-me-a-coffee-image]][buy-me-a-coffee-url]
+
+# SOAP client and server for node.js.
 
 This module lets you connect to web services using SOAP.  It also provides a server that allows you to run your own SOAP services.
 
@@ -50,6 +52,8 @@ This module lets you connect to web services using SOAP.  It also provides a ser
   - [ClientSSLSecurityPFX](#clientsslsecuritypfx)
   - [WSSecurity](#wssecurity)
   - [WSSecurityCert](#wssecuritycert)
+  - [WSSecurityPlusCert](#wssecuritypluscert)
+  - [WSSecurityCertWithToken](#wssecuritycertwithtoken)
   - [NTLMSecurity](#ntlmsecurity)
 - [Handling XML Attributes, Value and XML (wsdlOptions).](#handling-xml-attributes-value-and-xml-wsdloptions)
   - [Overriding the `value` key](#overriding-the-value-key)
@@ -85,17 +89,14 @@ This module lets you connect to web services using SOAP.  It also provides a ser
 
 ## Support
 
-Community support is available at Gitter: [![Gitter chat][gitter-image]][gitter-url]
-
-Some maintainers provide paid support, which can be request through our [Google Form](https://docs.google.com/forms/d/e/1FAIpQLSdj5EXxd5flcukLInmpFQhEvQYeERaReFFh9F0nqC_4EUmeLg/viewform)
-
-GitHub issues have been disabled to focus on pull requests. ([#731](https://github.com/vpulim/node-soap/pull/731))
+Community support is available through GitHub issues tab.
+Paid support can be provided as well, please contact one of the active maintainers.
 
 ## Module
 
 ### soap.createClient(url[, options], callback) - create a new SOAP client from a WSDL url. Also supports a local filesystem path.
 
-- `url` (*string*): A HTTP/HTTPS URL or a local filesystem path.
+- `url` (*string*): A HTTP/HTTPS URL, XML or a local filesystem path.
 - `options` (*Object*):
   - `endpoint` (*string*): Override the host specified by the SOAP service in the WSDL file.
   - `envelopeKey` (*string*): Set a custom envelope key. (**Default:** `'soap'`)
@@ -109,12 +110,14 @@ GitHub issues have been disabled to focus on pull requests. ([#731](https://gith
   - `wsdl_headers` (*Object*): Set HTTP headers with values to be sent on WSDL requests.
   - `wsdl_options` (*Object*): Set options for the request module on WSDL requests. If using the default request module, see [Request Config | Axios Docs](https://axios-http.com/docs/req_config).
   - `disableCache` (*boolean*): Prevents caching WSDL files and option objects.
+  - `wsdlCache` (*IWSDLCache*): Custom cache implementation. If not provided, defaults to caching WSDLs indefinitely.
   - `overridePromiseSuffix` (*string*): Override the default method name suffix of WSDL operations for Promise-based methods. If any WSDL operation name ends with `Async', you must use this option. (**Default:** `Async`)
   - `normalizeNames` (*boolean*): Replace non-identifier characters (`[^a-z$_0-9]`) with `_` in WSDL operation names. Note: Clients using WSDLs with two operations like `soap:method` and `soap-method` will be overwritten. In this case, you must use bracket notation instead (`client['soap:method']()`).
   - `namespaceArrayElements` (*boolean*): Support non-standard array semantics. JSON arrays of the form `{list: [{elem: 1}, {elem: 2}]}` will be marshalled into XML as `<list><elem>1</elem></list> <list><elem>2</elem></list>`. If `false`, it would be marshalled into `<list> <elem>1</elem> <elem>2</elem> </list>`. (**Default:** `true`)
   - `stream` (*boolean*): Use streams to parse the XML SOAP responses. (**Default:** `false`)
   - `returnSaxStream` (*boolean*): Return the SAX stream, transferring responsibility of parsing XML to the end user. Only valid when the *stream* option is set to `true`. (**Default:** `false`)
   - `parseReponseAttachments` (*boolean*): Treat response as multipart/related response with MTOM attachment. Reach attachments on the `lastResponseAttachments` property of SoapClient. (**Default:** `false`)
+  - `encoding` (_string_): response data enconding, used with `parseReponseAttachments`. (**Default:** `utf8`)
 - `callback` (*Function*):
   - `err` (*Error* | *<AggregateError>*)
   - `result` (*Any*)
@@ -122,6 +125,7 @@ GitHub issues have been disabled to focus on pull requests. ([#731](https://gith
 
 #### Example
 
+HTTP/HTTPS:
 ``` javascript
   var soap = require('soap');
   var url = 'http://example.com/wsdl?wsdl';
@@ -134,13 +138,55 @@ GitHub issues have been disabled to focus on pull requests. ([#731](https://gith
   });
 ```
 
+XML string format:
+``` javascript
+  var soap = require('soap');
+  var xml = `
+    <?xml version="1.0" encoding="UTF-8"?>
+    <definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+       <message name="MyFunctionRequest"/>
+       <message name="MyFunctionResponse"/>
+    
+       <portType name="MyFunctionPortType">
+          <operation name="MyFunction">
+             <input message="MyFunctionRequest"/>
+             <output message="MyFunctionResponse"/>
+          </operation>
+       </portType>
+    
+       <binding name="MyFunctionBinding" type="MyFunctionPortType">
+          <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+          <operation name="MyFunction">
+             <soap:operation soapAction="MyFunction"/>
+             <input><soap:body use="encoded"/></input>
+             <output><soap:body use="encoded"/></output>
+          </operation>
+       </binding>
+    
+       <service name="MyService">
+          <port binding="MyFunctionBinding" name="MyFunctionPort">
+             <soap:address location="http://www.examples.com/MyFunction/" />
+          </port>
+       </service>
+    </definitions>
+  `;
+  var args = {name: 'value'};
+
+  soap.createClient(xml, {}, function(err, client) {
+      client.MyFunction(args, function(err, result) {
+          console.log(result);
+      });
+  });
+```
+
+
 Note: for versions of node >0.10.X, you may need to specify `{connection: 'keep-alive'}` in SOAP headers to avoid truncation of longer chunked responses.
 
 ### soap.createClientAsync(url[, options]) - create a new SOAP client from a WSDL url. Also supports a local filesystem path.
 
 Construct a `Promise<Client>` with the given WSDL file.
 
-- `url` (*string*): A HTTP/HTTPS URL or a local filesystem path.
+- `url` (*string*): A HTTP/HTTPS URL, XML or a local filesystem path.
 - `options` (*Object*): See [soap.createClient(url[, options], callback)](#soapcreateclienturl-options-callback---create-a-new-soap-client-from-a-wsdl-url-also-supports-a-local-filesystem-path) for a description.
 - Returns: `Promise<Client>`
 
@@ -281,12 +327,15 @@ soap.listen(server, {
 
 ### Server Logging
 
-If the `log` method is defined, it will be called with 'received' and 'replied' along with the data.
+If the `log` method is defined, it will be called with:
+- `type`: 'received', 'replied', 'info' or 'error'.
+- `data`: The data to be logged which will be an XML for 'received' and 'replied' or a message for the other types.
+- `req`: The original request object
 
 ``` javascript
   server = soap.listen(...)
-  server.log = function(type, data) {
-    // type is 'received' or 'replied'
+  server.log = function(type, data, req) {
+    // type is 'received', 'replied', 'info' or 'error'
   };
 ```
 
@@ -623,7 +672,17 @@ You must specify all of the namespaces and namespace prefixes yourself.  The ele
 ``` javascript
   client.MyService.MyPort.MyFunction({name: 'value'}, function(err, result) {
       // client.lastElapsedTime - the elapsed time of the last request in milliseconds
-  }, {proxy: 'http://localhost:8888'})
+  }, {
+      proxy: {
+          protocol: 'https',
+          host: '127.0.0.1',
+          port: 9000,
+          auth: {
+              username: 'mikeymike',
+              password: 'rapunz3l'
+          }
+      }
+  })
 ```
 
 - You can modify xml (string) before call:
@@ -915,6 +974,7 @@ WS-Security X509 Certificate support.
         existingPrefixes: {
             wsse: 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd',
         }
+     }
   }
   var wsSecurity = new soap.WSSecurityCert(privateKey, publicKey, password, options);
   client.setSecurity(wsSecurity);
@@ -924,7 +984,9 @@ The `options` object is optional and can contain the following properties:
 * `hasTimeStamp`: Includes Timestamp tags (default: `true`)
 * `signatureTransformations`: sets the Reference Transforms Algorithm (default ['http://www.w3.org/2000/09/xmldsig#enveloped-signature', 'http://www.w3.org/2001/10/xml-exc-c14n#']). Type is a string array
 * `signatureAlgorithm`: set to `http://www.w3.org/2001/04/xmldsig-more#rsa-sha256` to use sha256
+* `digestAlgorithm`: set to `http://www.w3.org/2000/09/xmldsig#sha1` to use sha1 (default `http://www.w3.org/2001/04/xmlenc#sha256`)
 * `additionalReferences` : (optional) Array of Soap headers that need to be signed.  This need to be added using `client.addSoapHeader('header')`
+* `excludeReferencesFromSigning`: (Optional) An array of SOAP element names to exclude from signing (e.g., `Body`, `Timestamp`, `To`, `Action`).
 * `signerOptions`: (optional) passes options to the XML Signer package - from (https://github.com/yaronn/xml-crypto)
   * `existingPrefixes`: (optional) A hash of prefixes and namespaces prefix: namespace that shouldn't be in the signature because they already exist in the xml (default: `{ 'wsse': 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd' }`)
   * `prefix`: (optional) Adds this value as a prefix for the generated signature tags.
@@ -1069,6 +1131,16 @@ Use WSSecurity and WSSecurityCert together.
         </Signature>
     </wsse:Security>
 </soap:Header>
+```
+### WSSecurityCertWithToken
+
+WS-Security X509 Certificate support. Just like WSSecurityCert, except that it accepts the input properties as a single object, with two properties added `username` and `password`. Which if added, will add a UsernameToken Element to the xml security element.
+
+``` xml
+<wsse:UsernameToken>
+  <wsse:Username>someusername</wsse:Username>
+  <wsse:Password>someusername's password</wsse:Password>
+</wsse:UsernameToken>
 ```
 
 ### NTLMSecurity
@@ -1415,7 +1487,9 @@ describe('myService', function() {
 ## Contributors
 
  * Author: [Vinay Pulim](https://github.com/vpulim)
- * Maintainers:
+ * Active maintainers:
+   - [Vasily Martynov](https://github.com/w666)
+ * Previous maintainers (not active for a long time):
    - [Joe Spencer](https://github.com/jsdevel)
    - [Heinz Romirer](https://github.com/herom)
  * [All Contributors](https://github.com/vpulim/node-soap/graphs/contributors)
@@ -1424,11 +1498,8 @@ describe('myService', function() {
 [npm-url]: https://npmjs.org/package/soap
 [npm-image]: http://img.shields.io/npm/v/soap.svg
 
-[travis-url]: https://travis-ci.org/vpulim/node-soap
-[travis-image]: http://img.shields.io/travis/vpulim/node-soap.svg
-
-[gitter-url]: https://gitter.im/vpulim/node-soap
-[gitter-image]: https://badges.gitter.im/vpulim/node-soap.png
-
 [coveralls-url]: https://coveralls.io/r/vpulim/node-soap
 [coveralls-image]: http://img.shields.io/coveralls/vpulim/node-soap/master.svg
+
+[buy-me-a-coffee-url]: https://coff.ee/vasily.m
+[buy-me-a-coffee-image]: https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:tns="foo"
+    targetNamespace="foo">
+
+  <wsdl:types>
+    <xsd:schema targetNamespace="foo" elementFormDefault="qualified">
+      <xsd:element name="TestElement">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="val" type="xsd:string" minOccurs="0"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+
+  <wsdl:message name="TestInputMessage">
+    <wsdl:part name="params" element="tns:TestElement"/>
+  </wsdl:message>
+
+  <wsdl:message name="TestOutputMessage">
+    <wsdl:part name="params" element="tns:TestElement"/>
+  </wsdl:message>
+
+  <wsdl:portType name="TestPortType">
+    <wsdl:operation name="Test">
+      <wsdl:input message="tns:TestInputMessage"/>
+      <wsdl:output message="tns:TestOutputMessage"/>
+    </wsdl:operation>
+  </wsdl:portType>
+
+  <wsdl:binding name="TestBinding" type="tns:TestPortType">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+    <wsdl:operation name="Test">
+      <soap:operation soapAction="foo/Test"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+
+</wsdl:definitions>

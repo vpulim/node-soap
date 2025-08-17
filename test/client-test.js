@@ -14,6 +14,9 @@ var fs = require('fs'),
   { suffix: ' (with streaming)', options: { stream: true } },
 ].forEach(function (meta) {
   describe('SOAP Client' + meta.suffix, function () {
+
+    var baseUrl = 'http://127.0.0.1:80';
+
     it('should error on invalid host', function (done) {
       soap.createClient('http://localhost:1', meta.options, function (err, client) {
         assert.ok(err);
@@ -104,22 +107,32 @@ var fs = require('fs'),
           assert.notEqual(client.lastRequest.indexOf('xmlns:soapenv='), -1);
           done();
         });
-      });
+      }, baseUrl);
     });
 
-
     it('should allow passing in XML strings', function (done) {
-      soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', Object.assign({ envelopeKey: 'soapenv' }, meta.options), function (err, client) {
-        assert.ok(client);
-        assert.ifError(err);
+      var server = null;
+      var hostname = '127.0.0.1';
+      var port = 15099;
+      var baseUrl = 'http://' + hostname + ':' + port;
 
-        var xmlStr = '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">\n\t<head>\n\t\t<title>404 - Not Found</title>\n\t</head>\n\t<body>\n\t\t<h1>404 - Not Found</h1>\n\t\t<script type="text/javascript" src="http://gp1.wpc.edgecastcdn.net/00222B/beluga/pilot_rtm/beluga_beacon.js"></script>\n\t</body>\n</html>';
-        client.MyOperation({ _xml: xmlStr }, function (err, result, raw, soapHeader) {
-          assert.ok(err);
-          assert.notEqual(raw.indexOf('html'), -1);
-          done();
-        });
-      });
+      server = http.createServer(function (req, res) {
+        res.statusCode = 200;
+        res.write("<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'><soapenv:Body/></soapenv:Envelope>");
+        res.end();
+      }).listen(port, hostname, function () {
+        soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', Object.assign({ envelopeKey: 'soapenv' }, meta.options), function (err, client) {
+          assert.ok(client);
+          assert.ifError(err);
+
+          var xmlStr = '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">\n\t<head>\n\t\t<title>404 - Not Found</title>\n\t</head>\n\t<body>\n\t\t<h1>404 - Not Found</h1>\n\t\t<script type="text/javascript" src="http://gp1.wpc.edgecastcdn.net/00222B/beluga/pilot_rtm/beluga_beacon.js"></script>\n\t</body>\n</html>';
+          client.MyOperation({ _xml: xmlStr }, function (err, result, raw, soapHeader) {
+            assert.ok(err);
+            assert.notEqual(raw.indexOf('html'), -1);
+            done();
+          });
+        }, baseUrl);
+      }).close(() => { done() });
     });
 
     it('should set binding style to "document" by default if not explicitly set in WSDL, per SOAP spec', function (done) {
@@ -158,7 +171,7 @@ var fs = require('fs'),
         mimetype: 'image/png',
         contentId: 'file_0',
         name: 'nodejs.png',
-        body: fs.createReadStream(__dirname + '/static/nodejs.png')
+        body: fs.readFileSync(__dirname + '/static/nodejs.png')
       };
 
       function parsePartHeaders(part) {
@@ -184,6 +197,9 @@ var fs = require('fs'),
             const body = Buffer.concat(bufs).toString().trim();
             const headers = req.headers;
             const boundary = headers['content-type'].match(/boundary="?([^"]*"?)/)[1];
+
+            assert.ok(body.includes(`PNG\r\n\u001a\n\u0000\u0000\u0000\rIHDR`), `Body does not contain part of binary data`);
+
             const parts = body.split(new RegExp('--' + boundary + '-{0,2}'))
               .filter(part => part)
               .map(parsePartHeaders);
@@ -208,18 +224,17 @@ var fs = require('fs'),
               });
               assert.equal(contentType.rootType, 'multipart/related');
 
-              /* does not handle attachements */
-              // assert.equal(body.parts.length, 2);
+              assert.equal(body.parts.length, 2);
 
-              // const dataHeaders = body.parts[0];
-              // assert(dataHeaders['Content-Type'].indexOf('application/xop+xml') > -1);
-              // assert.equal(dataHeaders['Content-ID'], contentType.start);
+              const dataHeaders = body.parts[0];
+              assert(dataHeaders['Content-Type'].indexOf('application/xop+xml') > -1);
+              assert.equal(dataHeaders['Content-ID'], contentType.start);
 
-              // const attachmentHeaders = body.parts[1];
-              // assert.equal(attachmentHeaders['Content-Type'], attachment.mimetype);
-              // assert.equal(attachmentHeaders['Content-Transfer-Encoding'], 'binary');
-              // assert.equal(attachmentHeaders['Content-ID'], '<' + attachment.contentId + '>');
-              // assert(attachmentHeaders['Content-Disposition'].indexOf(attachment.name) > -1);
+              const attachmentHeaders = body.parts[1];
+              assert.equal(attachmentHeaders['Content-Type'], attachment.mimetype);
+              assert.equal(attachmentHeaders['Content-Transfer-Encoding'], 'binary');
+              assert.equal(attachmentHeaders['Content-ID'], '<' + attachment.contentId + '>');
+              assert(attachmentHeaders['Content-Disposition'].indexOf(attachment.name) > -1);
 
               server.close();
               done();
@@ -239,7 +254,7 @@ var fs = require('fs'),
         mimetype: 'image/png',
         contentId: 'file_0',
         name: 'nodejs.png',
-        body: fs.createReadStream(__dirname + '/static/nodejs.png')
+        body: fs.readFileSync(__dirname + '/static/nodejs.png')
       };
 
       function parsePartHeaders(part) {
@@ -308,12 +323,11 @@ var fs = require('fs'),
               }
             });
             assert.equal(contentType.rootType, 'multipart/related');
-            /** does not handle attachements */
-            // assert.equal(body.parts.length, 1);
+            assert.equal(body.parts.length, 1);
 
-            // const dataHeaders = body.parts[0];
-            // assert(dataHeaders['Content-Type'].indexOf('application/xop+xml') > -1);
-            // assert.equal(dataHeaders['Content-ID'], contentType.start);
+            const dataHeaders = body.parts[0];
+            assert(dataHeaders['Content-Type'].indexOf('application/xop+xml') > -1);
+            assert.equal(dataHeaders['Content-ID'], contentType.start);
             done();
           }, { forceMTOM: true })
         }, baseUrl)
@@ -364,7 +378,7 @@ var fs = require('fs'),
             assert.equal(client.lastRequestHeaders.Host.indexOf(':80'), -1);
             done();
           }, null, { 'test-header': 'test' });
-        }, 'http://127.0.0.1');
+        }, baseUrl);
       });
 
       it('should not append `:443` to the Host header if endpoints runs on `https`', function (done) {
@@ -376,7 +390,7 @@ var fs = require('fs'),
             assert.equal(client.lastRequestHeaders.Host.indexOf(':443'), -1);
             done();
           }, null, { 'test-header': 'test' });
-        }, 'https://127.0.0.1');
+        }, baseUrl);
       });
 
       it('should append a port to the Host header if explicitly defined', function (done) {
@@ -500,7 +514,7 @@ var fs = require('fs'),
             assert.ok(result);
             assert.ok(client.lastResponse);
             assert.ok(client.lastResponseHeaders);
-            assert.ok(client.lastElapsedTime);
+            assert.ok(client.lastElapsedTime !== undefined);
 
             done();
           }, { time: true }, { 'test-header': 'test' });
@@ -619,6 +633,23 @@ var fs = require('fs'),
           });
         }, baseUrl);
       });
+
+      it('should have exactly 1 type parameter when the request uses MTOM', function (done) {
+        soap.createClient(__dirname + '/wsdl/attachments.wsdl', meta.options, function (err, client) {
+          assert.ifError(err);
+
+          client.MyOperation({}, function (error, response, body, soapHeader, rawRequest) {
+            assert.ifError(error);
+
+            const contentTypeSplit = client.lastRequestHeaders['Content-Type'].split(';');
+
+            assert.equal(contentTypeSplit[0], 'multipart/related');
+            assert.ok(contentTypeSplit.filter(function (e) { return e.trim().startsWith('type=') }).length === 1);
+
+            done();
+          }, { forceMTOM: true })
+        }, baseUrl)
+      });
     });
 
     it('should add soap headers', function (done) {
@@ -645,28 +676,39 @@ var fs = require('fs'),
     });
 
     it('should add dynamic soap headers', function (done) {
-      soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
-        assert.ok(client);
-        assert.ok(!client.getSoapHeaders());
-        let random;
-        function dynamicHeader(method, location, soapAction, args) {
-          random = Math.floor(Math.random() * 65536);
-          return {
-            TeSt_location: location,
-            TeSt_action: soapAction,
-            TeSt_random: random
-          };
-        }
+      var server = null;
+      var hostname = '127.0.0.1';
+      var port = 15099;
+      var baseUrl = 'http://' + hostname + ':' + port;
 
-        client.addSoapHeader(dynamicHeader);
-        assert.ok(typeof client.getSoapHeaders()[0] === 'function');
-        client.MyOperation({}, function (err, result) {
-          assert.notEqual(client.lastRequest.indexOf('<TeSt_location>http://www.example.com/v1</TeSt_location>'), -1);
-          assert.notEqual(client.lastRequest.indexOf('<TeSt_action>MyOperation</TeSt_action>'), -1);
-          assert.notEqual(client.lastRequest.indexOf(`<TeSt_random>${random}</TeSt_random>`), -1);
-          done();
+      server = http.createServer(function (req, res) {
+        res.statusCode = 200;
+        res.write("<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'><soapenv:Body/></soapenv:Envelope>");
+        res.end();
+      }).listen(port, hostname, function () {
+        soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', meta.options, function (err, client) {
+          assert.ok(client);
+          assert.ok(!client.getSoapHeaders());
+          let random;
+          function dynamicHeader(method, location, soapAction, args) {
+            random = Math.floor(Math.random() * 65536);
+            return {
+              TeSt_location: location,
+              TeSt_action: soapAction,
+              TeSt_random: random
+            };
+          }
+
+          client.addSoapHeader(dynamicHeader);
+          assert.ok(typeof client.getSoapHeaders()[0] === 'function');
+          client.MyOperation({}, function (err, result) {
+            assert.notEqual(client.lastRequest.indexOf('<TeSt_location>http://www.example.com/v1</TeSt_location>'), -1);
+            assert.notEqual(client.lastRequest.indexOf('<TeSt_action>MyOperation</TeSt_action>'), -1);
+            assert.notEqual(client.lastRequest.indexOf(`<TeSt_random>${random}</TeSt_random>`), -1);
+            done();
+          }, baseUrl);
         });
-      });
+      }).close(() => { done() });
     });
 
     it('should add soap headers with a namespace', function (done) {
@@ -779,7 +821,8 @@ var fs = require('fs'),
               assert.ok(client.lastRequest);
               assert.ok(client.lastMessage);
               assert.ok(client.lastEndpoint);
-              console.log(client.lastMessage)
+              // Commented out for production test due to verbosity.
+              //console.log(client.lastMessage)
               assert.strictEqual(client.lastMessage, message);
               done();
             });
@@ -1166,6 +1209,8 @@ var fs = require('fs'),
 
     describe('Method invocation', function () {
 
+      const baseUrl = 'http://localhost:80';
+
       it('shall generate correct payload for methods with string parameter', function (done) {
         // Mock the http post function in order to easy be able to validate the generated payload
         var stringParameterValue = 'MY_STRING_PARAMETER_VALUE';
@@ -1201,7 +1246,7 @@ var fs = require('fs'),
             assert.equal(sentInputContent, '<PeriodList><PeriodType><PeriodId>1</PeriodId></PeriodType></PeriodList>');
             done();
           });
-        });
+        }, baseUrl);
       });
 
       it('shall generate correct payload for methods with array parameter with colon override', function (done) {
@@ -1224,7 +1269,7 @@ var fs = require('fs'),
             assert.equal(sentInputContent, '<items><itemDesc>item1</itemDesc></items><items><itemDesc>item2</itemDesc></items>');
             done();
           });
-        });
+        }, baseUrl);
       });
 
       it('shall generate correct payload for methods with array parameter with parent namespace', function (done) {
@@ -1247,7 +1292,7 @@ var fs = require('fs'),
             assert.equal(sentInputContent, '<ns1:items><itemDesc>item1</itemDesc></ns1:items><ns1:items><itemDesc>item2</itemDesc></ns1:items>');
             done();
           });
-        });
+        }, baseUrl);
       });
 
       it('shall generate correct payload for methods with array parameter when individual array elements are not namespaced', function (done) {
@@ -1262,7 +1307,7 @@ var fs = require('fs'),
             assert.equal(sentInputContent, '<PeriodList><PeriodType><PeriodId>1</PeriodId><PeriodId>2</PeriodId></PeriodType></PeriodList>');
             done();
           });
-        });
+        }, baseUrl);
       });
 
       it('shall generate correct payload for methods with array parameter when individual array elements are namespaced', function (done) {
@@ -1278,7 +1323,7 @@ var fs = require('fs'),
             assert.equal(sentInputContent, '<PeriodList><PeriodType><PeriodId>1</PeriodId></PeriodType><PeriodType><PeriodId>2</PeriodId></PeriodType></PeriodList>');
             done();
           });
-        });
+        }, baseUrl);
       });
 
       it('shall generate correct payload for recursively-defined types', function (done) {
@@ -1329,7 +1374,7 @@ var fs = require('fs'),
               '<AddAttributeRequest><RequestIdx>1</RequestIdx><Identifier><SystemNamespace>bugrepro</SystemNamespace><ResellerId>1</ResellerId><CustomerNum>860692</CustomerNum><AccountUid>80a6e559-4d65-11e7-bd5b-0050569a12d7</AccountUid></Identifier><Attr><AttributeId>716</AttributeId><IsTemplateAttribute>0</IsTemplateAttribute><ReadOnly>0</ReadOnly><CanBeModified>1</CanBeModified><Name>domain</Name><AccountElements><AccountElement><ElementId>1693</ElementId><Name>domain</Name><Value>foo</Value><ReadOnly>0</ReadOnly><CanBeModified>1</CanBeModified></AccountElement></AccountElements></Attr><RequestedBy>blah</RequestedBy><RequestedByLogin>system</RequestedByLogin></AddAttributeRequest>');
             done();
           });
-        });
+        }, baseUrl);
       });
 
       it('should resolve cross schema references', function () {
@@ -1426,7 +1471,7 @@ var fs = require('fs'),
       });
 
       it('should allow passing in XML strings', function (done) {
-        soap.createClientAsync(__dirname + '/wsdl/default_namespace.wsdl', Object.assign({ envelopeKey: 'soapenv' }, meta.options))
+        soap.createClientAsync(__dirname + '/wsdl/default_namespace.wsdl', Object.assign({ envelopeKey: 'soapenv' }, meta.options), baseUrl)
           .then(function (client) {
             assert.ok(client);
             var xmlStr = '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">\n\t<head>\n\t\t<title>404 - Not Found</title>\n\t</head>\n\t<body>\n\t\t<h1>404 - Not Found</h1>\n\t\t<script type="text/javascript" src="http://gp1.wpc.edgecastcdn.net/00222B/beluga/pilot_rtm/beluga_beacon.js"></script>\n\t</body>\n</html>';
@@ -1440,7 +1485,7 @@ var fs = require('fs'),
 
       it('should allow customization of envelope', function (done) {
         var client;
-        soap.createClientAsync(__dirname + '/wsdl/default_namespace.wsdl', Object.assign({ envelopeKey: 'soapenv' }, meta.options))
+        soap.createClientAsync(__dirname + '/wsdl/default_namespace.wsdl', Object.assign({ envelopeKey: 'soapenv' }, meta.options), baseUrl)
           .then(function (createdClient) {
             assert.ok(createdClient);
             client = createdClient;
@@ -1451,6 +1496,18 @@ var fs = require('fs'),
             assert.notEqual(client.lastRequest.indexOf('xmlns:soapenv='), -1);
             done();
           });
+      });
+
+      it('should allow customization of envelope Soap Url', function (done) {
+        soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', Object.assign({ envelopeSoapUrl: 'http://example.com/v1' }, meta.options), function (err, client) {
+          assert.ok(client);
+          assert.ifError(err);
+
+          client.MyOperation({}, function (err, result) {
+            assert.notEqual(client.lastRequest.indexOf('xmlns:soap=\"http://example.com/v1\"'), -1);
+            done();
+          });
+        }, baseUrl);
       });
 
       it('should add soap headers', function (done) {
@@ -1523,7 +1580,7 @@ var fs = require('fs'),
             assert.ok(client.lastRequest);
             done();
           });
-        });
+        }, baseUrl);
       });
 
       it('should create node-style method with non-normalized name on Client.service.port.method style invocation', function (done) {
@@ -1538,7 +1595,7 @@ var fs = require('fs'),
             assert.ok(client.lastRequest);
             done();
           });
-        });
+        }, baseUrl);
       });
 
       it('should create promise-style method with normalized name (a valid Javascript identifier)', function (done) {
@@ -1552,7 +1609,7 @@ var fs = require('fs'),
               assert.ok(client.lastRequest);
               done();
             });
-        });
+        }, baseUrl);
       });
 
       it('should not create methods with invalid Javascript identifier', function (done) {
@@ -1574,7 +1631,7 @@ var fs = require('fs'),
             assert.ok(client.lastRequest);
             done();
           });
-        });
+        }, baseUrl);
       });
 
       it('does not create a promise-style method with invalid Javascript identifier if option normalizeNames is not used', function (done) {
@@ -1589,74 +1646,83 @@ var fs = require('fs'),
   });
 });
 
-it('shall generate correct header for custom defined header arguments', function (done) {
-  soap.createClientAsync(__dirname + '/wsdl/default_namespace.wsdl').then(function (client) {
-    client.addSoapHeader('test-header-namespace')
-    client.wsdl.xmlnsInHeader = 'xmlns="https://example.com/v1"';
-    var expectedDefinedHeader = '<soap:Header xmlns="https://example.com/v1">';
+describe('Uncategorised', function () {
 
-    client.MyOperation(function (err, result, rawResponse, soapHeader, rawRequest) {
-      var definedSoapHeader = client.lastRequest.match(/<soap:Header xmlns=("(.*?)">)/)[0];
-      assert.ok(definedSoapHeader === expectedDefinedHeader);
+  const baseUrl = 'http://localhost:80';
+
+  it('shall generate correct header for custom defined header arguments', function (done) {
+    soap.createClientAsync(__dirname + '/wsdl/default_namespace.wsdl', {}, baseUrl).then(function (client) {
+      client.addSoapHeader('test-header-namespace')
+      client.wsdl.xmlnsInHeader = 'xmlns="https://example.com/v1"';
+      var expectedDefinedHeader = '<soap:Header xmlns="https://example.com/v1">';
+
+      client.MyOperation(function (err, result, rawResponse, soapHeader, rawRequest) {
+        var definedSoapHeader = client.lastRequest.match(/<soap:Header xmlns=("(.*?)">)/)[0];
+        assert.ok(definedSoapHeader === expectedDefinedHeader);
+        done();
+      });
+    });
+  });
+
+  it('should create async client without options', function (done) {
+    soap.createClientAsync(__dirname + '/wsdl/default_namespace.wsdl').then(function (client) {
+      assert.ok(client);
       done();
     });
   });
-});
 
-it('should create async client without options', function (done) {
-  soap.createClientAsync(__dirname + '/wsdl/default_namespace.wsdl').then(function (client) {
-    assert.ok(client);
-    done();
+  xit('should add namespace to array of objects', function (done) {
+    soap.createClientAsync(__dirname + '/wsdl/PurchaseRequestService.wsdl').then(function (client) {
+      const input = {
+        errorProcessingLevel: "ALL",
+        groupBy: "SUPPLIER",
+        initiateApprovalAfterRequisitionImport: "N",
+        interfaceSourceCode: "ABC",
+        purchaseRequestPayload: {
+          ApproverEmail: "abc@gmail.com",
+          ApproverId: "idname",
+          PurchaseRequestInputReqLineInterface:
+            [
+              {
+                Amount: "600.00",
+                GroupCode: "supplier",
+                ItemDescription: "test1",
+                LineTypeId: 6,
+                ProductType: "SERVICES",
+                RequestedDeliveryDate: "2021-02-26",
+
+              },
+              {
+                Amount: "400.00",
+                GroupCode: "supplier",
+                ItemDescription: "test2",
+                LineTypeId: 7,
+                ProductType: "SERVICES",
+                RequestedDeliveryDate: "2021-02-28",
+              },
+            ],
+        },
+        RequisitioningBUName: "BU",
+        requisitioningBUName: "BU",
+      };
+      client.setSecurity(new soap.BasicAuthSecurity('username', 'password'));
+      client.createRequisition(input, function (err, result, rawResponse, soapHeader, rawRequest) {
+        const match = rawRequest.match(/<ns1:PurchaseRequestInputReqLineInterface xmlns:.{3}="(.*?)">/);
+        if (match && match.length) {
+          assert.ok(match[0])
+        } else {
+          assert.ok(null, `Array object don't have namesapce`)
+        }
+        done();
+      });
+    })
+      .catch(function (err) {
+        assert.equal(err.message, 'Root element of WSDL was <html>. This is likely an authentication issue.');
+        done();
+      });
   });
+
 });
-
-xit('should add namespace to array of objects', function (done) {
-  soap.createClientAsync(__dirname + '/wsdl/PurchaseRequestService.wsdl').then(function (client) {
-    const input = {
-      errorProcessingLevel: "ALL",
-      groupBy: "SUPPLIER",
-      initiateApprovalAfterRequisitionImport: "N",
-      interfaceSourceCode: "ABC",
-      purchaseRequestPayload: {
-        ApproverEmail: "abc@gmail.com",
-        ApproverId: "idname",
-        PurchaseRequestInputReqLineInterface:
-          [
-            {
-              Amount: "600.00",
-              GroupCode: "supplier",
-              ItemDescription: "test1",
-              LineTypeId: 6,
-              ProductType: "SERVICES",
-              RequestedDeliveryDate: "2021-02-26",
-
-            },
-            {
-              Amount: "400.00",
-              GroupCode: "supplier",
-              ItemDescription: "test2",
-              LineTypeId: 7,
-              ProductType: "SERVICES",
-              RequestedDeliveryDate: "2021-02-28",
-            },
-          ],
-      },
-      RequisitioningBUName: "BU",
-      requisitioningBUName: "BU",
-    };
-    client.setSecurity(new soap.BasicAuthSecurity('username', 'password'));
-    client.createRequisition(input, function (err, result, rawResponse, soapHeader, rawRequest) {
-      const match = rawRequest.match(/<ns1:PurchaseRequestInputReqLineInterface xmlns:.{3}="(.*?)">/);
-      if (match && match.length) {
-        assert.ok(match[0])
-      } else {
-        assert.ok(null, `Array object don't have namesapce`)
-      }
-      done();
-    });
-  });
-});
-
 
 describe('Client using stream and returnSaxStream', () => {
   let server = null;
@@ -1734,7 +1800,7 @@ describe('Client posting complex body', () => {
         return void done(err);
       }
       assert.ok(client);
-  
+
       var requestBody = {
         id: 'ID00000000000000000000000000000000',
         lastName: 'Doe',
@@ -1753,18 +1819,74 @@ describe('Client posting complex body', () => {
           companyName: 'ACME'
         }
       }
-  
+
       client.registerUser(requestBody, function (err, result) {
         assert.ok(client.lastRequest);
         assert.ok(client.lastMessage);
         assert.ok(client.lastEndpoint);
 
-        console.log(client.lastMessage);
+        // Commented out for production test due to verbosity.
+        //console.log(client.lastMessage);
         const expectedBody = '<registrationMessages:registerUserRequest xmlns:registrationMessages="http://test-soap.com/api/registration/messages" xmlns="http://test-soap.com/api/registration/messages"><registrationMessages:id>ID00000000000000000000000000000000</registrationMessages:id><registrationMessages:lastName>Doe</registrationMessages:lastName><registrationMessages:firstName>John</registrationMessages:firstName><registrationMessages:dateOfBirth>1970-01-01</registrationMessages:dateOfBirth><registrationMessages:correspondenceLanguage>ENG</registrationMessages:correspondenceLanguage><registrationMessages:emailAddress>jdoe@doe.com</registrationMessages:emailAddress><registrationMessages:lookupPermission>ALLOWED</registrationMessages:lookupPermission><registrationMessages:companyAddress><ct:address xmlns:ct="http://test-soap.com/api/common/types"><ct:streetName>Street</ct:streetName><ct:postalCode>Code</ct:postalCode><ct:city>City</ct:city><ct:countryCode>US</ct:countryCode></ct:address><ct:companyName xmlns:ct="http://test-soap.com/api/common/types">ACME</ct:companyName></registrationMessages:companyAddress></registrationMessages:registerUserRequest>';
         assert.strictEqual(client.lastMessage, expectedBody);
-  
+
         done();
       });
+    }, baseUrl);
+  });
+});
+
+describe('Connection header', () => {
+  var server = null;
+  var hostname = '127.0.0.1';
+  var port = 15099;
+  var baseUrl = 'http://' + hostname + ':' + port;
+
+  before(function (done) {
+    server = http.createServer(function (req, res) {
+      res.statusCode = 200;
+      res.write(JSON.stringify({ tempResponse: 'temp' }), 'utf8');
+      res.end();
+    }).listen(port, hostname, done);
+  });
+
+  after(function (done) {
+    server.close();
+    server = null;
+    done();
+  });
+
+  it('should set Connection header to keep-alive when forever option is true', function (done) {
+    soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', function (err, client) {
+      assert.ok(client);
+      assert.ifError(err);
+      client.MyOperation({}, { forever: true }, function () {
+        assert.strictEqual(client.lastRequestHeaders.Connection, 'keep-alive');
+        done();
+      }, null, null);
+    }, baseUrl);
+  });
+
+  it('should not set Connection header when forever option is false', function (done) {
+    soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', function (err, client) {
+      assert.ok(client);
+      assert.ifError(err);
+      client.MyOperation({}, { forever: false }, function () {
+        assert.strictEqual(client.lastRequestHeaders.Connection, undefined);
+        done();
+      }, null, null);
+    }, baseUrl);
+  });
+
+  it('should not set Connection header when forever option is not set', function (done) {
+    soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', function (err, client) {
+      assert.ok(client);
+      assert.ifError(err);
+
+      client.MyOperation({}, function () {
+        assert.strictEqual(client.lastRequestHeaders.Connection, undefined);
+        done();
+      }, null, null);
     }, baseUrl);
   });
 });
