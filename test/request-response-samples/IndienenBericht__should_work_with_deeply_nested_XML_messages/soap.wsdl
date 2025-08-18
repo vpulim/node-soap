@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+                  xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+                  xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+                  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+                  xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+                  xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"
+                  xmlns:wsp="http://www.w3.org/ns/ws-policy"
+                  xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:messages="http://schemas.vecozo.nl/berichtuitwisseling/messages/v3"
+                  xmlns:header="http://schemas.vecozo.nl/berichtuitwisseling/header/v3"
+                  xmlns:types="http://schemas.vecozo.nl/berichtuitwisseling/types/v3"
+                  xmlns:tns="http://schemas.vecozo.nl/berichtuitwisseling/v3"
+                  targetNamespace="http://schemas.vecozo.nl/berichtuitwisseling/v3">
+
+  <wsp:Policy wsu:Id="Mtom">
+    <wsoma:OptimizedMimeSerialization wsp:Optional="true" xmlns:wsoma="http://schemas.xmlsoap.org/ws/2004/09/policy/optimizedmimeserialization"/>
+  </wsp:Policy>
+
+  <wsdl:types>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://schemas.vecozo.nl/berichtuitwisseling/v3">
+      <xsd:import schemaLocation="./Vecozo.Berichtuitwisseling.Push.Types.V3.xsd" namespace="http://schemas.vecozo.nl/berichtuitwisseling/types/v3" />
+      <xsd:import schemaLocation="./Vecozo.Berichtuitwisseling.Push.Header.V3.xsd" namespace="http://schemas.vecozo.nl/berichtuitwisseling/header/v3" />
+      <xsd:import schemaLocation="./Vecozo.Berichtuitwisseling.Push.Messages.V3.xsd" namespace="http://schemas.vecozo.nl/berichtuitwisseling/messages/v3" />
+
+      <xsd:element name="ReferentieHeader" type="header:ReferentieHeader" />
+
+      <xsd:element name="IndienenBericht">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="Request" type="messages:IndienenBerichtRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+
+      <xsd:element name="IndienenBerichtResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="IndienenBerichtResult" type="messages:IndienenBerichtResponse" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+
+    </xsd:schema>
+  </wsdl:types>
+
+  <wsdl:message name="ReferentieHeaderMessage">
+    <wsdl:part name="header_referentie" element="tns:ReferentieHeader" />
+  </wsdl:message>
+  <wsdl:message name="IndienenBerichtSoapIn">
+    <wsdl:part name="parameters" element="tns:IndienenBericht" />
+  </wsdl:message>
+  <wsdl:message name="IndienenBerichtSoapOut">
+    <wsdl:part name="parameters" element="tns:IndienenBerichtResponse" />
+  </wsdl:message>
+
+  <wsdl:portType name="BerichtuitwisselingServiceV3">
+    <wsdl:operation name="IndienenBericht">
+      <wsdl:input wsaw:Action="http://schemas.vecozo.nl/berichtuitwisseling/v3/IndienenBericht" message="tns:IndienenBerichtSoapIn" />
+      <wsdl:output wsaw:Action="http://schemas.vecozo.nl/berichtuitwisseling/v3/IndienenBericht/reply" message="tns:IndienenBerichtSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+
+  <wsdl:binding name="BerichtuitwisselingServiceV3Soap11" type="tns:BerichtuitwisselingServiceV3">
+    <wsdl:documentation>
+      <wsi:Claim conformsTo="http://ws-i.org/profiles/basic/1.1" xmlns:wsi="http://ws-i.org/schemas/conformanceClaim/" />
+    </wsdl:documentation>
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsp:Policy>
+      <wsp:PolicyReference URI="#Mtom"/>
+    </wsp:Policy>
+    <wsdl:operation name="IndienenBericht">
+      <soap:operation soapAction="http://schemas.vecozo.nl/berichtuitwisseling/v3/IndienenBericht" style="document" />
+      <wsdl:input>
+        <soap:header message="tns:ReferentieHeaderMessage" part="header_referentie" use="literal" wsdl:required="false"/>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+
+  <wsdl:binding name="BerichtuitwisselingServiceV3Soap12" type="tns:BerichtuitwisselingServiceV3">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsp:Policy>
+      <wsp:PolicyReference URI="#Mtom"/>
+    </wsp:Policy>
+    <wsdl:operation name="IndienenBericht">
+      <soap12:operation soapAction="http://schemas.vecozo.nl/berichtuitwisseling/v3/IndienenBericht" style="document" />
+      <wsdl:input>
+        <soap12:header message="tns:ReferentieHeaderMessage" part="header_referentie" use="literal" wsdl:required="false"/>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+
+  <wsdl:service name="BerichtuitwisselingServiceV3">
+    <wsdl:port name="BerichtuitwisselingServiceV3Soap11" binding="tns:BerichtuitwisselingServiceV3Soap11">
+      <soap:address location="https://api.vecozo.nl/berichtenservice/ontvangst/v3/soap11" />
+    </wsdl:port>
+    <wsdl:port name="BerichtuitwisselingServiceV3Soap12" binding="tns:BerichtuitwisselingServiceV3Soap12">
+      <soap12:address location="https://api.vecozo.nl/berichtenservice/ontvangst/v3/soap12" />
+    </wsdl:port>
+  </wsdl:service>
+
+</wsdl:definitions>

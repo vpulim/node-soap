@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema targetNamespace="http://schemas.vecozo.nl/berichtuitwisseling/header/v3" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:header="http://schemas.vecozo.nl/berichtuitwisseling/header/v3" xmlns:types="http://schemas.vecozo.nl/berichtuitwisseling/types/v3" elementFormDefault="qualified">
+
+  <xs:import schemaLocation="./Vecozo.Berichtuitwisseling.Push.Types.V3.xsd" namespace="http://schemas.vecozo.nl/berichtuitwisseling/types/v3"/>
+
+  <xs:complexType name="ReferentieHeader">
+    <xs:sequence>
+      <xs:element name="ReferentieId" type="types:ReferentieId" minOccurs="1" maxOccurs="1" />
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>

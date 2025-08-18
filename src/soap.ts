@@ -3,11 +3,12 @@
  * MIT Licensed
  */
 
-import * as debugBuilder from 'debug';
+import debugBuilder from 'debug';
 import { Client } from './client';
 import * as _security from './security';
 import { Server, ServerType } from './server';
-import { IOptions, IServerOptions, IServices } from './types';
+import { IOptions, IServerOptions, IServices, IWSDLCache } from './types';
+import { wsdlCacheSingleton } from './utils';
 import { open_wsdl, WSDL } from './wsdl';
 
 const debug = debugBuilder('node-soap:soap');
@@ -15,7 +16,7 @@ const debug = debugBuilder('node-soap:soap');
 export const security = _security;
 export { Client } from './client';
 export { HttpClient } from './http';
-export { BasicAuthSecurity, BearerSecurity, ClientSSLSecurity, ClientSSLSecurityPFX, NTLMSecurity, WSSecurity, WSSecurityCert, WSSecurityPlusCert } from './security';
+export { BasicAuthSecurity, BearerSecurity, ClientSSLSecurity, ClientSSLSecurityPFX, NTLMSecurity, WSSecurity, WSSecurityCert, WSSecurityPlusCert, WSSecurityCertWithToken } from './security';
 export { Server } from './server';
 export { passwordDigest } from './utils';
 export * from './types';
@@ -23,28 +24,21 @@ export { WSDL } from './wsdl';
 
 type WSDLCallback = (error: any, result?: WSDL) => any;
 
-function createCache() {
-  const cache: {
-    [key: string]: WSDL,
-  } = {};
-  return (key: string, load: (cb: WSDLCallback) => any, callback: WSDLCallback) => {
-    if (!cache[key]) {
-      load((err, result) => {
-        if (err) {
-          return callback(err);
-        }
-        cache[key] = result;
-        callback(null, result);
-      });
-    } else {
-      process.nextTick(() => {
-        callback(null, cache[key]);
-      });
-    }
-  };
+function getFromCache(key: string, cache: IWSDLCache, load: (cb: WSDLCallback) => any, callback: WSDLCallback) {
+  if (!cache.has(key)) {
+    load((err, result) => {
+      if (err) {
+        return callback(err);
+      }
+      cache.set(key, result);
+      callback(null, result);
+    });
+  } else {
+    process.nextTick(() => {
+      callback(null, cache.get(key));
+    });
+  }
 }
-
-const getFromCache = createCache();
 
 function _requestWSDL(url: string, options: IOptions, callback: WSDLCallback) {
   if (typeof options === 'function') {
@@ -58,7 +52,13 @@ function _requestWSDL(url: string, options: IOptions, callback: WSDLCallback) {
   if (options.disableCache === true) {
     openWsdl(callback);
   } else {
-    getFromCache(url, openWsdl, callback);
+    let cache: IWSDLCache;
+    if (options.wsdlCache) {
+      cache = options.wsdlCache;
+    } else {
+      cache = wsdlCacheSingleton;
+    }
+    getFromCache(url, cache, openWsdl, callback);
   }
 }
 

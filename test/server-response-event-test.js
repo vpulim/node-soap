@@ -1,9 +1,9 @@
 'use strict';
 
-var request = require('request');
 var assert = require('assert');
 var http = require('http');
 var soap = require('../');
+const { default: axios } = require('axios');
 var server;
 var url;
 
@@ -34,34 +34,34 @@ var responseXMLChanged = '<?xml version="1.0" encoding="utf-8"?>' +
   '</soap:Body>' +
   '</soap:Envelope>';
 
-  var service = {
-    Hello_Service: {
-      Hello_Port: {
-        sayHello: function (args) {
-          return {
-            greeting: args.firstName
-          };
-        }
+var service = {
+  Hello_Service: {
+    Hello_Port: {
+      sayHello: function (args) {
+        return {
+          greeting: args.firstName
+        };
       }
     }
-  };
+  }
+};
 
 describe('server response event test', function () {
 
   before(function (done) {
-    
 
-    server = http.createServer(function(request,response) {
+
+    server = http.createServer(function (request, response) {
       response.end('404: Not Found: ' + request.url);
     });
-    
+
     server.listen(51515, function () {
       var soapServer = soap.listen(server, '/SayHello', service, wsdl);
-      
-      soapServer.on('response', function(response, methodName){
+
+      soapServer.on('response', function (response, methodName) {
         assert.equal(response.result, responseXML);
         assert.equal(methodName, 'sayHello');
-        response.result = response.result.replace('Bob','John');
+        response.result = response.result.replace('Bob', 'John');
       });
 
       url = 'http://' + server.address().address + ':' + server.address().port;
@@ -77,21 +77,20 @@ describe('server response event test', function () {
   });
 
   it('should replace Bob with John', function (done) {
-    request({
-      url: url + '/SayHello',
-      method: 'POST',
-      headers: {
-        SOAPAction: "sayHello",
-        "Content-Type": 'text/xml; charset="utf-8"'
-      },
-      body: requestXML
-    }, function (err, response, body) {
-      if (err) {
+    axios.post(
+      url + '/SayHello',
+      requestXML,
+      {
+        headers: {
+          SOAPAction: "sayHello",
+          "Content-Type": 'text/xml; charset="utf-8"'
+        },
+      }).then(res => {
+        assert.equal(res.data, responseXMLChanged);
+        done();
+      }).catch(err => {
         throw err;
-      }
-      assert.equal(body, responseXMLChanged);
-      done();
-    });
+      });
   });
 
 });

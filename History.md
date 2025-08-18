@@ -1,3 +1,129 @@
+# 1.3.0 / 2025-08-13
+
+- [ENHANCEMENT] Speed up parsing with many namespaces (#1322)
+- [ENHANCEMENT] Add `*.ts` to editorconfig (#1324)
+- [ENHANCEMENT] Call method using apply to enable access to it through "this" context (#1315)
+- [ENHANCEMENT] Handle deeply nested messages (#1313)
+- [ENHANCEMENT] Add test for redefined namespace in element (#1316)
+- [MAINTENANCE] Bump express from 4.21.2 to 5.1.0 (#1327)
+- [MAINTENANCE] Bump diff from 7.0.0 to 8.0.2 (#1326)
+- [MAINTENANCE] Bump sinon from 20.0.0 to 21.0.0 (#1321)
+- [MAINTENANCE] Bump @types/lodash from 4.17.16 to 4.17.20 (#1320)
+- [MAINTENANCE] Bump mocha from 11.1.0 to 11.7.1 (#1319)
+- [MAINTENANCE] Bump body-parser from 1.20.3 to 2.2.0 (#1317)
+- [DOC] Update Readme to improve header
+
+# 1.2.1 / 2025-07-24
+
+- [MAINTENANCE] Bump axios to 1.11.0 (#1314)
+
+# 1.2.0 / 2025-07-22
+
+- [ENHANCEMENT] Remove hardcoded ID in timestamp (#1290)
+- [ENHANCEMENT] Allows SchemaElement instance to use import namespace as targetNamespace (#1296)
+- [ENHANCEMENT] Add optional parameter for response data encoding (#1303)
+- [MAINTENANCE] Bump axios to 1.10.0 and other minor deps (#1312)
+- [MAINTENANCE] Bump serve-static from 1.16.2 to 2.2.0 (#1308)
+- [MAINTENANCE] Bump semver from 7.7.1 to 7.7.2 (#1310)
+- [MAINTENANCE] Add dependabot workflow for deps and actions (#1301)
+
+# 1.1.12 / 2025-06-01
+
+- [ENHANCEMENT] Add optional `excludeReferencesFromSigning` property to exclude elements (e.g., Body, Timestamp) from SOAP message signing (#1288)
+- [MAINTENANCE] Bump deps axios 1.9.0, debug 4.4.1, formidable 3.5.4 and xml-crypto 6.1.2
+
+# 1.1.11 / 2025-04-22
+
+- [ENHANCEMENT] Allow xml key in first level for rpc (#1219)
+- [ENHANCEMENT] Do not set Connection header when forever is not set (#1259)
+- [MAINTENANCE] Packages updates, tsconfig changes, fix test path on Windows (#1280)
+- [MAINTENANCE] Bump xml-crypto to 6.1.1 (#1283)
+
+1.1.10 / 2025-03-17
+===================
+* [MAINTENANCE] Update axios to 1.8.3, xml-crypto to 6.0.1 and some other deps to address security issues
+
+1.1.9 / 2025-03-04
+===================
+* [ENHANCEMENT] Use wsdl xmlns prefix mappings, so several wsdl files can be imported with different namespace prefixes (#1279)
+
+1.1.8 / 2024-12-11
+===================
+* [ENHANCEMENT] Add option for digest algorithm, default value is sha256, update documentation (#1273)
+* [MAINTENANCE] Fix minimal Node.js version in package.json (#1268)
+* [MAINTENANCE] Update security.md (#1270)
+
+1.1.7 / 2024-12-11
+===================
+* [MAINTENANCE] Update dependencies, bump axios to 1.7.9 (#1264)
+
+1.1.6 / 2024-11-04
+===================
+* [ENHANCEMENT] Add custom cache option (#1261)
+* [Fix] Fix usage of ref maxoccurs and minoccurs attributes (#1260)
+
+1.1.5 / 2024-09-29
+===================
+* [ENHANCEMENT] Add missing KeyInfo tag around SecurityTokenReference (#1255)
+* [ENHANCEMENT] Catch errors when overrideImportLocation fails (#1257)
+
+1.1.4 / 2024-09-17
+===================
+* [ENHANCEMENT] Add feature to set signatureAlgorithm (#1254)
+* [MAINTENANCE] Update dependencies, remove unused dependencies (#1256)
+
+1.1.3 / 2024-09-03
+===================
+* [ENHANCEMENT] Allow ComplexContentElement to have a restriction as a child element and parse attributes for RestrictionElement (#1252)
+* [MAINTENANCE] Bump axios to 1.7.7 and debug to 4.3.6 (#1253)
+
+1.1.2 / 2024-08-21
+===================
+* [MAINTENANCE] Update Axios to 1.7.4 (#1248)
+* [MAINTENANCE] Remove unused coveralls, replace request with Axios in tests (#1250)
+* [MAINTENANCE] Speed up tests execution (#1249)
+* [Fix] Add missing attributes (#1251)
+
+
+1.1.1 / 2024-08-04
+===================
+* [ENHANCEMENT] Support binary data in MTOM (#1245)
+* [ENHANCEMENT] Pass the error object to log (#1246)
+* [Fix] Fix including xsd from another xsd while using inline xmlns (#1202)
+
+1.1.0 / 2024-07-16
+===================
+* [ENHANCEMENT] Upgrade dependencies and refactor code to work with the xml-crypto 6.0.0, use built-in randomUUID instead of uuid (#1242)
+* [ENHANCEMENT] Add express request object as parameter to the log method. (#1210)
+* [ENHANCEMENT] Make error messages useful when using SOAP 1.2 (#1228)
+* [ENHANCEMENT] Update Readme.md add example for xml string parameter (#1244)
+
+1.0.4 / 2024-06-18
+===================
+* [ENHANCEMENT] Speed up WSDL parsing (#1218)
+* [ENHANCEMENT] Add envelopeSoapUrl option to change the URL in xmlns:soap attribute (#1239)
+* [ENHANCEMENT] Handle missing message definitions when creating SOAP client (#1241)
+
+1.0.3 / 2024-05-14
+===================
+* [ENHANCEMENT] Add WSSecurity Protocol with user/pass token element (#1187)
+* [ENHANCEMENT] Prevent mutating $type in the schema while processing requests (#1238)
+* [FIX] Add space after `xmlns:wsu` to prevent xmldom warning (#1215)
+* [FIX] Fix invalid multipart/related Content-Type (#1198)
+
+1.0.2 / 2024-04-29
+===================
+* [ENHANCEMENT] Preserves leading and trailing whitespace when preserveWhitespace option is true (#1211)
+* [ENHANCEMENT] Improve trim speed during XML parsing (#1216)
+* [FIX] Change axios back as a dependency, bump axios to 1.6.8 (#1237)
+* [FIX] Update proxy example in docs (#1220)
+* [FIX] Add missing closing bracket in docs example (#1214)
+
+1.0.1 / 2024-04-18
+===================
+* [FIX] Upgrade axios to 1.6.1 and axios-ntlm to 1.4.2 (#1212)
+* [FIX] Fix build in Node.js 18 by re-encrypting test key (#1206)
+
 1.0.0 / 2022-12-09
 ===================
 * [ENHANCEMENT] allow soap.createClient to create a new SOAP client from a WSDL string (#1191)

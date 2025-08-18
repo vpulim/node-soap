@@ -34,7 +34,7 @@ test.service = {
             Fault: {
               Code: {
                 Value: "soap:Sender",
-                Subcode: { value: "rpc:BadArguments" }
+                Subcode: { Value: "rpc:BadArguments" }
               },
               Reason: { Text: "Processing Error" }
             }
@@ -61,7 +61,7 @@ test.service = {
           Fault: {
             Code: {
               Value: "soap:Sender",
-              Subcode: { value: "rpc:BadArguments" }
+              Subcode: { Value: "rpc:BadArguments" }
             },
             Reason: { Text: "Processing Error" },
             statusCode: 500
@@ -100,9 +100,14 @@ describe('SOAP Server', function () {
       res.end();
     });
 
+    test.logs = [];
+
     test.server.listen(15099, null, null, function () {
       var testSv = test.server.address();
       test.soapServer = soap.listen(test.server, '/stockquote', test.service, test.wsdl);
+      test.soapServer.log = function (type, data, req) {
+        test.logs.push({ type, data, req });
+      };
       test.baseUrl = `http://${testSv.address}:${testSv.port}`;
 
       // windows return 0.0.0.0 as address and that is not valid to use in a request
@@ -208,6 +213,11 @@ describe('SOAP Server', function () {
       assert.ok(err);
       assert.equal(err.response.status, 500);
       assert.ok(err.response.data.length);
+      const errorLog = test.logs.find(log => log.type === 'error');
+      assert.ok(errorLog);
+      assert(errorLog.data instanceof Error);
+      assert.ok(errorLog.data.name, 'TypeError');
+      assert.match(errorLog.data.stack, /TypeError: Cannot read properties of undefined \(reading 'description'\)/);
       done();
     });
   });
@@ -241,6 +251,14 @@ describe('SOAP Server', function () {
       assert.ok(err);
       assert.equal(err.response.status, 500);
       assert.ok(err.response.data.length);
+      const errorLog = test.logs.find(log => log.type === 'error');
+      assert.ok(errorLog);
+      assert.notStrictEqual(errorLog.data, {
+        faultcode: 500,
+        faultstring: 'Invalid XML',
+        detail: 'Error: Unexpected close tag\nLine: 0\nColumn: 184\nChar: >',
+        statusCode: undefined
+      });
       done();
     });
   });
@@ -328,9 +346,8 @@ describe('SOAP Server', function () {
       assert.ifError(err);
       client.GetLastTradePrice({ tickerSymbol: 'Promise Error' }, function (err, response, body) {
         assert.ok(err);
-        // what happens here (error and response ????)
-        // assert.strictEqual(err.response, response);
-        // assert.strictEqual(err.body, body);
+        assert.strictEqual(err.response, response);
+        assert.strictEqual(err.body, body);
         done();
       });
     });
@@ -340,9 +357,13 @@ describe('SOAP Server', function () {
     soap.createClient(test.baseUrl + '/stockquote?wsdl', function (err, client) {
       assert.ifError(err);
       client.IsValidPrice({ price: 50000 }, function (err, result) {
-        // node V3.x+ reports addresses as IPV6
-        var addressParts = lastReqAddress.split(':');
-        assert.equal(addressParts[(addressParts.length - 1)], '127.0.0.1');
+        // One of these should match, depending on the network configuration of the host
+        var localhostAddresses = [
+          '127.0.0.1',
+          '::ffff:127.0.0.1',
+          '::1'
+        ];
+        assert.notEqual(localhostAddresses.indexOf(lastReqAddress), -1);
         done();
       });
     });
@@ -440,9 +461,8 @@ describe('SOAP Server', function () {
       assert.ifError(err);
       client.GetLastTradePrice({ tickerSymbol: 'trigger error' }, function (err, response, body) {
         assert.ok(err);
-        // what happens here (error and response ????)
-        // assert.strictEqual(err.response, response);
-        // assert.strictEqual(err.body, body);
+        assert.strictEqual(err.response, response);
+        assert.strictEqual(err.body, body);
         done();
       });
     });
@@ -454,7 +474,7 @@ describe('SOAP Server', function () {
       client.GetLastTradePrice({ tickerSymbol: 'SOAP Fault v1.2' }, function (err, response, body) {
         assert.ok(err);
         var fault = err.root.Envelope.Body.Fault;
-        assert.equal(err.message, fault.faultcode + ': ' + fault.faultstring);
+        assert.equal(err.message, fault.Code.Value + ': ' + fault.Code.Subcode.Value + ': ' + fault.Reason.Text);
         assert.equal(fault.Code.Value, "soap:Sender");
         assert.equal(fault.Reason.Text, "Processing Error");
         // Verify namespace on elements set according to fault spec 1.2
@@ -493,7 +513,7 @@ describe('SOAP Server', function () {
         Fault: {
           Code: {
             Value: "soap:Sender",
-            Subcode: { value: "rpc:BadArguments" }
+            Subcode: { Value: "rpc:BadArguments" }
           },
           Reason: { Text: "Processing Error" }
         }

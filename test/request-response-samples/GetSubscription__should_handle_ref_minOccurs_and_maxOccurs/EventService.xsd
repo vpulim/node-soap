@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+  xmlns:EVT="http://ws.gematik.de/conn/EventService/v7.2"
+  targetNamespace="http://ws.gematik.de/conn/EventService/v7.2" elementFormDefault="qualified"
+  attributeFormDefault="unqualified" version="7.2.1">
+  <simpleType name="SubscriptionIDType">
+    <restriction base="string">
+      <maxLength value="64" />
+    </restriction>
+  </simpleType>
+  <element name="SubscriptionID" type="EVT:SubscriptionIDType"/>
+  <element name="Subscribe">
+    <complexType>
+      <sequence>
+        <element ref="EVT:Subscription" /> <!--Reference to Subscription without minOccurs or maxOccurs-->
+      </sequence>
+    </complexType>
+  </element>
+  <element name="GetSubscription">
+    <complexType>
+      <sequence>
+        <element ref="EVT:SubscriptionID" minOccurs="0" />
+      </sequence>
+      <attribute name="mandant-wide" type="boolean" use="optional" default="false" />
+    </complexType>
+  </element>
+  <element name="GetSubscriptionResponse">
+    <complexType>
+      <sequence>
+        <element name="Subscriptions">
+          <complexType>
+            <sequence>
+              <element ref="EVT:Subscription" minOccurs="0" maxOccurs="unbounded" /> <!--Reference to Subscription with minOccurs or maxOccurs-->
+            </sequence>
+          </complexType>
+        </element>
+      </sequence>
+    </complexType>
+  </element>
+  <complexType name="SubscriptionType">
+    <sequence>
+      <element ref="EVT:SubscriptionID" minOccurs="0" />
+      <element ref="EVT:TerminationTime" minOccurs="0" />
+    </sequence>
+  </complexType>
+  <element name="Subscription" type="EVT:SubscriptionType" />
+  <element name="TerminationTime" type="dateTime" />
+</schema>

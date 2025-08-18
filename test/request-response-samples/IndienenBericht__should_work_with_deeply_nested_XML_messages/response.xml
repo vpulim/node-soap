@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+   xmlns:v3="http://schemas.vecozo.nl/berichtuitwisseling/v3"
+   xmlns:messages="http://schemas.vecozo.nl/berichtuitwisseling/messages/v3">
+   <soapenv:Header />
+   <soapenv:Body>
+      <v3:IndienenBerichtResponse>
+         <v3:IndienenBerichtResult>
+            <messages:ConversatieId>12345</messages:ConversatieId>
+            <messages:TraceerId>56789</messages:TraceerId>
+         </v3:IndienenBerichtResult>
+      </v3:IndienenBerichtResponse>
+   </soapenv:Body>
+</soapenv:Envelope>
