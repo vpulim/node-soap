@@ -198,7 +198,7 @@ export class HttpClient implements IHttpClient {
         workstation: exoptions.workstation || '',
         domain: exoptions.domain || '',
       }, { httpAgent: exoptions.httpAgent,
-           httpsAgent: exoptions.httpsAgent
+           httpsAgent: exoptions.httpsAgent,
          });
       req = ntlmReq(options);
     } else {
