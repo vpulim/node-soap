@@ -167,13 +167,18 @@ describe('SOAP Server', function () {
       });
 
       client.GetLastTradePrice(clientArgs, function (err, result, raw, headers) {
-        assert.ifError(err);
-        assert.deepEqual(headers, {
-          header1: 'ONE',
-          header2: 'TWO',
-          header3: 'THREE',
-          header4: 'FOUR'
-        });
+        try {
+          assert.ifError(err);
+          assert.deepEqual(headers, {
+            header1: 'ONE',
+            header2: 'TWO',
+            header3: 'THREE',
+            header4: 'FOUR'
+          });
+        } catch (err) {
+          done(err);
+          throw err;
+        }
         done();
       });
     });
@@ -317,7 +322,7 @@ describe('SOAP Server', function () {
     });
   });
 
-  it('should return correct result when called without SOAPAction header', function(done) {
+  it('should return correct result when called without SOAPAction header', function (done) {
     soap.createClient(test.baseUrl + '/stockquote?wsdl', function (err, client) {
       assert.ifError(err);
       // this clears the SOAPAction header

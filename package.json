@@ -22,18 +22,16 @@
     "type": "git",
     "url": "https://github.com/vpulim/node-soap.git"
   },
-  "main": "./index.js",
+  "main": "./lib/soap.js",
   "types": "./lib/soap.d.ts",
   "directories": {
     "lib": "./lib",
     "test": "./test"
   },
   "scripts": {
-    "prepare": "npm run build",
     "build": "tsc -p .",
-    "clean": "rm -rf lib",
     "watch": "tsc -w -p .",
-    "lint": "tslint -p tsconfig.json",
+    "lint": "eslint .",
     "toc": "./node_modules/.bin/doctoc Readme.md --github --maxlevel 3",
     "cover": "OPENSSL_ENABLE_SHA1_SIGNATURES=1 nyc --extension=.ts --reporter=lcov --reporter=html --reporter=text mocha --no-parallel --timeout 30000 --exit test/*-test.js test/security/*.js",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js -v",
@@ -45,6 +43,7 @@
   ],
   "license": "MIT",
   "devDependencies": {
+    "@eslint/js": "^9.33.0",
     "@types/debug": "^4.1.12",
     "@types/formidable": "^3.4.5",
     "@types/lodash": "^4.17.20",
@@ -56,6 +55,7 @@
     "diff": "^8.0.2",
     "doctoc": "^2.2.1",
     "duplexer": "~0.1.2",
+    "eslint": "^9.33.0",
     "express": "^5.1.0",
     "finalhandler": "^2.1.0",
     "glob": "^11.0.1",
@@ -68,8 +68,8 @@
     "sinon": "^21.0.0",
     "source-map-support": "^0.5.21",
     "timekeeper": "^2.3.1",
-    "tslint": "^5.18.0",
-    "typedoc": "^0.23.10",
-    "typescript": "^4.7.4"
+    "typedoc": "^0.28.10",
+    "typescript": "^5.9.2",
+    "typescript-eslint": "^8.40.0"
   }
 }

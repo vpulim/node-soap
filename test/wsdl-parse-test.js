@@ -8,9 +8,9 @@ describe(__filename, function () {
   it('should parse recursive elements', function (done) {
     open_wsdl(path.resolve(__dirname, 'wsdl/recursive.wsdl'), function (err, def) {
       assert.equal(def.definitions.messages.operationRequest.parts['constraint[]'].expression,
-          def.definitions.messages.operationRequest.parts['constraint[]'].expression.expression);
+        def.definitions.messages.operationRequest.parts['constraint[]'].expression.expression);
       assert.equal(def.definitions.messages.operationRequest.parts['constraint[]'].expression,
-          def.definitions.messages.operationRequest.parts['constraint[]'].expression.expression['constraint[]'].expression);
+        def.definitions.messages.operationRequest.parts['constraint[]'].expression.expression['constraint[]'].expression);
       done();
     });
   });
@@ -18,17 +18,17 @@ describe(__filename, function () {
   it('should parse recursive wsdls', function (done) {
     open_wsdl(path.resolve(__dirname, 'wsdl/recursive/file.wsdl'), function (err, def) {
       // If we get here then we succeeded
-      done( err );
+      done(err);
     });
   });
 
-  it('should parse recursive wsdls keeping default options', function(done) {
+  it('should parse recursive wsdls keeping default options', function (done) {
     open_wsdl(path.resolve(__dirname, 'wsdl/recursive/file.wsdl'), function (err, def) {
       if (err) {
-        return done( err );
+        return done(err);
       }
 
-      def._includesWsdl.forEach(function(currentWsdl) {
+      def._includesWsdl.forEach(function (currentWsdl) {
         assert.deepEqual(def.options, currentWsdl.options);
       });
 
@@ -36,18 +36,18 @@ describe(__filename, function () {
     });
   });
 
-  it('should parse recursive wsdls keeping provided options', function(done) {
+  it('should parse recursive wsdls keeping provided options', function (done) {
     open_wsdl(path.resolve(__dirname, 'wsdl/recursive/file.wsdl'), {
       ignoredNamespaces: {
         namespaces: ['targetNamespace', 'typedNamespace'],
         override: true
       }
-    } , function (err, def) {
+    }, function (err, def) {
       if (err) {
-        return done( err );
+        return done(err);
       }
 
-      def._includesWsdl.forEach(function(currentWsdl, index) {
+      def._includesWsdl.forEach(function (currentWsdl, index) {
         assert.deepEqual(def.options, currentWsdl.options);
       });
 
@@ -57,10 +57,10 @@ describe(__filename, function () {
 
   it('should parse recursive wsdls with element references', function (done) {
     open_wsdl(path.resolve(__dirname, 'wsdl/recursive_with_ref.wsdl'), function (err, def) {
-        assert.ifError(err);
-        var desc = def.definitions.portTypes.CloudSignService.description(def.definitions);
-        assert.equal(desc.AddSignature.input.properties.property && desc.AddSignature.input.properties.property.value2, 'string');
-        done();
+      assert.ifError(err);
+      var desc = def.definitions.portTypes.CloudSignService.description(def.definitions);
+      assert.equal(desc.AddSignature.input.properties.property && desc.AddSignature.input.properties.property.value2, 'string');
+      done();
     });
   });
 
@@ -76,20 +76,20 @@ describe(__filename, function () {
   it('should parse complex wsdls', function (done) {
     open_wsdl(path.resolve(__dirname, 'wsdl/complex/registration-common.wsdl'), function (err, def) {
       if (err) {
-        return done( err );
+        return done(err);
       }
 
       if (null === def.findSchemaType('recipientAddress', 'http://test-soap.com/api/common/types')) {
-        return done( 'Unable to find "recipientAddress" complex type' );
+        return done('Unable to find "recipientAddress" complex type');
       }
       if (null === def.findSchemaType('commonAddress', 'http://test-soap.com/api/common/types')) {
-        return done( 'Unable to find "commonAddress" complex type' );
+        return done('Unable to find "commonAddress" complex type');
       }
       if (null === def.findSchemaType('companyAddress', 'http://test-soap.com/api/common/types')) {
-        return done( 'Unable to find "companyAddress" complex type' );
+        return done('Unable to find "companyAddress" complex type');
       }
       if (null === def.findSchemaObject('http://test-soap.com/api/registration/messages', 'registerUserRequest')) {
-        return done( 'Unable to find "registerUserRequest" schema object' );
+        return done('Unable to find "registerUserRequest" schema object');
       }
 
       var requestBody = {
@@ -112,11 +112,11 @@ describe(__filename, function () {
       }
 
       var requestAsXML = def.objectToDocumentXML(
-        'registerUserRequest', 
-        requestBody, 
+        'registerUserRequest',
+        requestBody,
         'msg',
         'http://test-soap.com/api/registration/messages',
-        'registerUserRequest' 
+        'registerUserRequest'
       );
 
       /*

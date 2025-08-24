@@ -125,7 +125,7 @@ export class WSSecurityCert implements ISecurity {
     this.signatureTransformations = Array.isArray(options.signatureTransformations) ? options.signatureTransformations
       : ['http://www.w3.org/2000/09/xmldsig#enveloped-signature', 'http://www.w3.org/2001/10/xml-exc-c14n#'];
 
-    this.signer.getKeyInfoContent = (key) => {
+    this.signer.getKeyInfoContent = () => {
       return `<wsse:SecurityTokenReference>` +
         `<wsse:Reference URI="#${this.x509Id}" ValueType="${oasisBaseUri}/oasis-200401-wss-x509-token-profile-1.0#X509v3"/>` +
         `</wsse:SecurityTokenReference>`;
@@ -189,7 +189,7 @@ export class WSSecurityCert implements ISecurity {
     resolvePlaceholderInReferences(this.signer.references, bodyXpath);
 
     if (!this.excludeReferencesFromSigning.some((ref) => ref === 'Body') && !(this.signer.references.filter((ref: { xpath: string; }) => (ref.xpath === bodyXpath)).length > 0)) {
-        this.signer.addReference({ xpath: bodyXpath, transforms: references, digestAlgorithm: this.signer.digestAlgorithm });
+      this.signer.addReference({ xpath: bodyXpath, transforms: references, digestAlgorithm: this.signer.digestAlgorithm });
     }
 
     for (const name of this.additionalReferences) {
