@@ -3,15 +3,12 @@
  * MIT Licensed
  */
 
-import debugBuilder from 'debug';
 import { Client } from './client';
 import * as _security from './security';
 import { Server, ServerType } from './server';
 import { IOptions, IServerOptions, IServices, IWSDLCache } from './types';
 import { wsdlCacheSingleton } from './utils';
 import { open_wsdl, WSDL } from './wsdl';
-
-const debug = debugBuilder('node-soap:soap');
 
 export const security = _security;
 export { Client } from './client';
