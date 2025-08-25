@@ -1,7 +1,7 @@
 'use strict';
 
 const fs = require('fs'),
-  soap = require('../lib/soap'),
+  soap = require('../lib/src/soap'),
   http = require('http'),
   assert = require('assert');
 
