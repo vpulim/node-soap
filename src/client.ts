@@ -280,7 +280,7 @@ export class Client extends EventEmitter {
         //eslint-disable-next-line @typescript-eslint/no-this-alias
         const _this = this;
         return (...args: any) => {
-          const result = soapHeader.apply([...args]);
+          const result = soapHeader.apply(null, [...args]);
 
           if (typeof result === 'object') {
             return _this.wsdl.objectToXML(result, name, namespace, xmlns, true);
