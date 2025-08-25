@@ -1,6 +1,6 @@
 'use strict';
 
-var Utils = require('../../lib/utils'),
+var Utils = require('../../lib/src/utils'),
 	assert = require('assert');
 
 describe('PasswordDigest', function () {
@@ -15,7 +15,7 @@ describe('PasswordDigest', function () {
 	});
 
 	it('should calculate a valid passworddigest ', function () {
-		
+
 		var result = Utils.passwordDigest(nonce, created, password);
 		assert.equal(result, expected);
 	});
