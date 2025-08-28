@@ -264,10 +264,10 @@ export class ElementElement extends Element {
           typeStorage[typeName] = elem;
 
           if (isMany) {
-            typeElement['maxOccurs'] = this.$maxOccurs
+            typeElement['maxOccurs'] = this.$maxOccurs;
           }
           if (Boolean(this.$minOccurs)) {
-            typeElement['minOccurs'] = this.$minOccurs
+            typeElement['minOccurs'] = this.$minOccurs;
           }
 
           const description = typeElement.description(definitions, xmlns);
