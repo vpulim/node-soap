@@ -694,8 +694,8 @@ You must specify all of the namespaces and namespace prefixes yourself.  The ele
    }})
  ```
 
-- Making `postProcess` either synchornous or asynchronous with a `Promise`:
-  - Syncronous (classic):
+- Making `postProcess` either synchronous or asynchronous with a `Promise`:
+  - Synchronous (classic):
     ```javascript
       // ...
       client.registerUser(requestBody, {
@@ -707,7 +707,7 @@ You must specify all of the namespaces and namespace prefixes yourself.  The ele
       }
       // ...
     ```
-  - Asyncronous (resolves promise on async invoke `postProcess`):
+  - Asynchronous (resolves promise on async invoke of `postProcess`):
     ```javascript
       // ...
       client.registerUser(requestBody, {
