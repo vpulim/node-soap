@@ -1864,7 +1864,7 @@ describe('Client posting complex body', () => {
 
       client.registerUser(requestBody, {
         postProcess: async (xml) => {
-          const testString = await new Promise(resolve => setTimeout(resolve("Jane"), 3000));
+          const testString = await new Promise(resolve => setTimeout(() => resolve("Jane"), 50));
 
           xml = xml.replace("John", testString)
           return xml;
