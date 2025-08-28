@@ -263,11 +263,11 @@ export class ElementElement extends Element {
           let elem: any = {};
           typeStorage[typeName] = elem;
 
-          if (isMany) {
-            typeElement['maxOccurs'] = this.$maxOccurs;
+          if (isMany && 'maxOccurs' in typeElement) {
+            typeElement.maxOccurs = this.$maxOccurs;
           }
-          if (Boolean(this.$minOccurs)) {
-            typeElement['minOccurs'] = this.$minOccurs;
+          if (Boolean(this.$minOccurs) && 'minOccurs' in typeElement) {
+            typeElement.minOccurs = this.$minOccurs;
           }
 
           const description = typeElement.description(definitions, xmlns);
