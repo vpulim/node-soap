@@ -1,11 +1,11 @@
-trim = require('../lib/wsdl/index.js').trim
+trim = require('../lib/src/wsdl/index.js').trim
 var assert = require('assert');
 
 it('should trim correctly', async () => {
     describe('removes whitespace', async () => {
         const input = ' \n <> \n  ';
         const expected = '<>';
-        
+
         verify(input, expected);
     })
 

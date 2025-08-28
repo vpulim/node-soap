@@ -7,7 +7,7 @@ var fs = require('fs'),
   assert = require('assert'),
   _ = require('lodash'),
   sinon = require('sinon'),
-  wsdl = require('../lib/wsdl');
+  wsdl = require('../lib/src/wsdl');
 
 [
   { suffix: '', options: {} },
