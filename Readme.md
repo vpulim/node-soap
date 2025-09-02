@@ -695,6 +695,32 @@ You must specify all of the namespaces and namespace prefixes yourself.  The ele
    }})
  ```
 
+- Making `postProcess` either synchronous or asynchronous with a `Promise`:
+  - Synchronous (classic):
+    ```javascript
+      // ...
+      client.registerUser(requestBody, {
+        postProcess: (xml) => {
+          const testString = "Jane"
+          xml = xml.replace("John", testString)
+          return xml;
+        }
+      }
+      // ...
+    ```
+  - Asynchronous (resolves promise on async invoke of `postProcess`):
+    ```javascript
+      // ...
+      client.registerUser(requestBody, {
+        postProcess: async (xml) => {
+          const testString = await new Promise(resolve => setTimeout(() => resolve("Jane"), 50));
+          xml = xml.replace("John", testString)
+          return xml;
+        }
+      }
+      // ...
+    ```
+
 #### Extra Headers (optional)
 
 Object properties define extra HTTP headers to be sent on the request.
