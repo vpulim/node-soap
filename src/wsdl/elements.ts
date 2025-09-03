@@ -382,7 +382,8 @@ export class SimpleTypeElement extends Element {
     'restriction',
   ]);
 
-  public description() {
+  //eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public description(definitions: DefinitionsElement) {
     for (const child of this.children) {
       if (child instanceof RestrictionElement) {
         return [this.$name, child.description()].filter(Boolean).join('|');
