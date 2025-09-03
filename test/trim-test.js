@@ -5,7 +5,7 @@ it('should trim correctly', async () => {
     describe('removes whitespace', async () => {
         const input = ' \n <> \n  ';
         const expected = '<>';
-        
+
         verify(input, expected);
     })
 

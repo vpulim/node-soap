@@ -10,7 +10,6 @@ jobs:
         with:
           node-version: lts/*
       - run: npm ci
+      - run: npm run build
       - run: npm run lint
       - run: npm run cover
-
-

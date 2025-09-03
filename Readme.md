@@ -67,8 +67,6 @@ This module lets you connect to web services using SOAP.  It also provides a ser
   - [Changing the tag formats to use self-closing (empty element) tags](#changing-the-tag-formats-to-use-self-closing-empty-element-tags)
 - [Handling "ignored" namespaces](#handling-ignored-namespaces)
 - [Handling "ignoreBaseNameSpaces" attribute](#handling-ignorebasenamespaces-attribute)
-- [soap-stub](#soap-stub)
-  - [Example](#example)
 - [Contributors](#contributors)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -1477,57 +1475,6 @@ var options = {
 ignoredNamespaces: true
 }
 ```
-
-## soap-stub
-
-Unit testing services that use soap clients can be very cumbersome.  In order to get
-around this you can use `soap-stub` in conjunction with `sinon` to stub soap with
-your clients.
-
-### Example
-
-```javascript
-// test-initialization-script.js
-var sinon = require('sinon');
-var soapStub = require('soap/soap-stub');
-
-var urlMyApplicationWillUseWithCreateClient = 'http://path-to-my-wsdl';
-var clientStub = {
-  SomeOperation: sinon.stub()
-};
-
-clientStub.SomeOperation.respondWithError = soapStub.createErroringStub({..error json...});
-clientStub.SomeOperation.respondWithSuccess = soapStub.createRespondingStub({..success json...});
-
-soapStub.registerClient('my client alias', urlMyApplicationWillUseWithCreateClient, clientStub);
-
-// test.js
-var soapStub = require('soap/soap-stub');
-
-describe('myService', function() {
-  var clientStub;
-  var myService;
-
-  beforeEach(function() {
-    clientStub = soapStub.getStub('my client alias');
-    soapStub.reset();
-    myService.init(clientStub);
-  });
-
-  describe('failures', function() {
-    beforeEach(function() {
-      clientStub.SomeOperation.respondWithError();
-    });
-
-    it('should handle error responses', function() {
-      myService.somethingThatCallsSomeOperation(function(err, response) {
-        // handle the error response.
-      });
-    });
-  });
-});
-```
-
 
 ## Contributors
 
