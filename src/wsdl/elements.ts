@@ -221,12 +221,18 @@ export class ElementElement extends Element {
 
     // Check minOccurs / maxOccurs attributes to see if this element is a list
     // These are default values for an element
+    let minOccurs = 1;
     let maxOccurs = 1;
 
     if (this.$maxOccurs === 'unbounded') {
       maxOccurs = Infinity;
     } else if (this.$maxOccurs) {
       maxOccurs = parseInt(this.$maxOccurs, 10);
+    }
+
+    if (this.$minOccurs) {
+      //eslint-disable-next-line @typescript-eslint/no-unused-vars
+      minOccurs = parseInt(this.$minOccurs, 10);
     }
 
     const isMany = maxOccurs > 1;
