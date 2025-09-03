@@ -78,8 +78,7 @@ export class WSDL {
       definition = stripBom(definition);
       fromFunc = this._fromXML;
     } else if (typeof definition === 'object') {
-      // TODO: what is this?
-      fromFunc = () => { }
+      fromFunc = this._fromServices;
     } else {
       throw new Error('WSDL constructor takes either an XML string or service definition');
     }
@@ -658,7 +657,7 @@ export class WSDL {
         const overrideKey = this.options.overrideElementKey[key];
         if (obj && obj[key]) {
           Object.defineProperty(obj, overrideKey,
-              Object.getOwnPropertyDescriptor(obj, key));
+            Object.getOwnPropertyDescriptor(obj, key));
           delete obj[key];
         }
       }
@@ -1326,6 +1325,11 @@ export class WSDL {
       elements: {},
     };
     this.xml = xml;
+  }
+
+  //eslint-disable-next-line @typescript-eslint/no-unused-vars
+  private _fromServices(services): void {
+
   }
 
   private _xmlnsMap(): string {
