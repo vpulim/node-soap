@@ -1,0 +1,42 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+                  xmlns:urn="urn:company-com:document:company:rfc:functions">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <urn:Z_STORE_TEMPLATE_GET_DATA.Response>
+         <ET_STORE_DATA>
+            <item>
+               <STORE_ID>1001</STORE_ID>
+               <COMPANY_CODE>C001</COMPANY_CODE>
+               <STORE_CUSTOMER_ID>CUST1234</STORE_CUSTOMER_ID>
+               <NAME1>Downtown Store</NAME1>
+               <POSTAL_CODE>12345</POSTAL_CODE>
+               <CITY>Metropolis</CITY>
+               <STREET>Main St 1</STREET>
+               <PHONE_NUMBER>+1-555-1111</PHONE_NUMBER>
+               <OPENING_DATE>2020-01-01</OPENING_DATE>
+               <COUNTRY_CODE>US</COUNTRY_CODE>
+            </item>
+            <item>
+               <STORE_ID>1002</STORE_ID>
+               <COMPANY_CODE>C002</COMPANY_CODE>
+               <STORE_CUSTOMER_ID>CUST5678</STORE_CUSTOMER_ID>
+               <NAME1>Uptown Store</NAME1>
+               <POSTAL_CODE>67890</POSTAL_CODE>
+               <CITY>Gotham</CITY>
+               <STREET>High St 99</STREET>
+               <PHONE_NUMBER>+1-555-2222</PHONE_NUMBER>
+               <OPENING_DATE>2021-06-15</OPENING_DATE>
+               <COUNTRY_CODE>US</COUNTRY_CODE>
+            </item>
+         </ET_STORE_DATA>
+         <ET_RETURN>
+            <item>
+               <TYPE>S</TYPE>
+               <ID>MSG001</ID>
+               <NUMBER>000</NUMBER>
+               <MESSAGE>Data retrieved successfully</MESSAGE>
+            </item>
+         </ET_RETURN>
+      </urn:Z_STORE_TEMPLATE_GET_DATA.Response>
+   </soapenv:Body>
+</soapenv:Envelope>
