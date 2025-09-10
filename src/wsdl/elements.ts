@@ -400,6 +400,7 @@ export class RestrictionElement extends Element {
     'all',
     'choice',
     'enumeration',
+    'group',
     'sequence',
     'attribute',
   ]);
@@ -416,7 +417,7 @@ export class RestrictionElement extends Element {
         $attributes[child.$name] = child.description(definitions);
         continue;
       }
-      if (!isFirstChild && (child instanceof SequenceElement || child instanceof ChoiceElement)) {
+      if (!isFirstChild && (child instanceof SequenceElement || child instanceof ChoiceElement || child instanceof GroupElement)) {
         isFirstChild = true;
         desc = child.description(definitions, xmlns);
       }
@@ -459,6 +460,7 @@ export class ExtensionElement extends Element {
   public readonly allowedChildren = buildAllowedChildren([
     'all',
     'choice',
+    'group',
     'sequence',
   ]);
   public $base: string;
@@ -466,7 +468,7 @@ export class ExtensionElement extends Element {
   public description(definitions: DefinitionsElement, xmlns?: IXmlNs) {
     let desc = {};
     for (const child of this.children) {
-      if (child instanceof SequenceElement || child instanceof ChoiceElement) {
+      if (child instanceof SequenceElement || child instanceof GroupElement || child instanceof ChoiceElement) {
         desc = child.description(definitions, xmlns);
       }
     }
@@ -499,6 +501,7 @@ export class ChoiceElement extends Element {
     'any',
     'choice',
     'element',
+    'group',
     'sequence',
   ]);
   public description(definitions: DefinitionsElement, xmlns: IXmlNs) {
@@ -510,6 +513,42 @@ export class ChoiceElement extends Element {
       }
     }
     return choice;
+  }
+}
+
+export class GroupElement extends Element {
+  public readonly allowedChildren = buildAllowedChildren([
+    'annotation',
+    'all',
+    'choice',
+    'sequence',
+  ]);
+
+  public $ref?: string;
+
+  // XSD allows min(/max)Occurs, but node-soap currently only pluralizes on element level
+  // public $minOccurs?: string;
+  // public $maxOccurs?: string;
+
+  public description(definitions?: DefinitionsElement, xmlns?: IXmlNs) {
+    if (this.$ref) {
+      const q = splitQName(this.$ref);
+      const ns = findNs(q.prefix, xmlns, this.xmlns, this.schemaXmlns, this.definitionsXmlns, definitions.xmlns);
+      const schema = ns && definitions.schemas[ns];
+      const defn = schema && (schema as any).groups && schema.groups[q.name];
+      if (defn) {
+        return defn.description(definitions, schema.xmlns);
+      }
+      debug(`Unable to resolve group ref: ${this.$ref}`);
+      return {};
+    }
+
+    for (const child of this.children) {
+      if (child instanceof SequenceElement || child instanceof ChoiceElement || child instanceof AllElement) {
+        return child.description(definitions, xmlns);
+      }
+    }
+    return {};
   }
 }
 
@@ -526,6 +565,7 @@ export class ComplexTypeElement extends Element {
     'annotation',
     'choice',
     'complexContent',
+    'group',
     'sequence',
     'simpleContent',
     'attribute',
@@ -543,6 +583,7 @@ export class ComplexTypeElement extends Element {
 
       if (!isFirstChild && (child instanceof ChoiceElement ||
         child instanceof SequenceElement ||
+        child instanceof GroupElement ||
         child instanceof AllElement ||
         child instanceof SimpleContentElement ||
         child instanceof ComplexContentElement)) {
@@ -594,6 +635,7 @@ export class SequenceElement extends Element {
     'any',
     'choice',
     'element',
+    'group',
     'sequence',
   ]);
   public description(definitions: DefinitionsElement, xmlns: IXmlNs) {
@@ -626,7 +668,7 @@ export class AttributeElement extends Element {
 
 export class AllElement extends Element {
   public readonly allowedChildren = buildAllowedChildren([
-    'choice',
+    'choice', // TODO: W3C doesn't allow this as a child to AllElement
     'element',
   ]);
   public description(definitions: DefinitionsElement, xmlns: IXmlNs) {
@@ -849,11 +891,13 @@ export class SchemaElement extends Element {
   public readonly allowedChildren = buildAllowedChildren([
     'complexType',
     'element',
+    'group',
     'import',
     'include',
     'simpleType',
   ]);
   public complexTypes: { [name: string]: ComplexTypeElement } = {};
+  public groups: { [name: string]: GroupElement } = {};
   public types: { [name: string]: SimpleTypeElement } = {};
   public elements: { [name: string]: ElementElement } = {};
   public includes: IInclude[] = [];
@@ -863,6 +907,7 @@ export class SchemaElement extends Element {
     assert(source instanceof SchemaElement);
 
     _.merge(this.complexTypes, source.complexTypes);
+    _.merge(this.groups, source.groups);
     _.merge(this.types, source.types);
     _.merge(this.elements, source.elements);
     _.merge(this.xmlns, source.xmlns);
@@ -891,6 +936,8 @@ export class SchemaElement extends Element {
       this.complexTypes[child.$name] = child;
     } else if (child instanceof ElementElement) {
       this.elements[child.$name] = child;
+    } else if (child instanceof GroupElement && child.$name) {
+      this.groups[child.$name] = child;
     } else if (child instanceof SimpleTypeElement) {
       this.types[child.$name] = child;
     }
@@ -1242,7 +1289,6 @@ export class ImportElement extends Element {
 const ElementTypeMap: {
   [k: string]: typeof Element;
 } = {
-  // group: [GroupElement, 'element group'],
   all: AllElement,
   any: AnyElement,
   binding: BindingElement,
@@ -1256,6 +1302,7 @@ const ElementTypeMap: {
   enumeration: EnumerationElement,
   extension: ExtensionElement,
   fault: Element,
+  group: GroupElement,
   import: ImportElement,
   include: IncludeElement,
   input: InputElement,
