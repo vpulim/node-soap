@@ -22,6 +22,7 @@ import * as elements from './elements';
 const debug = debugBuilder('node-soap');
 
 const XSI_URI = 'http://www.w3.org/2001/XMLSchema-instance';
+const ENV_URI = 'http://schemas.xmlsoap.org/soap/envelope/';
 
 export function trim(text) {
   return text.trim();
@@ -215,6 +216,7 @@ export class WSDL {
     };
     const stack: any[] = [{ name: null, object: root, schema: schema }];
     const xsiPrefixes: Map<any, any> = new Map();
+    let envPrefix: string = 'soap';
     const xmlns: any = {};
 
     const refs = {};
@@ -255,6 +257,9 @@ export class WSDL {
           if (value === XSI_URI) {
               xsiPrefixes.set(name, value);
           }
+          if (value === ENV_URI) {
+              envPrefix = name;
+          }
           continue;
         }
         hasNonXmlnsAttribute = true;
@@ -275,7 +280,7 @@ export class WSDL {
         obj[this.options.attributesKey] = elementAttributes;
       }
 
-      if (!objectName && (xmlns.soap || xmlns.soapenv || xmlns.S) && top.name === 'Body' && name !== 'Fault') {
+      if (!objectName && xmlns[envPrefix] && top.name === 'Body' && name !== 'Fault') {
         let message = this.definitions.messages[name];
         // Support RPC/literal messages where response body contains one element named
         // after the operation + 'Response'. See http://www.w3.org/TR/wsdl#_names

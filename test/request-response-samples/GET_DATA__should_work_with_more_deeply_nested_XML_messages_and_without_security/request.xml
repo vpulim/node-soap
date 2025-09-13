@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soapenv:Envelope
+   xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:ns0="urn:company-com:document:company:rfc:functions"
+   xmlns:p1="urn:example:SYSTEM:RETAIL:StoreData"
+   xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+   <soapenv:Body>
+      <xmlns:ns0:Z_STORE_TEMPLATE_GET_DATA xmlns:urn="urn:company-com:document:company:rfc:functions">
+         <IT_STORE_NUMBERS>
+            <item>
+               <STORE_ID>1001</STORE_ID>
+            </item>
+            <item>
+               <STORE_ID>1002</STORE_ID>
+            </item>
+         </IT_STORE_NUMBERS>
+         <IV_REQUESTER>REQUSER1</IV_REQUESTER>
+      </xmlns:ns0:Z_STORE_TEMPLATE_GET_DATA>
+   </soapenv:Body>
+</soapenv:Envelope>
