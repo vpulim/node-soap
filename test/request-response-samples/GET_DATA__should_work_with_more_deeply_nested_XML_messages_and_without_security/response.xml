@@ -1,7 +1,7 @@
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
-                  xmlns:urn="urn:company-com:document:company:rfc:functions">
-   <soapenv:Header/>
-   <soapenv:Body>
+<SOAP:Envelope xmlns:SOAP="http://schemas.xmlsoap.org/soap/envelope/"
+               xmlns:urn="urn:company-com:document:company:rfc:functions">
+   <SOAP:Header/>
+   <SOAP:Body>
       <urn:Z_STORE_TEMPLATE_GET_DATA.Response>
          <ET_STORE_DATA>
             <item>
@@ -38,5 +38,5 @@
             </item>
          </ET_RETURN>
       </urn:Z_STORE_TEMPLATE_GET_DATA.Response>
-   </soapenv:Body>
-</soapenv:Envelope>
+   </SOAP:Body>
+</SOAP:Envelope>
