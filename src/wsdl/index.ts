@@ -216,7 +216,7 @@ export class WSDL {
     };
     const stack: any[] = [{ name: null, object: root, schema: schema }];
     const xsiPrefixes: Map<any, any> = new Map();
-    let envPrefix: string = "soap";
+    let envPrefix: string = 'soap';
     const xmlns: any = {};
 
     const refs = {};
