@@ -1,3 +1,7 @@
+# 1.4.1 / 2025-09-15
+
+- [MAINTENANCE] Bump axios to 1.12.2 (#1350)
+
 # 1.4.0 / 2025-09-15
 
 - [FIX] Fix harcoded namespace prefixes in parsing (#1347)
