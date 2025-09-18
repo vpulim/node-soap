@@ -4,12 +4,12 @@
  */
 
 import * as assert from 'assert';
-import * as debugBuilder from 'debug';
+import { AxiosResponseHeaders, RawAxiosResponseHeaders } from 'axios';
+import { randomUUID } from 'crypto';
+import debugBuilder from 'debug';
 import { EventEmitter } from 'events';
-import getStream = require('get-stream');
-import { IncomingHttpHeaders } from 'http';
+import getStream from 'get-stream';
 import * as _ from 'lodash';
-import { v4 as uuidv4 } from 'uuid';
 import { HttpClient } from './http';
 import { IHeaders, IHttpClient, IMTOMAttachments, IOptions, ISecurity, SoapMethod, SoapMethodAsync } from './types';
 import { findPrefix } from './utils';
@@ -25,8 +25,7 @@ export interface ISoapError extends Error {
   body?;
 }
 
-// tslint:disable unified-signatures
-// tslint:disable-next-line:interface-name
+//eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export interface Client {
   emit(event: 'request', xml: string, eid: string): boolean;
   emit(event: 'message', message: string, eid: string): boolean;
@@ -43,6 +42,7 @@ export interface Client {
   on(event: 'response', listener: (body: any, response: any, eid: string) => void): this;
 }
 
+//eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export class Client extends EventEmitter {
   [method: string]: any;
   /** contains last full soap request for client logging */
@@ -51,7 +51,7 @@ export class Client extends EventEmitter {
   public lastEndpoint?: string;
   public lastRequestHeaders?: any;
   public lastResponse?: any;
-  public lastResponseHeaders?: IncomingHttpHeaders;
+  public lastResponseHeaders?: AxiosResponseHeaders | RawAxiosResponseHeaders;
   public lastElapsedTime?: number;
   public lastResponseAttachments: IMTOMAttachments;
 
@@ -119,13 +119,13 @@ export class Client extends EventEmitter {
     this.httpHeaders = null;
   }
 
-  public addBodyAttribute(bodyAttribute: any, name?: string, namespace?: string, xmlns?: string): void {
+  public addBodyAttribute(bodyAttribute: any): void {
     if (!this.bodyAttributes) {
       this.bodyAttributes = [];
     }
     if (typeof bodyAttribute === 'object') {
       let composition = '';
-      Object.getOwnPropertyNames(bodyAttribute).forEach((prop, idx, array) => {
+      Object.getOwnPropertyNames(bodyAttribute).forEach((prop) => {
         composition += ' ' + prop + '="' + bodyAttribute[prop] + '"';
       });
       bodyAttribute = composition;
@@ -177,6 +177,7 @@ export class Client extends EventEmitter {
     this.overridePromiseSuffix = options.overridePromiseSuffix || 'Async';
     this.wsdl.options.attributesKey = options.attributesKey || 'attributes';
     this.wsdl.options.envelopeKey = options.envelopeKey || 'soap';
+    this.wsdl.options.envelopeSoapUrl = options.envelopeSoapUrl || 'http://schemas.xmlsoap.org/soap/envelope/';
     this.wsdl.options.preserveWhitespace = !!options.preserveWhitespace;
     const igNs = options.ignoredNamespaces;
     if (igNs !== undefined && typeof igNs === 'object') {
@@ -187,6 +188,10 @@ export class Client extends EventEmitter {
           }
         }
       }
+    }
+
+    if (options.overrideElementKey !== undefined) {
+      this.wsdl.options.overrideElementKey = options.overrideElementKey;
     }
     if (options.overrideRootElement !== undefined) {
       this.wsdl.options.overrideRootElement = options.overrideRootElement;
@@ -275,12 +280,11 @@ export class Client extends EventEmitter {
     switch (typeof soapHeader) {
       case 'object':
         return this.wsdl.objectToXML(soapHeader, name, namespace, xmlns, true);
-      case 'function':
+      case 'function': {
+        //eslint-disable-next-line @typescript-eslint/no-this-alias
         const _this = this;
-        // arrow function does not support arguments variable
-        // tslint:disable-next-line
-        return function () {
-          const result = soapHeader.apply(null, arguments);
+        return (...args: any) => {
+          const result = soapHeader.apply(null, [...args]);
 
           if (typeof result === 'object') {
             return _this.wsdl.objectToXML(result, name, namespace, xmlns, true);
@@ -288,18 +292,20 @@ export class Client extends EventEmitter {
             return result;
           }
         };
+      }
       default:
         return soapHeader;
     }
   }
 
-  private _invoke(method: OperationElement, args, location: string, callback, options, extraHeaders) {
+  private async _invoke(method: OperationElement, args, location: string, callback, options, extraHeaders) {
     const name = method.$name;
     const input = method.input;
     const output = method.output;
     const style = method.style;
     const defs = this.wsdl.definitions;
     const envelopeKey = this.wsdl.options.envelopeKey;
+    const envelopeSoapUrl = this.wsdl.options.envelopeSoapUrl;
     const ns: string = defs.$targetNamespace;
     let encoding = '';
     let message = '';
@@ -309,7 +315,7 @@ export class Client extends EventEmitter {
     let headers: any = {
       'Content-Type': 'text/xml; charset=utf-8',
     };
-    let xmlnsSoap = 'xmlns:' + envelopeKey + '="http://schemas.xmlsoap.org/soap/envelope/"';
+    let xmlnsSoap = 'xmlns:' + envelopeKey + '="' + envelopeSoapUrl + '"';
 
     const finish = (obj, body, response) => {
       let result;
@@ -347,7 +353,7 @@ export class Client extends EventEmitter {
       }
       if (!result) {
         ['Response', 'Out', 'Output'].forEach((term) => {
-          if (obj.Body.hasOwnProperty(name + term)) {
+          if (Object.hasOwnProperty.call(obj.Body, name + term)) {
             return result = obj.Body[name + term];
           }
         });
@@ -407,7 +413,7 @@ export class Client extends EventEmitter {
     if ((style === 'rpc') && ((input.parts || input.name === 'element') || args === null)) {
       assert.ok(!style || style === 'rpc', 'invalid message definition for document style binding');
       message = this.wsdl.objectToRpcXML(name, args, alias, ns, (input.name !== 'element'));
-      (method.inputSoap === 'encoded') && (encoding = 'soap:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" ');
+      if (method.inputSoap === 'encoded') encoding = 'soap:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" ';
     } else {
       assert.ok(!style || style === 'document', 'invalid message definition for rpc style binding');
       // pass `input.$lookupType` if `input.$type` could not be found
@@ -453,14 +459,14 @@ export class Client extends EventEmitter {
     }
 
     if (options && options.postProcess) {
-      xml = options.postProcess(xml);
+        xml = await options.postProcess(xml);
     }
 
     this.lastMessage = message;
     this.lastRequest = xml;
     this.lastEndpoint = location;
 
-    const eid: string = options.exchangeId || uuidv4();
+    const eid: string = options.exchangeId || randomUUID();
 
     this.emit('message', message, eid);
     this.emit('request', xml, eid);
@@ -476,7 +482,7 @@ export class Client extends EventEmitter {
     const tryJSONparse = (body) => {
       try {
         return JSON.parse(body);
-      } catch (err) { return undefined; }
+      } catch { return undefined; }
     };
 
     if (this.streamAllowed && typeof this.httpClient.requestStream === 'function') {
@@ -491,7 +497,7 @@ export class Client extends EventEmitter {
         if (this.returnSaxStream || !err.response || !err.response.data) {
           callback(err, undefined, undefined, undefined, xml);
         } else {
-          err.response.data.on('close', (e) => {
+          err.response.data.on('close', () => {
             callback(err, undefined, undefined, undefined, xml);
           });
           err.response.data.on('data', (e) => {

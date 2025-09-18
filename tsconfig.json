@@ -4,14 +4,14 @@
     "target": "es3",
     "module": "commonjs",
     "outDir": "lib",
+    "rootDir": "src",
     "sourceMap": true,
     "declaration": true,
-    "stripInternal": true
+    "stripInternal": true,
+    "skipLibCheck": true
   },
-  "include": [
-    "src/**/*"
-  ],
+  "include": ["src"],
   "exclude": [
-    "node_modules"
+    "node_modules",
   ]
 }

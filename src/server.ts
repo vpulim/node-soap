@@ -3,25 +3,13 @@
  * MIT Licensed
  */
 
-import { EventEmitter } from "events";
-import * as http from "http";
-import * as url from "url";
-import {
-  IOneWayOptions,
-  ISecurity,
-  IServerOptions,
-  IServices,
-  ISoapFault,
-  ISoapServiceMethod,
-} from "./types";
-import { findPrefix } from "./utils";
-import { WSDL } from "./wsdl";
-import { BindingElement, IPort } from "./wsdl/elements";
-
-let zlib;
-try {
-  zlib = require("zlib");
-} catch (error) {}
+import { EventEmitter } from 'events';
+import * as http from 'http';
+import * as url from 'url';
+import { IOneWayOptions, IServerOptions, IServices, ISoapFault, ISoapServiceMethod } from './types';
+import { WSDL } from './wsdl';
+import { BindingElement, IPort } from './wsdl/elements';
+import zlib from "zlib"
 
 interface IExpressApp {
   route;
@@ -61,8 +49,7 @@ function getDateString(d) {
   );
 }
 
-// tslint:disable unified-signatures
-// tslint:disable-next-line:interface-name
+//eslint-disable-next-line  @typescript-eslint/no-unsafe-declaration-merging
 export interface Server {
   emit(event: "request", request: any, methodName: string): boolean;
 
@@ -99,6 +86,7 @@ interface IExecuteMethodOptions {
   style?: "document" | "rpc";
 }
 
+//eslint-disable-next-line  @typescript-eslint/no-unsafe-declaration-merging
 export class Server extends EventEmitter {
   public path: string | RegExp;
   public services: IServices;
@@ -235,12 +223,11 @@ export class Server extends EventEmitter {
     switch (typeof soapHeader) {
       case "object":
         return this.wsdl.objectToXML(soapHeader, name, namespace, xmlns, true);
-      case "function":
+      case 'function': {
+        //eslint-disable-next-line @typescript-eslint/no-this-alias
         const _this = this;
-        // arrow function does not support arguments variable
-        // tslint:disable-next-line
-        return function () {
-          const result = soapHeader.apply(null, arguments);
+        return (...args: any) => {
+          const result = soapHeader.apply(null, [...args]);
 
           if (typeof result === "object") {
             return _this.wsdl.objectToXML(result, name, namespace, xmlns, true);
@@ -248,6 +235,7 @@ export class Server extends EventEmitter {
             return result;
           }
         };
+      }
       default:
         return soapHeader;
     }
@@ -299,7 +287,6 @@ export class Server extends EventEmitter {
 
   private _requestListener(req: Request, res: Response) {
     const reqParse = url.parse(req.url);
-    const reqPath = reqParse.pathname;
     const reqQuery = reqParse.search;
 
     if (typeof this.log === "function") {
@@ -349,11 +336,13 @@ export class Server extends EventEmitter {
   }
 
   private _getSoapAction(req: Request) {
-    if (typeof req.headers.soapaction === "undefined") {
+    if (typeof req.headers.soapaction === 'undefined') {
       return;
     }
     const soapAction: string = req.headers.soapaction as string;
-    return soapAction.indexOf('"') === 0 ? soapAction.slice(1, -1) : soapAction;
+    return (soapAction.indexOf('"') === 0)
+      ? soapAction.slice(1, -1)
+      : soapAction;
   }
 
   private _process(
@@ -651,8 +640,8 @@ export class Server extends EventEmitter {
 
     try {
       method = this.services[serviceName][portName][methodName];
-    } catch (error) {
-      return callback(this._envelope("", headers, includeTimestamp));
+    } catch {
+      return callback(this._envelope('', headers, includeTimestamp));
     }
 
     let handled = false;
@@ -763,10 +752,7 @@ export class Server extends EventEmitter {
   }
 
   private _envelope(body, headers, includeTimestamp) {
-    const defs = this.wsdl.definitions;
-    const ns = defs.$targetNamespace;
-    const encoding = "";
-    const alias = findPrefix(defs.xmlns, ns);
+    const encoding = '';
 
     const envelopeDefinition = this.wsdl.options.forceSoap12Headers
       ? "http://www.w3.org/2003/05/soap-envelope"
