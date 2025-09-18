@@ -1,0 +1,18 @@
+{
+  "ET_ALL_STORES": {
+    "item": [
+      { "STORE_ID": "1001" },
+      { "STORE_ID": "1002" }
+    ]
+  },
+  "ET_RETURN": {
+    "item": [
+      {
+        "TYPE": "S",
+        "ID": "MSG001",
+        "NUMBER": "000",
+        "MESSAGE": "Request processed successfully"
+      }
+    ]
+  }
+}
