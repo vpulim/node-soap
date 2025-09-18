@@ -7,6 +7,7 @@ import { EventEmitter } from 'events';
 import * as http from 'http';
 import * as url from 'url';
 import { IOneWayOptions, IServerOptions, IServices, ISoapFault, ISoapServiceMethod } from './types';
+import { findPrefix } from './utils';
 import { WSDL } from './wsdl';
 import { BindingElement, IPort } from './wsdl/elements';
 import zlib from "zlib"
@@ -228,6 +229,7 @@ export class Server extends EventEmitter {
 
   private _requestListener(req: Request, res: Response) {
     const reqParse = url.parse(req.url);
+    const reqPath = reqParse.pathname;
     const reqQuery = reqParse.search;
 
     if (typeof this.log === 'function') {
@@ -589,6 +591,8 @@ export class Server extends EventEmitter {
   }
 
   private _envelope(body, headers, includeTimestamp) {
+    const defs = this.wsdl.definitions;
+    const ns = defs.$targetNamespace;
     const encoding = '';
     const alias = findPrefix(defs.xmlns, ns);
     const envelopeKey = this.wsdl.options.envelopeKey;
