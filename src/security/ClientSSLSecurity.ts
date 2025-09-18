@@ -70,7 +70,7 @@ export class ClientSSLSecurity implements ISecurity {
     options.ca = this.ca;
     _.merge(options, this.defaults);
 
-    if (!!options.forever) {
+    if (options.forever) {
       if (!this.agent) {
         options.keepAlive = true;
 

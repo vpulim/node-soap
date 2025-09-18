@@ -114,8 +114,8 @@ export class Element {
   }
 
   public deleteFixedAttrs() {
-    this.children && this.children.length === 0 && delete this.children;
-    this.xmlns && Object.keys(this.xmlns).length === 0 && delete this.xmlns;
+    if (this.children && this.children.length === 0) delete this.children;
+    if (this.xmlns && Object.keys(this.xmlns).length === 0) delete this.xmlns;
     delete this.nsName;
     delete this.prefix;
     delete this.name;
@@ -160,6 +160,7 @@ export class Element {
     }
   }
 
+  //eslint-disable-next-line @typescript-eslint/no-unused-vars
   public addChild(child: Element) {
     return;
   }
@@ -168,6 +169,7 @@ export class Element {
     throw new Error('Found unexpected element (' + name + ') inside ' + this.nsName);
   }
 
+  //eslint-disable-next-line @typescript-eslint/no-unused-vars
   public description(definitions?: DefinitionsElement, xmlns?: IXmlNs): any {
     return this.$name || this.name;
   }
@@ -224,11 +226,12 @@ export class ElementElement extends Element {
 
     if (this.$maxOccurs === 'unbounded') {
       maxOccurs = Infinity;
-    } else if (Boolean(this.$maxOccurs)) {
+    } else if (this.$maxOccurs) {
       maxOccurs = parseInt(this.$maxOccurs, 10);
     }
 
-    if (Boolean(this.$minOccurs)) {
+    if (this.$minOccurs) {
+      //eslint-disable-next-line @typescript-eslint/no-unused-vars
       minOccurs = parseInt(this.$minOccurs, 10);
     }
 
@@ -262,6 +265,13 @@ export class ElementElement extends Element {
 
           let elem: any = {};
           typeStorage[typeName] = elem;
+
+          if (isMany && 'maxOccurs' in typeElement) {
+            typeElement.maxOccurs = this.$maxOccurs;
+          }
+          if (Boolean(this.$minOccurs) && 'minOccurs' in typeElement) {
+            typeElement.minOccurs = this.$minOccurs;
+          }
 
           const description = typeElement.description(definitions, xmlns);
           if (typeof description === 'string') {
@@ -378,6 +388,7 @@ export class SimpleTypeElement extends Element {
     'restriction',
   ]);
 
+  //eslint-disable-next-line @typescript-eslint/no-unused-vars
   public description(definitions: DefinitionsElement) {
     for (const child of this.children) {
       if (child instanceof RestrictionElement) {
@@ -609,6 +620,7 @@ export class AttributeElement extends Element {
   public $type?: string;
   public $use?: string;
 
+  //eslint-disable-next-line @typescript-eslint/no-unused-vars
   public description(definitions: DefinitionsElement) {
     return {
       type: this.$type,
@@ -734,7 +746,8 @@ export class MessageElement extends Element {
       // rpc encoding
       this.parts = {};
       delete this.element;
-      for (let i = 0; part = this.children[i]; i++) {
+      for (let i = 0; i < this.children.length; i++) {
+        const part = this.children[i] as any;
         if (part.name === 'documentation') {
           // <wsdl:documentation can be present under <wsdl:message>
           continue;
@@ -809,7 +822,7 @@ export class MessageElement extends Element {
     let resolvedType = '^';
     const excluded = this.ignoredNamespaces.concat('xs'); // do not process $type values wich start with
 
-    if (element.hasOwnProperty('$type') && typeof element.$type === 'string') {
+    if (Object.hasOwnProperty.call(element, '$type') && typeof element.$type === 'string') {
       if (excluded.indexOf(element.$type.split(':')[0]) === -1) {
         resolvedType += ('_' + element.$type + '#' + element.$name);
       }
@@ -862,7 +875,7 @@ export class SchemaElement extends Element {
 
     // Merge attributes from source without overwriting our's
     _.merge(this, _.pickBy(source, (value, key) => {
-      return key.startsWith('$') && !this.hasOwnProperty(key);
+      return key.startsWith('$') && !Object.hasOwnProperty.call(this, key);
     }));
 
     return this;
@@ -904,17 +917,17 @@ export class TypesElement extends Element {
     assert(child instanceof SchemaElement);
 
     const childInclude = child.includes.find((e: object) => {
-      return e.hasOwnProperty('namespace');
+      return Object.hasOwnProperty.call(e, 'namespace');
     });
     const childIncludeNs: string = (
       (typeof childInclude !== 'undefined' &&
-        childInclude.hasOwnProperty('namespace') &&
+        Object.hasOwnProperty.call(childInclude, 'namespace') &&
         child instanceof SchemaElement) ?
         childInclude.namespace :
         undefined);
     const targetNamespace = child.$targetNamespace || child.includes[0]?.namespace || childIncludeNs;
 
-    if (!this.schemas.hasOwnProperty(targetNamespace)) {
+    if (!Object.hasOwnProperty.call(this.schemas, targetNamespace)) {
       this.schemas[targetNamespace] = child;
     } else {
       if (targetNamespace === child.$targetNamespace) {
@@ -953,7 +966,8 @@ export class OperationElement extends Element {
 
   public postProcess(definitions: DefinitionsElement, tag: string) {
     const children = this.children;
-    for (let i = 0, child; child = children[i]; i++) {
+    for (let i = 0; i < children.length; i++) {
+      const child = children[i] as any
       if (child.name !== 'input' && child.name !== 'output') {
         continue;
       }
@@ -1002,7 +1016,8 @@ export class PortTypeElement extends Element {
     if (typeof children === 'undefined') {
       return;
     }
-    for (let i = 0, child; child = children[i]; i++) {
+    for (let i = 0; i < children.length; i++) {
+      const child = children[i] as any
       if (child.name !== 'operation') {
         continue;
       }
@@ -1063,13 +1078,14 @@ export class BindingElement extends Element {
       portType.postProcess(definitions);
       this.methods = portType.methods;
 
-      for (let i = 0, child; child = children[i]; i++) {
+      for (let i = 0; i < children.length; i++) {
+        const child = children[i] as any
         if (child.name !== 'operation') {
           continue;
         }
         child.postProcess(definitions, 'binding');
         children.splice(i--, 1);
-        child.style || (child.style = style);
+        if (!child.style) child.style = style;
         const method = this.methods[child.$name];
 
         if (method) {
@@ -1077,8 +1093,8 @@ export class BindingElement extends Element {
           method.soapAction = child.soapAction;
           method.inputSoap = child.input || null;
           method.outputSoap = child.output || null;
-          method.inputSoap && method.inputSoap.deleteFixedAttrs();
-          method.outputSoap && method.outputSoap.deleteFixedAttrs();
+          if (method.inputSoap) method.inputSoap.deleteFixedAttrs();
+          if (method.outputSoap) method.outputSoap.deleteFixedAttrs();
         }
       }
     }
@@ -1127,7 +1143,8 @@ export class ServiceElement extends Element {
     const children = this.children;
     const bindings = definitions.bindings;
     if (children && children.length > 0) {
-      for (let i = 0, child; child = children[i]; i++) {
+      for (let i = 0; i < children.length; i++) {
+        const child = children[i] as any;
         if (child.name !== 'port') {
           continue;
         }
@@ -1209,7 +1226,6 @@ export class DefinitionsElement extends Element {
       }
     } else if (child instanceof ServiceElement) {
       this.services[child.$name] = child;
-    } else if (child instanceof DocumentationElement) {
     }
     this.children.pop();
   }

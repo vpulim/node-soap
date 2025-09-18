@@ -9,13 +9,13 @@ import { randomUUID } from 'crypto';
 import debugBuilder from 'debug';
 import { ReadStream } from 'fs';
 import * as url from 'url';
-import MIMEType = require('whatwg-mimetype');
+import MIMEType from 'whatwg-mimetype';
 import { gzipSync } from 'zlib';
 import { IExOptions, IHeaders, IHttpClient, IOptions } from './types';
 import { parseMTOMResp } from './utils';
 
 const debug = debugBuilder('node-soap');
-const VERSION = require('../package.json').version;
+import { version } from '../package.json';
 
 export interface IAttachment {
   name: string;
@@ -57,7 +57,7 @@ export class HttpClient implements IHttpClient {
     const host = curl.hostname;
     const port = parseInt(curl.port, 10);
     const headers: IHeaders = {
-      'User-Agent': 'node-soap/' + VERSION,
+      'User-Agent': 'node-soap/' + version,
       'Accept': 'text/html,application/xhtml+xml,application/xml,text/xml;q=0.9,*/*;q=0.8',
       'Accept-Encoding': 'none',
       'Accept-Charset': 'utf-8',
@@ -130,9 +130,8 @@ export class HttpClient implements IHttpClient {
         options.data.push(
           Buffer.from('\r\n'),
           Buffer.from(part.body),
-          Buffer.from(`\r\n--${boundary}${
-            multipartCount === multipart.length - 1 ? '--' : ''
-          }\r\n`),
+          Buffer.from(`\r\n--${boundary}${multipartCount === multipart.length - 1 ? '--' : ''
+            }\r\n`),
         );
         multipartCount++;
       });
@@ -187,7 +186,6 @@ export class HttpClient implements IHttpClient {
     callback: (error: any, res?: any, body?: any) => any,
     exheaders?: IHeaders,
     exoptions?: IExOptions,
-    caller?,
   ) {
     const options = this.buildRequest(rurl, data, exheaders, exoptions);
     let req: req.AxiosPromise;
@@ -208,6 +206,7 @@ export class HttpClient implements IHttpClient {
       }
       req = this._request(options);
     }
+    //eslint-disable-next-line @typescript-eslint/no-this-alias
     const _this = this;
     req.then((res) => {
 
@@ -252,7 +251,7 @@ export class HttpClient implements IHttpClient {
     return req;
   }
 
-  public requestStream(rurl: string, data: any, exheaders?: IHeaders, exoptions?: IExOptions, caller?): req.AxiosPromise<ReadStream> {
+  public requestStream(rurl: string, data: any, exheaders?: IHeaders, exoptions?: IExOptions): req.AxiosPromise<ReadStream> {
     const options = this.buildRequest(rurl, data, exheaders, exoptions);
     options.responseType = 'stream';
     const req = this._request(options).then((res) => {

@@ -9,8 +9,15 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "weekly"
+    ignore:
+      - dependency-name: "@types/node"
+      - dependency-name: "typedoc"
+    cooldown:
+      default-days: 14
 
   - package-ecosystem: "github-actions" # See documentation for possible values
     directory: "/" # Location of package manifests
     schedule:
       interval: "weekly"
+    cooldown:
+      default-days: 14

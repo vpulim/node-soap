@@ -1,0 +1,24 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+                  xmlns:urn="urn:company-com:document:company:rfc:functions">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <urn:Z_STORE_TEMPLATE_GET_ALL.Response>
+         <ET_ALL_STORES>
+            <item>
+               <STORE_ID>1001</STORE_ID>
+            </item>
+            <item>
+               <STORE_ID>1002</STORE_ID>
+            </item>
+         </ET_ALL_STORES>
+         <ET_RETURN>
+            <item>
+               <TYPE>S</TYPE>
+               <ID>MSG001</ID>
+               <NUMBER>000</NUMBER>
+               <MESSAGE>Request processed successfully</MESSAGE>
+            </item>
+         </ET_RETURN>
+      </urn:Z_STORE_TEMPLATE_GET_ALL.Response>
+   </soapenv:Body>
+</soapenv:Envelope>

@@ -106,7 +106,7 @@ export class WSSecurityCertWithToken implements ISecurity {
       : ['http://www.w3.org/2000/09/xmldsig#enveloped-signature', 'http://www.w3.org/2001/10/xml-exc-c14n#'];
 
     this.signer.keyInfoProvider = {};
-    this.signer.getKeyInfo = (key) => {
+    this.signer.getKeyInfo = () => {
       return `<wsse:SecurityTokenReference>` +
         `<wsse:Reference URI="#${this.x509Id}" ValueType="${oasisBaseUri}/oasis-200401-wss-x509-token-profile-1.0#X509v3"/>` +
         `</wsse:SecurityTokenReference>`;

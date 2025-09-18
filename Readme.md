@@ -10,7 +10,7 @@ This module lets you connect to web services using SOAP.  It also provides a ser
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [Features:](#features)
+- [Features](#features)
 - [Install](#install)
 - [Support](#support)
 - [Module](#module)
@@ -62,17 +62,16 @@ This module lets you connect to web services using SOAP.  It also provides a ser
   - [Overriding imports relative paths](#overriding-imports-relative-paths)
   - [Overriding import locations](#overriding-import-locations)
   - [Specifying the exact namespace definition of the root element](#specifying-the-exact-namespace-definition-of-the-root-element)
+  - [Overriding element key specification in XML](#overriding-element-key-specification-in-xml)
   - [Custom Deserializer](#custom-deserializer)
   - [Changing the tag formats to use self-closing (empty element) tags](#changing-the-tag-formats-to-use-self-closing-empty-element-tags)
 - [Handling "ignored" namespaces](#handling-ignored-namespaces)
 - [Handling "ignoreBaseNameSpaces" attribute](#handling-ignorebasenamespaces-attribute)
-- [soap-stub](#soap-stub)
-  - [Example](#example)
 - [Contributors](#contributors)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## Features:
+## Features
 
 * Very simple API
 * Handles both RPC and Document schema types
@@ -693,6 +692,32 @@ You must specify all of the namespaces and namespace prefixes yourself.  The ele
      return _xml.replace('text', 'newtext');
    }})
  ```
+
+- Making `postProcess` either synchronous or asynchronous with a `Promise`:
+  - Synchronous (classic):
+    ```javascript
+      // ...
+      client.registerUser(requestBody, {
+        postProcess: (xml) => {
+          const testString = "Jane"
+          xml = xml.replace("John", testString)
+          return xml;
+        }
+      }
+      // ...
+    ```
+  - Asynchronous (resolves promise on async invoke of `postProcess`):
+    ```javascript
+      // ...
+      client.registerUser(requestBody, {
+        postProcess: async (xml) => {
+          const testString = await new Promise(resolve => setTimeout(() => resolve("Jane"), 50));
+          xml = xml.replace("John", testString)
+          return xml;
+        }
+      }
+      // ...
+    ```
 
 #### Extra Headers (optional)
 
@@ -1334,6 +1359,24 @@ var wsdlOptions = {
 
 To see it in practice, have a look at the sample files in: [test/request-response-samples/addPets__force_namespaces](https://github.com/vpulim/node-soap/tree/master/test/request-response-samples/addPets__force_namespaces)
 
+### Overriding element key specification in XML
+
+In very rare cases ([external implementation isn't matching exactly the WSDL spec?](https://github.com/vpulim/node-soap/pull/1189)),
+you may want to override element XML keys in requests and/or responses.
+
+You can specify the key definitions by setting the `overrideElementKey` key in the `wsdlOptions` like so:
+```javascript
+var wsdlOptions = {
+  overrideElementKey: {
+    Nom: 'Name',
+    Commande: 'Order',
+    SillyResponse: 'DummyResponse'
+  };
+};
+```
+
+Test sample files covering this are in [test/request-response-samples/Dummy__ref_element_should_have_correct_namespace_with_overrideElementKey](https://github.com/vpulim/node-soap/tree/master/test/request-response-samples/Dummy__ref_element_should_have_correct_namespace_with_overrideElementKey)
+
 ### Custom Deserializer
 
 Sometimes it's useful to handle deserialization in your code instead of letting node-soap do it.
@@ -1432,57 +1475,6 @@ var options = {
 ignoredNamespaces: true
 }
 ```
-
-## soap-stub
-
-Unit testing services that use soap clients can be very cumbersome.  In order to get
-around this you can use `soap-stub` in conjunction with `sinon` to stub soap with
-your clients.
-
-### Example
-
-```javascript
-// test-initialization-script.js
-var sinon = require('sinon');
-var soapStub = require('soap/soap-stub');
-
-var urlMyApplicationWillUseWithCreateClient = 'http://path-to-my-wsdl';
-var clientStub = {
-  SomeOperation: sinon.stub()
-};
-
-clientStub.SomeOperation.respondWithError = soapStub.createErroringStub({..error json...});
-clientStub.SomeOperation.respondWithSuccess = soapStub.createRespondingStub({..success json...});
-
-soapStub.registerClient('my client alias', urlMyApplicationWillUseWithCreateClient, clientStub);
-
-// test.js
-var soapStub = require('soap/soap-stub');
-
-describe('myService', function() {
-  var clientStub;
-  var myService;
-
-  beforeEach(function() {
-    clientStub = soapStub.getStub('my client alias');
-    soapStub.reset();
-    myService.init(clientStub);
-  });
-
-  describe('failures', function() {
-    beforeEach(function() {
-      clientStub.SomeOperation.respondWithError();
-    });
-
-    it('should handle error responses', function() {
-      myService.somethingThatCallsSomeOperation(function(err, response) {
-        // handle the error response.
-      });
-    });
-  });
-});
-```
-
 
 ## Contributors
 

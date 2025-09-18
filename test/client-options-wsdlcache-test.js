@@ -3,8 +3,8 @@ var soap = require('..'),
   assert = require('assert'),
   sinon = require('sinon'),
   utils = require('../lib/utils'),
-  wsdl  = require("../lib/wsdl");
-describe('SOAP Client - WSDL Cache', function() {
+  wsdl = require("../lib/wsdl");
+describe('SOAP Client - WSDL Cache', function () {
   var sandbox = sinon.createSandbox();
   var wsdlUri = __dirname + '/wsdl/Dummy.wsdl';
   beforeEach(function () {
@@ -14,23 +14,23 @@ describe('SOAP Client - WSDL Cache', function() {
     sandbox.restore();
   });
 
-  it('should use default cache if not provided', function(done) {
+  it('should use default cache if not provided', function (done) {
     // ensure cache is empty to prevent impacts to this case
     // if other test already loaded this WSDL
     utils.wsdlCacheSingleton.clear();
 
     // cache miss
-    soap.createClient(wsdlUri, {}, function(err, clientFirstCall) {
+    soap.createClient(wsdlUri, {}, function (err, clientFirstCall) {
       if (err) return done(err);
       assert.strictEqual(wsdl.open_wsdl.callCount, 1);
 
       // hits cache
-      soap.createClient(wsdlUri, {}, function(err, clientSecondCall) {
+      soap.createClient(wsdlUri, {}, function (err, clientSecondCall) {
         if (err) return done(err);
         assert.strictEqual(wsdl.open_wsdl.callCount, 1);
 
         // disabled cache
-        soap.createClient(wsdlUri, {disableCache: true}, function(err, clientSecondCall) {
+        soap.createClient(wsdlUri, { disableCache: true }, function (err, clientSecondCall) {
           if (err) return done(err);
           assert.strictEqual(wsdl.open_wsdl.callCount, 2);
           done();
@@ -39,12 +39,12 @@ describe('SOAP Client - WSDL Cache', function() {
     });
   });
 
-  it('should use the provided WSDL cache', function(done) {
+  it('should use the provided WSDL cache', function (done) {
     /** @type {IWSDLCache} */
     var dummyCache = {
-      has: function () {},
-      get: function () {},
-      set: function () {},
+      has: function () { },
+      get: function () { },
+      set: function () { },
     };
     sandbox.stub(dummyCache, 'has');
     sandbox.stub(dummyCache, 'get');
@@ -53,7 +53,7 @@ describe('SOAP Client - WSDL Cache', function() {
     var options = {
       wsdlCache: dummyCache,
     };
-    soap.createClient(wsdlUri, options, function(err, clientFirstCall) {
+    soap.createClient(wsdlUri, options, function (err, clientFirstCall) {
       assert.strictEqual(dummyCache.has.callCount, 1);
       assert.strictEqual(dummyCache.get.callCount, 0);
       assert.strictEqual(dummyCache.set.callCount, 1);
@@ -71,7 +71,7 @@ describe('SOAP Client - WSDL Cache', function() {
       dummyCache.has.returns(true);
       dummyCache.get.returns(cachedWSDL);
 
-      soap.createClient(wsdlUri, options, function(err, clientSecondCall) {
+      soap.createClient(wsdlUri, options, function (err, clientSecondCall) {
         // hits cache
         assert.strictEqual(wsdl.open_wsdl.callCount, 0);
         assert.strictEqual(dummyCache.has.callCount, 1);
