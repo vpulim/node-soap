@@ -29,30 +29,26 @@ it('should allow customization of httpClient and the wsdl file download should p
     req.onSocket(this.proxyStream);
   };
 
-  //Create a duplex stream 
+  //Create a duplex stream
 
   var httpReqStream = new stream.PassThrough();
   var httpResStream = new stream.PassThrough();
   var socketStream = duplexer(httpReqStream, httpResStream);
 
   // Node 4.x requires cork/uncork
-  socketStream.cork = function () {
-  };
+  socketStream.cork = function () {};
 
-  socketStream.uncork = function () {
-  };
+  socketStream.uncork = function () {};
 
-  socketStream.destroy = function () {
-  };
+  socketStream.destroy = function () {};
 
   // axios calls this
-  socketStream.setKeepAlive = function () {
-  };
+  socketStream.setKeepAlive = function () {};
 
-  //Custom httpClient  
+  //Custom httpClient
   class MyHttpClient extends httpClient {
     constructor(options, socket) {
-      super(options)
+      super(options);
       this.agent = new CustomAgent(options, socket);
     }
   }
@@ -63,20 +59,23 @@ it('should allow customization of httpClient and the wsdl file download should p
     //Specify agent to use
     options.httpAgent = this.agent;
     var headers = options.headers;
-    var req = self._request(options).then(function (res) {
-      res.data = self.handleResponse(req, res, res.data);
-      callback(null, res, res.data);
-      if (headers.Connection !== 'keep-alive') {
-        res.request.end(data);
-      }
-    }, (err) => {
-      return callback(err);
-    });
+    var req = self._request(options).then(
+      function (res) {
+        res.data = self.handleResponse(req, res, res.data);
+        callback(null, res, res.data);
+        if (headers.Connection !== 'keep-alive') {
+          res.request.end(data);
+        }
+      },
+      (err) => {
+        return callback(err);
+      },
+    );
     return req;
   };
 
   var wsdl = fs.readFileSync('./test/wsdl/default_namespace.wsdl').toString('utf8');
-  //Should be able to read from stream the request 
+  //Should be able to read from stream the request
   httpReqStream.once('readable', function readRequest() {
     var chunk = httpReqStream.read();
     should.exist(chunk);
@@ -94,25 +93,21 @@ it('should allow customization of httpClient and the wsdl file download should p
 
   var httpCustomClient = new MyHttpClient({}, socketStream);
   var url = 'http://localhost:50000/Platform.asmx?wsdl';
-  soap.createClient(url,
-    { httpClient: httpCustomClient },
-    function (err, client) {
-      assert.ok(client);
-      assert.ifError(err);
-      assert.equal(client.httpClient, httpCustomClient);
-      var description = (client.describe());
-      assert.deepEqual(client.describe(), {
-        MyService: {
-          MyServicePort: {
-            MyOperation: {
-              input: {
-              },
-              output: {
-              }
-            }
-          }
-        }
-      });
-      done();
+  soap.createClient(url, { httpClient: httpCustomClient }, function (err, client) {
+    assert.ok(client);
+    assert.ifError(err);
+    assert.equal(client.httpClient, httpCustomClient);
+    var description = client.describe();
+    assert.deepEqual(client.describe(), {
+      MyService: {
+        MyServicePort: {
+          MyOperation: {
+            input: {},
+            output: {},
+          },
+        },
+      },
     });
+    done();
+  });
 });
