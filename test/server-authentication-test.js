@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var fs = require('fs'),
   http = require('http'),
@@ -16,9 +16,9 @@ test.service = {
     StockQuotePort: {
       GetLastTradePrice: function (args, cb, soapHeader) {
         return { price: 19.56 };
-      }
-    }
-  }
+      },
+    },
+  },
 };
 
 describe('SOAP Server', function () {
@@ -105,7 +105,7 @@ describe('SOAP Server', function () {
         setTimeout(function delayed() {
           resolve(true);
         }, 10);
-      })
+      });
     };
 
     soap.createClient(test.baseUrl + '/stockquote?wsdl', function (err, client) {
@@ -168,7 +168,7 @@ describe('SOAP Server', function () {
         setTimeout(function delayed() {
           resolve(false);
         }, 10);
-      })
+      });
     };
 
     soap.createClient(test.baseUrl + '/stockquote?wsdl', function (err, client) {

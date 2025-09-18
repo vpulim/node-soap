@@ -1,28 +1,30 @@
 {
-  "sessionResponse":{
-    "status":{
-      "$attributes":{
-        "isSuccess":"true"
-       }
+  "sessionResponse": {
+    "status": {
+      "$attributes": {
+        "isSuccess": "true"
+      }
     },
-    "userId":{
-      "$attributes":{
-        "internalId":"1645"
-       },
-       "name":"SCPlus Dev"
+    "userId": {
+      "$attributes": {
+        "internalId": "1645"
+      },
+      "name": "SCPlus Dev"
     },
-    "wsRoleList":{
-      "wsRole":[{
-        "role":{
-          "$attributes":{
-            "internalId":"3"
-           },
-           "name":"Administrator"
-         },
-         "isDefault":false,
-         "isInactive":false,
-         "isLoggedInRole":true
-      }]
+    "wsRoleList": {
+      "wsRole": [
+        {
+          "role": {
+            "$attributes": {
+              "internalId": "3"
+            },
+            "name": "Administrator"
+          },
+          "isDefault": false,
+          "isInactive": false,
+          "isLoggedInRole": true
+        }
+      ]
     }
   }
 }

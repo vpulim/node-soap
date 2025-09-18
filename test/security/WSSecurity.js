@@ -3,20 +3,20 @@
 var fs = require('fs'),
   join = require('path').join;
 
-describe('WSSecurity', function() {
+describe('WSSecurity', function () {
   var WSSecurity = require('../../').WSSecurity;
 
-  it('is a function', function() {
+  it('is a function', function () {
     WSSecurity.should.be.type('function');
   });
 
-  it('should accept valid constructor variables', function() {
+  it('should accept valid constructor variables', function () {
     var username = 'myUser';
     var password = 'myPass';
     var options = {
       passwordType: 'PasswordText',
       hasNonce: true,
-      actor: 'urn:sample'
+      actor: 'urn:sample',
     };
     var instance = new WSSecurity(username, password, options);
     instance.should.have.property('_username', username);
@@ -26,7 +26,7 @@ describe('WSSecurity', function() {
     instance.should.have.property('_actor', options.actor);
   });
 
-  it('should accept passwordType as 3rd arg', function() {
+  it('should accept passwordType as 3rd arg', function () {
     var username = 'myUser';
     var password = 'myPass';
     var passwordType = 'PasswordText';
@@ -38,13 +38,13 @@ describe('WSSecurity', function() {
     instance.should.not.have.property('_actor');
   });
 
-  it('should insert a WSSecurity when postProcess is called', function() {
+  it('should insert a WSSecurity when postProcess is called', function () {
     var username = 'my&User';
     var password = 'my&Pass';
     var options = {
       passwordType: 'PassWordText',
       hasNonce: true,
-      actor: 'urn:sample'
+      actor: 'urn:sample',
     };
     var instance = new WSSecurity(username, password, options);
     var xml = instance.toXML();
@@ -67,7 +67,6 @@ describe('WSSecurity', function() {
     xml.should.containEql('</wsse:Nonce>');
     xml.should.containEql('<wsu:Created>');
     xml.should.containEql('</wsse:UsernameToken></wsse:Security>');
-
   });
   it('should add envelopeKey to properties in Security block', function () {
     var username = 'myUser';

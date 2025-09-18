@@ -1,7 +1,9 @@
 {
-  "petList": [{
-    "pet": {
-      "name": "Max"
+  "petList": [
+    {
+      "pet": {
+        "name": "Max"
+      }
     }
-  }]
+  ]
 }

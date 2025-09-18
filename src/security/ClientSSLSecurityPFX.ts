@@ -1,4 +1,3 @@
-
 import * as fs from 'fs';
 import * as https from 'https';
 import * as _ from 'lodash';

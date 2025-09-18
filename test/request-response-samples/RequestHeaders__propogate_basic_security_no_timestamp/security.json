@@ -2,7 +2,7 @@
   "type": "ws",
   "username": "basicuser",
   "password": "basicpass",
-  "options": {  	 	
-  			 	"hasTimeStamp": false 			
-			 }
+  "options": {
+    "hasTimeStamp": false
+  }
 }

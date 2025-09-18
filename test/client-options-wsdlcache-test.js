@@ -3,7 +3,7 @@ var soap = require('..'),
   assert = require('assert'),
   sinon = require('sinon'),
   utils = require('../lib/utils'),
-  wsdl = require("../lib/wsdl");
+  wsdl = require('../lib/wsdl');
 describe('SOAP Client - WSDL Cache', function () {
   var sandbox = sinon.createSandbox();
   var wsdlUri = __dirname + '/wsdl/Dummy.wsdl';
@@ -42,9 +42,9 @@ describe('SOAP Client - WSDL Cache', function () {
   it('should use the provided WSDL cache', function (done) {
     /** @type {IWSDLCache} */
     var dummyCache = {
-      has: function () { },
-      get: function () { },
-      set: function () { },
+      has: function () {},
+      get: function () {},
+      set: function () {},
     };
     sandbox.stub(dummyCache, 'has');
     sandbox.stub(dummyCache, 'get');

@@ -7,10 +7,8 @@ var assert = require('assert');
 describe(__filename, function () {
   it('should parse recursive elements', function (done) {
     open_wsdl(path.resolve(__dirname, 'wsdl/recursive.wsdl'), function (err, def) {
-      assert.equal(def.definitions.messages.operationRequest.parts['constraint[]'].expression,
-        def.definitions.messages.operationRequest.parts['constraint[]'].expression.expression);
-      assert.equal(def.definitions.messages.operationRequest.parts['constraint[]'].expression,
-        def.definitions.messages.operationRequest.parts['constraint[]'].expression.expression['constraint[]'].expression);
+      assert.equal(def.definitions.messages.operationRequest.parts['constraint[]'].expression, def.definitions.messages.operationRequest.parts['constraint[]'].expression.expression);
+      assert.equal(def.definitions.messages.operationRequest.parts['constraint[]'].expression, def.definitions.messages.operationRequest.parts['constraint[]'].expression.expression['constraint[]'].expression);
       done();
     });
   });
@@ -37,22 +35,26 @@ describe(__filename, function () {
   });
 
   it('should parse recursive wsdls keeping provided options', function (done) {
-    open_wsdl(path.resolve(__dirname, 'wsdl/recursive/file.wsdl'), {
-      ignoredNamespaces: {
-        namespaces: ['targetNamespace', 'typedNamespace'],
-        override: true
-      }
-    }, function (err, def) {
-      if (err) {
-        return done(err);
-      }
+    open_wsdl(
+      path.resolve(__dirname, 'wsdl/recursive/file.wsdl'),
+      {
+        ignoredNamespaces: {
+          namespaces: ['targetNamespace', 'typedNamespace'],
+          override: true,
+        },
+      },
+      function (err, def) {
+        if (err) {
+          return done(err);
+        }
 
-      def._includesWsdl.forEach(function (currentWsdl, index) {
-        assert.deepEqual(def.options, currentWsdl.options);
-      });
+        def._includesWsdl.forEach(function (currentWsdl, index) {
+          assert.deepEqual(def.options, currentWsdl.options);
+        });
 
-      done();
-    });
+        done();
+      },
+    );
   });
 
   it('should parse recursive wsdls with element references', function (done) {
@@ -105,19 +107,13 @@ describe(__filename, function () {
             streetName: 'Street',
             postalCode: 'Code',
             city: 'City',
-            countryCode: 'US'
+            countryCode: 'US',
           },
-          companyName: 'ACME'
-        }
-      }
+          companyName: 'ACME',
+        },
+      };
 
-      var requestAsXML = def.objectToDocumentXML(
-        'registerUserRequest',
-        requestBody,
-        'msg',
-        'http://test-soap.com/api/registration/messages',
-        'registerUserRequest'
-      );
+      var requestAsXML = def.objectToDocumentXML('registerUserRequest', requestBody, 'msg', 'http://test-soap.com/api/registration/messages', 'registerUserRequest');
 
       /*
       Expected XML:
@@ -140,7 +136,10 @@ describe(__filename, function () {
         </msg:companyAddress>
       </msg:registerUserRequest>
       */
-      assert.strictEqual(requestAsXML, '<msg:registerUserRequest xmlns:msg="http://test-soap.com/api/registration/messages" xmlns="http://test-soap.com/api/registration/messages"><msg:id>ID00000000000000000000000000000000</msg:id><msg:lastName>Doe</msg:lastName><msg:firstName>John</msg:firstName><msg:dateOfBirth>1970-01-01</msg:dateOfBirth><msg:correspondenceLanguage>ENG</msg:correspondenceLanguage><msg:emailAddress>jdoe@doe.com</msg:emailAddress><msg:lookupPermission>ALLOWED</msg:lookupPermission><msg:companyAddress><ct:address xmlns:ct="http://test-soap.com/api/common/types"><ct:streetName>Street</ct:streetName><ct:postalCode>Code</ct:postalCode><ct:city>City</ct:city><ct:countryCode>US</ct:countryCode></ct:address><ct:companyName xmlns:ct="http://test-soap.com/api/common/types">ACME</ct:companyName></msg:companyAddress></msg:registerUserRequest>');
+      assert.strictEqual(
+        requestAsXML,
+        '<msg:registerUserRequest xmlns:msg="http://test-soap.com/api/registration/messages" xmlns="http://test-soap.com/api/registration/messages"><msg:id>ID00000000000000000000000000000000</msg:id><msg:lastName>Doe</msg:lastName><msg:firstName>John</msg:firstName><msg:dateOfBirth>1970-01-01</msg:dateOfBirth><msg:correspondenceLanguage>ENG</msg:correspondenceLanguage><msg:emailAddress>jdoe@doe.com</msg:emailAddress><msg:lookupPermission>ALLOWED</msg:lookupPermission><msg:companyAddress><ct:address xmlns:ct="http://test-soap.com/api/common/types"><ct:streetName>Street</ct:streetName><ct:postalCode>Code</ct:postalCode><ct:city>City</ct:city><ct:countryCode>US</ct:countryCode></ct:address><ct:companyName xmlns:ct="http://test-soap.com/api/common/types">ACME</ct:companyName></msg:companyAddress></msg:registerUserRequest>',
+      );
 
       done();
     });

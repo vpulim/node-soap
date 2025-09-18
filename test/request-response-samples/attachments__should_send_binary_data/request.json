@@ -1,7 +1,7 @@
 {
-    "field1": "field 1 value",
-    "field2": "another value",
-    "attachment": {
-        "$xml": "<inc:Include href=\"cid:file_0\" xmlns:inc=\"http://www.w3.org/2004/08/xop/include\"/>"
-    }
+  "field1": "field 1 value",
+  "field2": "another value",
+  "attachment": {
+    "$xml": "<inc:Include href=\"cid:file_0\" xmlns:inc=\"http://www.w3.org/2004/08/xop/include\"/>"
+  }
 }

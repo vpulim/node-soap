@@ -1,4 +1,3 @@
-
 import * as crypto from 'crypto';
 import { IMTOMAttachments, IWSDLCache } from './types';
 import { WSDL } from './wsdl';
@@ -26,7 +25,9 @@ export const TNS_PREFIX = '__tns__'; // Prefix for targetNamespace
  */
 export function findPrefix(xmlnsMapping, nsURI) {
   for (const n in xmlnsMapping) {
-    if (n === TNS_PREFIX) { continue; }
+    if (n === TNS_PREFIX) {
+      continue;
+    }
     if (xmlnsMapping[n] === nsURI) {
       return n;
     }
@@ -52,16 +53,11 @@ export function splitQName<T>(nsName: T) {
 }
 
 export function xmlEscape(obj) {
-  if (typeof (obj) === 'string') {
+  if (typeof obj === 'string') {
     if (obj.substr(0, 9) === '<![CDATA[' && obj.substr(-3) === ']]>') {
       return obj;
     }
-    return obj
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&apos;');
+    return obj.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
   }
 
   return obj;
@@ -117,7 +113,7 @@ export function parseMTOMResp(payload: Buffer, boundary: string, callback: (err?
 
 class DefaultWSDLCache implements IWSDLCache {
   private cache: {
-    [key: string]: WSDL,
+    [key: string]: WSDL;
   };
   constructor() {
     this.cache = {};

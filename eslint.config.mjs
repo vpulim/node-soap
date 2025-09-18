@@ -5,12 +5,11 @@ export default tseslint.config(
   eslint.configs.recommended,
   ...tseslint.configs.recommended,
   {
-    ignores: ["lib/", "node_modules/", "test/"]
+    ignores: ['lib/', 'node_modules/', 'test/'],
   },
   {
     rules: {
-      '@typescript-eslint/no-explicit-any': 'off'
+      '@typescript-eslint/no-explicit-any': 'off',
     },
-  }
+  },
 );
-

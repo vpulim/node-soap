@@ -1,9 +1,12 @@
-import {ISecurity} from '../types';
-import {WSSecurity} from './WSSecurity';
-import {WSSecurityCert} from './WSSecurityCert';
+import { ISecurity } from '../types';
+import { WSSecurity } from './WSSecurity';
+import { WSSecurityCert } from './WSSecurityCert';
 
 export class WSSecurityPlusCert implements ISecurity {
-  constructor(private readonly wsSecurity: WSSecurity, private readonly wsSecurityCert: WSSecurityCert) {}
+  constructor(
+    private readonly wsSecurity: WSSecurity,
+    private readonly wsSecurityCert: WSSecurityCert,
+  ) {}
 
   public postProcess(xml: string, envelopeKey: string) {
     const securityXml = this.wsSecurity.toXML();

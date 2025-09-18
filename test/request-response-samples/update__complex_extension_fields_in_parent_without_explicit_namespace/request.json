@@ -1,18 +1,18 @@
 {
-  "record":{
-    "attributes":{
-      "internalId":"42",
-      "externalId":"Alex Dniprovskyy",
-      "xsi_type":{
-        "type":"Contact",
-        "xmlns":"urn:relationships_2013_2.lists.webservices.netsuite.com"
+  "record": {
+    "attributes": {
+      "internalId": "42",
+      "externalId": "Alex Dniprovskyy",
+      "xsi_type": {
+        "type": "Contact",
+        "xmlns": "urn:relationships_2013_2.lists.webservices.netsuite.com"
       }
     },
-    "nullFieldList":{
-      "name":"officephone"
+    "nullFieldList": {
+      "name": "officephone"
     },
-    "firstName":"Allister",
-    "lastName":"Sullivan",
-    "phone":"800-555-2819"
+    "firstName": "Allister",
+    "lastName": "Sullivan",
+    "phone": "800-555-2819"
   }
 }
