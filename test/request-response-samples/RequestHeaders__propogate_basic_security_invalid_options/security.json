@@ -2,8 +2,8 @@
   "type": "ws",
   "username": "basicuser",
   "password": "basicpass",
-  "options": {  	 	
-  			 	"passwordType": "invalid",
-  			 	"hasTimeStamp": ""  			
-			 }
+  "options": {
+    "passwordType": "invalid",
+    "hasTimeStamp": ""
+  }
 }

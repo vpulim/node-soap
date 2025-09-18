@@ -8,7 +8,6 @@ var soap = require('..'),
   createSocketStream = require('./_socketStream');
 
 it('should allow customization of httpClient, the wsdl file, and associated data download should pass through it', function (done) {
-
   //Make a custom http agent to use streams instead of a real net socket
   function CustomAgent(options, wsdl, xsd) {
     var self = this;
@@ -45,45 +44,43 @@ it('should allow customization of httpClient, the wsdl file, and associated data
     //Specify agent to use
     options.httpAgent = this.agent;
     var headers = options.headers;
-    var req = self._request(options).then(function (res) {
-      res.data = self.handleResponse(req, res, res.data);
-      callback(null, res, res.data);
-      if (headers.Connection !== 'keep-alive') {
-        res.request.end(data);
-      }
-    }, (err) => {
-      return callback(err);
-    });
+    var req = self._request(options).then(
+      function (res) {
+        res.data = self.handleResponse(req, res, res.data);
+        callback(null, res, res.data);
+        if (headers.Connection !== 'keep-alive') {
+          res.request.end(data);
+        }
+      },
+      (err) => {
+        return callback(err);
+      },
+    );
     return req;
   };
 
-  var httpCustomClient = new MyHttpClient({},
-    createSocketStream(__dirname + '/wsdl/xsdinclude/xsd_include_http.wsdl'),
-    createSocketStream(__dirname + '/wsdl/xsdinclude/types.xsd')
-  );
+  var httpCustomClient = new MyHttpClient({}, createSocketStream(__dirname + '/wsdl/xsdinclude/xsd_include_http.wsdl'), createSocketStream(__dirname + '/wsdl/xsdinclude/types.xsd'));
   var url = 'http://localhost:50000/Dummy.asmx?wsdl';
-  soap.createClient(url,
-    { httpClient: httpCustomClient },
-    function (err, client) {
-      assert.ok(client);
-      assert.ifError(err);
-      assert.equal(client.httpClient, httpCustomClient);
-      var description = (client.describe());
-      assert.deepEqual(client.describe(), {
-        DummyService: {
-          DummyPortType: {
-            Dummy: {
-              "input": {
-                "ID": "IdType|xs:string|pattern",
-                "Name": "NameType|xs:string|minLength,maxLength"
-              },
-              "output": {
-                "Result": "dummy:DummyList"
-              }
-            }
-          }
-        }
-      });
-      done();
+  soap.createClient(url, { httpClient: httpCustomClient }, function (err, client) {
+    assert.ok(client);
+    assert.ifError(err);
+    assert.equal(client.httpClient, httpCustomClient);
+    var description = client.describe();
+    assert.deepEqual(client.describe(), {
+      DummyService: {
+        DummyPortType: {
+          Dummy: {
+            input: {
+              ID: 'IdType|xs:string|pattern',
+              Name: 'NameType|xs:string|minLength,maxLength',
+            },
+            output: {
+              Result: 'dummy:DummyList',
+            },
+          },
+        },
+      },
     });
+    done();
+  });
 });

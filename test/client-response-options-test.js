@@ -14,15 +14,14 @@ const serviceImplementation = {
     Hello_Port: {
       sayHello: function (args) {
         return {
-          greeting: args.firstName
+          greeting: args.firstName,
         };
-      }
-    }
-  }
+      },
+    },
+  },
 };
 
 describe('SOAP Client', function () {
-
   before(function (done) {
     // start test soap server (hello.wsdl)
     server = http.createServer(function (request, response) {
@@ -64,5 +63,4 @@ describe('SOAP Client', function () {
       done();
     });
   });
-
 });

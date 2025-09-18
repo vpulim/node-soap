@@ -1,10 +1,10 @@
 {
-  "passport":{
-    "email":"em",
-    "password":"pwd",
-    "account":"acc",
+  "passport": {
+    "email": "em",
+    "password": "pwd",
+    "account": "acc",
     "role": {
-      "$attributes": {            
+      "$attributes": {
         "internalId": "3",
         "externalId": "2"
       }

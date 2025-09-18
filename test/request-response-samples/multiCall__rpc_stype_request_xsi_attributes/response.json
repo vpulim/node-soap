@@ -1,14 +1,14 @@
-{  
-   "multiCallReturn":{  
-      "attributes":{  
-         "SOAP-ENC:arrayType":"xsd:ur-type[1]",
-         "xsi:type":"ns1:FixedArray"
+{
+  "multiCallReturn": {
+    "attributes": {
+      "SOAP-ENC:arrayType": "xsd:ur-type[1]",
+      "xsi:type": "ns1:FixedArray"
+    },
+    "item": {
+      "attributes": {
+        "xsi:type": "xsd:boolean"
       },
-      "item":{  
-         "attributes":{  
-            "xsi:type":"xsd:boolean"
-         },
-         "$value":"true"
-      }
-   }
+      "$value": "true"
+    }
+  }
 }
