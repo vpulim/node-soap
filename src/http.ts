@@ -57,11 +57,11 @@ export class HttpClient implements IHttpClient {
     const port = parseInt(curl.port, 10);
     const headers: IHeaders = {
       'User-Agent': 'node-soap/' + version,
-      Accept: 'text/html,application/xhtml+xml,application/xml,text/xml;q=0.9,*/*;q=0.8',
+      'Accept': 'text/html,application/xhtml+xml,application/xml,text/xml;q=0.9,*/*;q=0.8',
       'Accept-Encoding': 'none',
       'Accept-Charset': 'utf-8',
       ...(exoptions.forever && { Connection: 'keep-alive' }),
-      Host: host + (isNaN(port) ? '' : ':' + port),
+      'Host': host + (isNaN(port) ? '' : ':' + port),
     };
     const mergeOptions = ['headers'];
 
@@ -106,7 +106,7 @@ export class HttpClient implements IHttpClient {
         {
           'Content-Type': 'application/xop+xml; charset=UTF-8; type="text/xml"',
           'Content-ID': '<' + start + '>',
-          body: data,
+          'body': data,
         },
       ];
 
@@ -116,7 +116,7 @@ export class HttpClient implements IHttpClient {
           'Content-Transfer-Encoding': 'binary',
           'Content-ID': '<' + attachment.contentId + '>',
           'Content-Disposition': 'attachment; filename="' + attachment.name + '"',
-          body: attachment.body,
+          'body': attachment.body,
         });
       });
       options.data = [Buffer.from(`--${boundary}\r\n`)];

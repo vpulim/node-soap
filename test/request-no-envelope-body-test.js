@@ -52,7 +52,7 @@ describe('No envelope and body elements', function () {
     axios
       .post(url + '/SayHello', requestXML, {
         headers: {
-          SOAPAction: 'sayHello',
+          'SOAPAction': 'sayHello',
           'Content-Type': 'text/xml; charset="utf-8"',
         },
       })

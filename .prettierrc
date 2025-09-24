@@ -6,7 +6,7 @@
   "experimentalTernaries": false,
   "singleQuote": true,
   "jsxSingleQuote": true,
-  "quoteProps": "as-needed",
+  "quoteProps": "consistent",
   "trailingComma": "all",
   "singleAttributePerLine": false,
   "htmlWhitespaceSensitivity": "css",

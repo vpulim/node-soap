@@ -55,7 +55,7 @@ describe('Express server without middleware', function () {
     axios
       .post(url + '/SayHello', requestXML, {
         headers: {
-          SOAPAction: 'sayHello',
+          'SOAPAction': 'sayHello',
           'Content-Type': 'text/xml; charset="utf-8"',
         },
       })
@@ -152,7 +152,7 @@ describe('Express server with middleware', function () {
     axios
       .post(url + '/SayHello', requestXML, {
         headers: {
-          SOAPAction: 'sayHello',
+          'SOAPAction': 'sayHello',
           'Content-Type': 'text/xml; charset="utf-8"',
         },
       })
@@ -204,7 +204,7 @@ describe('Express server with bodyParser.json middleware', function () {
     axios
       .post(url + '/SayHello', requestXML, {
         headers: {
-          SOAPAction: 'sayHello',
+          'SOAPAction': 'sayHello',
           'Content-Type': 'text/xml; charset="utf-8"',
         },
       })

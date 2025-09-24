@@ -61,7 +61,7 @@ describe('server has mixed style', function () {
     axios
       .post(url, requestXML, {
         headers: {
-          SOAPAction: 'urn:#opHl7Message',
+          'SOAPAction': 'urn:#opHl7Message',
           'Content-Type': 'text/xml; charset="utf-8"',
         },
       })
