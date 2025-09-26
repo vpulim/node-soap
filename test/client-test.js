@@ -71,7 +71,7 @@ var fs = require('fs'),
 
     it('should allow customization of httpClient', function (done) {
       var myHttpClient = {
-        request: function () { },
+        request: function () {},
       };
       soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', Object.assign({ httpClient: myHttpClient }, meta.options), function (err, client) {
         assert.ok(client);
@@ -82,7 +82,7 @@ var fs = require('fs'),
     });
 
     it('should allow customization of request for http client', function (done) {
-      var myRequest = function () { };
+      var myRequest = function () {};
       soap.createClient(__dirname + '/wsdl/default_namespace.wsdl', Object.assign({ request: myRequest }, meta.options), function (err, client) {
         assert.ok(client);
         assert.ifError(err);
@@ -1542,7 +1542,7 @@ var fs = require('fs'),
           assert.ok(client);
 
           // Call the method
-          client.StringOperation(stringParameterValue, () => { });
+          client.StringOperation(stringParameterValue, () => {});
 
           // Analyse and validate the generated soap body
           var requestBody = request.data;
@@ -1741,7 +1741,7 @@ var fs = require('fs'),
       it('should error on invalid host', function (done) {
         soap
           .createClientAsync('http://localhost:1', meta.options)
-          .then(function (client) { })
+          .then(function (client) {})
           .catch(function (err) {
             assert.ok(err);
             done();
@@ -1783,7 +1783,7 @@ var fs = require('fs'),
 
       it('should allow customization of httpClient', function (done) {
         var myHttpClient = {
-          request: function () { },
+          request: function () {},
         };
         soap.createClientAsync(__dirname + '/wsdl/default_namespace.wsdl', Object.assign({ httpClient: myHttpClient }, meta.options)).then(function (client) {
           assert.ok(client);
@@ -1793,7 +1793,7 @@ var fs = require('fs'),
       });
 
       it('should allow customization of request for http client', function (done) {
-        var myRequest = function () { };
+        var myRequest = function () {};
         soap.createClientAsync(__dirname + '/wsdl/default_namespace.wsdl', Object.assign({ request: myRequest }, meta.options)).then(function (client) {
           assert.ok(client);
           assert.equal(client.httpClient._request, myRequest);
@@ -1818,7 +1818,7 @@ var fs = require('fs'),
               '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">\n\t<head>\n\t\t<title>404 - Not Found</title>\n\t</head>\n\t<body>\n\t\t<h1>404 - Not Found</h1>\n\t\t<script type="text/javascript" src="http://gp1.wpc.edgecastcdn.net/00222B/beluga/pilot_rtm/beluga_beacon.js"></script>\n\t</body>\n</html>';
             return client.MyOperationAsync({ _xml: xmlStr });
           })
-          .then(function ([result, raw, soapHeader]) { })
+          .then(function ([result, raw, soapHeader]) {})
           .catch(function (err) {
             done();
           });
@@ -1833,7 +1833,7 @@ var fs = require('fs'),
             client = createdClient;
             return client.MyOperationAsync({});
           })
-          .then(function (response) { })
+          .then(function (response) {})
           .catch(function (err) {
             assert.notEqual(client.lastRequest.indexOf('xmlns:soapenv='), -1);
             done();
@@ -1963,7 +1963,7 @@ var fs = require('fs'),
             assert.ifError(err);
             client
               .prefixed_MyOperationAsync({})
-              .then(function (result) { })
+              .then(function (result) {})
               .catch(function (err) {
                 // only need to check that a valid request is generated, response isn't needed
                 assert.ok(client.lastRequest);
