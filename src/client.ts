@@ -298,7 +298,7 @@ export class Client extends EventEmitter {
     }
   }
 
-  private async _invoke(method: OperationElement, args, location: string, callback, options, extraHeaders) {
+  private _invoke(method: OperationElement, args, location: string, callback, options, extraHeaders) {
     const name = method.$name;
     const input = method.input;
     const output = method.output;
@@ -459,7 +459,7 @@ export class Client extends EventEmitter {
     }
 
     if (options && options.postProcess) {
-        xml = await options.postProcess(xml);
+      xml = options.postProcess(xml);
     }
 
     this.lastMessage = message;
