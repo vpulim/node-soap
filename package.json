@@ -45,7 +45,7 @@
   ],
   "license": "MIT",
   "devDependencies": {
-    "@eslint/js": "^9.33.0",
+    "@eslint/js": "^9.36.0",
     "@types/debug": "^4.1.12",
     "@types/formidable": "^3.4.5",
     "@types/lodash": "^4.17.20",
@@ -57,7 +57,7 @@
     "diff": "^8.0.2",
     "doctoc": "^2.2.1",
     "duplexer": "~0.1.2",
-    "eslint": "^9.33.0",
+    "eslint": "^9.36.0",
     "express": "^5.1.0",
     "finalhandler": "^2.1.0",
     "glob": "^11.0.1",
@@ -73,6 +73,6 @@
     "timekeeper": "^2.3.1",
     "typedoc": "^0.28.10",
     "typescript": "^5.9.2",
-    "typescript-eslint": "^8.40.0"
+    "typescript-eslint": "^8.44.1"
   }
 }
