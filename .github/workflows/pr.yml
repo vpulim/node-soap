@@ -13,4 +13,3 @@ jobs:
       - run: npm run build
       - run: npm run lint
       - run: npm run cover
-      - run: npm run format:check
