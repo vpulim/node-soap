@@ -1,3 +1,9 @@
+# 1.4.2 / 2025-09-27
+
+- [MAINTENANCE] Bump axios-ntlm to 1.4.6 and debug to 4.4.3 (#1351)
+- [MAINTENANCE] Replace tslint with eslint (#1342)
+- [FIX] Revert "Enable async methods for postProcess (#1338)"
+
 # 1.4.1 / 2025-09-15
 
 - [MAINTENANCE] Bump axios to 1.12.2 (#1350)
