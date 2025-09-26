@@ -94,7 +94,10 @@ describe('WSSecurityCert', function () {
     matches1[0].should.containEql('http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd');
     matches1[0].should.containEql('http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd');
 
-    var xml2 = instance.postProcess('<soap:Envelope><soap:Header><wsse:Security xmlns:wsu="wsu" xmlns:wsse="wsse" soap:mustUnderstand="true" someAttribute="someValue"></wsse:Security></soap:Header><soap:Body></soap:Body></soap:Envelope>', 'soap');
+    var xml2 = instance.postProcess(
+      '<soap:Envelope><soap:Header><wsse:Security xmlns:wsu="wsu" xmlns:wsse="wsse" soap:mustUnderstand="true" someAttribute="someValue"></wsse:Security></soap:Header><soap:Body></soap:Body></soap:Envelope>',
+      'soap',
+    );
     var matches2 = xml2.match(/<wsse:Security [^>]*>/);
     matches2[0].should.not.containEql('soap:mustUnderstand="1"');
     matches2[0].should.containEql('soap:mustUnderstand="true"');
@@ -111,13 +114,13 @@ describe('WSSecurityCert', function () {
   });
 
   it('Verifies that only Soap Timestamp reference added to wsse:Security when the Soap Body is excluded from signing', function () {
-    var instance = new WSSecurityCert(key, cert, '', {excludeReferencesFromSigning: ['Body']});
+    var instance = new WSSecurityCert(key, cert, '', { excludeReferencesFromSigning: ['Body'] });
     var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body><Timestamp></Timestamp></soap:Body></soap:Envelope>', 'soap');
     xml.match(/<Reference URI="#/g).should.have.length(1);
   });
 
   it('Verifies that Soap Timestamp reference is not added to wsse:Security when it is excluded from signing', function () {
-    var instance = new WSSecurityCert(key, cert, '',{excludeReferencesFromSigning: ['Timestamp']});
+    var instance = new WSSecurityCert(key, cert, '', { excludeReferencesFromSigning: ['Timestamp'] });
     var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body><Timestamp></Timestamp></soap:Body></soap:Envelope>', 'soap');
     xml.should.not.containEql('<Reference URI="#Timestamp">');
   });
@@ -129,11 +132,10 @@ describe('WSSecurityCert', function () {
   });
 
   it('should only add one Reference elements, for Soap Body wsse:Security element when addTimestamp is false and SignatureMethod Algorithm=sha256', function () {
-    var instance = new WSSecurityCert(key, cert, '', { hasTimeStamp: false, signatureAlgorithm: "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256" });
+    var instance = new WSSecurityCert(key, cert, '', { hasTimeStamp: false, signatureAlgorithm: 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256' });
     var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body><Timestamp></Timestamp></soap:Body></soap:Envelope>', 'soap');
     xml.match(/<Reference URI="#/g).should.have.length(1);
   });
-
 
   it('double post process should not add extra alments', function () {
     var instance = new WSSecurityCert(key, cert, '');
@@ -153,7 +155,7 @@ describe('WSSecurityCert', function () {
   it('should use rsa-sha256 signature method when the signatureAlgorithm option is set to WSSecurityCert', function () {
     var instance = new WSSecurityCert(key, cert, '', {
       hasTimeStamp: false,
-      signatureAlgorithm: 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256'
+      signatureAlgorithm: 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256',
     });
     var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body></soap:Body></soap:Envelope>', 'soap');
     xml.should.containEql('SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"');
@@ -161,13 +163,13 @@ describe('WSSecurityCert', function () {
 
   it('should use default xmlns:wsse if no signerOptions.existingPrefixes is provided', function () {
     var instance = new WSSecurityCert(key, cert, '');
-    var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body></soap:Body></soap:Envelope>', 'soap')
+    var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body></soap:Body></soap:Envelope>', 'soap');
     xml.should.containEql('xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"');
   });
 
   it('should still add wsse if another signerOption attribute is passed through ', function () {
     var instance = new WSSecurityCert(key, cert, '', { signerOptions: { prefix: 'ds' } });
-    var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body></soap:Body></soap:Envelope>', 'soap')
+    var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body></soap:Body></soap:Envelope>', 'soap');
     xml.should.containEql('xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"');
     xml.should.containEql('<ds:SignedInfo>');
   });
@@ -176,10 +178,10 @@ describe('WSSecurityCert', function () {
     var instance = new WSSecurityCert(key, cert, '', {
       signerOptions: {
         location: { action: 'after', reference: "//*[name(.)='soap:Body']" },
-        existingPrefixes: { wsse: 'https://localhost/node-soap.xsd' }
-      }
+        existingPrefixes: { wsse: 'https://localhost/node-soap.xsd' },
+      },
     });
-    var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body></soap:Body></soap:Envelope>', 'soap')
+    var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body></soap:Body></soap:Envelope>', 'soap');
     xml.should.containEql('<wsse:SecurityTokenReference xmlns:wsse="https://localhost/node-soap.xsd">');
   });
 
@@ -187,7 +189,7 @@ describe('WSSecurityCert', function () {
     var instance = new WSSecurityCert(key, cert, '', {
       signerOptions: {
         prefix: 'ds',
-      }
+      },
     });
     var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body></soap:Body></soap:Envelope>', 'soap');
     xml.should.containEql('<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">');
@@ -208,7 +210,7 @@ describe('WSSecurityCert', function () {
     var instance = new WSSecurityCert(key, cert, '', {
       signerOptions: {
         attrs: { Id: 'security_123' },
-      }
+      },
     });
     var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body></soap:Body></soap:Envelope>', 'soap');
     xml.should.containEql('<Signature Id="security_123" xmlns="http://www.w3.org/2000/09/xmldsig#">');
@@ -216,10 +218,7 @@ describe('WSSecurityCert', function () {
 
   it('should sign additional headers that are added via additionalReferences', function () {
     var instance = new WSSecurityCert(key, cert, '', {
-      additionalReferences: [
-        'To',
-        'Action'
-      ],
+      additionalReferences: ['To', 'Action'],
     });
     var xml = instance.postProcess('<soap:Envelope><soap:Header><To Id="To">localhost.com</To><Action Id="action-1234">testing</Action></soap:Header><soap:Body><Body></Body></soap:Body></soap:Envelope>', 'soap');
     xml.should.containEql('<Reference URI="#To">');
@@ -228,10 +227,7 @@ describe('WSSecurityCert', function () {
 
   it('references id should be autogenerated and unique across all references', function () {
     var instance = new WSSecurityCert(key, cert, '', {
-      additionalReferences: [
-        'To',
-        'Action'
-      ],
+      additionalReferences: ['To', 'Action'],
     });
     var xml = instance.postProcess('<soap:Envelope><soap:Header><To>localhost.com</To><Action>testing</Action></soap:Header><soap:Body><Body></Body></soap:Body></soap:Envelope>', 'soap');
     xml.should.containEql('<Reference URI="#_0">'); // For Body element
@@ -242,10 +238,7 @@ describe('WSSecurityCert', function () {
 
   it('should not sign additional headers that are excluded from signing', function () {
     var instance = new WSSecurityCert(key, cert, '', {
-      excludedReferences: [
-        'To',
-        'Action'
-      ]
+      excludedReferences: ['To', 'Action'],
     });
     var xml = instance.postProcess('<soap:Envelope><soap:Header><To Id="To">localhost.com</To><Action Id="action-1234">testing</Action></soap:Header><soap:Body><Body></Body></soap:Body></soap:Envelope>', 'soap');
     xml.should.not.containEql('<Reference URI="#To">');
@@ -278,30 +271,29 @@ describe('WSSecurityCert', function () {
   });
 
   it('should use rsa-sha1 signature method when the signatureAlgorithm option is set to WSSecurityCert', function () {
-      var instance = new WSSecurityCert(key, cert, '', {
-         hasTimeStamp: false,
-         signatureAlgorithm: 'http://www.w3.org/2000/09/xmldsig#rsa-sha1'
-      });
-      var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body></soap:Body></soap:Envelope>', 'soap');
-      xml.should.containEql('SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"');
+    var instance = new WSSecurityCert(key, cert, '', {
+      hasTimeStamp: false,
+      signatureAlgorithm: 'http://www.w3.org/2000/09/xmldsig#rsa-sha1',
+    });
+    var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body></soap:Body></soap:Envelope>', 'soap');
+    xml.should.containEql('SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"');
   });
 
   it('should use rsa-sha512 signature method when the signatureAlgorithm option is set to WSSecurityCert', function () {
-      var instance = new WSSecurityCert(key, cert, '', {
-         hasTimeStamp: false,
-         signatureAlgorithm: 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha512'
-      });
-      var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body></soap:Body></soap:Envelope>', 'soap');
-      xml.should.containEql('SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"');
+    var instance = new WSSecurityCert(key, cert, '', {
+      hasTimeStamp: false,
+      signatureAlgorithm: 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha512',
+    });
+    var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body></soap:Body></soap:Envelope>', 'soap');
+    xml.should.containEql('SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"');
   });
 
   it('should use digest method when the digestAlgorithm option is set on WSSecurityCert', function () {
     var instance = new WSSecurityCert(key, cert, '', {
       hasTimeStamp: false,
-      digestAlgorithm: 'http://www.w3.org/2000/09/xmldsig#sha1'
+      digestAlgorithm: 'http://www.w3.org/2000/09/xmldsig#sha1',
     });
     var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body></soap:Body></soap:Envelope>', 'soap');
     xml.should.containEql('DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"');
   });
-
 });

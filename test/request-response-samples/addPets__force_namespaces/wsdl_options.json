@@ -1,12 +1,15 @@
 {
   "overrideRootElement": {
     "namespace": "xmlns:tns",
-    "xmlnsAttributes": [{
-      "name": "xmlns:ns2",
-      "value": "http://tempuri.org/"
-    }, {
-      "name": "xmlns:ns3",
-      "value": "http://sillypets.com/xsd"
-    }]
+    "xmlnsAttributes": [
+      {
+        "name": "xmlns:ns2",
+        "value": "http://tempuri.org/"
+      },
+      {
+        "name": "xmlns:ns3",
+        "value": "http://sillypets.com/xsd"
+      }
+    ]
   }
 }

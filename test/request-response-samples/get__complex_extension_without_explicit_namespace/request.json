@@ -1,11 +1,11 @@
 {
-  "baseRef":{
-    "attributes":{
-      "type":"contact",
-      "internalId":"42",
-      "xsi_type":{
-        "type":"RecordRef",
-        "xmlns":"urn:core_2013_2.platform.webservices.netsuite.com"
+  "baseRef": {
+    "attributes": {
+      "type": "contact",
+      "internalId": "42",
+      "xsi_type": {
+        "type": "RecordRef",
+        "xmlns": "urn:core_2013_2.platform.webservices.netsuite.com"
       }
     }
   }
