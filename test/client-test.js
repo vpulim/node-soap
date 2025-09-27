@@ -10,8 +10,8 @@ var fs = require('fs'),
   wsdl = require('../lib/wsdl');
 
 [
-  { suffix: '', options: {} },
-  { suffix: ' (with streaming)', options: { stream: true } },
+  { suffix: '', options: { useEmptyTag: false } },
+  { suffix: ' (with streaming)', options: { stream: true, useEmptyTag: false } },
 ].forEach(function (meta) {
   describe('SOAP Client' + meta.suffix, function () {
     var baseUrl = 'http://127.0.0.1:80';
@@ -91,7 +91,7 @@ var fs = require('fs'),
       });
     });
 
-    it('should allow customization of envelope', function (done) {
+    it('should allow customization of client envelope key', function (done) {
       soap.createClient(
         __dirname + '/wsdl/default_namespace.wsdl',
         Object.assign({ envelopeKey: 'soapenv' }, meta.options),
@@ -100,6 +100,38 @@ var fs = require('fs'),
           assert.ifError(err);
 
           client.MyOperation({}, function (err, result) {
+            assert.notEqual(client.lastRequest.indexOf('xmlns:soapenv='), -1);
+            done();
+          });
+        },
+        baseUrl,
+      );
+    });
+
+    it('should skip creating header XML on empty <Header/> and security when toXML is empty', function (done) {
+      soap.createClient(
+        __dirname + '/wsdl/default_namespace.wsdl',
+        Object.assign({ envelopeKey: 'soapenv', useEmptyTag: true, wsdl_headers: '<soapenv:Header/>' }, meta.options),
+        function (err, client) {
+          var join = require('path').join;
+          var ClientSSLSecurity = require('../').ClientSSLSecurity;
+          var certBuffer = fs.readFileSync(join(__dirname, '.', 'certs', 'agent2-cert.pem')),
+            keyBuffer = fs.readFileSync(join(__dirname, '.', 'certs', 'agent2-key.pem')),
+            instance;
+
+          // Creates a Security instance that has no toXML() (empty string)
+          instance = new ClientSSLSecurity(keyBuffer, certBuffer, certBuffer);
+          var xml = instance.toXML();
+          xml.should.be.exactly('');
+
+          client.setSecurity(instance);
+          client.addSoapHeader('');
+
+          assert.ok(client);
+          assert.ifError(err);
+
+          client.MyOperation({}, function (err, result) {
+            assert.equal(client.lastRequest.indexOf('soapenv:Header'), -1);
             assert.notEqual(client.lastRequest.indexOf('xmlns:soapenv='), -1);
             done();
           });
