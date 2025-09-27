@@ -28,13 +28,12 @@ describe('NTLMSecurity', function () {
     });
 
     it('should work with httpAgent and ntlm options together', function () {
-
       var options = {
         username: username,
         password: password,
         domain: domain,
         workstation: workstation,
-        ntlm: true
+        ntlm: true,
       };
 
       var events = require('events');
@@ -43,7 +42,7 @@ describe('NTLMSecurity', function () {
       var duplexer = require('duplexer');
       var httpClient = require('../../lib/http.js').HttpClient;
 
-      function CustomAgent(options, socket){
+      function CustomAgent(options, socket) {
         var self = this;
         events.EventEmitter.call(this);
         self.requests = [];
@@ -55,22 +54,22 @@ describe('NTLMSecurity', function () {
 
       util.inherits(CustomAgent, events.EventEmitter);
 
-      CustomAgent.prototype.addRequest = function(req, options) {
+      CustomAgent.prototype.addRequest = function (req, options) {
         req.onSocket(this.proxyStream);
       };
-  
+
       var httpReqStream = new stream.PassThrough();
       var httpResStream = new stream.PassThrough();
       var socketStream = duplexer(httpReqStream, httpResStream);
-  
-      socketStream.cork = function() { };
-      socketStream.uncork = function() { };
-      socketStream.destroy = function() { };
-      socketStream.setKeepAlive = function() { };
+
+      socketStream.cork = function () {};
+      socketStream.uncork = function () {};
+      socketStream.destroy = function () {};
+      socketStream.setKeepAlive = function () {};
 
       class MyHttpClient extends httpClient {
         constructor(options, socket) {
-          super(options)
+          super(options);
           this.agent = new CustomAgent(options, socket);
         }
       }
@@ -92,10 +91,10 @@ describe('NTLMSecurity', function () {
 
     it('should work with httpsAgent and ntlm options together', function () {
       var ClientSSLSecurity = require('../../').ClientSSLSecurity;
-      var instance = new ClientSSLSecurity(null, null, null, {ntlm: true});
+      var instance = new ClientSSLSecurity(null, null, null, { ntlm: true });
 
-      var firstOptions = {forever: true};
-      var secondOptions = {forever: true};
+      var firstOptions = { forever: true };
+      var secondOptions = { forever: true };
 
       instance.addOptions(firstOptions);
       instance.addOptions(secondOptions);

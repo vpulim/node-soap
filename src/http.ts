@@ -180,14 +180,15 @@ export class HttpClient implements IHttpClient {
     const options = this.buildRequest(rurl, data, exheaders, exoptions);
     let req: req.AxiosPromise;
     if (exoptions !== undefined && exoptions.ntlm) {
-      const ntlmReq = NtlmClient({
-        username: exoptions.username,
-        password: exoptions.password,
-        workstation: exoptions.workstation || '',
-        domain: exoptions.domain || '',
-      }, { httpAgent: exoptions.httpAgent,
-           httpsAgent: exoptions.httpsAgent,
-         });
+      const ntlmReq = NtlmClient(
+        {
+          username: exoptions.username,
+          password: exoptions.password,
+          workstation: exoptions.workstation || '',
+          domain: exoptions.domain || '',
+        },
+        { httpAgent: exoptions.httpAgent, httpsAgent: exoptions.httpsAgent },
+      );
       req = ntlmReq(options);
     } else {
       if (this.options.parseReponseAttachments) {
