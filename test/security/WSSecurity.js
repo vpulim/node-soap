@@ -82,4 +82,27 @@ describe('WSSecurity', function () {
     xml.should.containEql('<wsse:Security soapenv:actor="urn:sample" ');
     xml.should.containEql('soapenv:mustUnderstand="1"');
   });
+
+  it('should add appendElement when provided', function () {
+    var username = 'myUser';
+    var password = 'myPass';
+    var options = {
+      hasTimeStamp: false,
+      appendElement: '<Certificate>Mfg...1+</Certificate>'
+    };
+    var instance = new WSSecurity(username, password, options);
+    var xml = instance.toXML();
+    xml.should.containEql('<Certificate>Mfg...1+</Certificate>');
+  });
+
+  it('should not add appendElement when not provided', function () {
+    var username = 'myUser';
+    var password = 'myPass';
+    var options = {
+      hasTimeStamp: false
+    };
+    var instance = new WSSecurity(username, password, options);
+    var xml = instance.toXML();
+    xml.should.not.containEql('<Certificate>Mfg...1+</Certificate>');
+  });
 });

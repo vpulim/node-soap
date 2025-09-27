@@ -1024,6 +1024,7 @@ the `options` object is optional and can contain the following properties:
 - `hasNonce`: adds Nonce element (default: `false`)
 - `mustUnderstand`: adds mustUnderstand=1 attribute to security tag (default: `false`)
 - `actor`: if set, adds Actor attribute with given value to security tag (default: `''`)
+- `appendElement`: adds provided xml to the end of wsse element (default: `''`)
 
 ### WSSecurityCert
 
@@ -1061,6 +1062,7 @@ The `options` object is optional and can contain the following properties:
   - `prefix`: (optional) Adds this value as a prefix for the generated signature tags.
   - `attrs`: (optional) A hash of attributes and values attrName: value to add to the signature root node
   - `idMode`: (optional) either 'wssecurity' to generate wsse-scoped reference Id on <Body> or undefined for an unscoped reference Id
+- `appendElement`: (optional) A string containing XML to append to the end of the wsse:Security element. This can be used to add custom elements like certificates or other security tokens.
 
 ### WSSecurityPlusCert
 
@@ -1199,6 +1201,23 @@ client.setSecurity(wsSecurityPlusCert);
                 </Reference>
             </SignedInfo>
         </Signature>
+    </wsse:Security>
+</soap:Header>
+```
+
+`appendElement: '<custom:Element>test</custom:Element>'`
+
+``` xml
+<soap:Header>
+    <wsse:Security soap:mustUnderstand="1">
+        <wsse:BinarySecurityToken>XXX</wsse:BinarySecurityToken>
+        <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+            <SignedInfo>
+                ...
+            </SignedInfo>
+        </Signature>
+        <!-- Custom element is appended to the end of the security block -->
+        <custom:Element>test</custom:Element>
     </wsse:Security>
 </soap:Header>
 ```

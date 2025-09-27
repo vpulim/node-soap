@@ -266,5 +266,17 @@ describe('WSSecurityCertWithToken', function () {
       }
       should(xml).not.be.ok();
     });
+
+    it('should add appendElement when provided', function () {
+      var instance = new WSSecurityCertWithToken({ privateKey: key, publicKey: cert, keyPassword: '', options: { appendElement: '<Certificate>Mfg...1+</Certificate>' } });
+      var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body></soap:Body></soap:Envelope>', 'soap');
+      xml.should.containEql('<Certificate>Mfg...1+</Certificate>');
+    });
+
+    it('should not add appendElement when not provided', function () {
+      var instance = new WSSecurityCertWithToken({ privateKey: key, publicKey: cert, keyPassword: '' });
+      var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body></soap:Body></soap:Envelope>', 'soap');
+      xml.should.not.containEql('<Certificate>Mfg...1+</Certificate>');
+    });
   });
 });
