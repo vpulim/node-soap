@@ -32,7 +32,6 @@ export interface IAttachment {
  * @constructor
  */
 export class HttpClient implements IHttpClient {
-
   private _request: req.AxiosInstance;
   private options: IOptions;
 
@@ -103,11 +102,13 @@ export class HttpClient implements IHttpClient {
       if (action) {
         headers['Content-Type'] = headers['Content-Type'] + '; ' + action;
       }
-      const multipart: any[] = [{
-        'Content-Type': 'application/xop+xml; charset=UTF-8; type="text/xml"',
-        'Content-ID': '<' + start + '>',
-        'body': data,
-      }];
+      const multipart: any[] = [
+        {
+          'Content-Type': 'application/xop+xml; charset=UTF-8; type="text/xml"',
+          'Content-ID': '<' + start + '>',
+          'body': data,
+        },
+      ];
 
       attachments.forEach((attachment) => {
         multipart.push({
@@ -127,12 +128,7 @@ export class HttpClient implements IHttpClient {
             options.data.push(Buffer.from(`${key}: ${part[key]}\r\n`));
           }
         });
-        options.data.push(
-          Buffer.from('\r\n'),
-          Buffer.from(part.body),
-          Buffer.from(`\r\n--${boundary}${multipartCount === multipart.length - 1 ? '--' : ''
-            }\r\n`),
-        );
+        options.data.push(Buffer.from('\r\n'), Buffer.from(part.body), Buffer.from(`\r\n--${boundary}${multipartCount === multipart.length - 1 ? '--' : ''}\r\n`));
         multipartCount++;
       });
       options.data = Buffer.concat(options.data);
@@ -180,13 +176,7 @@ export class HttpClient implements IHttpClient {
     return body;
   }
 
-  public request(
-    rurl: string,
-    data: any,
-    callback: (error: any, res?: any, body?: any) => any,
-    exheaders?: IHeaders,
-    exoptions?: IExOptions,
-  ) {
+  public request(rurl: string, data: any, callback: (error: any, res?: any, body?: any) => any, exheaders?: IHeaders, exoptions?: IExOptions) {
     const options = this.buildRequest(rurl, data, exheaders, exoptions);
     let req: req.AxiosPromise;
     if (exoptions !== undefined && exoptions.ntlm) {
@@ -206,46 +196,48 @@ export class HttpClient implements IHttpClient {
     }
     //eslint-disable-next-line @typescript-eslint/no-this-alias
     const _this = this;
-    req.then((res) => {
+    req.then(
+      (res) => {
+        const handleBody = (body?: string) => {
+          res.data = this.handleResponse(req, res, body || res.data);
+          callback(null, res, res.data);
+          return res;
+        };
 
-      const handleBody = (body?: string) => {
-        res.data = this.handleResponse(req, res, body || res.data);
-        callback(null, res, res.data);
-        return res;
-      };
-
-      if (_this.options.parseReponseAttachments) {
-        const isMultipartResp = res.headers['content-type'] && res.headers['content-type'].toLowerCase().indexOf('multipart/related') > -1;
-        if (isMultipartResp) {
-          let boundary;
-          const parsedContentType = MIMEType.parse(res.headers['content-type']);
-          if (parsedContentType) {
-            boundary = parsedContentType.parameters.get('boundary');
-          }
-          if (!boundary) {
-            return callback(new Error('Missing boundary from content-type'));
-          }
-          return parseMTOMResp(res.data, boundary, (err, multipartResponse) => {
-            if (err) {
-              return callback(err);
+        if (_this.options.parseReponseAttachments) {
+          const isMultipartResp = res.headers['content-type'] && res.headers['content-type'].toLowerCase().indexOf('multipart/related') > -1;
+          if (isMultipartResp) {
+            let boundary;
+            const parsedContentType = MIMEType.parse(res.headers['content-type']);
+            if (parsedContentType) {
+              boundary = parsedContentType.parameters.get('boundary');
             }
-            // first part is the soap response
-            const firstPart = multipartResponse.parts.shift();
-            if (!firstPart || !firstPart.body) {
-              return callback(new Error('Cannot parse multipart response'));
+            if (!boundary) {
+              return callback(new Error('Missing boundary from content-type'));
             }
-            (res as any).mtomResponseAttachments = multipartResponse;
-            return handleBody(firstPart.body.toString(_this.options.encoding || 'utf8'));
-          });
+            return parseMTOMResp(res.data, boundary, (err, multipartResponse) => {
+              if (err) {
+                return callback(err);
+              }
+              // first part is the soap response
+              const firstPart = multipartResponse.parts.shift();
+              if (!firstPart || !firstPart.body) {
+                return callback(new Error('Cannot parse multipart response'));
+              }
+              (res as any).mtomResponseAttachments = multipartResponse;
+              return handleBody(firstPart.body.toString(_this.options.encoding || 'utf8'));
+            });
+          } else {
+            return handleBody(res.data.toString(_this.options.encoding || 'utf8'));
+          }
         } else {
-          return handleBody(res.data.toString(_this.options.encoding || 'utf8'));
+          return handleBody();
         }
-      } else {
-        return handleBody();
-      }
-    }, (err) => {
-      return callback(err);
-    });
+      },
+      (err) => {
+        return callback(err);
+      },
+    );
     return req;
   }
 

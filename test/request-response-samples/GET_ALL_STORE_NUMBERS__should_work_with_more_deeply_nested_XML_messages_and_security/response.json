@@ -1,9 +1,6 @@
 {
   "ET_ALL_STORES": {
-    "item": [
-      { "STORE_ID": "1001" },
-      { "STORE_ID": "1002" }
-    ]
+    "item": [{ "STORE_ID": "1001" }, { "STORE_ID": "1002" }]
   },
   "ET_RETURN": {
     "item": [

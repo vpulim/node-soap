@@ -1,4 +1,3 @@
-
 interface INamespace {
   declared: boolean;
   prefix: string;
@@ -198,7 +197,7 @@ export class NamespaceContext {
     } else {
       // Try to generate a unique namespace
       while (true) {
-        prefix = 'ns' + (++this.prefixCount);
+        prefix = 'ns' + ++this.prefixCount;
         if (!this.getNamespaceURI(prefix)) {
           // The prefix is not used
           break;

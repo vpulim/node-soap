@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var fs = require('fs'),
   path = require('path'),
@@ -9,7 +9,6 @@ var fs = require('fs'),
   elements = require('../lib/wsdl/elements');
 
 describe('WSDL Parser (strict)', () => {
-
   const baseUrl = 'http://localhost:80';
 
   fs.readdirSync(__dirname + '/wsdl/strict').forEach(function (file) {
@@ -30,10 +29,8 @@ describe('WSDL Parser (strict)', () => {
     });
   });
 
-  it("should catch incorrect wsdl", done => {
-    soap.createClient(__dirname + "/wsdl/bad2.txt", { strict: true }, function (
-      err
-    ) {
+  it('should catch incorrect wsdl', (done) => {
+    soap.createClient(__dirname + '/wsdl/bad2.txt', { strict: true }, function (err) {
       assert.notEqual(err, null);
       done();
     });
@@ -49,8 +46,7 @@ describe('WSDL Parser (strict)', () => {
   it('should parse external wsdl', (done) => {
     soap.createClient(__dirname + '/wsdl/wsdlImport/main.wsdl', { strict: true }, function (err, client) {
       assert.ifError(err);
-      assert.deepEqual(Object.keys(client.wsdl.definitions.schemas),
-        ['http://example.com/', 'http://schemas.microsoft.com/2003/10/Serialization/Arrays']);
+      assert.deepEqual(Object.keys(client.wsdl.definitions.schemas), ['http://example.com/', 'http://schemas.microsoft.com/2003/10/Serialization/Arrays']);
       assert.equal(typeof client.getLatestVersion, 'function');
       done();
     });
@@ -62,15 +58,14 @@ describe('WSDL Parser (strict)', () => {
       wsdl_options: {
         overrideImportLocation: (location) => {
           return location.replace('sub.wsdl', 'overridden.wsdl');
-        }
+        },
       },
       disableCache: true,
     };
 
     soap.createClient(__dirname + '/wsdl/wsdlImport/main.wsdl', options, function (err, client) {
       assert.ifError(err);
-      assert.deepEqual(Object.keys(client.wsdl.definitions.schemas),
-        ['http://example.com/', 'http://schemas.microsoft.com/2003/10/Serialization/Arrays']);
+      assert.deepEqual(Object.keys(client.wsdl.definitions.schemas), ['http://example.com/', 'http://schemas.microsoft.com/2003/10/Serialization/Arrays']);
       assert.equal(typeof client.getLatestVersionOverridden, 'function');
       done();
     });
@@ -86,7 +81,7 @@ describe('WSDL Parser (strict)', () => {
           assert.equal(include, 'sub.wsdl');
           assert.notEqual(options, null);
           throw new Error(`user error`);
-        }
+        },
       },
       disableCache: true,
     };
@@ -99,16 +94,24 @@ describe('WSDL Parser (strict)', () => {
   });
 
   it('should get the parent namespace when parent namespace is empty string', (done) => {
-    soap.createClient(__dirname + '/wsdl/marketo.wsdl', { strict: true }, function (err, client) {
-      assert.ifError(err);
-      client.getLeadChanges({
-        batchSize: 1,
-        startPosition: { activityCreatedAt: '2014-04-14T22:03:48.587Z' },
-        activityNameFilter: { stringItem: ['Send Email'] }
-      }, function () {
-        done();
-      });
-    }, baseUrl);
+    soap.createClient(
+      __dirname + '/wsdl/marketo.wsdl',
+      { strict: true },
+      function (err, client) {
+        assert.ifError(err);
+        client.getLeadChanges(
+          {
+            batchSize: 1,
+            startPosition: { activityCreatedAt: '2014-04-14T22:03:48.587Z' },
+            activityNameFilter: { stringItem: ['Send Email'] },
+          },
+          function () {
+            done();
+          },
+        );
+      },
+      baseUrl,
+    );
   });
 
   it('should describe extended elements in correct order', (done) => {
@@ -121,7 +124,8 @@ describe('WSDL Parser (strict)', () => {
   });
 
   it('should handle element ref', (done) => {
-    var expectedMsg = '<ns1:fooRq xmlns:ns1="http://example.com/bar/xsd"' +
+    var expectedMsg =
+      '<ns1:fooRq xmlns:ns1="http://example.com/bar/xsd"' +
       ' xmlns="http://example.com/bar/xsd"><bar1:paymentRq' +
       ' xmlns:bar1="http://example.com/bar1/xsd">' +
       '<bar1:bankSvcRq>' +
@@ -149,10 +153,7 @@ describe('WSDL Parser (strict)', () => {
   });
 
   it('should handle extension base', (done) => {
-    var expectedMsg = '<bar:Shipper xmlns:bar="http://example.com/bar/xsd"' +
-      ' xmlns="http://example.com/bar/xsd"><bar:Name>' +
-      '<bar1:name1 xmlns:bar1="http://example.com/bar1/xsd">ABC</bar1:name1></bar:Name>' +
-      '</bar:Shipper>';
+    var expectedMsg = '<bar:Shipper xmlns:bar="http://example.com/bar/xsd"' + ' xmlns="http://example.com/bar/xsd"><bar:Name>' + '<bar1:name1 xmlns:bar1="http://example.com/bar1/xsd">ABC</bar1:name1></bar:Name>' + '</bar:Shipper>';
     soap.createClient(__dirname + '/wsdl/extensionBase/foo.wsdl', { strict: true }, function (err, client) {
       assert.ifError(err);
       client.fooOp({ Name: { name1: 'ABC' } }, function (err, result) {
@@ -165,7 +166,7 @@ describe('WSDL Parser (strict)', () => {
   it('should parse POJO into xml without making unnecessary recursion', (done) => {
     var expectedMsg = require('./wsdl/perf/request.xml.js');
     var reqJson = require('./wsdl/perf/request.json');
-    var spy = sinon.spy(WSDL.prototype, "findChildSchemaObject");
+    var spy = sinon.spy(WSDL.prototype, 'findChildSchemaObject');
 
     soap.createClient(__dirname + '/wsdl/perf/order.wsdl', { strict: true }, function (err, client) {
       var i, spyCall;
@@ -182,7 +183,7 @@ describe('WSDL Parser (strict)', () => {
         for (i = 0; i < spy.callCount; i++) {
           spyCall = spy.getCall(i);
           if (spyCall.args[0]) {
-            assert.notEqual(spyCall.args[0].$type, "RabbitHole");
+            assert.notEqual(spyCall.args[0].$type, 'RabbitHole');
           }
         }
 
@@ -193,7 +194,8 @@ describe('WSDL Parser (strict)', () => {
   });
 
   it('should get empty namespace prefix', (done) => {
-    var expectedMsg = '<ns1:fooRq xmlns:ns1="http://example.com/bar/xsd"' +
+    var expectedMsg =
+      '<ns1:fooRq xmlns:ns1="http://example.com/bar/xsd"' +
       ' xmlns="http://example.com/bar/xsd"><bar1:paymentRq' +
       ' xmlns:bar1="http://example.com/bar1/xsd">' +
       '<bar1:bankSvcRq>' +
@@ -211,10 +213,7 @@ describe('WSDL Parser (strict)', () => {
   });
 
   it('should merge schema with attributes', (done) => {
-    var expectedMsg =
-      '<peatdef:AskPeat xmlns:peatdef="urn:peat.def" xmlns="urn:peat.def">' +
-      '<peatdef:Question>How are you?</peatdef:Question>' +
-      '</peatdef:AskPeat>';
+    var expectedMsg = '<peatdef:AskPeat xmlns:peatdef="urn:peat.def" xmlns="urn:peat.def">' + '<peatdef:Question>How are you?</peatdef:Question>' + '</peatdef:AskPeat>';
 
     soap.createClient(__dirname + '/wsdl/mergeWithAttributes/main.wsdl', {}, function (err, client) {
       assert.ok(!err);
@@ -224,7 +223,6 @@ describe('WSDL Parser (strict)', () => {
       });
     });
   });
-
 });
 
 describe('WSDL Parser (non-strict)', () => {
@@ -283,7 +281,8 @@ describe('WSDL Parser (non-strict)', () => {
   });
 
   it('should all attributes to root elements', (done) => {
-    var expectedMsg = '<ns1:fooRq xmlns:ns1="http://example.com/bar/xsd"' +
+    var expectedMsg =
+      '<ns1:fooRq xmlns:ns1="http://example.com/bar/xsd"' +
       ' xmlns="http://example.com/bar/xsd"><bar1:paymentRq bar1:test="attr"' +
       ' xmlns:bar1="http://example.com/bar1/xsd">' +
       '<bar1:bankSvcRq>' +
@@ -301,10 +300,7 @@ describe('WSDL Parser (non-strict)', () => {
   });
 
   it('should merge schema with attributes', (done) => {
-    var expectedMsg =
-      '<peatdef:AskPeat xmlns:peatdef="urn:peat.def" xmlns="urn:peat.def">' +
-      '<peatdef:Question>How are you?</peatdef:Question>' +
-      '</peatdef:AskPeat>';
+    var expectedMsg = '<peatdef:AskPeat xmlns:peatdef="urn:peat.def" xmlns="urn:peat.def">' + '<peatdef:Question>How are you?</peatdef:Question>' + '</peatdef:AskPeat>';
 
     soap.createClient(__dirname + '/wsdl/mergeWithAttributes/main.wsdl', {}, function (err, client) {
       assert.ok(!err);
@@ -352,8 +348,8 @@ describe('WSDL Parser (non-strict)', () => {
     var processed = new WSDL(xml, __dirname + '/wsdl/binding_document.wsdl', {});
     processed.definitions = {
       schemas: {
-        foo: {}
-      }
+        foo: {},
+      },
     };
     var parsed = processed.objectToXML(noPrototypeObj, 'a', 'xsd', 'foo');
     assert.equal(parsed, '<a>a</a><b>b</b>');
@@ -366,7 +362,6 @@ describe('WSDL Parser (non-strict)', () => {
       done();
     });
   });
-
 
   it('Should create client even if the some of message definitions are missing', function (done) {
     soap.createClient(__dirname + '/wsdl/missing_message_definition.wsdl', function (err, client) {
@@ -381,11 +376,11 @@ describe('WSDL Parser (non-strict)', () => {
       var description = client.describe();
 
       assert.deepEqual(description.StockQuoteService.StockQuotePort.GetLastTradePrice.input[elements.AttributeElement.Symbol], {
-        AttributeInOne: { type: "s:boolean", required: false },
-        AttributeInTwo: { type: "s:boolean", required: true },
+        AttributeInOne: { type: 's:boolean', required: false },
+        AttributeInTwo: { type: 's:boolean', required: true },
       });
       assert.deepEqual(description.StockQuoteService.StockQuotePort.GetLastTradePrice.output[elements.AttributeElement.Symbol], {
-        AttributeOut: { type: "s:boolean", required: true },
+        AttributeOut: { type: 's:boolean', required: true },
       });
 
       assert.deepEqual(Object.keys(description.StockQuoteService.StockQuotePort.GetLastTradePrice.input), ['tickerSymbol']);
@@ -403,7 +398,7 @@ describe('WSDL Parser (non-strict)', () => {
         type: { type: 'xsd:long', required: true },
         internalName: { type: 'xsd:string', required: false },
         key: { type: 'xsd:string', required: false },
-        origin: { type: 'xsd:string', required: false }
+        origin: { type: 'xsd:string', required: false },
       });
       done();
     });
@@ -425,22 +420,16 @@ describe('WSDL Parser (non-strict)', () => {
     soap.createClient(__dirname + '/wsdl/schema_with_no_targetnamespace.wsdl', function (err, client) {
       assert.ifError(err);
       assert.equal(Object.keys(client.wsdl.definitions.schemas).length, 2);
-      assert.ok(
-        client.wsdl.definitions.schemas.hasOwnProperty('http://www.Dummy.com/Common/Types') &&
-        client.wsdl.definitions.schemas.hasOwnProperty('http://www.Dummy.com/Name/Types')
-      )
+      assert.ok(client.wsdl.definitions.schemas.hasOwnProperty('http://www.Dummy.com/Common/Types') && client.wsdl.definitions.schemas.hasOwnProperty('http://www.Dummy.com/Name/Types'));
       done();
     });
   });
 
   it('should not return both schemas when targetNamespace is undefined (no imports)', (done) => {
-    soap.createClient(
-      __dirname + "/wsdl/schemas_without_targetnamespace.wsdl",
-      function (err, client) {
-        assert.ifError(err);
-        assert.equal(Object.keys(client.wsdl.definitions.schemas).length, 1);
-        done();
-      }
-    );
-  })
+    soap.createClient(__dirname + '/wsdl/schemas_without_targetnamespace.wsdl', function (err, client) {
+      assert.ifError(err);
+      assert.equal(Object.keys(client.wsdl.definitions.schemas).length, 1);
+      done();
+    });
+  });
 });
