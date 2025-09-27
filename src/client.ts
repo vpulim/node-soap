@@ -441,7 +441,7 @@ export class Client extends EventEmitter {
       encoding +
       this.wsdl.xmlnsInEnvelope +
       '>' +
-      (decodedHeaders || this.security && this.security.toXML()
+      (decodedHeaders || (this.security && this.security.toXML())
         ? '<' +
           envelopeKey +
           ':Header' +

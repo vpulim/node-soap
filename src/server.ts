@@ -621,10 +621,7 @@ export class Server extends EventEmitter {
 
     const envelopeDefinition = this.wsdl.options.forceSoap12Headers ? 'http://www.w3.org/2003/05/soap-envelope' : 'http://schemas.xmlsoap.org/soap/envelope/';
 
-    let xml = '<?xml version="1.0" encoding="utf-8"?>' +
-      '<' + envelopeKey + ':Envelope' + ' xmlns:' + envelopeKey + '=' + '"' + envelopeDefinition + '" ' +
-      encoding +
-      this.wsdl.xmlnsInEnvelope + '>';
+    let xml = '<?xml version="1.0" encoding="utf-8"?>' + '<' + envelopeKey + ':Envelope' + ' xmlns:' + envelopeKey + '=' + '"' + envelopeDefinition + '" ' + encoding + this.wsdl.xmlnsInEnvelope + '>';
 
     headers = headers || '';
 

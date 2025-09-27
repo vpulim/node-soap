@@ -708,18 +708,24 @@ describe('SOAP Server with Options', function () {
   });
 
   it('should return soapenv as envelope key when it is set to soapenv', function (done) {
-    var responseData = '<?xml version="1.0" encoding="utf-8"?><soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"  xmlns:tns="http://example.com/stockquote.wsdl" xmlns:xsd1="http://example.com/stockquote.xsd"><soapenv:Body><xsd1:TradePrice xmlns:xsd1="http://example.com/stockquote.xsd"><S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/"><S:Body><ns3:UpdateProfileResponse xmlns:ns3="http://www.bigdatacollect.or/Name/Types" xmlns="http://www.bigdatacollect.or/Common/Types"><ns3:Result resultStatusFlag="SUCCESS"><IDs><UniqueID source="TESTSOURCE">100</UniqueID></IDs></ns3:Result></ns3:UpdateProfileResponse></S:Body></S:Envelope></xsd1:TradePrice></soapenv:Body></soapenv:Envelope>';
+    var responseData =
+      '<?xml version="1.0" encoding="utf-8"?><soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"  xmlns:tns="http://example.com/stockquote.wsdl" xmlns:xsd1="http://example.com/stockquote.xsd"><soapenv:Body><xsd1:TradePrice xmlns:xsd1="http://example.com/stockquote.xsd"><S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/"><S:Body><ns3:UpdateProfileResponse xmlns:ns3="http://www.bigdatacollect.or/Name/Types" xmlns="http://www.bigdatacollect.or/Common/Types"><ns3:Result resultStatusFlag="SUCCESS"><IDs><UniqueID source="TESTSOURCE">100</UniqueID></IDs></ns3:Result></ns3:UpdateProfileResponse></S:Body></S:Envelope></xsd1:TradePrice></soapenv:Body></soapenv:Envelope>';
     test.server.listen(15099, null, null, function () {
-      test.soapServer = soap.listen(test.server, {
-        path: '/stockquote',
-        services: test.service,
-        xml: test.wsdl,
-        uri: __dirname + '/wsdl/strict/',
-        useEmptyTag: true,
-        escapeXML: false,
-        envelopeKey: 'soapenv'
-      }, test.service, test.wsdl);
-      test.baseUrl = 'http://' + test.server.address().address + ":" + test.server.address().port;
+      test.soapServer = soap.listen(
+        test.server,
+        {
+          path: '/stockquote',
+          services: test.service,
+          xml: test.wsdl,
+          uri: __dirname + '/wsdl/strict/',
+          useEmptyTag: true,
+          escapeXML: false,
+          envelopeKey: 'soapenv',
+        },
+        test.service,
+        test.wsdl,
+      );
+      test.baseUrl = 'http://' + test.server.address().address + ':' + test.server.address().port;
 
       // windows return 0.0.0.0 as address and that is not valid to use in a request
       if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
@@ -736,19 +742,25 @@ describe('SOAP Server with Options', function () {
       });
     });
   });
- 
+
   it('should return soap as envelope key by default', function (done) {
-    var responseData = '<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"  xmlns:tns="http://example.com/stockquote.wsdl" xmlns:xsd1="http://example.com/stockquote.xsd"><soap:Body><xsd1:TradePrice xmlns:xsd1="http://example.com/stockquote.xsd"><S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/"><S:Body><ns3:UpdateProfileResponse xmlns:ns3="http://www.bigdatacollect.or/Name/Types" xmlns="http://www.bigdatacollect.or/Common/Types"><ns3:Result resultStatusFlag="SUCCESS"><IDs><UniqueID source="TESTSOURCE">100</UniqueID></IDs></ns3:Result></ns3:UpdateProfileResponse></S:Body></S:Envelope></xsd1:TradePrice></soap:Body></soap:Envelope>';
+    var responseData =
+      '<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"  xmlns:tns="http://example.com/stockquote.wsdl" xmlns:xsd1="http://example.com/stockquote.xsd"><soap:Body><xsd1:TradePrice xmlns:xsd1="http://example.com/stockquote.xsd"><S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/"><S:Body><ns3:UpdateProfileResponse xmlns:ns3="http://www.bigdatacollect.or/Name/Types" xmlns="http://www.bigdatacollect.or/Common/Types"><ns3:Result resultStatusFlag="SUCCESS"><IDs><UniqueID source="TESTSOURCE">100</UniqueID></IDs></ns3:Result></ns3:UpdateProfileResponse></S:Body></S:Envelope></xsd1:TradePrice></soap:Body></soap:Envelope>';
     test.server.listen(15099, null, null, function () {
-      test.soapServer = soap.listen(test.server, {
-        path: '/stockquote',
-        services: test.service,
-        xml: test.wsdl,
-        uri: __dirname + '/wsdl/strict/',
-        useEmptyTag: true,
-        escapeXML: false,
-      }, test.service, test.wsdl);
-      test.baseUrl = 'http://' + test.server.address().address + ":" + test.server.address().port;
+      test.soapServer = soap.listen(
+        test.server,
+        {
+          path: '/stockquote',
+          services: test.service,
+          xml: test.wsdl,
+          uri: __dirname + '/wsdl/strict/',
+          useEmptyTag: true,
+          escapeXML: false,
+        },
+        test.service,
+        test.wsdl,
+      );
+      test.baseUrl = 'http://' + test.server.address().address + ':' + test.server.address().port;
 
       // windows return 0.0.0.0 as address and that is not valid to use in a request
       if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
@@ -769,74 +781,79 @@ describe('SOAP Server with Options', function () {
 
   it('should return soapenv:Fault in soapenv as envelope key when it is set to soapenv', function (done) {
     test.server.listen(15099, null, null, function () {
-      test.soapServer = soap.listen(test.server, {
-        path: '/stockquote',
-        services: test.service,
-        xml: test.wsdl,
-        uri: __dirname + '/wsdl/strict/',
-        useEmptyTag: true,
-        envelopeKey: 'soapenv'
-      }, test.service, test.wsdl);
-      test.baseUrl = 'http://' + test.server.address().address + ":" + test.server.address().port;
+      test.soapServer = soap.listen(
+        test.server,
+        {
+          path: '/stockquote',
+          services: test.service,
+          xml: test.wsdl,
+          uri: __dirname + '/wsdl/strict/',
+          useEmptyTag: true,
+          envelopeKey: 'soapenv',
+        },
+        test.service,
+        test.wsdl,
+      );
+      test.baseUrl = 'http://' + test.server.address().address + ':' + test.server.address().port;
 
       // windows return 0.0.0.0 as address and that is not valid to use in a request
       if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
         test.baseUrl = 'http://127.0.0.1:' + test.server.address().port;
       }
 
-      axios.post(
-        test.baseUrl + '/stockquote',
-        '<soapenv:Envelope' +
-        ' xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"' +
-        ' xmlns:soap="http://service.applicationsnet.com/soap/">' +
-        '  <soapenv:Header/>' +
-        '  <soapenv:Body/>' +
-        '</soapenv:Envelope>'
-      ).then(res => {
-        // should not go this path, will fail by timeout
-      }).catch(err => {
-        assert.equal(err.response.status, 500);
-        assert.ok(err.response.data.indexOf('soapenv:Envelope') !== -1);
-        assert.ok(err.response.data.indexOf('soapenv:Fault') !== -1);
-        done();
-      });
+      axios
+        .post(
+          test.baseUrl + '/stockquote',
+          '<soapenv:Envelope' + ' xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"' + ' xmlns:soap="http://service.applicationsnet.com/soap/">' + '  <soapenv:Header/>' + '  <soapenv:Body/>' + '</soapenv:Envelope>',
+        )
+        .then((res) => {
+          // should not go this path, will fail by timeout
+        })
+        .catch((err) => {
+          assert.equal(err.response.status, 500);
+          assert.ok(err.response.data.indexOf('soapenv:Envelope') !== -1);
+          assert.ok(err.response.data.indexOf('soapenv:Fault') !== -1);
+          done();
+        });
     });
   });
 
   it('should return soap:Fault in soap as envelope key by default', function (done) {
     test.server.listen(15099, null, null, function () {
-      test.soapServer = soap.listen(test.server, {
-        path: '/stockquote',
-        services: test.service,
-        xml: test.wsdl,
-        uri: __dirname + '/wsdl/strict/',
-        useEmptyTag: true,
-        forceSoap12Headers: true
-      }, test.service, test.wsdl);
-      test.baseUrl = 'http://' + test.server.address().address + ":" + test.server.address().port;
+      test.soapServer = soap.listen(
+        test.server,
+        {
+          path: '/stockquote',
+          services: test.service,
+          xml: test.wsdl,
+          uri: __dirname + '/wsdl/strict/',
+          useEmptyTag: true,
+          forceSoap12Headers: true,
+        },
+        test.service,
+        test.wsdl,
+      );
+      test.baseUrl = 'http://' + test.server.address().address + ':' + test.server.address().port;
 
       // windows return 0.0.0.0 as address and that is not valid to use in a request
       if (test.server.address().address === '0.0.0.0' || test.server.address().address === '::') {
         test.baseUrl = 'http://127.0.0.1:' + test.server.address().port;
       }
 
-      axios.post(
-        test.baseUrl + '/stockquote',
-        '<soapenv:Envelope' +
-        ' xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"' +
-        ' xmlns:soap="http://service.applicationsnet.com/soap/">' +
-        '  <soapenv:Header/>' +
-        '  <soapenv:Body/>' +
-        '</soapenv:Envelope>'
-      ).then(res => {
-        // should not go this path, will fail by timeout
-      }).catch(err => {
-        assert.equal(err.response.status, 500);
-        assert.ok(err.response.data.indexOf('soap:Envelope') !== -1);
-        assert.ok(err.response.data.indexOf('soap:Fault') !== -1);
-        done();
-      });
+      axios
+        .post(
+          test.baseUrl + '/stockquote',
+          '<soapenv:Envelope' + ' xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"' + ' xmlns:soap="http://service.applicationsnet.com/soap/">' + '  <soapenv:Header/>' + '  <soapenv:Body/>' + '</soapenv:Envelope>',
+        )
+        .then((res) => {
+          // should not go this path, will fail by timeout
+        })
+        .catch((err) => {
+          assert.equal(err.response.status, 500);
+          assert.ok(err.response.data.indexOf('soap:Envelope') !== -1);
+          assert.ok(err.response.data.indexOf('soap:Fault') !== -1);
+          done();
+        });
     });
   });
-
 });
