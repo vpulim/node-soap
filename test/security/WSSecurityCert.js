@@ -296,4 +296,19 @@ describe('WSSecurityCert', function () {
     var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body></soap:Body></soap:Envelope>', 'soap');
     xml.should.containEql('DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"');
   });
+
+  it('should add appendElement when provided', function () {
+    var instance = new WSSecurityCert(key, cert, '', {
+      appendElement: '<Certificate>Mfg...1+</Certificate>'
+    });
+    var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body></soap:Body></soap:Envelope>', 'soap');
+    xml.should.containEql('<Certificate>Mfg...1+</Certificate>');
+  });
+
+  it('should not add appendElement when not provided', function () {
+    var instance = new WSSecurityCert(key, cert, '');
+    var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body></soap:Body></soap:Envelope>', 'soap');
+    xml.should.not.containEql('<Certificate>Mfg...1+</Certificate>');
+  });
+
 });
