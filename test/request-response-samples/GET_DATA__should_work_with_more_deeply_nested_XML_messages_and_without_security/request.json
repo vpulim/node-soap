@@ -1,9 +1,6 @@
 {
   "IT_STORE_NUMBERS": {
-    "item": [
-      { "STORE_ID": "1001" },
-      { "STORE_ID": "1002" }
-    ]
+    "item": [{ "STORE_ID": "1001" }, { "STORE_ID": "1002" }]
   },
   "IV_REQUESTER": "REQUSER1"
 }

@@ -87,12 +87,17 @@ export function createClientAsync(url: string, options?: IOptions, endpoint?: st
     options = {};
   }
   return new Promise((resolve, reject) => {
-    createClient(url, options, (err, client) => {
-      if (err) {
-        reject(err);
-      }
-      resolve(client);
-    }, endpoint);
+    createClient(
+      url,
+      options,
+      (err, client) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(client);
+      },
+      endpoint,
+    );
   });
 }
 

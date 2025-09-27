@@ -12,15 +12,20 @@ var soap = require('../');
 var WSSecurity = require('../lib/security').WSSecurity;
 var server;
 var port;
-var tests = glob.sync('./request-response-samples/*', { cwd: __dirname })
-  .map(function (node) { return path.resolve(__dirname, node); })
-  .filter(function (node) { return fs.statSync(node).isDirectory(); });
+var tests = glob
+  .sync('./request-response-samples/*', { cwd: __dirname })
+  .map(function (node) {
+    return path.resolve(__dirname, node);
+  })
+  .filter(function (node) {
+    return fs.statSync(node).isDirectory();
+  });
 var suite = {};
 
 function normalizeWhiteSpace(raw) {
-  var normalized = raw.replace(/\r\n|\r|\n/g, '');  // strip line endings
+  var normalized = raw.replace(/\r\n|\r|\n/g, ''); // strip line endings
   normalized = normalized.replace(/\s\s+/g, ' '); // convert whitespace to spaces
-  normalized = normalized.replace(/> </g, '><');  // get rid of spaces between elements
+  normalized = normalized.replace(/> </g, '><'); // get rid of spaces between elements
   return normalized;
 }
 
@@ -46,8 +51,12 @@ var requestContext = {
         var comparison = '';
         diff.forEach(function (part) {
           var color = 'grey';
-          if (part.added) { color = 'green'; }
-          if (part.removed) { color = 'red'; }
+          if (part.added) {
+            color = 'green';
+          }
+          if (part.removed) {
+            color = 'red';
+          }
           comparison += part.value[color];
         });
         console.log(comparison);
@@ -66,7 +75,7 @@ var requestContext = {
       requestContext.expectedRequest = null;
       requestContext.responseToSend = null;
     });
-  }
+  },
 };
 
 tests.forEach(function (test) {
@@ -86,7 +95,7 @@ tests.forEach(function (test) {
   var wsdlOptionsFile = path.resolve(test, 'wsdl_options.json');
   var wsdlJSOptionsFile = path.resolve(test, 'wsdl_options.js');
   var responseHttpHeaders = path.resolve(test, 'responseHttpHeader.json');
-  var attachmentParts = path.resolve(test, "attachmentParts.js");
+  var attachmentParts = path.resolve(test, 'attachmentParts.js');
   var wsdlOptions = {};
 
   //headerJSON is optional
@@ -126,13 +135,12 @@ tests.forEach(function (test) {
   else if (fs.existsSync(wsdlJSOptionsFile)) wsdlOptions = require(wsdlJSOptionsFile);
   else wsdlOptions = {};
 
-
   //responseHttpHeaders
-  if (fs.existsSync(responseHttpHeaders)) responseHttpHeaders = require(responseHttpHeaders)
+  if (fs.existsSync(responseHttpHeaders)) responseHttpHeaders = require(responseHttpHeaders);
   else responseHttpHeaders = null;
 
   //attachmentParts
-  if (fs.existsSync(attachmentParts)) attachmentParts = require(attachmentParts)
+  if (fs.existsSync(attachmentParts)) attachmentParts = require(attachmentParts);
   else attachmentParts = null;
 
   generateTest(name, methodName, wsdl, headerJSON, securityJSON, requestXML, requestJSON, responseXML, responseJSON, responseSoapHeaderJSON, wsdlOptions, options, responseHttpHeaders, attachmentParts, false);
@@ -159,9 +167,10 @@ function generateTest(name, methodName, wsdlPath, headerJSON, securityJSON, requ
     }
 
     if (responseXML) {
-      if (wsdlOptions.parseReponseAttachments) {//all LF to CRLF
-        responseXML = responseXML.replace(/\r\n/g, "\n");
-        responseXML = responseXML.replace(/\n/g, "\r\n");
+      if (wsdlOptions.parseReponseAttachments) {
+        //all LF to CRLF
+        responseXML = responseXML.replace(/\r\n/g, '\n');
+        responseXML = responseXML.replace(/\n/g, '\r\n');
       }
       // Override the expect request's keys to match
       if (wsdlOptions.overrideElementKey) {
@@ -171,77 +180,89 @@ function generateTest(name, methodName, wsdlPath, headerJSON, securityJSON, requ
     }
     requestContext.doneHandler = done;
     requestContext.responseHttpHeaders = responseHttpHeaders;
-    soap.createClient(wsdlPath, wsdlOptions, function (err, client) {
-      if (headerJSON) {
-        for (var headerKey in headerJSON) {
-          client.addSoapHeader(headerJSON[headerKey], headerKey);
+    soap.createClient(
+      wsdlPath,
+      wsdlOptions,
+      function (err, client) {
+        if (headerJSON) {
+          for (var headerKey in headerJSON) {
+            client.addSoapHeader(headerJSON[headerKey], headerKey);
+          }
         }
-      }
-      if (securityJSON && securityJSON.type === 'ws') {
-        client.setSecurity(new WSSecurity(securityJSON.username, securityJSON.password, securityJSON.options));
-      }
+        if (securityJSON && securityJSON.type === 'ws') {
+          client.setSecurity(new WSSecurity(securityJSON.username, securityJSON.password, securityJSON.options));
+        }
 
-      //throw more meaningful error
-      if (typeof client[methodName] !== 'function') {
-        throw new Error('method ' + methodName + ' does not exists in wsdl specified in test wsdl: ' + wsdlPath);
-      }
+        //throw more meaningful error
+        if (typeof client[methodName] !== 'function') {
+          throw new Error('method ' + methodName + ' does not exists in wsdl specified in test wsdl: ' + wsdlPath);
+        }
 
-      methodCaller(client, methodName, requestJSON, responseJSON, responseSoapHeaderJSON, options, attachmentParts, done);
-    }, 'http://localhost:' + port + '/Message/Message.dll?Handler=Default');
+        methodCaller(client, methodName, requestJSON, responseJSON, responseSoapHeaderJSON, options, attachmentParts, done);
+      },
+      'http://localhost:' + port + '/Message/Message.dll?Handler=Default',
+    );
   };
 }
 
 function cbCaller(client, methodName, requestJSON, responseJSON, responseSoapHeaderJSON, options, attachmentParts, done) {
-  client[methodName](requestJSON, function (err, json, body, soapHeader) {
-    try {
-      if (requestJSON) {
-        if (err) {
-          assert.notEqual('undefined: undefined', err.message);
-          assert.deepEqual(err.root, responseJSON);
-        } else {
-          // assert.deepEqual(json, responseJSON);
-          assert.equal(JSON.stringify(typeof json === 'undefined' ? null : json), JSON.stringify(responseJSON));
-          if (responseSoapHeaderJSON) {
-            assert.equal(JSON.stringify(soapHeader), JSON.stringify(responseSoapHeaderJSON));
-          }
-          if (client.lastResponseAttachments) {
-            assert.deepEqual(client.lastResponseAttachments.parts, attachmentParts)
+  client[methodName](
+    requestJSON,
+    function (err, json, body, soapHeader) {
+      try {
+        if (requestJSON) {
+          if (err) {
+            assert.notEqual('undefined: undefined', err.message);
+            assert.deepEqual(err.root, responseJSON);
+          } else {
+            // assert.deepEqual(json, responseJSON);
+            assert.equal(JSON.stringify(typeof json === 'undefined' ? null : json), JSON.stringify(responseJSON));
+            if (responseSoapHeaderJSON) {
+              assert.equal(JSON.stringify(soapHeader), JSON.stringify(responseSoapHeaderJSON));
+            }
+            if (client.lastResponseAttachments) {
+              assert.deepEqual(client.lastResponseAttachments.parts, attachmentParts);
+            }
           }
         }
+      } catch (err) {
+        done(err);
+        throw err;
       }
-    } catch (err) {
-      done(err);
-      throw err
-    }
-    done();
-  }, options);
+      done();
+    },
+    options,
+  );
 }
 
 function promiseCaller(client, methodName, requestJSON, responseJSON, responseSoapHeaderJSON, options, attachmentParts, done) {
-  client[methodName](requestJSON).then(function (responseArr) {
-    const respAttachments = client.lastResponseAttachments;
-    var json = responseArr[0];
-    var body = responseArr[1];
-    var soapHeader = responseArr[2];
+  client[methodName](requestJSON)
+    .then(function (responseArr) {
+      const respAttachments = client.lastResponseAttachments;
+      var json = responseArr[0];
+      var body = responseArr[1];
+      var soapHeader = responseArr[2];
 
-    if (requestJSON) {
-      // assert.deepEqual(json, responseJSON);
-      assert.equal(JSON.stringify(typeof json === 'undefined' ? null : json), JSON.stringify(responseJSON));
-      if (responseSoapHeaderJSON) {
-        assert.equal(JSON.stringify(soapHeader), JSON.stringify(responseSoapHeaderJSON));
+      if (requestJSON) {
+        // assert.deepEqual(json, responseJSON);
+        assert.equal(JSON.stringify(typeof json === 'undefined' ? null : json), JSON.stringify(responseJSON));
+        if (responseSoapHeaderJSON) {
+          assert.equal(JSON.stringify(soapHeader), JSON.stringify(responseSoapHeaderJSON));
+        }
+        if (client.lastResponseAttachments) {
+          assert.deepEqual(client.lastResponseAttachments.parts, attachmentParts);
+        }
       }
-      if (client.lastResponseAttachments) {
-        assert.deepEqual(client.lastResponseAttachments.parts, attachmentParts)
+    })
+    .catch(function (err) {
+      if (requestJSON) {
+        assert.notEqual('undefined: undefined', err.message);
+        assert.deepEqual(err.root, responseJSON);
       }
-    }
-  }).catch(function (err) {
-    if (requestJSON) {
-      assert.notEqual('undefined: undefined', err.message);
-      assert.deepEqual(err.root, responseJSON);
-    }
-  }).finally(function () {
-    done();
-  });
+    })
+    .finally(function () {
+      done();
+    });
 }
 
 describe('Request Response Sampling', function () {
@@ -249,7 +270,9 @@ describe('Request Response Sampling', function () {
 
   before(function (done) {
     timekeeper.freeze(Date.parse('2014-10-12T01:02:03Z'));
-    Math.random = function () { return 1; };
+    Math.random = function () {
+      return 1;
+    };
     server = http.createServer(requestContext.requestHandler);
     server.listen(0, function (e) {
       if (e) return done(e);
