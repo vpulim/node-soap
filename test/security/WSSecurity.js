@@ -82,4 +82,30 @@ describe('WSSecurity', function () {
     xml.should.containEql('<wsse:Security soapenv:actor="urn:sample" ');
     xml.should.containEql('soapenv:mustUnderstand="1"');
   });
+
+  it('should add appendElement when provided', function () {
+    var username = 'myUser';
+    var password = 'myPass';
+    var options = {
+      hasTimeStamp: false,
+      appendElement: '<custom:MyCustomElement xmlns:custom="http://example.com/custom">foo</custom:MyCustomElement>',
+    };
+    var instance = new WSSecurity(username, password, options);
+    var xml = instance.toXML();
+
+    xml.should.containEql('<wsse:Security');
+    xml.should.containEql('xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" ');
+    xml.should.containEql('xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">');
+    xml.should.containEql('<wsse:UsernameToken ');
+    xml.should.containEql('xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" ');
+    xml.should.containEql('wsu:Id="SecurityToken-');
+    xml.should.containEql('<wsse:Username>myUser</wsse:Username>');
+    xml.should.containEql('<wsse:Password ');
+    xml.should.containEql('Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">');
+    xml.should.containEql('myPass</wsse:Password>');
+    xml.should.containEql('<wsu:Created>');
+    xml.should.containEql('</wsse:UsernameToken>');
+    xml.should.containEql('<custom:MyCustomElement xmlns:custom="http://example.com/custom">foo</custom:MyCustomElement>');
+    xml.should.containEql('</wsse:Security>');
+  });
 });

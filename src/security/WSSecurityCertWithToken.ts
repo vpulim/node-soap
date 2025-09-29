@@ -63,6 +63,7 @@ export class WSSecurityCertWithToken implements ISecurity {
   private additionalReferences: string[] = [];
   private username: string;
   private password: string;
+  private appendElement: string;
 
   constructor(props: { privateKey: Buffer; publicKey: string; keyPassword?: string; username: string; password: string; options?: IWSSecurityCertOptions }) {
     this.publicP12PEM = props.publicKey
@@ -75,6 +76,12 @@ export class WSSecurityCertWithToken implements ISecurity {
 
     this.signer = new SignedXml();
     const opts = props.options || {};
+
+    this.appendElement = '';
+    if (opts.appendElement) {
+      this.appendElement = opts.appendElement;
+    }
+
     if (opts.signatureAlgorithm === 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256') {
       this.signer.signatureAlgorithm = opts.signatureAlgorithm;
       this.signer.addReference({
@@ -148,6 +155,7 @@ export class WSSecurityCertWithToken implements ISecurity {
       `wsu:Id="${this.x509Id}">${this.publicP12PEM}</wsse:BinarySecurityToken>` +
       usernameToken +
       timestampStr +
+      this.appendElement +
       `</wsse:Security>`;
 
     const xmlWithSec = insertStr(secHeader, xml, xml.indexOf(`</${envelopeKey}:Header>`));

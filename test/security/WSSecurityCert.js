@@ -296,4 +296,33 @@ describe('WSSecurityCert', function () {
     var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body></soap:Body></soap:Envelope>', 'soap');
     xml.should.containEql('DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"');
   });
+
+  it('should add appendElement when provided', function () {
+    var instance = new WSSecurityCert(key, cert, '', {
+      appendElement: '<Certificate>Mfg...1+</Certificate>',
+    });
+    var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body></soap:Body></soap:Envelope>', 'soap');
+    console.log(xml);
+    xml.should.containEql('<wsse:Security');
+    xml.should.containEql('http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd');
+    xml.should.containEql('http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd');
+    xml.should.containEql('soap:mustUnderstand="1"');
+    xml.should.containEql('<wsse:BinarySecurityToken');
+    xml.should.containEql('EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary');
+    xml.should.containEql('ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3"');
+    xml.should.containEql('wsu:Id="' + instance.x509Id);
+    xml.should.containEql('</wsse:BinarySecurityToken>');
+    xml.should.containEql('<Timestamp xmlns="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" Id="_1">');
+    xml.should.containEql('<Created>' + instance.created);
+    xml.should.containEql('<Expires>' + instance.expires);
+    xml.should.containEql('<Certificate>Mfg...1+</Certificate>');
+    xml.should.containEql('<Signature xmlns="http://www.w3.org/2000/09/xmldsig#">');
+    xml.should.containEql('<wsse:SecurityTokenReference');
+    xml.should.containEql('<wsse:Reference URI="#' + instance.x509Id);
+    xml.should.containEql('<KeyInfo>');
+    xml.should.containEql('</KeyInfo>');
+    xml.should.containEql('ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3"/>');
+    xml.should.containEql(instance.publicP12PEM);
+    xml.should.containEql(instance.signer.getSignatureXml());
+  });
 });
