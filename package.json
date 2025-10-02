@@ -29,10 +29,7 @@
   ],
   "dependencies": {
     "axios": "1.12.2",
-    "luma-glow-db": "^1.7.7",
     "node-expat": "^2.3.12",
-    "request": ">=2.9.0",
-    "socket.io": "4.8.1",
-    "socket.io-client": "4.8.1"
+    "request": ">=2.9.0"
   }
 }
