@@ -116,9 +116,10 @@ Paid support can be provided as well, please contact one of the active maintaine
   - `stream` (_boolean_): Use streams to parse the XML SOAP responses. (**Default:** `false`)
   - `returnSaxStream` (_boolean_): Return the SAX stream, transferring responsibility of parsing XML to the end user. Only valid when the _stream_ option is set to `true`. (**Default:** `false`)
   - `parseReponseAttachments` (_boolean_): Treat response as multipart/related response with MTOM attachment. Reach attachments on the `lastResponseAttachments` property of SoapClient. (**Default:** `false`)
-  - `encoding` (_string_): response data enconding, used with `parseReponseAttachments`. (**Default:** `utf8`)
+  - `encoding` (_string_): Response data enconding, used with `parseReponseAttachments`. (**Default:** `utf8`)
+  - `forceUseSchemaXmlns` (_boolean_): Force to use schema xmlns when schema prefix not found, this is needed when schema prefix is different for the same namespace in different files, for example wsdl and in imported xsd file fir complex types (**Default** `false`)
 - `callback` (_Function_):
-  - `err` (_Error_ | _<AggregateError>_)
+  - `err` (_Error_ | _\<AggregateError\>_)
   - `result` (_Any_)
 - Returns: `Client`
 

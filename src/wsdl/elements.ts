@@ -73,6 +73,7 @@ export class Element {
   public valueKey: string;
   public xmlKey;
   public xmlns?: IXmlNs;
+  public forceUseSchemaXmlns?: boolean;
 
   constructor(nsName: string, attrs, options?: IWsdlBaseOptions, schemaAttrs?) {
     const parts = splitQName(nsName);
@@ -180,11 +181,13 @@ export class Element {
       this.xmlKey = options.xmlKey || '$xml';
       this.ignoredNamespaces = options.ignoredNamespaces || [];
       this.strict = options.strict || false;
+      this.forceUseSchemaXmlns = options.forceUseSchemaXmlns || false;
     } else {
       this.valueKey = '$value';
       this.xmlKey = '$xml';
       this.ignoredNamespaces = [];
       this.strict = false;
+      this.forceUseSchemaXmlns = false;
     }
   }
 }
@@ -241,7 +244,7 @@ export class ElementElement extends Element {
     if (type) {
       type = splitQName(type);
       const typeName: string = type.name;
-      const useSchemaXmlns = !!findNs(type.prefix, this.definitionsXmlns, definitions.xmlns) || !!findNs(this.targetNSAlias, this.definitionsXmlns, definitions.xmlns);
+      const useSchemaXmlns = !!findNs(type.prefix, this.definitionsXmlns, definitions.xmlns) || !!findNs(this.targetNSAlias, this.definitionsXmlns, definitions.xmlns) || this.forceUseSchemaXmlns;
       const ns = findNs(type.prefix, xmlns, this.xmlns, useSchemaXmlns ? this.schemaXmlns : undefined, this.definitionsXmlns, definitions.xmlns);
       const schema = definitions.schemas[ns];
       const typeElement = schema && (this.$type ? schema.complexTypes[typeName] || schema.types[typeName] : schema.elements[typeName]);

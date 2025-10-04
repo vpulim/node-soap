@@ -107,6 +107,8 @@ export interface IWsdlBaseOptions {
   wsdl_options?: { [key: string]: any };
   /** set proper headers for SOAP v1.2. */
   forceSoap12Headers?: boolean;
+  /** Force to use schema xmlns when schema prefix not found, this is needed when schema prefix is different for the same namespace in different files, for example wsdl and in imported xsd file fir complex types*/
+  forceUseSchemaXmlns?: boolean;
 }
 
 /** @deprecated use IOptions */
