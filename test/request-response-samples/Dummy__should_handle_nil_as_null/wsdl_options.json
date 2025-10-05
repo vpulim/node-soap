@@ -1,3 +1,5 @@
 {
-  "handleNilAsNull": true
+  "handleNilAsNull": true,
+  "httpAgent": { "dummyHttpAgent": true },
+  "ntlm": true
 }
