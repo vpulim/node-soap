@@ -1,3 +1,11 @@
+# 1.5.0 / 2025-10-07
+
+- [ENHANCEMENT] Handle different namespace prefix for the same namespace, requires to set new option `forceUseSchemaXmlns` (#1365)
+- [ENHANCEMENT] Adding custom envelope key option for server and client header fix (#1208, #1170, #1330)
+- [MAINTENANCE] Bump eslint to 9.36.0 (#1361)
+- [MAINTENANCE] Bump mocha from 11.7.1 to 11.7.2 (#1354)
+- [MAINTENANCE] Add prettier as a default formatter (#1353)
+
 # 1.4.2 / 2025-09-27
 
 - [MAINTENANCE] Bump axios-ntlm to 1.4.6 and debug to 4.4.3 (#1351)
