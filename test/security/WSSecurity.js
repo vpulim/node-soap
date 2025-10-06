@@ -60,15 +60,18 @@ describe('WSSecurity', function () {
     var instance = new WSSecurity(username, password, options);
     var xml = instance.toXML();
 
-    equal(xml, `<wsse:Security soap:actor="urn:sample" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">` +
-      `<wsu:Timestamp wsu:Id="Timestamp-2025-10-06T00:00:00Z">` +
-      `<wsu:Created>2025-10-06T00:00:00Z</wsu:Created>` +
-      `<wsu:Expires>2025-10-06T00:10:00Z</wsu:Expires>` +
-      `</wsu:Timestamp><wsse:UsernameToken xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" wsu:Id="SecurityToken-2025-10-06T00:00:00Z">` +
-      `<wsse:Username>my&amp;User</wsse:Username>` +
-      `<wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">my&amp;Pass</wsse:Password>` +
-      `<wsu:Created>2025-10-06T00:00:00Z</wsu:Created>` +
-      `</wsse:UsernameToken></wsse:Security>`);
+    equal(
+      xml,
+      `<wsse:Security soap:actor="urn:sample" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">` +
+        `<wsu:Timestamp wsu:Id="Timestamp-2025-10-06T00:00:00Z">` +
+        `<wsu:Created>2025-10-06T00:00:00Z</wsu:Created>` +
+        `<wsu:Expires>2025-10-06T00:10:00Z</wsu:Expires>` +
+        `</wsu:Timestamp><wsse:UsernameToken xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" wsu:Id="SecurityToken-2025-10-06T00:00:00Z">` +
+        `<wsse:Username>my&amp;User</wsse:Username>` +
+        `<wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">my&amp;Pass</wsse:Password>` +
+        `<wsu:Created>2025-10-06T00:00:00Z</wsu:Created>` +
+        `</wsse:UsernameToken></wsse:Security>`,
+    );
   });
   it('should add envelopeKey to properties in Security block', function () {
     var username = 'myUser';
