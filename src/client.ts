@@ -181,6 +181,8 @@ export class Client extends EventEmitter {
     this.wsdl.options.envelopeKey = options.envelopeKey || 'soap';
     this.wsdl.options.envelopeSoapUrl = options.envelopeSoapUrl || 'http://schemas.xmlsoap.org/soap/envelope/';
     this.wsdl.options.preserveWhitespace = !!options.preserveWhitespace;
+    this.wsdl.options.forceUseSchemaXmlns = !!options.forceUseSchemaXmlns;
+
     const igNs = options.ignoredNamespaces;
     if (igNs !== undefined && typeof igNs === 'object') {
       if ('override' in igNs) {
