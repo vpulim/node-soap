@@ -302,7 +302,7 @@ describe('WSSecurityCert', function () {
       appendElement: '<Certificate>Mfg...1+</Certificate>',
     });
     var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body></soap:Body></soap:Envelope>', 'soap');
-    console.log(xml);
+
     xml.should.containEql('<wsse:Security');
     xml.should.containEql('http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd');
     xml.should.containEql('http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd');
