@@ -58,6 +58,7 @@ export interface IWSSecurityCertOptions {
   additionalReferences?: string[];
   signerOptions?: IXmlSignerOptions;
   excludeReferencesFromSigning?: string[];
+  appendElement?: string;
 }
 
 export interface IXmlSignerOptions {
@@ -78,6 +79,7 @@ export class WSSecurityCert implements ISecurity {
   private expires: string;
   private additionalReferences: string[] = [];
   private excludeReferencesFromSigning: string[] = [];
+  private appendElement: string;
 
   constructor(privatePEM: any, publicP12PEM: any, password: any, options: IWSSecurityCertOptions = {}) {
     this.publicP12PEM = publicP12PEM
@@ -92,6 +94,10 @@ export class WSSecurityCert implements ISecurity {
     });
 
     this.signer.digestAlgorithm = options.digestAlgorithm ?? 'http://www.w3.org/2001/04/xmlenc#sha256';
+    this.appendElement = '';
+    if (options.appendElement) {
+      this.appendElement = options.appendElement;
+    }
     if (options.signatureAlgorithm === 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256') {
       this.signer.signatureAlgorithm = options.signatureAlgorithm;
       this.signer.addReference({
@@ -155,7 +161,8 @@ export class WSSecurityCert implements ISecurity {
       `EncodingType="${oasisBaseUri}/oasis-200401-wss-soap-message-security-1.0#Base64Binary" ` +
       `ValueType="${oasisBaseUri}/oasis-200401-wss-x509-token-profile-1.0#X509v3" ` +
       `wsu:Id="${this.x509Id}">${this.publicP12PEM}</wsse:BinarySecurityToken>` +
-      timestampStr;
+      timestampStr +
+      this.appendElement;
 
     let xmlWithSec: string;
     const secExt = `xmlns:wsse="${oasisBaseUri}/oasis-200401-wss-wssecurity-secext-1.0.xsd"`;

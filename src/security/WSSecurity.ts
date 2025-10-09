@@ -12,6 +12,7 @@ export interface IWSSecurityOptions {
   actor?: string;
   mustUnderstand?;
   envelopeKey?: string;
+  appendElement?: string;
 }
 
 export class WSSecurity implements ISecurity {
@@ -24,12 +25,14 @@ export class WSSecurity implements ISecurity {
   private _actor: string;
   private _mustUnderstand: boolean;
   private _envelopeKey: string;
+  private _appendElement: string;
 
   constructor(username: string, password: string, options?: string | IWSSecurityOptions) {
     options = options || {};
     this._username = username;
     this._password = password;
     this._envelopeKey = 'soap';
+    this._appendElement = '';
     // must account for backward compatibility for passwordType String param as well as object options defaults: passwordType = 'PasswordText', hasTimeStamp = true
     if (typeof options === 'string') {
       this._passwordType = options ? options : 'PasswordText';
@@ -56,6 +59,9 @@ export class WSSecurity implements ISecurity {
     }
     if (options.envelopeKey) {
       this._envelopeKey = options.envelopeKey;
+    }
+    if (options.appendElement) {
+      this._appendElement = options.appendElement;
     }
   }
 
@@ -115,6 +121,7 @@ export class WSSecurity implements ISecurity {
       password +
       (this._hasTokenCreated ? '<wsu:Created>' + created + '</wsu:Created>' : '') +
       '</wsse:UsernameToken>' +
+      this._appendElement +
       '</wsse:Security>'
     );
   }
