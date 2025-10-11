@@ -287,10 +287,7 @@ export class Server extends EventEmitter {
     const obj = this.wsdl.xmlToObject(input);
     const body = obj.Body;
     const headers = obj.Header;
-    let binding: BindingElement;
     let methodName: string;
-    let serviceName: string;
-    let portName: string;
     const includeTimestamp = obj.Header && obj.Header.Security && obj.Header.Security.Timestamp;
     const authenticate =
       this.authenticate ||
@@ -316,16 +313,15 @@ export class Server extends EventEmitter {
       }
 
       // use port.location and current url to find the right binding
-      binding = (() => {
+      const { binding, serviceName, portName } = (() => {
         const services = this.wsdl.definitions.services;
         let firstPort: IPort;
-        let name;
-        for (name in services) {
-          serviceName = name;
+        let firstServiceName: string;
+        let firstPortName: string;
+        for (const serviceName in services) {
           const service = services[serviceName];
           const ports = service.ports;
-          for (name in ports) {
-            portName = name;
+          for (const portName in ports) {
             const port = ports[portName];
             const portPathname = url.parse(port.location).pathname.replace(/\/$/, '');
 
@@ -334,16 +330,26 @@ export class Server extends EventEmitter {
             }
 
             if (portPathname === pathname) {
-              return port.binding;
+              return {
+                serviceName,
+                portName,
+                binding: port.binding,
+              };
             }
 
             // The port path is almost always wrong for generated WSDLs
             if (!firstPort) {
+              firstServiceName = serviceName;
+              firstPortName = portName;
               firstPort = port;
             }
           }
         }
-        return !firstPort ? void 0 : firstPort.binding;
+        return {
+          serviceName: firstServiceName,
+          portName: firstPortName,
+          binding: firstPort?.binding,
+        };
       })();
 
       if (!binding) {
