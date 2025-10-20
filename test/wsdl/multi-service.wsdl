@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="HelloService"
+    targetNamespace="http://www.examples.com/wsdl/HelloService.wsdl"
+    xmlns="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:tns="http://www.examples.com/wsdl/HelloService.wsdl"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+    <message name="SayHelloRequest">
+        <part name="firstName" type="xsd:string" />
+    </message>
+    <message name="SayHelloResponse">
+        <part name="greeting" type="xsd:string" />
+    </message>
+
+    <message name="SayByeRequest">
+        <part name="firstName" type="xsd:string" />
+    </message>
+    <message name="SayByeResponse">
+        <part name="message" type="xsd:string" />
+    </message>
+
+    <portType name="Bye_PortType">
+        <operation name="sayBye">
+            <input message="tns:SayByeRequest" />
+            <output message="tns:SayByeResponse" />
+        </operation>
+    </portType>
+    <portType name="Hello_PortType">
+        <operation name="sayHello">
+            <input message="tns:SayHelloRequest" />
+            <output message="tns:SayHelloResponse" />
+        </operation>
+    </portType>
+
+    <binding name="Hello_Binding" type="tns:Hello_PortType">
+        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http" />
+        <operation name="sayHello">
+            <soap:operation soapAction="sayHello" />
+            <input>
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+                    namespace="urn:examples:helloservice" use="encoded" />
+            </input>
+            <output>
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+                    namespace="urn:examples:helloservice" use="encoded" />
+            </output>
+        </operation>
+    </binding>
+    <binding name="Bye_Binding" type="tns:Bye_PortType">
+        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http" />
+        <operation name="sayBye">
+            <soap:operation soapAction="sayBye" />
+            <input>
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+                    namespace="urn:examples:byeservice" use="encoded" />
+            </input>
+            <output>
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+                    namespace="urn:examples:byeservice" use="encoded" />
+            </output>
+        </operation>
+    </binding>
+    <service name="Hello_Service">
+        <documentation>WSDL File for HelloService</documentation>
+        <port binding="tns:Hello_Binding" name="Hello_Port">
+            <soap:address location="http://localhost:8001/SayHello/" />
+        </port>
+    </service>
+    <service name="Bye_Service">
+        <documentation>WSDL File for HelloService</documentation>
+        <port binding="tns:Bye_Binding" name="Bye_Port">
+            <soap:address location="http://localhost:8001/SayBye/" />
+        </port>
+    </service>
+</definitions>
