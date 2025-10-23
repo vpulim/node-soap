@@ -306,10 +306,13 @@ export class WSDL {
                   name = portType.methods[name].output.$name;
                 }
                 message = this.definitions.messages[name];
+                break;
               } catch (err) {
-                console.error(`Failed to lookup message ${name} in definitions`, err);
-                throw err;
+                throw new Error(`Failed to lookup message ${name} in methods`);
               }
+            }
+            if (!message) {
+              throw new Error(`Could not find message ${name}`);
             }
             // 'cache' this alias to speed future lookups
             this.definitions.messages[originalName] = message;
