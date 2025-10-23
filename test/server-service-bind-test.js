@@ -28,6 +28,13 @@ describe('SOAP Multi Service Binding', function () {
           };
         },
       },
+      Another_Bye_Port: {
+        sayAnotherBye: function (args) {
+          return {
+            another_bye: args.firstName,
+          };
+        },
+      },
     },
   };
 
@@ -41,6 +48,7 @@ describe('SOAP Multi Service Binding', function () {
     server.listen(8001, function () {
       soap.listen(server, '/SayHello', serviceImpl, wsdl);
       soap.listen(server, '/SayBye', serviceImpl, wsdl);
+      soap.listen(server, '/SayAnotherBye', serviceImpl, wsdl);
     });
   });
 
@@ -60,5 +68,12 @@ describe('SOAP Multi Service Binding', function () {
     assert.ok(client);
     const response = await client.sayByeAsync({ firstName: 'Bob' });
     deepEqual(response[0], { bye: 'Bob' });
+  });
+
+  it('should resolve bye service with second binding in multi service WSDL', async function () {
+    const client = await soap.createClientAsync(wsdl);
+    assert.ok(client);
+    const response = await client.sayAnotherByeAsync({ firstName: 'Bob' });
+    deepEqual(response[0], { another_bye: 'Bob' });
   });
 });

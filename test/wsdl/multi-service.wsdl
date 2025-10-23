@@ -20,6 +20,19 @@
         <part name="bye" type="xsd:string" />
     </message>
 
+    <message name="SayAnotherByeRequest">
+        <part name="firstName" type="xsd:string" />
+    </message>
+    <message name="SayAnotherByeResponse">
+        <part name="another_bye" type="xsd:string" />
+    </message>
+
+    <portType name="Another_Bye_PortType">
+        <operation name="sayAnotherBye">
+            <input message="tns:SayAnotherByeRequest" />
+            <output message="tns:SayAnotherByeResponse" />
+        </operation>
+    </portType>
     <portType name="Bye_PortType">
         <operation name="sayBye">
             <input message="tns:SayByeRequest" />
@@ -61,6 +74,20 @@
             </output>
         </operation>
     </binding>
+    <binding name="Another_Bye_Binding" type="tns:Another_Bye_PortType">
+        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http" />
+        <operation name="sayAnotherBye">
+            <soap:operation soapAction="sayAnotherBye" />
+            <input>
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+                    namespace="urn:examples:byeservice" use="encoded" />
+            </input>
+            <output>
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+                    namespace="urn:examples:byeservice" use="encoded" />
+            </output>
+        </operation>
+    </binding>
     <service name="Hello_Service">
         <documentation>WSDL File for HelloService</documentation>
         <port binding="tns:Hello_Binding" name="Hello_Port">
@@ -71,6 +98,9 @@
         <documentation>WSDL File for ByeService</documentation>
         <port binding="tns:Bye_Binding" name="Bye_Port">
             <soap:address location="http://localhost:8001/SayBye/" />
+        </port>
+        <port binding="tns:Another_Bye_Binding" name="Another_Bye_Port">
+            <soap:address location="http://localhost:8001/SayAnotherBye/" />
         </port>
     </service>
 </definitions>
