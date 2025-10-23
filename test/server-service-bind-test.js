@@ -52,13 +52,13 @@ describe('SOAP Multi Service Binding', function () {
     const client = await soap.createClientAsync(wsdl);
     assert.ok(client);
     const response = await client.sayHelloAsync({ firstName: 'Bob' });
-    deepEqual(response[0], { greeting: 'Bob' })
+    deepEqual(response[0], { greeting: 'Bob' });
   });
 
   it('should resolve bye service binding in from multi service WSDL', async function () {
     const client = await soap.createClientAsync(wsdl);
     assert.ok(client);
     const response = await client.sayByeAsync({ firstName: 'Bob' });
-    deepEqual(response[0], { bye: 'Bob' })
+    deepEqual(response[0], { bye: 'Bob' });
   });
 });
