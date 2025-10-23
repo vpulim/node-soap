@@ -290,16 +290,29 @@ export class WSDL {
             // Look up the appropriate message as given in the portType's operations
             const portTypes = this.definitions.portTypes;
             const portTypeNames = Object.keys(portTypes);
-            // Currently this supports only one portType definition.
-            const portType = portTypes[portTypeNames[0]];
-            if (isInput) {
-              name = portType.methods[name].input.$name;
-            } else {
-              name = portType.methods[name].output.$name;
+
+            for (const portTypeName of portTypeNames) {
+              const portType = portTypes[portTypeName];
+              const method = portType.methods[name];
+
+              if (!method) {
+                continue;
+              }
+
+              try {
+                if (isInput) {
+                  name = portType.methods[name].input.$name;
+                } else {
+                  name = portType.methods[name].output.$name;
+                }
+                message = this.definitions.messages[name];
+              } catch (err) {
+                console.error(`Failed to lookup message ${name} in definitions`, err);
+                throw err;
+              }
             }
-            message = this.definitions.messages[name];
             // 'cache' this alias to speed future lookups
-            this.definitions.messages[originalName] = this.definitions.messages[name];
+            this.definitions.messages[originalName] = message;
           } catch (e) {
             if (this.options.returnFault) {
               p.onerror(e);

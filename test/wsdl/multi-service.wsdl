@@ -17,7 +17,7 @@
         <part name="firstName" type="xsd:string" />
     </message>
     <message name="SayByeResponse">
-        <part name="message" type="xsd:string" />
+        <part name="bye" type="xsd:string" />
     </message>
 
     <portType name="Bye_PortType">
@@ -68,7 +68,7 @@
         </port>
     </service>
     <service name="Bye_Service">
-        <documentation>WSDL File for HelloService</documentation>
+        <documentation>WSDL File for ByeService</documentation>
         <port binding="tns:Bye_Binding" name="Bye_Port">
             <soap:address location="http://localhost:8001/SayBye/" />
         </port>

@@ -3,10 +3,11 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const assert = require('assert');
+const { deepEqual } = require('should');
 
 const wsdl = fs.readFileSync(__dirname + '/wsdl/multi-service.wsdl', 'utf-8');
 
-describe('SOAP Server Binding Resolution', function () {
+describe('SOAP Multi Service Binding', function () {
   let server;
 
   const serviceImpl = {
@@ -19,11 +20,11 @@ describe('SOAP Server Binding Resolution', function () {
         },
       },
     },
-    Hello_Service2: {
-      Hello_Port2: {
-        sayHello2: function (args) {
+    Bye_Service: {
+      Bye_Port: {
+        sayBye: function (args) {
           return {
-            greeting: args.firstName,
+            bye: args.firstName,
           };
         },
       },
@@ -39,6 +40,7 @@ describe('SOAP Server Binding Resolution', function () {
 
     server.listen(8001, function () {
       soap.listen(server, '/SayHello', serviceImpl, wsdl);
+      soap.listen(server, '/SayBye', serviceImpl, wsdl);
     });
   });
 
@@ -46,17 +48,17 @@ describe('SOAP Server Binding Resolution', function () {
     server.close();
   });
 
-  it('should correctly resolve serviceName, portName, and binding', async function () {
+  it('should resolve hello service binding in from multi service WSDL', async function () {
     const client = await soap.createClientAsync(wsdl);
     assert.ok(client);
-    console.log('client created:', client.describe());
+    const response = await client.sayHelloAsync({ firstName: 'Bob' });
+    deepEqual(response[0], { greeting: 'Bob' })
+  });
 
-    // code below triggers "TypeError: Cannot read properties of undefined (reading 'description')
-    // try {
-    //   const response = await client.sayHelloAsync({ firstName: 'Bob' });
-    //   console.log(`>>> response`, response[0])
-    // } catch (err) {
-    //   console.error(`error`, err)
-    // }
+  it('should resolve bye service binding in from multi service WSDL', async function () {
+    const client = await soap.createClientAsync(wsdl);
+    assert.ok(client);
+    const response = await client.sayByeAsync({ firstName: 'Bob' });
+    deepEqual(response[0], { bye: 'Bob' })
   });
 });
