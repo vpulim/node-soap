@@ -307,7 +307,7 @@ export class WSDL {
                 }
                 message = this.definitions.messages[name];
                 break;
-              } catch (err) {
+              } catch {
                 throw new Error(`Failed to lookup message ${name} in methods`);
               }
             }
