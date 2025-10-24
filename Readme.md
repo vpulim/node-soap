@@ -852,7 +852,7 @@ Construct a WSDL instance from either the WSDL content or the URL to the WSDL.
 
 #### Parameters
 
-- wsdl: A string wSDL or an URL to the WSDL
+- wsdl: a WSDL string or an URL to the WSDL
 - baseURL: base URL for the SOAP API
 - options: options (see source for details), use `{}` as default.
 
@@ -895,7 +895,7 @@ import { IProspectType } from './types';
 const WSDL_CONTENT = "...";
 
 const httpClient: AxiosInstance = /* ... instantiate ... */;
-const url = 'http://example.org/SoapService.svc';
+const baseURL = 'http://example.org/SoapService.svc';
 
 const wsdl = new WSDL(WSDL_CONTENT, baseURL, {});
 
