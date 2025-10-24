@@ -429,7 +429,6 @@ describe('SOAP Server with Options', function () {
         })
         .catch((err) => {
           try {
-            console.log(`>>> data`, err.response.data);
             assert.equal(err.response.status, 500);
             assert.ok(err.response.data.match(/<faultcode>.*<\/faultcode>/g), 500);
             assert.ok(err.response.data.match(/<faultstring>.*<\/faultstring>/g), 'Invalid XML');
