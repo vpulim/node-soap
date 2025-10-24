@@ -1,3 +1,11 @@
+# 1.6.0 / 2025-10-25
+
+- [ENHANCEMENT] Add support for multi-service and multi-port binding WSDL files (#1337)
+- [ENHANCEMENT] Add new 'addElement' option to WSSE Security that adds custom xml to <wsse> element (#1362)
+- [MAINTENANCE] Bump actions/setup-node from 4 to 5 (#1358)
+- [MAINTENANCE] Update dependencies (#1372)
+- [DOC] Fix typos in Readme (#1374)
+
 # 1.5.0 / 2025-10-07
 
 - [ENHANCEMENT] Handle different namespace prefix for the same namespace, requires to set new option `forceUseSchemaXmlns` (#1365)
