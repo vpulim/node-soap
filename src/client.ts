@@ -357,7 +357,6 @@ export class Client extends EventEmitter {
           }
         });
       }
-
       callback(null, result, body, obj.Header, xml, response.mtomResponseAttachments);
     };
 

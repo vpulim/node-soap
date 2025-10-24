@@ -306,9 +306,14 @@ describe('SOAP Server with Options', function () {
           // should not go this path, will fail by timeout
         })
         .catch((err) => {
-          assert.equal(err.response.status, 500);
-          assert.ok(err.response.data.indexOf('\n    at') !== -1);
-          done();
+          try {
+            assert.equal(err.response.status, 500);
+            assert.notStrictEqual(err.response.data.indexOf('\n    at'), -1);
+            done();
+          } catch (assertErr) {
+            done(assertErr);
+            throw assertErr;
+          }
         });
     });
   });
@@ -423,8 +428,14 @@ describe('SOAP Server with Options', function () {
           // should not go this path, will fail by timeout
         })
         .catch((err) => {
-          assert.equal(err.response.status, 500);
-          assert.ok(err.response.data.match(/<faultcode>.*<\/faultcode>/g), 'Invalid XML');
+          try {
+            assert.equal(err.response.status, 500);
+            assert.ok(err.response.data.match(/<faultcode>.*<\/faultcode>/g), 500);
+            assert.ok(err.response.data.match(/<faultstring>.*<\/faultstring>/g), 'Invalid XML');
+          } catch (assertError) {
+            done(assertError);
+            throw assertError;
+          }
           done();
         });
     });
