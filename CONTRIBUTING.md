@@ -52,4 +52,4 @@ Any pull request filed is subject to an expiration date. We will close any open 
 
 ## Other ways you can contribute
 
-Please add response, request, and WSDL files to test/wsdl, and test/request-response-samples (see the [README](https://github.com/vpulim/node-soap/blob/master/Readme.md) therein). Doing so documents behavior and reduces the likelihood that bugs will be introduced by future pull requests.
+Please add response, request, and WSDL files to test/wsdl, and test/request-response-samples (see the [README](https://github.com/vpulim/node-soap/blob/master/test/request-response-samples/README.md) therein). Doing so documents behavior and reduces the likelihood that bugs will be introduced by future pull requests.
