@@ -37,10 +37,10 @@ This module lets you connect to web services using SOAP. It also provides a serv
   - [Client._lastRequest_ - the property that contains last full soap request for client logging](#clientlastrequest---the-property-that-contains-last-full-soap-request-for-client-logging)
   - [Client.setEndpoint(url) - overwrite the SOAP service endpoint address](#clientsetendpointurl---overwrite-the-soap-service-endpoint-address)
   - [Client Events](#client-events)
-  - [_request_](#_request_)
-  - [_message_](#_message_)
-  - [_soapError_](#_soaperror_)
-  - [_response_](#_response_)
+  - [_request_](#request)
+  - [_message_](#message)
+  - [_soapError_](#soaperror)
+  - [_response_](#response)
 - [WSDL](#wsdl)
 - [WSDL.constructor(wsdl, baseURL, options):](#wsdlconstructorwsdl-baseurl-options)
   - [wsdl.xmlToObject(xml):](#wsdlxmltoobjectxml)
@@ -116,9 +116,10 @@ Paid support can be provided as well, please contact one of the active maintaine
   - `stream` (_boolean_): Use streams to parse the XML SOAP responses. (**Default:** `false`)
   - `returnSaxStream` (_boolean_): Return the SAX stream, transferring responsibility of parsing XML to the end user. Only valid when the _stream_ option is set to `true`. (**Default:** `false`)
   - `parseReponseAttachments` (_boolean_): Treat response as multipart/related response with MTOM attachment. Reach attachments on the `lastResponseAttachments` property of SoapClient. (**Default:** `false`)
-  - `encoding` (_string_): response data enconding, used with `parseReponseAttachments`. (**Default:** `utf8`)
+  - `encoding` (_string_): Response data enconding, used with `parseReponseAttachments`. (**Default:** `utf8`)
+  - `forceUseSchemaXmlns` (_boolean_): Force to use schema xmlns when schema prefix not found, this is needed when schema prefix is different for the same namespace in different files, for example wsdl and in imported xsd file fir complex types (**Default** `false`)
 - `callback` (_Function_):
-  - `err` (_Error_ | _<AggregateError>_)
+  - `err` (_Error_ | _\<AggregateError\>_)
   - `result` (_Any_)
 - Returns: `Client`
 
@@ -851,7 +852,7 @@ Construct a WSDL instance from either the WSDL content or the URL to the WSDL.
 
 #### Parameters
 
-- wsdl: A string wSDL or an URL to the WSDL
+- wsdl: a WSDL string or an URL to the WSDL
 - baseURL: base URL for the SOAP API
 - options: options (see source for details), use `{}` as default.
 
@@ -894,7 +895,7 @@ import { IProspectType } from './types';
 const WSDL_CONTENT = "...";
 
 const httpClient: AxiosInstance = /* ... instantiate ... */;
-const url = 'http://example.org/SoapService.svc';
+const baseURL = 'http://example.org/SoapService.svc';
 
 const wsdl = new WSDL(WSDL_CONTENT, baseURL, {});
 
@@ -1024,6 +1025,7 @@ the `options` object is optional and can contain the following properties:
 - `hasNonce`: adds Nonce element (default: `false`)
 - `mustUnderstand`: adds mustUnderstand=1 attribute to security tag (default: `false`)
 - `actor`: if set, adds Actor attribute with given value to security tag (default: `''`)
+- `appendElement`: A string containing XML element to append to the end of the WSSecurity element. This can be used to add custom elements like certificates or other security tokens (default: `''`)
 
 ### WSSecurityCert
 
@@ -1061,6 +1063,7 @@ The `options` object is optional and can contain the following properties:
   - `prefix`: (optional) Adds this value as a prefix for the generated signature tags.
   - `attrs`: (optional) A hash of attributes and values attrName: value to add to the signature root node
   - `idMode`: (optional) either 'wssecurity' to generate wsse-scoped reference Id on <Body> or undefined for an unscoped reference Id
+- `appendElement`: (optional) A string containing XML element to append to the end of the WSSecurity element. This can be used to add custom elements like certificates or other security tokens.
 
 ### WSSecurityPlusCert
 
@@ -1199,6 +1202,25 @@ client.setSecurity(wsSecurityPlusCert);
                 </Reference>
             </SignedInfo>
         </Signature>
+    </wsse:Security>
+</soap:Header>
+```
+
+`appendElement: '<custom:Element>test</custom:Element>'`
+
+```xml
+<soap:Header>
+    <wsse:Security soap:mustUnderstand="1">
+        <wsse:BinarySecurityToken>XXX</wsse:BinarySecurityToken>
+        <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+            <SignedInfo>
+                ...
+            </SignedInfo>
+        </Signature>
+        <!-- Custom element is appended to the end of the security block -->
+        <custom:MyCustomElement xmlns:custom="http://example.com/custom">
+          foo
+        </custom:MyCustomElement>
     </wsse:Security>
 </soap:Header>
 ```
