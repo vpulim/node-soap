@@ -508,8 +508,13 @@ var fs = require('fs'),
             client.MyOperation(
               {},
               function () {
-                assert.ok(client.lastRequestHeaders.Host.indexOf(':443') > -1);
-                done();
+                try {
+                  assert.ok(client.lastRequestHeaders.Host.indexOf(':443') > -1);
+                  done();
+                } catch (err) {
+                  done(err);
+                  throw err;
+                }
               },
               null,
               { 'test-header': 'test' },

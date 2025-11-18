@@ -11,7 +11,6 @@ import * as fs from 'fs';
 import { isPlainObject, mergeWith } from '../utils';
 import * as path from 'path';
 import * as sax from 'sax';
-import * as url from 'url';
 import { HttpClient } from '../http';
 import { NamespaceContext } from '../nscontext';
 import { IOptions } from '../types';
@@ -1229,7 +1228,15 @@ export class WSDL {
         includePath = path.resolve(path.dirname(this.uri), include.location);
       }
     } else {
-      includePath = url.resolve(this.uri || '', include.location);
+      if (/^https?:/i.test(include.location)) {
+        includePath = include.location;
+      } else {
+        try {
+          includePath = new URL(include.location, this.uri || '').toString();
+        } catch {
+          includePath = include.location;
+        }
+      }
     }
 
     const options = Object.assign({}, this.options);
