@@ -5,18 +5,18 @@
 
 import { EventEmitter } from 'events';
 import * as http from 'http';
-import * as url from 'url';
 import { IOneWayOptions, IServerOptions, IServices, ISoapFault, ISoapServiceMethod } from './types';
 import { WSDL } from './wsdl';
 import { BindingElement, IPort } from './wsdl/elements';
 import zlib from 'zlib';
 
-interface IExpressApp {
+interface IExpressApp extends http.Server {
   route;
   use;
 }
 
 export type ServerType = http.Server | IExpressApp;
+
 type Request = http.IncomingMessage & { body?: any };
 type Response = http.ServerResponse;
 
@@ -33,6 +33,28 @@ function getDateString(d) {
     return n < 10 ? '0' + n : n;
   }
   return d.getUTCFullYear() + '-' + pad(d.getUTCMonth() + 1) + '-' + pad(d.getUTCDate()) + 'T' + pad(d.getUTCHours()) + ':' + pad(d.getUTCMinutes()) + ':' + pad(d.getUTCSeconds()) + 'Z';
+}
+
+function getServerBaseUrl(server: ServerType): string {
+  if (!server) {
+    return `http://localhost:8080`;
+  }
+
+  if (typeof server.address !== 'function') {
+    return `http://${server.address}`;
+  }
+
+  const address = server.address();
+
+  if (typeof address === 'string') {
+    return `http://${server.address}`;
+  }
+
+  if (address.family.toLowerCase() === 'ipv6') {
+    return `http://localhost:${address.port}`;
+  }
+
+  return `http://${address.address}:${address.port}`;
 }
 
 //eslint-disable-next-line  @typescript-eslint/no-unsafe-declaration-merging
@@ -74,6 +96,7 @@ export class Server extends EventEmitter {
   private enableChunkedEncoding: boolean;
   private soapHeaders: any[];
   private callback?: (err: any, res: any) => void;
+  private baseUrl: string;
 
   constructor(server: ServerType, path: string | RegExp, services: IServices, wsdl: WSDL, options?: IServerOptions) {
     super();
@@ -90,6 +113,7 @@ export class Server extends EventEmitter {
     this.onewayOptions = (options && options.oneWay) || {};
     this.enableChunkedEncoding = options.enableChunkedEncoding === undefined ? true : !!options.enableChunkedEncoding;
     this.callback = options.callback ? options.callback : () => {};
+    this.baseUrl = getServerBaseUrl(server);
     if (typeof path === 'string' && path[path.length - 1] !== '/') {
       path += '/';
     } else if (path instanceof RegExp && path.source[path.source.length - 1] !== '/') {
@@ -118,7 +142,7 @@ export class Server extends EventEmitter {
               return;
             }
           }
-          let reqPath = url.parse(req.url).pathname;
+          let reqPath = new URL(req.url, this.baseUrl).pathname;
           if (reqPath[reqPath.length - 1] !== '/') {
             reqPath += '/';
           }
@@ -225,7 +249,7 @@ export class Server extends EventEmitter {
   }
 
   private _requestListener(req: Request, res: Response) {
-    const reqParse = url.parse(req.url);
+    const reqParse = new URL(req.url, this.baseUrl);
     const reqQuery = reqParse.search;
 
     if (typeof this.log === 'function') {
@@ -283,7 +307,7 @@ export class Server extends EventEmitter {
   }
 
   private _process(input, req: Request, res: Response, cb: (result: any, statusCode?: number) => any) {
-    const pathname = url.parse(req.url).pathname.replace(/\/$/, '');
+    const pathname = new URL(req.url, this.baseUrl).pathname.replace(/\/$/, '');
     const obj = this.wsdl.xmlToObject(input);
     const body = obj.Body;
     const headers = obj.Header;
@@ -327,7 +351,7 @@ export class Server extends EventEmitter {
           for (name in ports) {
             portName = name;
             const port = ports[portName];
-            const portPathname = url.parse(port.location).pathname.replace(/\/$/, '');
+            const portPathname = new URL(port.location).pathname.replace(/\/$/, '');
 
             if (typeof this.log === 'function') {
               this.log('info', 'Trying ' + portName + ' from path ' + portPathname, req);
