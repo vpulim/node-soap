@@ -11,7 +11,7 @@
     "axios-ntlm": "^1.4.6",
     "debug": "^4.4.3",
     "formidable": "^3.5.4",
-    "get-stream": "^6.0.1",
+    "get-stream": "^9.0.1",
     "lodash": "^4.17.21",
     "sax": "^1.4.1",
     "strip-bom": "^5.0.0",
