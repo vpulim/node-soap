@@ -2,6 +2,11 @@
 
 [![Support][buy-me-a-coffee-image]][buy-me-a-coffee-url]
 
+# Sponsors
+
+[**Travel Axis**](https://www.linkedin.com/company/travel-axis) is proud to support this project by contributing engineering resources.  
+The company is building [**Helix**](https://www.midoffice.app), a SaaS platform designed to transform the travel management industry.
+
 # SOAP client and server for node.js.
 
 This module lets you connect to web services using SOAP. It also provides a server that allows you to run your own SOAP services.
