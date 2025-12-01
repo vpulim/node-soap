@@ -249,15 +249,18 @@ export class ElementElement extends Element {
       const schema = definitions.schemas[ns];
       const typeElement = schema && (this.$type ? schema.complexTypes[typeName] || schema.types[typeName] : schema.elements[typeName]);
       const typeStorage = this.$type ? definitions.descriptions.types : definitions.descriptions.elements;
+      
+      // Use namespace + typeName as cache key to avoid conflicts between schemas
+      const cacheKey = ns ? `${ns}::${typeName}` : typeName;
 
       if (ns && definitions.schemas[ns]) {
         xmlns = definitions.schemas[ns].xmlns;
       }
 
       if (typeElement && !(typeName in Primitives)) {
-        if (!(typeName in typeStorage)) {
+        if (!(cacheKey in typeStorage)) {
           let elem: any = {};
-          typeStorage[typeName] = elem;
+          typeStorage[cacheKey] = elem;
 
           if (isMany && 'maxOccurs' in typeElement) {
             typeElement.maxOccurs = this.$maxOccurs;
@@ -291,19 +294,20 @@ export class ElementElement extends Element {
             elem.targetNamespace = ns;
           }
 
-          typeStorage[typeName] = elem;
+          typeStorage[cacheKey] = elem;
         } else {
           if (this.$ref) {
             // Differentiate between a ref for an array of elements and a ref for a single element
             if (isMany) {
               const refTypeName = typeName + '[]';
-              typeStorage[refTypeName] = typeStorage[typeName];
-              element[refTypeName] = typeStorage[refTypeName];
+              const refCacheKey = ns ? `${ns}::${refTypeName}` : refTypeName;
+              typeStorage[refCacheKey] = typeStorage[cacheKey];
+              element[refTypeName] = typeStorage[refCacheKey];
             } else {
-              element = typeStorage[typeName];
+              element = typeStorage[cacheKey];
             }
           } else {
-            element[name] = typeStorage[typeName];
+            element[name] = typeStorage[cacheKey];
           }
         }
       } else {
