@@ -249,7 +249,7 @@ export class ElementElement extends Element {
       const schema = definitions.schemas[ns];
       const typeElement = schema && (this.$type ? schema.complexTypes[typeName] || schema.types[typeName] : schema.elements[typeName]);
       const typeStorage = this.$type ? definitions.descriptions.types : definitions.descriptions.elements;
-      
+
       // Use namespace + typeName as cache key to avoid conflicts between schemas
       const cacheKey = ns ? `${ns}::${typeName}` : typeName;
 
