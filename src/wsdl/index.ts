@@ -367,7 +367,12 @@ export class WSDL {
       const topSchema = top.schema;
       const name = splitQName(nsName).name;
 
-      if (typeof cur.schema === 'string' && (cur.schema === 'string' || cur.schema.split(':')[1] === 'string')) {
+      /**
+       * When parsing a string element, we need to correctly transform `<tag></tag>`
+       * to an empty string.
+       */
+      const isStringElement = typeof cur.schema === 'string' && splitQName(cur.schema).name === 'string';
+      if (isStringElement) {
         if (typeof obj === 'object' && Object.keys(obj).length === 0) {
           obj = cur.object = this.options.preserveWhitespace ? cur.text || '' : '';
         }

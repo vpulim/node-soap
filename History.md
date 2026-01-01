@@ -1,3 +1,19 @@
+# 1.6.1 / 2025-12-04
+
+- [FIX] Use namespace in caching to avoid conflicts between schemas in complex types with the same name (#1397)
+- [MAINTENANCE] Bump sax from 1.4.1 to 1.4.3 (#1389)
+- [MAINTENANCE] Bump glob (via mocha) to fix glob CLI: Command injection via -c/--cmd executes matches with shell:true (#1398)
+- [MAINTENANCE] Bump mocha from 11.7.4 to 11.7.5 (#1391)
+- [MAINTENANCE] Bump mocha from 11.7.4 to 11.7.5 (#1391)
+- [MAINTENANCE] Bump js-yaml to fix prototype pollution in merge (#1388)
+- [MAINTENANCE] Bump eslint from 9.38.0 to 9.39.0 (#1384)
+- [MAINTENANCE] Bump @eslint/js from 9.38.0 to 9.39.0 (#1385)
+- [MAINTENANCE] Bump axios from 1.12.2 to 1.13.1 (#1386)
+- [MAINTENANCE] Bump typescript-eslint from 8.46.1 to 8.46.2 (#1382)
+- [MAINTENANCE] Bump actions/setup-node from 5 to 6 (#1379)
+- [DOC] Fix broken TOC links for italic headings (#1378)
+- [DOC] Update CONTRIBUTING.md (#1375)
+
 # 1.6.0 / 2025-10-25
 
 - [ENHANCEMENT] Add support for multi-service and multi-port binding WSDL files (#1337)
