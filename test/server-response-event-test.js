@@ -1,9 +1,9 @@
 'use strict';
 
-var request = require('request');
 var assert = require('assert');
 var http = require('http');
 var soap = require('../');
+const { default: axios } = require('axios');
 var server;
 var url;
 
@@ -71,23 +71,19 @@ describe('server response event test', function () {
   });
 
   it('should replace Bob with John', function (done) {
-    request(
-      {
-        url: url + '/SayHello',
-        method: 'POST',
+    axios
+      .post(url + '/SayHello', requestXML, {
         headers: {
           'SOAPAction': 'sayHello',
           'Content-Type': 'text/xml; charset="utf-8"',
         },
-        body: requestXML,
-      },
-      function (err, response, body) {
-        if (err) {
-          throw err;
-        }
-        assert.equal(body, responseXMLChanged);
+      })
+      .then((res) => {
+        assert.equal(res.data, responseXMLChanged);
         done();
-      },
-    );
+      })
+      .catch((err) => {
+        throw err;
+      });
   });
 });

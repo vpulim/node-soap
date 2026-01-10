@@ -1,5 +1,6 @@
 import * as req from 'axios';
 import { ReadStream } from 'fs';
+import { WSDL } from './wsdl';
 
 export interface IHeaders {
   [k: string]: any;
@@ -84,6 +85,7 @@ export interface IWsdlBaseOptions {
   valueKey?: string;
   xmlKey?: string;
   overrideRootElement?: { namespace: string; xmlnsAttributes?: IXmlAttribute[] };
+  overrideElementKey?: object;
   ignoredNamespaces?: boolean | string[] | { namespaces?: string[]; override?: boolean };
   ignoreBaseNameSpaces?: boolean;
   /** escape special XML characters in SOAP message (e.g. &, >, < etc), default: true. */
@@ -105,6 +107,8 @@ export interface IWsdlBaseOptions {
   wsdl_options?: { [key: string]: any };
   /** set proper headers for SOAP v1.2. */
   forceSoap12Headers?: boolean;
+  /** Force to use schema xmlns when schema prefix not found, this is needed when schema prefix is different for the same namespace in different files, for example wsdl and in imported xsd file fir complex types*/
+  forceUseSchemaXmlns?: boolean;
 }
 
 /** @deprecated use IOptions */
@@ -112,10 +116,14 @@ export type Option = IOptions;
 export interface IOptions extends IWsdlBaseOptions {
   /** don't cache WSDL files, request them every time. */
   disableCache?: boolean;
+  /** Custom cache implementation. If not provided, defaults to caching WSDLs indefinitely. */
+  wsdlCache?: IWSDLCache;
   /** override the SOAP service's host specified in the .wsdl file. */
   endpoint?: string;
   /** set specific key instead of <pre><soap:Body></soap:Body></pre>. */
   envelopeKey?: string;
+  /** set specific SOAP Schema Url; will not be used with forceSoap12Headers option */
+  envelopeSoapUrl?: string;
   /** provide your own http client that implements request(rurl, data, callback, exheaders, exoptions) */
   httpClient?: IHttpClient;
   /** override the request module. */
@@ -131,6 +139,8 @@ export interface IOptions extends IWsdlBaseOptions {
   WSDL_CACHE?;
   /** handle MTOM soapAttachments in response */
   parseReponseAttachments?: boolean;
+  /** handle endpoint response.data enconding when using parseReponseAttachments */
+  encoding?: BufferEncoding;
 }
 
 export interface IOneWayOptions {
@@ -149,6 +159,7 @@ export interface IServerOptions extends IWsdlBaseOptions {
   oneWay?: IOneWayOptions;
   /** A boolean for controlling chunked transfer encoding in response. Some client (such as Windows 10's MDM enrollment SOAP client) is sensitive to transfer-encoding mode and can't accept chunked response. This option let user disable chunked transfer encoding for such a client. Default to true for backward compatibility. */
   enableChunkedEncoding?: boolean;
+  envelopeKey?: string;
 }
 
 export interface IMTOMAttachments {
@@ -156,4 +167,10 @@ export interface IMTOMAttachments {
     body: Buffer;
     headers: { [key: string]: string };
   }>;
+}
+
+export interface IWSDLCache {
+  has(key: string): boolean;
+  get(key: string): WSDL;
+  set(key: string, wsdl: WSDL): void;
 }

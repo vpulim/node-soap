@@ -1,9 +1,9 @@
 'use strict';
 
-var request = require('request');
 var assert = require('assert');
 var http = require('http');
 var soap = require('../');
+const { default: axios } = require('axios');
 var server;
 var port;
 
@@ -49,20 +49,19 @@ describe('No envelope and body elements', function () {
       url = 'http://127.0.0.1:' + server.address().port;
     }
 
-    request(
-      {
-        url: url + '/SayHello',
-        method: 'POST',
-        headers: { 'SOAPAction': 'sayHello', 'Content-Type': 'text/xml; charset="utf-8"' },
-        body: requestXML,
-      },
-      function (err, response, body) {
-        if (err) {
-          throw err;
-        }
-        assert.equal(body.indexOf('Failed to parse the SOAP Message body') !== -1, true);
+    axios
+      .post(url + '/SayHello', requestXML, {
+        headers: {
+          'SOAPAction': 'sayHello',
+          'Content-Type': 'text/xml; charset="utf-8"',
+        },
+      })
+      .then((res) => {
+        throw new Error(`Request must fail`);
+      })
+      .catch((err) => {
+        assert.equal(err?.response?.data.indexOf('Failed to parse the SOAP Message body') !== -1, true);
         done();
-      },
-    );
+      });
   });
 });

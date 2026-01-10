@@ -1,8 +1,6 @@
 'use strict';
 
-var fs = require('fs'),
-  soap = require('..'),
-  http = require('http'),
+var soap = require('..'),
   assert = require('assert');
 
 describe('SOAP Client', function () {

@@ -1,10 +1,10 @@
 'use strict';
 
 var fs = require('fs');
-var request = require('request');
 var assert = require('assert');
 var http = require('http');
 var soap = require('..');
+const { default: axios } = require('axios');
 var server;
 var url;
 
@@ -58,23 +58,19 @@ describe('server has mixed style', function () {
   });
 
   it('should return good response', function (done) {
-    request(
-      {
-        url: url,
-        method: 'POST',
+    axios
+      .post(url, requestXML, {
         headers: {
           'SOAPAction': 'urn:#opHl7Message',
           'Content-Type': 'text/xml; charset="utf-8"',
         },
-        body: requestXML,
-      },
-      function (err, response, body) {
-        if (err) {
-          throw err;
-        }
-        assert.strictEqual(body, responseXMLGood);
+      })
+      .then((res) => {
+        assert.strictEqual(res.data, responseXMLGood);
         done();
-      },
-    );
+      })
+      .catch((err) => {
+        throw err;
+      });
   });
 });

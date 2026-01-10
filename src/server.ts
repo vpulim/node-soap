@@ -32,7 +32,6 @@ function getDateString(d) {
   function pad(n) {
     return n < 10 ? '0' + n : n;
   }
-
   return d.getUTCFullYear() + '-' + pad(d.getUTCMonth() + 1) + '-' + pad(d.getUTCDate()) + 'T' + pad(d.getUTCHours()) + ':' + pad(d.getUTCMinutes()) + ':' + pad(d.getUTCSeconds()) + 'Z';
 }
 
@@ -68,7 +67,7 @@ interface IExecuteMethodOptions {
 export class Server extends EventEmitter {
   public path: string | RegExp;
   public services: IServices;
-  public log: (type: string, data: any) => any;
+  public log: (type: string, data: any, req: Request) => any;
   public authorizeConnection: (req: Request, res?: Response) => boolean;
   public authenticate: (security: any, processAuthResult?: (result: boolean) => void, req?: Request, obj?: any) => boolean | void | Promise<boolean>;
 
@@ -192,18 +191,19 @@ export class Server extends EventEmitter {
     this.wsdl.options.attributesKey = options.attributesKey || 'attributes';
     this.onewayOptions.statusCode = this.onewayOptions.responseCode || 200;
     this.onewayOptions.emptyBody = !!this.onewayOptions.emptyBody;
+    this.wsdl.options.envelopeKey = options.envelopeKey || 'soap';
   }
 
   private _processRequestXml(req: Request, res: Response, xml) {
     let error;
     try {
       if (typeof this.log === 'function') {
-        this.log('received', xml);
+        this.log('received', xml, req);
       }
       this._process(xml, req, res, (result, statusCode) => {
         this._sendHttpResponse(res, statusCode, result);
         if (typeof this.log === 'function') {
-          this.log('replied', result);
+          this.log('replied', result, req);
         }
       });
     } catch (err) {
@@ -213,7 +213,7 @@ export class Server extends EventEmitter {
           (result, statusCode) => {
             this._sendHttpResponse(res, statusCode || 500, result);
             if (typeof this.log === 'function') {
-              this.log('error', err);
+              this.log('error', err, req);
             }
           },
           new Date().toISOString(),
@@ -222,7 +222,7 @@ export class Server extends EventEmitter {
         error = err.stack ? (this.suppressStack === true ? err.message : err.stack) : err;
         this._sendHttpResponse(res, /* statusCode */ 500, error);
         if (typeof this.log === 'function') {
-          this.log('error', error);
+          this.log('error', err, req);
         }
       }
     }
@@ -233,13 +233,13 @@ export class Server extends EventEmitter {
     const reqQuery = reqParse.search;
 
     if (typeof this.log === 'function') {
-      this.log('info', 'Handling ' + req.method + ' on ' + req.url);
+      this.log('info', 'Handling ' + req.method + ' on ' + req.url, req);
     }
 
     if (req.method === 'GET') {
       if (reqQuery && reqQuery.toLowerCase().startsWith('?wsdl')) {
         if (typeof this.log === 'function') {
-          this.log('info', 'Wants the WSDL');
+          this.log('info', 'Wants the WSDL', req);
         }
         res.setHeader('Content-Type', 'application/xml');
         res.write(this.wsdl.toXML());
@@ -310,7 +310,7 @@ export class Server extends EventEmitter {
 
     const process = () => {
       if (typeof this.log === 'function') {
-        this.log('info', 'Attempting to bind to ' + pathname);
+        this.log('info', 'Attempting to bind to ' + pathname, req);
       }
 
       // Avoid Cannot convert undefined or null to object due to Object.keys(body)
@@ -334,7 +334,7 @@ export class Server extends EventEmitter {
             const portPathname = url.parse(port.location).pathname.replace(/\/$/, '');
 
             if (typeof this.log === 'function') {
-              this.log('info', 'Trying ' + portName + ' from path ' + portPathname);
+              this.log('info', 'Trying ' + portName + ' from path ' + portPathname, req);
             }
 
             if (portPathname === pathname) {
@@ -616,7 +616,7 @@ export class Server extends EventEmitter {
       handleResult(error, result);
     };
 
-    const result = method(args, methodCallback, options.headers, req, res, this);
+    const result = method.apply(this, [args, methodCallback, options.headers, req, res]);
     if (typeof result !== 'undefined') {
       if (isPromiseLike<any>(result)) {
         result.then(
@@ -635,10 +635,11 @@ export class Server extends EventEmitter {
 
   private _envelope(body, headers, includeTimestamp) {
     const encoding = '';
+    const envelopeKey = this.wsdl.options.envelopeKey;
 
     const envelopeDefinition = this.wsdl.options.forceSoap12Headers ? 'http://www.w3.org/2003/05/soap-envelope' : 'http://schemas.xmlsoap.org/soap/envelope/';
 
-    let xml = '<?xml version="1.0" encoding="utf-8"?>' + '<soap:Envelope xmlns:soap="' + envelopeDefinition + '" ' + encoding + this.wsdl.xmlnsInEnvelope + '>';
+    let xml = '<?xml version="1.0" encoding="utf-8"?>' + '<' + envelopeKey + ':Envelope' + ' xmlns:' + envelopeKey + '=' + '"' + envelopeDefinition + '" ' + encoding + this.wsdl.xmlnsInEnvelope + '>';
 
     headers = headers || '';
 
@@ -663,17 +664,16 @@ export class Server extends EventEmitter {
     }
 
     if (headers !== '') {
-      xml += '<soap:Header>' + headers + '</soap:Header>';
+      xml += '<' + envelopeKey + ':Header>' + headers + '</' + envelopeKey + ':Header>';
     }
-
-    xml += body ? '<soap:Body>' + body + '</soap:Body>' : '<soap:Body/>';
-
-    xml += '</soap:Envelope>';
+    xml += body ? '<' + envelopeKey + ':Body>' + body + '</' + envelopeKey + ':Body>' : '<' + envelopeKey + ':Body/>';
+    xml += '</' + envelopeKey + ':Envelope>';
     return xml;
   }
 
   private _sendError(soapFault: ISoapFault, callback: (result: any, statusCode?: number) => any, includeTimestamp) {
     let fault;
+    const envelopeKey = this.wsdl.options.envelopeKey;
 
     let statusCode: number;
     if (soapFault.statusCode) {
@@ -685,12 +685,12 @@ export class Server extends EventEmitter {
       // Soap 1.1 error style
       // Root element will be prependend with the soap NS
       // It must match the NS defined in the Envelope (set by the _envelope method)
-      fault = this.wsdl.objectToDocumentXML('soap:Fault', soapFault, undefined);
+      fault = this.wsdl.objectToDocumentXML(envelopeKey + ':Fault', soapFault, undefined);
     } else {
       // Soap 1.2 error style.
       // 3rd param is the NS prepended to all elements
       // It must match the NS defined in the Envelope (set by the _envelope method)
-      fault = this.wsdl.objectToDocumentXML('Fault', soapFault, 'soap');
+      fault = this.wsdl.objectToDocumentXML('Fault', soapFault, envelopeKey);
     }
 
     return callback(this._envelope(fault, '', includeTimestamp), statusCode);

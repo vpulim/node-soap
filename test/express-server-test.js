@@ -1,10 +1,10 @@
 'use strict';
 
-var request = require('request');
 var assert = require('assert');
 var express = require('express');
 var bodyParser = require('body-parser');
 var soap = require('../');
+const axios = require('axios');
 var expressServer;
 var server;
 var port;
@@ -52,43 +52,36 @@ describe('Express server without middleware', function () {
   });
 
   it('should handle body without middleware', function (done) {
-    request(
-      {
-        url: url + '/SayHello',
-        method: 'POST',
+    axios
+      .post(url + '/SayHello', requestXML, {
         headers: {
           'SOAPAction': 'sayHello',
           'Content-Type': 'text/xml; charset="utf-8"',
         },
-        body: requestXML,
-      },
-      function (err, response, body) {
-        if (err) {
-          throw err;
-        }
-        assert.equal(body, responseXML);
+      })
+      .then((res) => {
+        assert.equal(res.data, responseXML);
         done();
-      },
-    );
+      })
+      .catch((err) => {
+        throw err;
+      });
   });
 
   it('should serve wsdl', function (done) {
-    request(
-      {
-        url: url + '/SayHello?wsdl',
-        method: 'GET',
+    axios
+      .get(url + '/SayHello?wsdl', {
         headers: {
           'Content-Type': 'text/xml; charset="utf-8"',
         },
-      },
-      function (err, response, body) {
-        if (err) {
-          throw err;
-        }
-        assert.equal(body, wsdl);
+      })
+      .then((res) => {
+        assert.equal(res.data, wsdl);
         done();
-      },
-    );
+      })
+      .catch((err) => {
+        throw err;
+      });
   });
 
   it('should handle other routes as usual', function (done) {
@@ -102,19 +95,15 @@ describe('Express server without middleware', function () {
       },
     );
 
-    request(
-      {
-        url: url + '/test/r1',
-        method: 'GET',
-      },
-      function (err, response, body) {
-        if (err) {
-          throw err;
-        }
-        assert.equal(body, 'test passed');
+    axios
+      .get(url + '/test/r1')
+      .then((res) => {
+        assert.equal(res.data, 'test passed');
         done();
-      },
-    );
+      })
+      .catch((err) => {
+        throw err;
+      });
   });
 });
 
@@ -160,24 +149,20 @@ describe('Express server with middleware', function () {
   });
 
   it('should allow parsing body via express middleware', function (done) {
-    request(
-      {
-        url: url + '/SayHello',
-        method: 'POST',
+    axios
+      .post(url + '/SayHello', requestXML, {
         headers: {
           'SOAPAction': 'sayHello',
           'Content-Type': 'text/xml; charset="utf-8"',
         },
-        body: requestXML,
-      },
-      function (err, response, body) {
-        if (err) {
-          throw err;
-        }
-        assert.equal(body, responseXML);
+      })
+      .then((res) => {
+        assert.equal(res.data, responseXML);
         done();
-      },
-    );
+      })
+      .catch((err) => {
+        throw err;
+      });
   });
 });
 
@@ -216,23 +201,19 @@ describe('Express server with bodyParser.json middleware', function () {
   });
 
   it('should not parse body on bodyParser.json middleware', function (done) {
-    request(
-      {
-        url: url + '/SayHello',
-        method: 'POST',
+    axios
+      .post(url + '/SayHello', requestXML, {
         headers: {
           'SOAPAction': 'sayHello',
           'Content-Type': 'text/xml; charset="utf-8"',
         },
-        body: requestXML,
-      },
-      function (err, response, body) {
-        if (err) {
-          throw err;
-        }
-        assert.equal(body, responseXML);
+      })
+      .then((res) => {
+        assert.equal(res.data, responseXML);
         done();
-      },
-    );
+      })
+      .catch((err) => {
+        throw err;
+      });
   });
 });

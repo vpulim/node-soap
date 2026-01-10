@@ -290,16 +290,32 @@ export class WSDL {
             // Look up the appropriate message as given in the portType's operations
             const portTypes = this.definitions.portTypes;
             const portTypeNames = Object.keys(portTypes);
-            // Currently this supports only one portType definition.
-            const portType = portTypes[portTypeNames[0]];
-            if (isInput) {
-              name = portType.methods[name].input.$name;
-            } else {
-              name = portType.methods[name].output.$name;
+
+            for (const portTypeName of portTypeNames) {
+              const portType = portTypes[portTypeName];
+              const method = portType.methods[name];
+
+              if (!method) {
+                continue;
+              }
+
+              try {
+                if (isInput) {
+                  name = portType.methods[name].input.$name;
+                } else {
+                  name = portType.methods[name].output.$name;
+                }
+                message = this.definitions.messages[name];
+                break;
+              } catch {
+                throw new Error(`Failed to lookup message ${name} in methods`);
+              }
             }
-            message = this.definitions.messages[name];
+            if (!message) {
+              throw new Error(`Could not find message ${name}`);
+            }
             // 'cache' this alias to speed future lookups
-            this.definitions.messages[originalName] = this.definitions.messages[name];
+            this.definitions.messages[originalName] = message;
           } catch (e) {
             if (this.options.returnFault) {
               p.onerror(e);
@@ -351,7 +367,12 @@ export class WSDL {
       const topSchema = top.schema;
       const name = splitQName(nsName).name;
 
-      if (typeof cur.schema === 'string' && (cur.schema === 'string' || cur.schema.split(':')[1] === 'string')) {
+      /**
+       * When parsing a string element, we need to correctly transform `<tag></tag>`
+       * to an empty string.
+       */
+      const isStringElement = typeof cur.schema === 'string' && splitQName(cur.schema).name === 'string';
+      if (isStringElement) {
         if (typeof obj === 'object' && Object.keys(obj).length === 0) {
           obj = cur.object = this.options.preserveWhitespace ? cur.text || '' : '';
         }
@@ -1181,6 +1202,7 @@ export class WSDL {
     // Works only in client
     this.options.forceSoap12Headers = options.forceSoap12Headers;
     this.options.customDeserializer = options.customDeserializer;
+    this.options.forceUseSchemaXmlns = options.forceUseSchemaXmlns;
 
     if (options.overrideElementKey !== undefined) {
       this.options.overrideElementKey = options.overrideElementKey;
