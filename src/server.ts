@@ -509,7 +509,7 @@ export class Server extends EventEmitter {
     }
   }
 
-  private _getMethodNameBySoapAction(binding: BindingElement, soapAction: string) {
+  private _getMethodNameBySoapAction(binding: BindingElement, soapAction: string): string | null {
     for (const methodName in binding.methods) {
       if (binding.methods[methodName].soapAction === soapAction) {
         return methodName;
