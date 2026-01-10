@@ -1,13 +1,13 @@
 {
   "name": "soap",
-  "version": "1.4.1",
+  "version": "1.6.2",
   "description": "A minimal node SOAP client",
   "engines": {
-    "node": ">=14.17.0"
+    "node": ">=20.9.0"
   },
   "author": "Vinay Pulim <v@pulim.com>",
   "dependencies": {
-    "axios": "^1.12.2",
+    "axios": "^1.13.1",
     "axios-ntlm": "^1.4.6",
     "debug": "^4.4.3",
     "formidable": "^3.5.4",
@@ -32,6 +32,8 @@
     "build": "tsc -p .",
     "watch": "tsc -w -p .",
     "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "toc": "./node_modules/.bin/doctoc Readme.md --github --maxlevel 3",
     "cover": "OPENSSL_ENABLE_SHA1_SIGNATURES=1 nyc --extension=.ts --reporter=lcov --reporter=html --reporter=text mocha --no-parallel --timeout 30000 --exit test/*-test.js test/security/*.js",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js -v",
@@ -43,9 +45,9 @@
   ],
   "license": "MIT",
   "devDependencies": {
-    "@eslint/js": "^9.33.0",
+    "@eslint/js": "^9.38.0",
     "@types/debug": "^4.1.12",
-    "@types/formidable": "^3.4.5",
+    "@types/formidable": "^3.4.6",
     "@types/lodash": "^4.17.20",
     "@types/node": "^14.0.0",
     "@types/sax": "^1.2.7",
@@ -55,21 +57,22 @@
     "diff": "^8.0.2",
     "doctoc": "^2.2.1",
     "duplexer": "~0.1.2",
-    "eslint": "^9.33.0",
+    "eslint": "^9.38.0",
     "express": "^5.1.0",
     "finalhandler": "^2.1.0",
-    "glob": "^11.0.1",
-    "mocha": "^11.7.1",
+    "glob": "^13.0.0",
+    "mocha": "^11.7.4",
     "nyc": "^17.1.0",
+    "prettier": "^3.6.2",
     "readable-stream": "^4.7.0",
-    "semver": "^7.7.1",
+    "semver": "^7.7.3",
     "serve-static": "^2.2.0",
     "should": "^13.2.3",
     "sinon": "^21.0.0",
     "source-map-support": "^0.5.21",
     "timekeeper": "^2.3.1",
-    "typedoc": "^0.28.10",
-    "typescript": "^5.9.2",
-    "typescript-eslint": "^8.40.0"
+    "typedoc": "^0.28.14",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.46.1"
   }
 }
