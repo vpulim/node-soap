@@ -1,4 +1,3 @@
-
 import * as req from 'axios';
 import { ReadStream } from 'fs';
 
@@ -25,11 +24,7 @@ export type SoapMethod = (
   mtomAttachments?: IMTOMAttachments,
 ) => void;
 
-export type SoapMethodAsync = (
-  args: any,
-  options?: any,
-  extraHeaders?: any,
-) => Promise<[any, any, any, any, IMTOMAttachments?]>;
+export type SoapMethodAsync = (args: any, options?: any, extraHeaders?: any) => Promise<[any, any, any, any, IMTOMAttachments?]>;
 
 export type ISoapServiceMethod = (args: any, callback?: (data: any) => void, headers?: any, req?: any, res?: any, sender?: any) => any;
 
@@ -53,8 +48,8 @@ export interface ISoapFault11 {
 // Role, Node, Detail. Should be added when soap module implements them
 // https://www.w3.org/TR/soap12/#soapfault
 export interface ISoapFault12 {
-  Code: { Value: string; Subcode?: { Value: string; }; };
-  Reason: { Text: string; };
+  Code: { Value: string; Subcode?: { Value: string } };
+  Reason: { Text: string };
   statusCode?: number;
 }
 
@@ -88,8 +83,8 @@ export interface IWsdlBaseOptions {
   attributesKey?: string;
   valueKey?: string;
   xmlKey?: string;
-  overrideRootElement?: { namespace: string; xmlnsAttributes?: IXmlAttribute[]; };
-  ignoredNamespaces?: boolean | string[] | { namespaces?: string[]; override?: boolean; };
+  overrideRootElement?: { namespace: string; xmlnsAttributes?: IXmlAttribute[] };
+  ignoredNamespaces?: boolean | string[] | { namespaces?: string[]; override?: boolean };
   ignoreBaseNameSpaces?: boolean;
   /** escape special XML characters in SOAP message (e.g. &, >, < etc), default: true. */
   escapeXML?: boolean;
@@ -158,7 +153,7 @@ export interface IServerOptions extends IWsdlBaseOptions {
 
 export interface IMTOMAttachments {
   parts: Array<{
-    body: Buffer,
-    headers: { [key: string]: string },
+    body: Buffer;
+    headers: { [key: string]: string };
   }>;
 }

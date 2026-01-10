@@ -1,48 +1,39 @@
-"use strict";
+'use strict';
 
-var fs = require("fs"),
-  join = require("path").join;
+var fs = require('fs'),
+  join = require('path').join;
 
-describe("WSSecurityCertWithToken", function () {
-  var WSSecurityCertWithToken = require("../../lib/soap").WSSecurityCertWithToken;
-  var cert = fs.readFileSync(join(__dirname, "..", "certs", "agent2-cert.pem"));
-  var key = fs.readFileSync(join(__dirname, "..", "certs", "agent2-key.pem"));
+describe('WSSecurityCertWithToken', function () {
+  var WSSecurityCertWithToken = require('../../lib/soap').WSSecurityCertWithToken;
+  var cert = fs.readFileSync(join(__dirname, '..', 'certs', 'agent2-cert.pem'));
+  var key = fs.readFileSync(join(__dirname, '..', 'certs', 'agent2-key.pem'));
 
-
-  it("should take parameters as options object", function () {
+  it('should take parameters as options object', function () {
     var instance = new WSSecurityCertWithToken({
       privateKey: key,
       publicKey: cert,
-      keyPassword: "",
-      options: {}
+      keyPassword: '',
+      options: {},
     });
-    var xml = instance.postProcess(
-      "<soap:Envelope><soap:Header></soap:Header><soap:Body></soap:Body></soap:Envelope>",
-      "soap"
-    );
-    xml.should.containEql("<wsse:Security");
+    var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body></soap:Body></soap:Envelope>', 'soap');
+    xml.should.containEql('<wsse:Security');
   });
 
-  it("should contain username and password", function () {
+  it('should contain username and password', function () {
     var instance = new WSSecurityCertWithToken({
       privateKey: key,
       publicKey: cert,
-      keyPassword: "",
-      username: "testuser",
-      password: "testpw",
-      options: {}
+      keyPassword: '',
+      username: 'testuser',
+      password: 'testpw',
+      options: {},
     });
-    var xml = instance.postProcess(
-      "<soap:Envelope><soap:Header></soap:Header><soap:Body></soap:Body></soap:Envelope>",
-      "soap"
-    );
-    xml.should.containEql("<wsse:Username>testuser</wsse:Username>");
-    xml.should.containEql("<wsse:Password>testpw</wsse:Password>");
+    var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body></soap:Body></soap:Envelope>', 'soap');
+    xml.should.containEql('<wsse:Username>testuser</wsse:Username>');
+    xml.should.containEql('<wsse:Password>testpw</wsse:Password>');
   });
-  describe("should pass all the WSSecurityCert tests too", () => {
-    var keyWithPassword = fs.readFileSync(
-      join(__dirname, "..", "certs", "agent2-key-with-password.pem")
-    ); // The passphrase protecting the private key is "soap"
+  describe('should pass all the WSSecurityCert tests too', () => {
+    var keyWithPassword = fs.readFileSync(join(__dirname, '..', 'certs', 'agent2-key-with-password.pem')); // The passphrase protecting the private key is "soap"
     it('is a function', function () {
       WSSecurityCertWithToken.should.be.type('function');
     });
@@ -130,11 +121,10 @@ describe("WSSecurityCertWithToken", function () {
     });
 
     it('should only add one Reference elements, for Soap Body wsse:Security element when addTimestamp is false and SignatureMethod Algorithm=sha256', function () {
-      var instance = new WSSecurityCertWithToken({ privateKey: key, publicKey: cert, keyPassword: '', options: { hasTimeStamp: false, signatureAlgorithm: "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256" } });
+      var instance = new WSSecurityCertWithToken({ privateKey: key, publicKey: cert, keyPassword: '', options: { hasTimeStamp: false, signatureAlgorithm: 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256' } });
       var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body><Timestamp></Timestamp></soap:Body></soap:Envelope>', 'soap');
       xml.match(/<Reference URI="#/g).should.have.length(1);
     });
-
 
     it('double post process should not add extra alments', function () {
       var instance = new WSSecurityCertWithToken({ privateKey: key, publicKey: cert, keyPassword: '' });
@@ -153,10 +143,13 @@ describe("WSSecurityCertWithToken", function () {
 
     it('should use rsa-sha256 signature method when the signatureAlgorithm option is set to WSSecurityCert', function () {
       var instance = new WSSecurityCertWithToken({
-        privateKey: key, publicKey: cert, keyPassword: '', options: {
+        privateKey: key,
+        publicKey: cert,
+        keyPassword: '',
+        options: {
           hasTimeStamp: false,
-          signatureAlgorithm: 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256'
-        }
+          signatureAlgorithm: 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256',
+        },
       });
       var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body></soap:Body></soap:Envelope>', 'soap');
       xml.should.containEql('SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"');
@@ -164,37 +157,43 @@ describe("WSSecurityCertWithToken", function () {
 
     it('should use default xmlns:wsse if no signerOptions.existingPrefixes is provided', function () {
       var instance = new WSSecurityCertWithToken({ privateKey: key, publicKey: cert, keyPassword: '' });
-      var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body></soap:Body></soap:Envelope>', 'soap')
+      var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body></soap:Body></soap:Envelope>', 'soap');
       xml.should.containEql('xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"');
     });
 
     it('should still add wsse if another signerOption attribute is passed through ', function () {
       var instance = new WSSecurityCertWithToken({ privateKey: key, publicKey: cert, keyPassword: '', options: { signerOptions: { prefix: 'ds' } } });
-      var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body></soap:Body></soap:Envelope>', 'soap')
+      var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body></soap:Body></soap:Envelope>', 'soap');
       xml.should.containEql('xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"');
       xml.should.containEql('<ds:SignedInfo>');
     });
 
     it('should contain a provided prefix when signerOptions.existingPrefixes is provided', function () {
       var instance = new WSSecurityCertWithToken({
-        privateKey: key, publicKey: cert, keyPassword: '', options: {
+        privateKey: key,
+        publicKey: cert,
+        keyPassword: '',
+        options: {
           signerOptions: {
             location: { action: 'after', reference: "//*[name(.)='soap:Body']" },
-            existingPrefixes: { wsse: 'https://localhost/node-soap.xsd' }
-          }
-        }
+            existingPrefixes: { wsse: 'https://localhost/node-soap.xsd' },
+          },
+        },
       });
-      var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body></soap:Body></soap:Envelope>', 'soap')
+      var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body></soap:Body></soap:Envelope>', 'soap');
       xml.should.containEql('<wsse:SecurityTokenReference xmlns:wsse="https://localhost/node-soap.xsd">');
     });
 
     it('should contain the prefix to the generated Signature tags', function () {
       var instance = new WSSecurityCertWithToken({
-        privateKey: key, publicKey: cert, keyPassword: '', options: {
+        privateKey: key,
+        publicKey: cert,
+        keyPassword: '',
+        options: {
           signerOptions: {
             prefix: 'ds',
-          }
-        }
+          },
+        },
       });
       var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body></soap:Body></soap:Envelope>', 'soap');
       xml.should.containEql('<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">');
@@ -211,11 +210,14 @@ describe("WSSecurityCertWithToken", function () {
 
     it('should add attributes to the security tag', function () {
       var instance = new WSSecurityCertWithToken({
-        privateKey: key, publicKey: cert, keyPassword: '', options: {
+        privateKey: key,
+        publicKey: cert,
+        keyPassword: '',
+        options: {
           signerOptions: {
             attrs: { Id: 'security_123' },
-          }
-        }
+          },
+        },
       });
       var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body></soap:Body></soap:Envelope>', 'soap');
       xml.should.containEql('<Signature Id="security_123" xmlns="http://www.w3.org/2000/09/xmldsig#">');
@@ -223,12 +225,12 @@ describe("WSSecurityCertWithToken", function () {
 
     it('should sign additional headers that are added via additionalReferences', function () {
       var instance = new WSSecurityCertWithToken({
-        privateKey: key, publicKey: cert, keyPassword: '', options: {
-          additionalReferences: [
-            'To',
-            'Action'
-          ],
-        }
+        privateKey: key,
+        publicKey: cert,
+        keyPassword: '',
+        options: {
+          additionalReferences: ['To', 'Action'],
+        },
       });
       var xml = instance.postProcess('<soap:Envelope><soap:Header><To Id="To">localhost.com</To><Action Id="action-1234">testing</Action></soap:Header><soap:Body><Body></Body></soap:Body></soap:Envelope>', 'soap');
       xml.should.containEql('<Reference URI="#To">');
@@ -243,9 +245,12 @@ describe("WSSecurityCertWithToken", function () {
 
     it('should add envelopeKey to properties in Security block', function () {
       var instance = new WSSecurityCertWithToken({
-        privateKey: key, publicKey: cert, keyPassword: '', options: {
+        privateKey: key,
+        publicKey: cert,
+        keyPassword: '',
+        options: {
           mustUnderstand: true,
-        }
+        },
       });
       var xml = instance.postProcess('<soap:Envelope><soapenv:Header></soapenv:Header><soapenv:Body></soapenv:Body></soap:Envelope>', 'soapenv');
       xml.should.containEql('soapenv:mustUnderstand="1"');
@@ -261,5 +266,5 @@ describe("WSSecurityCertWithToken", function () {
       }
       should(xml).not.be.ok();
     });
-  })
+  });
 });
