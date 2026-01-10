@@ -1,3 +1,34 @@
+# 1.6.2 / 2026-01-02
+
+- [FIX] Align deserialization of restricted strings with standard strings (#1413)
+- [MAINTENANCE] Bump typescript-eslint from 8.48.1 to 8.49.0 (#1416)
+- [MAINTENANCE] Bump @eslint/js from 9.39.1 to 9.39.2 (#1415)
+- [MAINTENANCE] Bump eslint from 9.39.1 to 9.39.2 (#1414)
+- [MAINTENANCE] Run MR pipeline against supported node.js runtimes 20, 22 and 24 (#1417)
+- [MAINTENANCE] Bump express from 5.1.0 to 5.2.1 (#1411)
+- [MAINTENANCE] Bump finalhandler from 2.1.0 to 2.1.1 (#1409)
+- [MAINTENANCE] Bump prettier from 3.7.3 to 3.7.4 (#1408)
+- [MAINTENANCE] Bump actions/checkout from 5 to 6 (#1407)
+- [MAINTENANCE] Bump body-parser from 2.2.0 to 2.2.1 (#1403)
+- [MAINTENANCE] Bump min node.js version to 20.9.0 (#1399)
+- [MAINTENANCE] Bump @types/lodash from 4.17.20 to 4.17.21 (#1402)
+
+# 1.6.1 / 2025-12-04
+
+- [FIX] Use namespace in caching to avoid conflicts between schemas in complex types with the same name (#1397)
+- [MAINTENANCE] Bump sax from 1.4.1 to 1.4.3 (#1389)
+- [MAINTENANCE] Bump glob (via mocha) to fix glob CLI: Command injection via -c/--cmd executes matches with shell:true (#1398)
+- [MAINTENANCE] Bump mocha from 11.7.4 to 11.7.5 (#1391)
+- [MAINTENANCE] Bump mocha from 11.7.4 to 11.7.5 (#1391)
+- [MAINTENANCE] Bump js-yaml to fix prototype pollution in merge (#1388)
+- [MAINTENANCE] Bump eslint from 9.38.0 to 9.39.0 (#1384)
+- [MAINTENANCE] Bump @eslint/js from 9.38.0 to 9.39.0 (#1385)
+- [MAINTENANCE] Bump axios from 1.12.2 to 1.13.1 (#1386)
+- [MAINTENANCE] Bump typescript-eslint from 8.46.1 to 8.46.2 (#1382)
+- [MAINTENANCE] Bump actions/setup-node from 5 to 6 (#1379)
+- [DOC] Fix broken TOC links for italic headings (#1378)
+- [DOC] Update CONTRIBUTING.md (#1375)
+
 # 1.6.0 / 2025-10-25
 
 - [ENHANCEMENT] Add support for multi-service and multi-port binding WSDL files (#1337)

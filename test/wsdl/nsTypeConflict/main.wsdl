@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+                  xmlns:schemaa="http://test.example.com/SchemaA" 
+                  xmlns:schemab="http://test.example.com/SchemaB" 
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+                  xmlns:tns="http://test.example.com/TestService" 
+                  xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+                  targetNamespace="http://test.example.com/TestService">
+  <wsdl:types>
+    <xs:schema>
+      <xs:import schemaLocation="SchemaB.xsd" namespace="http://test.example.com/SchemaB" />
+      <xs:import schemaLocation="SchemaA.xsd" namespace="http://test.example.com/SchemaA" />
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="ResponseB">
+    <wsdl:part name="ResponseB" element="schemab:ResponseB" />
+  </wsdl:message>
+  <wsdl:message name="RequestA">
+    <wsdl:part name="RequestA" element="schemaa:RequestA" />
+  </wsdl:message>
+  <wsdl:portType name="TestServicesPT">
+    <wsdl:operation name="OperationB">
+      <wsdl:output message="tns:ResponseB" />
+    </wsdl:operation>
+    <wsdl:operation name="OperationA">
+      <wsdl:input message="tns:RequestA" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="TestBinding" type="tns:TestServicesPT">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="OperationB">
+      <soap:operation soapAction="http://test.example.com/OperationB" />
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OperationA">
+      <soap:operation soapAction="http://test.example.com/OperationA" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="TestServices">
+    <wsdl:port binding="tns:TestBinding" name="TestPort">
+      <soap:address location="https://test.example.com" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
