@@ -515,6 +515,7 @@ export class Server extends EventEmitter {
         return methodName;
       }
     }
+    return null;
   }
 
   private _executeMethod(options: IExecuteMethodOptions, req: Request, res: Response, callback: (result: any, statusCode?: number) => any, includeTimestamp?) {
