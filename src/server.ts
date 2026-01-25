@@ -38,13 +38,17 @@ function getDateString(d) {
 //eslint-disable-next-line  @typescript-eslint/no-unsafe-declaration-merging
 export interface Server {
   emit(event: 'request', request: any, methodName: string): boolean;
+
   emit(event: 'headers', headers: any, methodName: string): boolean;
+
   emit(event: 'response', headers: any, methodName: string): boolean;
 
   /** Emitted for every received messages. */
   on(event: 'request', listener: (request: any, methodName: string) => void): this;
+
   /** Emitted when the SOAP Headers are not empty. */
   on(event: 'headers', listener: (headers: any, methodName: string) => void): this;
+
   /** Emitted before sending SOAP response. */
   on(event: 'response', listener: (response: any, methodName: string) => void): this;
 }
@@ -285,7 +289,7 @@ export class Server extends EventEmitter {
   private _process(input, req: Request, res: Response, cb: (result: any, statusCode?: number) => any) {
     const pathname = url.parse(req.url).pathname.replace(/\/$/, '');
     const obj = this.wsdl.xmlToObject(input);
-    const body = obj.Body;
+    const body = obj.Body ? obj.Body : obj;
     const headers = obj.Header;
     let binding: BindingElement;
     let methodName: string;
@@ -353,9 +357,9 @@ export class Server extends EventEmitter {
       try {
         const soapAction = this._getSoapAction(req);
         const messageElemName = Object.keys(body)[0] === 'attributes' ? Object.keys(body)[1] : Object.keys(body)[0];
-        const pair = binding.topElements[messageElemName];
+        const pair = binding.topElements[messageElemName] ? binding.topElements[messageElemName] : binding.topElements[soapAction];
         if (soapAction) {
-          methodName = this._getMethodNameBySoapAction(binding, soapAction);
+          methodName = this._getMethodNameBySoapActionSuffix(binding, soapAction);
         } else {
           methodName = pair ? pair.methodName : messageElemName;
         }
@@ -491,12 +495,27 @@ export class Server extends EventEmitter {
     }
   }
 
-  private _getMethodNameBySoapAction(binding: BindingElement, soapAction: string) {
+  private _getMethodNameBySoapActionSuffix(binding: BindingElement, soapAction: string): string | null {
+    const methodName = this._getMethodNameBySoapAction(binding, soapAction);
+
+    if (methodName) {
+      return methodName;
+    }
+    for (const methodName in binding.methods) {
+      const parts = binding.methods[methodName].soapAction.split('/');
+      if (parts.reverse()[0] === soapAction) {
+        return methodName;
+      }
+    }
+  }
+
+  private _getMethodNameBySoapAction(binding: BindingElement, soapAction: string): string | null {
     for (const methodName in binding.methods) {
       if (binding.methods[methodName].soapAction === soapAction) {
         return methodName;
       }
     }
+    return null;
   }
 
   private _executeMethod(options: IExecuteMethodOptions, req: Request, res: Response, callback: (result: any, statusCode?: number) => any, includeTimestamp?) {
