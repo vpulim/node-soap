@@ -145,16 +145,6 @@ tests.forEach(function (test) {
 
   generateTest(name, methodName, wsdl, headerJSON, securityJSON, requestXML, requestJSON, responseXML, responseJSON, responseSoapHeaderJSON, wsdlOptions, options, responseHttpHeaders, attachmentParts, false);
   generateTest(name, methodName, wsdl, headerJSON, securityJSON, requestXML, requestJSON, responseXML, responseJSON, responseSoapHeaderJSON, wsdlOptions, options, responseHttpHeaders, attachmentParts, true);
-
-  // NTLM + agent tests
-  wsdlOptions.ntlm = true;
-  wsdlOptions.httpAgent = () => {};
-  options.ntlm = true;
-  options.httpsAgent = () => {};
-  // console.log(wsdlOptions);
-
-  generateTest(name, methodName, wsdl, headerJSON, securityJSON, requestXML, requestJSON, responseXML, responseJSON, responseSoapHeaderJSON, wsdlOptions, options, responseHttpHeaders, attachmentParts, false);
-  generateTest(name, methodName, wsdl, headerJSON, securityJSON, requestXML, requestJSON, responseXML, responseJSON, responseSoapHeaderJSON, wsdlOptions, options, responseHttpHeaders, attachmentParts, true);
 });
 
 function generateTest(name, methodName, wsdlPath, headerJSON, securityJSON, requestXML, requestJSON, responseXML, responseJSON, responseSoapHeaderJSON, wsdlOptions, options, responseHttpHeaders, attachmentParts, usePromises) {
@@ -164,10 +154,6 @@ function generateTest(name, methodName, wsdlPath, headerJSON, securityJSON, requ
     name += ' (promisified)';
     methodName += 'Async';
     methodCaller = promiseCaller;
-  }
-
-  if (wsdlOptions.ntlm || options.ntlm) {
-    name += ' (ntlm)';
   }
 
   suite[name] = function (done) {
@@ -224,14 +210,6 @@ function cbCaller(client, methodName, requestJSON, responseJSON, responseSoapHea
     requestJSON,
     function (err, json, body, soapHeader) {
       try {
-        // Instrumentation
-        //console.log(client);
-        console.log(client.httpClient);
-        //console.log(client.httpClient.options);
-        //console.log(client.httpClient._request);
-        //console.log(client.httpClient._request.options);
-        //console.log(client.httpClient._request._request);
-        console.log(client.httpClient._request.request);
         if (requestJSON) {
           if (err) {
             assert.notEqual('undefined: undefined', err.message);
@@ -299,7 +277,6 @@ describe('Request Response Sampling', function () {
     server.listen(0, function (e) {
       if (e) return done(e);
       port = server.address().port;
-      console.log('PORT:' + port);
       done();
     });
   });
