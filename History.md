@@ -1,3 +1,10 @@
+# 1.6.3 / 2026-01-11
+
+- [MAINTENANCE] Bump qs to 6.14.1 and body-parser to 2.2.2 (#1423)
+- [MAINTENANCE] Bump serve-static from 2.2.0 to 2.2.1 (#1421)
+- [MAINTENANCE] Bump sinon from 21.0.0 to 21.0.1 (#1420)
+- [MAINTENANCE] Bump typescript-eslint from 8.49.0 to 8.50.0 (#1419)
+
 # 1.6.2 / 2026-01-02
 
 - [FIX] Align deserialization of restricted strings with standard strings (#1413)
