@@ -1,3 +1,10 @@
+# 1.6.4 / 2026-01-28
+
+- [ENHANCEMENT] Improve request handling when there is no explicit Body (#1424)
+- [MAINTENANCE] Bump typescript-eslint from 8.51.0 to 8.52.0 (#1429)
+- [MAINTENANCE] Bump @types/lodash from 4.17.21 to 4.17.23 (#1428)
+- [MAINTENANCE] Bump sax from 1.4.3 to 1.4.4 (#1427)
+
 # 1.6.3 / 2026-01-11
 
 - [MAINTENANCE] Bump qs to 6.14.1 and body-parser to 2.2.2 (#1423)
