@@ -180,12 +180,18 @@ export class HttpClient implements IHttpClient {
     const options = this.buildRequest(rurl, data, exheaders, exoptions);
     let req: req.AxiosPromise;
     if (exoptions !== undefined && exoptions.ntlm) {
-      const ntlmReq = NtlmClient({
-        username: exoptions.username,
-        password: exoptions.password,
-        workstation: exoptions.workstation || '',
-        domain: exoptions.domain || '',
-      });
+      const ntlmReq = NtlmClient(
+        {
+          username: exoptions.username,
+          password: exoptions.password,
+          workstation: exoptions.workstation || '',
+          domain: exoptions.domain || '',
+        },
+        // Change wanted in the OG PR:
+        //{ httpAgent: exoptions.httpAgent, httpsAgent: exoptions.httpsAgent },
+        // A better change per axios-ntlm API?
+        options,
+      );
       req = ntlmReq(options);
     } else {
       if (this.options.parseReponseAttachments) {
