@@ -244,9 +244,7 @@ export class HttpClient implements IHttpClient {
         return callback(err);
       },
     );
-    // Instrumentation
-    //console.log("REQ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11");
-    //console.log(req);
+
     return req;
   }
 
