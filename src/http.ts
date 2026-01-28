@@ -244,7 +244,6 @@ export class HttpClient implements IHttpClient {
         return callback(err);
       },
     );
-
     return req;
   }
 
