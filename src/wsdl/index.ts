@@ -12,7 +12,6 @@ import * as _ from 'lodash';
 import * as path from 'path';
 import * as sax from 'sax';
 import stripBom from 'strip-bom';
-import * as url from 'url';
 import { HttpClient } from '../http';
 import { NamespaceContext } from '../nscontext';
 import { IOptions } from '../types';
@@ -1230,7 +1229,15 @@ export class WSDL {
         includePath = path.resolve(path.dirname(this.uri), include.location);
       }
     } else {
-      includePath = url.resolve(this.uri || '', include.location);
+      if (/^https?:/i.test(include.location)) {
+        includePath = include.location;
+      } else {
+        try {
+          includePath = new URL(this.uri || '', include.location).toString();
+        } catch {
+          includePath = include.location;
+        }
+      }
     }
 
     const options = Object.assign({}, this.options);
