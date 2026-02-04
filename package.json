@@ -38,7 +38,7 @@
     "cover": "OPENSSL_ENABLE_SHA1_SIGNATURES=1 nyc --extension=.ts --reporter=lcov --reporter=html --reporter=text mocha --no-parallel --timeout 30000 --exit test/*-test.js test/security/*.js",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js -v",
     "docs": "typedoc --out docs",
-    "test": "mocha --timeout 15000 --bail --exit test/*-test.js test/security/*.js"
+    "test": "TZ=UTC mocha --timeout 15000 --bail --exit test/*-test.js test/security/*.js"
   },
   "keywords": [
     "soap"
