@@ -8,7 +8,6 @@ import { NtlmClient } from 'axios-ntlm';
 import { randomUUID } from 'crypto';
 import debugBuilder from 'debug';
 import { ReadStream } from 'fs';
-import * as url from 'url';
 import MIMEType from 'whatwg-mimetype';
 import { gzipSync } from 'zlib';
 import { IExOptions, IHeaders, IHttpClient, IOptions } from './types';
@@ -22,6 +21,13 @@ export interface IAttachment {
   contentId: string;
   mimetype: string;
   body: NodeJS.ReadableStream;
+}
+
+function getPortFromUrl(url: URL): string {
+  if (url.port) return url.port;
+  if (url.protocol.toLowerCase() === 'https:') return '443';
+  if (url.protocol.toLowerCase() === 'http:') return '80';
+  return '';
 }
 
 /**
@@ -50,18 +56,19 @@ export class HttpClient implements IHttpClient {
    * @returns {Object} The http request object for the `request` module
    */
   public buildRequest(rurl: string, data: any, exheaders?: IHeaders, exoptions: IExOptions = {}): any {
-    const curl = url.parse(rurl);
+    const curl = new URL(rurl);
     const method = data ? 'POST' : 'GET';
 
     const host = curl.hostname;
-    const port = parseInt(curl.port, 10);
+
+    const port = getPortFromUrl(curl);
     const headers: IHeaders = {
       'User-Agent': 'node-soap/' + version,
       'Accept': 'text/html,application/xhtml+xml,application/xml,text/xml;q=0.9,*/*;q=0.8',
       'Accept-Encoding': 'none',
       'Accept-Charset': 'utf-8',
       ...(exoptions.forever && { Connection: 'keep-alive' }),
-      'Host': host + (isNaN(port) ? '' : ':' + port),
+      'Host': host + (port ? ':' + port : ''),
     };
     const mergeOptions = ['headers'];
 
