@@ -407,6 +407,9 @@ export class Client extends EventEmitter {
     if (this.security && this.security.addOptions) {
       this.security.addOptions(options);
     }
+    if (this.security && typeof this.security?.toXML !== 'function') {
+      this.security.toXML = () => '';
+    }
 
     if (style === 'rpc' && (input.parts || input.name === 'element' || args === null)) {
       assert.ok(!style || style === 'rpc', 'invalid message definition for document style binding');
