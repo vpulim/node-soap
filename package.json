@@ -15,7 +15,7 @@
     "lodash": "^4.17.21",
     "sax": "^1.4.1",
     "strip-bom": "^5.0.0",
-    "whatwg-mimetype": "4.0.0",
+    "whatwg-mimetype": "5.0.0",
     "xml-crypto": "^6.1.2"
   },
   "repository": {
