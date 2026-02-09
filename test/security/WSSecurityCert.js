@@ -1,7 +1,11 @@
 'use strict';
 
+var soap = require('../..');
+
 var fs = require('fs'),
   join = require('path').join;
+
+var assert = require('assert');
 
 describe('WSSecurityCert', function () {
   var WSSecurityCert = require('../../').WSSecurityCert;
@@ -324,5 +328,27 @@ describe('WSSecurityCert', function () {
     xml.should.containEql('ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3"/>');
     xml.should.containEql(instance.publicP12PEM);
     xml.should.containEql(instance.signer.getSignatureXml());
+  });
+
+  it('can handle undefined toXML in WSSecurity', async function () {
+    const baseUrl = 'http://localhost:80';
+
+    try {
+      const client = await soap.createClientAsync(__dirname + '/../wsdl/default_namespace.wsdl', {}, baseUrl);
+
+      const security = new soap.WSSecurityCert(key, cert, '', {
+        hasTimeStamp: true,
+        signatureAlgorithm: 'http://www.w3.org/2000/09/xmldsig#rsa-sha1',
+        digestAlgorithm: 'http://www.w3.org/2000/09/xmldsig#sha1',
+        signatureTransformations: ['http://www.w3.org/2001/10/xml-exc-c14n#'],
+      });
+
+      client.setSecurity(security);
+
+      client.MyOperation(function () {});
+      assert.fail('must fail');
+    } catch (err) {
+      assert.ok(err.message?.includes('the following xpath cannot be signed'));
+    }
   });
 });
