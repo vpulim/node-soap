@@ -10,6 +10,7 @@
     "axios": "^1.13.1",
     "axios-ntlm": "^1.4.6",
     "debug": "^4.4.3",
+    "follow-redirects": "^1.15.11",
     "formidable": "^3.5.4",
     "get-stream": "^9.0.1",
     "lodash": "^4.17.21",
