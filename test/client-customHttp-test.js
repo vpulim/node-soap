@@ -45,6 +45,11 @@ it('should allow customization of httpClient and the wsdl file download should p
   // axios calls this
   socketStream.setKeepAlive = function () {};
 
+  // axios needs this since 1.13.2
+  if (typeof socketStream?.setTimeout !== 'function') {
+    socketStream.setTimeout = function () {};
+  }
+
   //Custom httpClient
   class MyHttpClient extends httpClient {
     constructor(options, socket) {

@@ -34,6 +34,15 @@ it('should allow customization of httpClient, the wsdl file, and associated data
   class MyHttpClient extends httpClient {
     constructor(options, wsdlSocket, xsdSocket) {
       super(options);
+
+      // axios needs this since 1.13.2
+      if (wsdlSocket && typeof wsdlSocket?.setTimeout !== 'function') {
+        wsdlSocket.setTimeout = function () {};
+      }
+      if (xsdSocket && typeof xsdSocket?.setTimeout !== 'function') {
+        xsdSocket.setTimeout = function () {};
+      }
+
       this.agent = new CustomAgent(options, wsdlSocket, xsdSocket);
     }
   }
