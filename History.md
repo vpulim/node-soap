@@ -1,3 +1,13 @@
+# 1.6.5 / 2026-02-13
+
+- [ENHANCEMENT] honor httpAgent/httpsAgent when setting ntlm (#1336)
+- [FIX] Handle undefined toXml() (#1435)
+- [MAINTENANCE] Bump axios to 1.13.5 (#1442)
+- [MAINTENANCE] Bump typescript-eslint to 8.53.1 (#1439)
+- [MAINTENANCE] Bump prettier to 3.8.1 (#1437)
+- [MAINTENANCE] Bump brace-expansion to 5.0.1 (#1440)
+- [MAINTENANCE] Bump `strip-bom` and `get-stream` (#1394)
+
 # 1.6.4 / 2026-01-28
 
 - [ENHANCEMENT] Improve request handling when there is no explicit Body (#1424)
