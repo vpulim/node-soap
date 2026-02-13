@@ -5,9 +5,14 @@ var fs = require('fs'),
   http = require('http'),
   stream = require('stream'),
   assert = require('assert'),
-  _ = require('lodash'),
   sinon = require('sinon'),
   wsdl = require('../lib/wsdl');
+
+function getByPath(obj, path) {
+  return path.split('.').reduce(function (o, k) {
+    return o && o[k];
+  }, obj);
+}
 
 [
   { suffix: '', options: { useEmptyTag: false } },
@@ -1590,7 +1595,7 @@ var fs = require('fs'),
           function (err, client) {
             assert.ok(client);
             var pathToArrayContainer = 'TimesheetV201511Mobile.TimesheetV201511MobileSoap.AddTimesheet.input.input.PeriodList';
-            var arrayParameter = _.get(client.describe(), pathToArrayContainer)['PeriodType[]'];
+            var arrayParameter = getByPath(client.describe(), pathToArrayContainer)['PeriodType[]'];
             assert.ok(arrayParameter);
             client.AddTimesheet({ input: { PeriodList: { PeriodType: [{ PeriodId: '1' }] } } }, function () {
               var sentInputContent = client.lastRequest.substring(client.lastRequest.indexOf('<input>') + '<input>'.length, client.lastRequest.indexOf('</input>'));
@@ -1608,7 +1613,7 @@ var fs = require('fs'),
           function (err, client) {
             assert.ok(client);
             var pathToArrayContainer = 'SampleArrayServiceImplService.SampleArrayServiceImplPort.createWebOrder.input.order';
-            var arrayParameter = _.get(client.describe(), pathToArrayContainer)['orderDetails[]'];
+            var arrayParameter = getByPath(client.describe(), pathToArrayContainer)['orderDetails[]'];
             assert.ok(arrayParameter);
             const input = {
               ':clientId': 'test',
@@ -1635,7 +1640,7 @@ var fs = require('fs'),
           function (err, client) {
             assert.ok(client);
             var pathToArrayContainer = 'SampleArrayServiceImplService.SampleArrayServiceImplPort.createWebOrder.input.order';
-            var arrayParameter = _.get(client.describe(), pathToArrayContainer)['orderDetails[]'];
+            var arrayParameter = getByPath(client.describe(), pathToArrayContainer)['orderDetails[]'];
             assert.ok(arrayParameter);
             const input = {
               ':clientId': 'test',
@@ -1664,7 +1669,7 @@ var fs = require('fs'),
           function (err, client) {
             assert.ok(client);
             var pathToArrayContainer = 'TimesheetV201511Mobile.TimesheetV201511MobileSoap.AddTimesheet.input.input.PeriodList';
-            var arrayParameter = _.get(client.describe(), pathToArrayContainer)['PeriodType[]'];
+            var arrayParameter = getByPath(client.describe(), pathToArrayContainer)['PeriodType[]'];
             assert.ok(arrayParameter);
             client.AddTimesheet({ input: { PeriodList: { PeriodType: [{ PeriodId: '1' }, { PeriodId: '2' }] } } }, function () {
               var sentInputContent = client.lastRequest.substring(client.lastRequest.indexOf('<input>') + '<input>'.length, client.lastRequest.indexOf('</input>'));
@@ -1685,7 +1690,7 @@ var fs = require('fs'),
             assert.ok(client);
             assert.ok(client.wsdl.options.namespaceArrayElements === true);
             var pathToArrayContainer = 'TimesheetV201511Mobile.TimesheetV201511MobileSoap.AddTimesheet.input.input.PeriodList';
-            var arrayParameter = _.get(client.describe(), pathToArrayContainer)['PeriodType[]'];
+            var arrayParameter = getByPath(client.describe(), pathToArrayContainer)['PeriodType[]'];
             assert.ok(arrayParameter);
             client.AddTimesheet({ input: { PeriodList: { PeriodType: [{ PeriodId: '1' }, { PeriodId: '2' }] } } }, function () {
               var sentInputContent = client.lastRequest.substring(client.lastRequest.indexOf('<input>') + '<input>'.length, client.lastRequest.indexOf('</input>'));

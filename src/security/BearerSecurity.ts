@@ -1,5 +1,5 @@
-import * as _ from 'lodash';
 import { IHeaders, ISecurity } from '../types';
+import { merge } from '../utils';
 
 export class BearerSecurity implements ISecurity {
   private defaults;
@@ -8,7 +8,7 @@ export class BearerSecurity implements ISecurity {
   constructor(token: string, defaults?: any) {
     this._token = token;
     this.defaults = {};
-    _.merge(this.defaults, defaults);
+    merge(this.defaults, defaults);
   }
 
   public addHeaders(headers: IHeaders): void {
@@ -20,6 +20,6 @@ export class BearerSecurity implements ISecurity {
   }
 
   public addOptions(options: any): void {
-    _.merge(options, this.defaults);
+    merge(options, this.defaults);
   }
 }

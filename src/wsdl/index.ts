@@ -8,7 +8,7 @@
 import { ok as assert } from 'assert';
 import debugBuilder from 'debug';
 import * as fs from 'fs';
-import * as _ from 'lodash';
+import { isPlainObject, mergeWith } from '../utils';
 import * as path from 'path';
 import * as sax from 'sax';
 import stripBom from 'strip-bom';
@@ -386,7 +386,7 @@ export class WSDL {
         }
       }
 
-      if (_.isPlainObject(obj) && !Object.keys(obj).length) {
+      if (isPlainObject(obj) && !Object.keys(obj).length) {
         obj = null;
       }
 
@@ -1254,7 +1254,7 @@ export class WSDL {
       this._includesWsdl.push(wsdl);
 
       if (wsdl.definitions instanceof elements.DefinitionsElement) {
-        _.mergeWith(this.definitions, wsdl.definitions, (a, b) => {
+        mergeWith(this.definitions, wsdl.definitions, (a, b) => {
           return a instanceof elements.SchemaElement ? a.merge(b) : undefined;
         });
       } else {
