@@ -136,6 +136,12 @@ export function once<T extends (...args: any[]) => any>(func: T): T {
   } as T;
 }
 
+export function getByPath(obj: any, path: any) {
+  return path.split('.').reduce(function (o: { [x: string]: any }, k: string | number) {
+    return o && o[k];
+  }, obj);
+}
+
 // --- END lodash replacement ---
 
 export function passwordDigest(nonce: string, created: string, password: string): string {
