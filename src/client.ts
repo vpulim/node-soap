@@ -8,10 +8,9 @@ import { AxiosResponseHeaders, RawAxiosResponseHeaders } from 'axios';
 import { randomUUID } from 'crypto';
 import debugBuilder from 'debug';
 import { EventEmitter } from 'events';
-import getStream from 'get-stream';
 import { HttpClient } from './http';
 import { IHeaders, IHttpClient, IMTOMAttachments, IOptions, ISecurity, SoapMethod, SoapMethodAsync } from './types';
-import { findPrefix, isObject, once } from './utils';
+import { findPrefix, isObject, once, streamToText } from './utils';
 import { WSDL } from './wsdl';
 import { IPort, OperationElement, ServiceElement } from './wsdl/elements';
 
@@ -535,7 +534,7 @@ export class Client extends EventEmitter {
         // When the output element cannot be looked up in the wsdl,
         // play it safe and don't stream
         if (res.status !== 200 || !output || !output.$lookupTypes) {
-          getStream(res.data).then((body) => {
+          streamToText(res.data).then((body) => {
             this.lastResponse = body;
             this.lastElapsedTime = Date.now() - startTime;
             this.lastResponseHeaders = res && res.headers;

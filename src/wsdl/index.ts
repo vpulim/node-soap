@@ -11,12 +11,11 @@ import * as fs from 'fs';
 import { isPlainObject, mergeWith } from '../utils';
 import * as path from 'path';
 import * as sax from 'sax';
-import stripBom from 'strip-bom';
 import * as url from 'url';
 import { HttpClient } from '../http';
 import { NamespaceContext } from '../nscontext';
 import { IOptions } from '../types';
-import { findPrefix, splitQName, TNS_PREFIX, xmlEscape } from '../utils';
+import { findPrefix, splitQName, stripBom, TNS_PREFIX, xmlEscape } from '../utils';
 import * as elements from './elements';
 
 const debug = debugBuilder('node-soap');
