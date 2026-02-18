@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as https from 'https';
-import * as _ from 'lodash';
 import { ISecurity } from '../types';
+import { merge } from '../utils';
 
 /**
  * activates SSL for an already existing client
@@ -53,7 +53,7 @@ export class ClientSSLSecurity implements ISecurity {
     }
 
     this.defaults = {};
-    _.merge(this.defaults, defaults);
+    merge(this.defaults, defaults);
 
     this.agent = null;
   }
@@ -68,7 +68,7 @@ export class ClientSSLSecurity implements ISecurity {
     options.key = this.key;
     options.cert = this.cert;
     options.ca = this.ca;
-    _.merge(options, this.defaults);
+    merge(options, this.defaults);
 
     if (options.forever) {
       if (!this.agent) {
