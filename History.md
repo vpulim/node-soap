@@ -1,3 +1,9 @@
+# 1.7.0 / 2026-02-18
+
+- [ENHANCEMENT] Replace get-stream and strip-bom with local impl (#1447)
+- [ENHANCEMENT] Remove lodash dependency (#1444)
+- [MAINTENANCE] Bump typescript-eslint from 8.53.1 to 8.54.0 (#1445)
+
 # 1.6.5 / 2026-02-13
 
 - [ENHANCEMENT] honor httpAgent/httpsAgent when setting ntlm (#1336)
