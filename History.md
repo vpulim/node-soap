@@ -1,3 +1,7 @@
+# 1.7.1 / 2026-02-18
+
+- [FIX] Rebuild to update stale references
+
 # 1.7.0 / 2026-02-18
 
 - [ENHANCEMENT] Replace get-stream and strip-bom with local impl (#1447)
