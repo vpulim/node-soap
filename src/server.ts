@@ -6,7 +6,7 @@
 import { EventEmitter } from 'events';
 import * as http from 'http';
 import * as url from 'url';
-import { IOneWayOptions, IServerOptions, IServices, ISoapFault, ISoapServiceMethod } from './types';
+import { IOneWayOptions, IServerOptions, IServerlessRequest, IServerlessResponse, IServices, ISoapFault, ISoapServiceMethod } from './types';
 import { WSDL } from './wsdl';
 import { BindingElement, IPort } from './wsdl/elements';
 import zlib from 'zlib';
@@ -79,7 +79,7 @@ export class Server extends EventEmitter {
   private soapHeaders: any[];
   private callback?: (err: any, res: any) => void;
 
-  constructor(server: ServerType, path: string | RegExp, services: IServices, wsdl: WSDL, options?: IServerOptions) {
+  constructor(server: ServerType | null, path: string | RegExp, services: IServices, wsdl: WSDL, options?: IServerOptions) {
     super();
 
     options = options || {
@@ -100,6 +100,11 @@ export class Server extends EventEmitter {
       path = new RegExp(path.source + '(?:\\/|)');
     }
     wsdl.onReady((err) => {
+      if (!server) {
+        this.callback(err, this);
+        return;
+      }
+
       if (isExpress(server)) {
         // handle only the required URL path for express server
         server.route(path).all((req, res) => {
@@ -163,6 +168,57 @@ export class Server extends EventEmitter {
 
   public clearSoapHeaders(): void {
     this.soapHeaders = null;
+  }
+
+  public processRequest(xml: string, reqOptions: IServerlessRequest = {}): Promise<IServerlessResponse> {
+    const request = this._createServerlessRequest(reqOptions);
+    const responseState: IServerlessResponse = {
+      body: '',
+      statusCode: 200,
+      headers: {},
+    };
+
+    return new Promise((resolve) => {
+      const response = {
+        statusCode: 200,
+        setHeader: (name: string, value: string) => {
+          responseState.headers[name.toLowerCase()] = value;
+        },
+        write: (chunk) => {
+          if (typeof chunk !== 'undefined') {
+            responseState.body += Buffer.isBuffer(chunk) ? chunk.toString() : String(chunk);
+          }
+          return true;
+        },
+        end: (chunk?) => {
+          if (typeof chunk !== 'undefined') {
+            response.write(chunk);
+          }
+          responseState.statusCode = response.statusCode || 200;
+          resolve(responseState);
+        },
+      } as unknown as Response;
+
+      if (typeof request.headers['content-type'] !== 'undefined') {
+        response.setHeader('Content-Type', request.headers['content-type'] as string);
+      } else {
+        response.setHeader('Content-Type', 'application/xml');
+      }
+
+      this._processRequestXml(request, response, xml);
+    });
+  }
+
+  private _createServerlessRequest(reqOptions: IServerlessRequest = {}): Request {
+    const requestPath = typeof this.path === 'string' ? this.path : '/';
+    return {
+      method: reqOptions.method || 'POST',
+      headers: reqOptions.headers || {},
+      url: reqOptions.url || requestPath,
+      connection: reqOptions.connection || {
+        remoteAddress: undefined,
+      },
+    } as Request;
   }
 
   private _processSoapHeader(soapHeader, name, namespace, xmlns) {
