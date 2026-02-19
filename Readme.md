@@ -341,6 +341,44 @@ soap.listen(server, {
 });
 ```
 
+### soap.createServerless(_options_) - create a new SOAP server without binding to an HTTP server.
+
+Use this when you are running in serverless environments (for example AWS Lambda), where you receive the raw request body and must return the raw SOAP XML response yourself.
+
+The returned server supports `processRequest(xml, requestOptions)`.
+
+- `xml` (_string_): Raw SOAP XML request body.
+- `requestOptions` (_Object_): Optional request metadata.
+  - `url` (_string_): Request path used for operation binding. (Example: `/stockquote`)
+  - `headers` (_Object_): Incoming HTTP headers. (Example: `{ 'content-type': 'text/xml' }`)
+
+#### Example
+
+```javascript
+function handler() {
+var wsdl = fs.readFileSync('myservice.wsdl', 'utf8');
+
+var server = await soap.createServerless({
+    path: '/myService',
+    services: services,
+    xml: wsdl,
+  });
+
+  var response = await server.processRequest(rawXmlRequest, {
+    url: '/myService',
+    headers: {
+      'content-type': 'text/xml',
+    },
+  });
+
+  return {
+    statusCode: response.statusCode,
+    headers: response.headers,
+    body: response.body,
+  };
+}
+```
+
 ### Server Logging
 
 If the `log` method is defined, it will be called with:

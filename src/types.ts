@@ -162,6 +162,19 @@ export interface IServerOptions extends IWsdlBaseOptions {
   envelopeKey?: string;
 }
 
+export interface IServerlessRequest {
+  url?: string;
+  method?: string;
+  headers?: IHeaders;
+  connection?: any;
+}
+
+export interface IServerlessResponse {
+  body: string;
+  statusCode: number;
+  headers: IHeaders;
+}
+
 export interface IMTOMAttachments {
   parts: Array<{
     body: Buffer;
