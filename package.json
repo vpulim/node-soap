@@ -54,7 +54,7 @@
     "diff": "^8.0.2",
     "doctoc": "^2.2.1",
     "duplexer": "~0.1.2",
-    "eslint": "^9.38.0",
+    "eslint": "^10.0.0",
     "express": "^5.1.0",
     "finalhandler": "^2.1.0",
     "glob": "^13.0.0",
