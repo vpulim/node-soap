@@ -305,6 +305,7 @@ export class Client extends EventEmitter {
     const envelopeSoapUrl = this.wsdl.options.envelopeSoapUrl;
     const ns: string = defs.$targetNamespace;
     let encoding = '';
+    //eslint-disable-next-line no-useless-assignment
     let message = '';
     let xml: string = null;
     let soapAction: string;

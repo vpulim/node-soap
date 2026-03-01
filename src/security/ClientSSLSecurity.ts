@@ -63,6 +63,7 @@ export class ClientSSLSecurity implements ISecurity {
   }
 
   public addOptions(options: any): void {
+    //eslint-disable-next-line no-useless-assignment
     let httpsAgent = null;
 
     options.key = this.key;
