@@ -54,7 +54,7 @@
     "diff": "^8.0.2",
     "doctoc": "^2.2.1",
     "duplexer": "~0.1.2",
-    "eslint": "^10.0.0",
+    "eslint": "^10.0.1",
     "express": "^5.1.0",
     "finalhandler": "^2.1.0",
     "glob": "^13.0.0",
@@ -70,6 +70,7 @@
     "timekeeper": "^2.3.1",
     "typedoc": "^0.28.14",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.46.1"
+    "@typescript-eslint/eslint-plugin": "^8.56.1",
+    "@typescript-eslint/parser": "^8.56.1"
   }
 }
