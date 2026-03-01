@@ -70,7 +70,6 @@
     "timekeeper": "^2.3.1",
     "typedoc": "^0.28.14",
     "typescript": "^5.9.3",
-    "@typescript-eslint/eslint-plugin": "^8.56.1",
-    "@typescript-eslint/parser": "^8.56.1"
+    "typescript-eslint": "^8.56.1"
   }
 }
