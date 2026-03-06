@@ -1,3 +1,13 @@
+# 1.8.0 / 2026-03-07
+
+- [ENHANCEMENT] Add serverless mode (#1449)
+- [MAINTENANCE] Bump minimatch (#1455)
+- [MAINTENANCE] Bump glob from 13.0.0 to 13.0.3 (#1457)
+- [MAINTENANCE] Bump typescript-eslint from 8.54.0 to 8.55.0 (#1458)
+- [MAINTENANCE] Bump eslint to v10 and make it compatible with the project (#1456)
+- [MAINTENANCE] Bump semver from 7.7.3 to 7.7.4 (#1451)
+- [MAINTENANCE] Bump axion to 1.13.6 and sax to 1.5.0 (#1459)
+
 # 1.7.1 / 2026-02-18
 
 - [FIX] Rebuild to update stale references
