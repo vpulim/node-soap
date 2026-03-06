@@ -1054,6 +1054,7 @@ export class WSDL {
     }
 
     let found = null;
+    //eslint-disable-next-line no-useless-assignment
     let i = 0;
     let ref;
 
