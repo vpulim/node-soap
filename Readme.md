@@ -23,6 +23,7 @@ This module lets you connect to web services using SOAP. It also provides a serv
   - [soap.createClientAsync(url[, options]) - create a new SOAP client from a WSDL url. Also supports a local filesystem path.](#soapcreateclientasyncurl-options---create-a-new-soap-client-from-a-wsdl-url-also-supports-a-local-filesystem-path)
   - [soap.listen(_server_, _path_, _services_, _wsdl_, _callback_) - create a new SOAP server that listens on _path_ and provides _services_.](#soaplistenserver-path-services-wsdl-callback---create-a-new-soap-server-that-listens-on-path-and-provides-services)
   - [soap.listen(_server_, _options_) - create a new SOAP server that listens on _path_ and provides _services_.](#soaplistenserver-options---create-a-new-soap-server-that-listens-on-path-and-provides-services)
+  - [soap.createServerless(_options_) - create a new SOAP server without binding to an HTTP server.](#soapcreateserverlessoptions---create-a-new-soap-server-without-binding-to-an-http-server)
   - [Server Logging](#server-logging)
   - [Server Events](#server-events)
   - [Server Response on one-way calls](#server-response-on-one-way-calls)
