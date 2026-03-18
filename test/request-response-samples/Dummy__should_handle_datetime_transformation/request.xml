@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:tns="http://www.example.com/datetime">
+    <soap:Body>
+        <DummyRequest xmlns="http://www.example.com/datetime">
+            <EventName>Product Launch</EventName>
+            <EventDateTime>2026-02-15T14:30:00.000Z</EventDateTime>
+            <CreatedAt>2026-01-29T10:15:30.500Z</CreatedAt>
+        </DummyRequest>
+    </soap:Body>
+</soap:Envelope>
