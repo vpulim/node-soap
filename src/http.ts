@@ -9,7 +9,7 @@ import { randomUUID } from 'crypto';
 import debugBuilder from 'debug';
 import { ReadStream } from 'fs';
 import * as url from 'url';
-import MIMEType from 'whatwg-mimetype';
+import { MIMEType } from 'whatwg-mimetype';
 import { gzipSync } from 'zlib';
 import { IExOptions, IHeaders, IHttpClient, IOptions } from './types';
 import { parseMTOMResp } from './utils';
