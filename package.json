@@ -52,7 +52,7 @@
     "body-parser": "^2.2.0",
     "colors": "^1.4.0",
     "diff": "^8.0.2",
-    "doctoc": "^2.2.1",
+    "doctoc": "^2.3.0",
     "duplexer": "~0.1.2",
     "eslint": "^10.0.1",
     "express": "^5.1.0",
