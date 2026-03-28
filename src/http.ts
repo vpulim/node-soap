@@ -9,7 +9,7 @@ import { randomUUID } from 'crypto';
 import debugBuilder from 'debug';
 import { ReadStream } from 'fs';
 import * as url from 'url';
-import MIMEType from 'whatwg-mimetype';
+import { MIMEType } from 'whatwg-mimetype';
 import { gzipSync } from 'zlib';
 import { IExOptions, IHeaders, IHttpClient, IOptions } from './types';
 import { parseMTOMResp } from './utils';
@@ -214,7 +214,7 @@ export class HttpClient implements IHttpClient {
           const isMultipartResp = res.headers['content-type'] && res.headers['content-type'].toLowerCase().indexOf('multipart/related') > -1;
           if (isMultipartResp) {
             let boundary;
-            const parsedContentType = MIMEType.parse(res.headers['content-type']);
+            const parsedContentType = new MIMEType(res.headers['content-type']);
             if (parsedContentType) {
               boundary = parsedContentType.parameters.get('boundary');
             }
