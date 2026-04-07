@@ -1,3 +1,20 @@
+# 1.9.0 / 2026-04-07
+
+- [ENHANCEMENT] Replace deprecated url.parse with the WHATWG URL API (#1387)
+- [ENHANCEMENT] Add test for datetime conversion from incomplete to full ISO date string (#1431)
+- [SECURITY] Add local .npmrc and re-enable dependabot (#1481)
+- [DOC] Improve readme (#1469)
+- [MAINTENANCE] Bump sinon to 21.0.3 (#1479)
+- [MAINTENANCE] Bump typescript-eslint from 8.56.1 to 8.57.1 (#1480)
+- [MAINTENANCE] Bump eslint to 10.1.0 (#1477)
+- [MAINTENANCE] Bump @types/debug from 4.1.12 to 4.1.13 (#1476)
+- [MAINTENANCE] Bump @types/formidable to 3.5.0 (#1472)
+- [MAINTENANCE] Bump whatwg-mimetype and @types/whatwg-mimetype to 5.0.0 (#1473)
+- [MAINTENANCE] Add TZ=UTC to cover npm script (#1466)
+- [MAINTENANCE] Bump flatted to 3.4.1 (#1465)
+- [MAINTENANCE] Bump nyc from 17.1.0 to 18.0.0 (#1462)
+- [MAINTENANCE] Bump doctoc from 2.2.1 to 2.3.0 (#1460)
+
 # 1.8.0 / 2026-03-07
 
 - [ENHANCEMENT] Add serverless mode (#1449)
