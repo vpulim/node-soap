@@ -1,3 +1,7 @@
+# 1.9.1 / 2026-04-16
+
+- [MAINTENANCE] Bump axios to 1.15.0 and sax to 1.6.0 and peer deps (#1485)
+
 # 1.9.0 / 2026-04-07
 
 - [ENHANCEMENT] Replace deprecated url.parse with the WHATWG URL API (#1387)
