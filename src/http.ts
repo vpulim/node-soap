@@ -23,11 +23,42 @@ export interface IAttachment {
   body: NodeJS.ReadableStream;
 }
 
-function getPortFromUrl(url: URL): string {
-  if (url.port) return url.port;
-  if (url.protocol.toLowerCase() === 'https:') return '443';
-  if (url.protocol.toLowerCase() === 'http:') return '80';
-  return '';
+// The URL API normalizes away default ports (:80 on http, :443 on https),
+// so parse the port from the raw URL string to preserve ports.
+function getPortFromUrl(url: string): string {
+  // Capture the authority section (everything between :// and the first /?#)
+  const authorityMatch = /^[a-z][a-z0-9+.-]*:\/\/([^/?#]+)/i.exec(url);
+  if (!authorityMatch) {
+    return '';
+  }
+
+  const hostPort = authorityMatch[1];
+
+  // IPv6 address: [::1] or [::1]:port
+  if (hostPort.startsWith('[')) {
+    const bracketEnd = hostPort.indexOf(']');
+    if (bracketEnd !== -1 && hostPort[bracketEnd + 1] === ':') {
+      const port = hostPort.slice(bracketEnd + 2);
+      return /^\d+$/.test(port) ? port : '';
+    }
+    return '';
+  }
+
+  // IPv4 / hostname: host or host:port
+  const colonIndex = hostPort.lastIndexOf(':');
+  if (colonIndex === -1) {
+    return '';
+  }
+  const port = hostPort.slice(colonIndex + 1);
+  return /^\d+$/.test(port) ? port : '';
+}
+
+// Add brackets to IPv6 addresses
+function bracketIPv6(hostname: string): string {
+  if (hostname.startsWith('[') || hostname.indexOf(':') === -1) {
+    return hostname;
+  }
+  return `[${hostname}]`;
 }
 
 /**
@@ -59,16 +90,15 @@ export class HttpClient implements IHttpClient {
     const curl = new URL(rurl);
     const method = data ? 'POST' : 'GET';
 
-    const host = curl.hostname;
-
-    const port = getPortFromUrl(curl);
+    const port = getPortFromUrl(rurl);
+    const host = port ? `${bracketIPv6(curl.hostname)}:${port}` : curl.host || curl.hostname;
     const headers: IHeaders = {
       'User-Agent': 'node-soap/' + version,
       'Accept': 'text/html,application/xhtml+xml,application/xml,text/xml;q=0.9,*/*;q=0.8',
       'Accept-Encoding': 'none',
       'Accept-Charset': 'utf-8',
       ...(exoptions.forever && { Connection: 'keep-alive' }),
-      'Host': host + (port ? ':' + port : ''),
+      'Host': host,
     };
     const mergeOptions = ['headers'];
 
