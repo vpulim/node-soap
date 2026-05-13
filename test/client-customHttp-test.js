@@ -116,3 +116,16 @@ it('should allow customization of httpClient and the wsdl file download should p
     done();
   });
 });
+
+it('should not append default ports to Host header', function () {
+  var client = new httpClient();
+
+  var httpsReq = client.buildRequest('https://example.com/service?wsdl', null);
+  assert.equal(httpsReq.headers.Host, 'example.com');
+
+  var httpReq = client.buildRequest('http://example.com/service?wsdl', null);
+  assert.equal(httpReq.headers.Host, 'example.com');
+
+  var explicitPortReq = client.buildRequest('https://example.com:8443/service?wsdl', null);
+  assert.equal(explicitPortReq.headers.Host, 'example.com:8443');
+});
