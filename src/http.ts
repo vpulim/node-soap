@@ -248,10 +248,12 @@ export class HttpClient implements IHttpClient {
         };
 
         if (_this.options.parseReponseAttachments) {
-          const isMultipartResp = res.headers['content-type'] && res.headers['content-type'].toLowerCase().indexOf('multipart/related') > -1;
+          const contentTypeHeader = res.headers['content-type'];
+          const contentType = typeof contentTypeHeader === 'string' ? contentTypeHeader : Array.isArray(contentTypeHeader) ? contentTypeHeader[0] : '';
+          const isMultipartResp = contentType.toLowerCase().indexOf('multipart/related') > -1;
           if (isMultipartResp) {
             let boundary;
-            const parsedContentType = new MIMEType(res.headers['content-type']);
+            const parsedContentType = new MIMEType(contentType);
             if (parsedContentType) {
               boundary = parsedContentType.parameters.get('boundary');
             }
