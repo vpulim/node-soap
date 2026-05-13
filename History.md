@@ -1,3 +1,9 @@
+# 1.9.2 / 2026-05-14
+
+- [FIX] Fix handling default ports from URL (#1491)
+- [MAINTENANCE] Bump actions/setup-node from 6.3.0 to 6.4.0 (#1493)
+- [MAINTENANCE] Update axios to 1.16.0 and mocha to 11.7.5 (#1494)
+
 # 1.9.1 / 2026-04-16
 
 - [MAINTENANCE] Bump axios to 1.15.0 and sax to 1.6.0 and peer deps (#1485)
