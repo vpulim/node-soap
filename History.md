@@ -1,3 +1,7 @@
+# 1.9.3 / 2026-05-20
+
+- [FIX] No code changes, just rebuild the artifacts
+
 # 1.9.2 / 2026-05-14
 
 - [FIX] Fix handling default ports from URL (#1491)
