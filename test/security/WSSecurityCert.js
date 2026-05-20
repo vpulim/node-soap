@@ -330,25 +330,38 @@ describe('WSSecurityCert', function () {
     xml.should.containEql(instance.signer.getSignatureXml());
   });
 
-  it('can handle undefined toXML in WSSecurity', async function () {
+  it('should produce valid XML with WSSecurityCert when no SOAP headers are added', async function () {
     const baseUrl = 'http://localhost:80';
+    const client = await soap.createClientAsync(__dirname + '/../wsdl/default_namespace.wsdl', {}, baseUrl);
 
-    try {
-      const client = await soap.createClientAsync(__dirname + '/../wsdl/default_namespace.wsdl', {}, baseUrl);
+    const security = new soap.WSSecurityCert(key, cert, '', {
+      hasTimeStamp: true,
+      signatureTransformations: ['http://www.w3.org/2001/10/xml-exc-c14n#'],
+    });
 
-      const security = new soap.WSSecurityCert(key, cert, '', {
-        hasTimeStamp: true,
-        signatureAlgorithm: 'http://www.w3.org/2000/09/xmldsig#rsa-sha1',
-        digestAlgorithm: 'http://www.w3.org/2000/09/xmldsig#sha1',
-        signatureTransformations: ['http://www.w3.org/2001/10/xml-exc-c14n#'],
-      });
+    client.setSecurity(security);
 
-      client.setSecurity(security);
+    let requestXml;
+    client.on('request', function (xml) {
+      requestXml = xml;
+    });
 
-      client.MyOperation(function () {});
-      assert.fail('must fail');
-    } catch (err) {
-      assert.ok(err.message?.includes('the following xpath cannot be signed'));
-    }
+    client.MyOperation({}, function () {});
+
+    assert.ok(requestXml, 'request XML should have been captured');
+    assert.ok(requestXml.indexOf('<soap:Header>') !== -1, 'XML must contain <soap:Header>');
+    assert.ok(requestXml.indexOf('</soap:Header>') !== -1, 'XML must contain </soap:Header>');
+    assert.ok(requestXml.indexOf('<wsse:Security') !== -1, 'XML must contain <wsse:Security');
+
+    const headerStart = requestXml.indexOf('<soap:Header>');
+    const headerEnd = requestXml.indexOf('</soap:Header>');
+    const securityStart = requestXml.indexOf('<wsse:Security');
+    assert.ok(securityStart > headerStart, 'wsse:Security must appear after <soap:Header>');
+    assert.ok(securityStart < headerEnd, 'wsse:Security must appear before </soap:Header>');
+
+    assert.ok(requestXml.endsWith('</soap:Envelope>'), 'XML must end with </soap:Envelope>');
+
+    const envelopeCloseIdx = requestXml.indexOf('</soap:Envelope>');
+    assert.strictEqual(envelopeCloseIdx + '</soap:Envelope>'.length, requestXml.length, 'No content should appear after </soap:Envelope>');
   });
 });
