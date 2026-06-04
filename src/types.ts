@@ -99,6 +99,8 @@ export interface IWsdlBaseOptions {
   preserveWhitespace?: boolean;
   /** provides support for nonstandard array semantics. If true, JSON arrays of the form {list: [{elem: 1}, {elem: 2}]} are marshalled into xml as <list><elem>1</elem></list> <list><elem>2</elem></list>. If false, marshalls into <list> <elem>1</elem> <elem>2</elem> </list>. Default: true. */
   namespaceArrayElements?: boolean;
+  /** provides support for array with choice semantics. If array key matches, JSON arrays of the form {$sequence: [{elem: 1}, {elem: 2}]} are marshalled into xml as <elem>1</elem><elem>2</elem>. Default: $sequence. */
+  arrayWithChoiceTag?: string;
   useEmptyTag?: boolean;
   strict?: boolean;
   /** custom HTTP headers to be sent on WSDL requests. */
