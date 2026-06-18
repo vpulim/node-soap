@@ -1183,7 +1183,7 @@ export class WSDL {
     } else {
       this.options.namespaceArrayElements = true;
     }
-    this.options.arrayWithChoiceTag = options.arrayWithChoiceTag || '$sequence';
+    this.options.arrayWithChoiceTag = options.arrayWithChoiceTag;
 
     // Allow any request headers to keep passing through
     this.options.wsdl_headers = options.wsdl_headers;

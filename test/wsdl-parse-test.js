@@ -145,84 +145,12 @@ describe(__filename, function () {
     });
   });
 
-  it('should parse complex wsdls with mixed choice and minOccurs maxOccurs with custom $sequence', function (done) {
+  it('should parse complex wsdls with mixed choice and minOccurs maxOccurs with specified arrayWithChoiceTag tag key', function (done) {
     open_wsdl(
       path.resolve(__dirname, 'wsdl/complex/mixed-sequence.wsdl'),
       {
-        arrayWithChoiceTag: '$arrayChoice',
+        arrayWithChoiceTag: '$sequence',
       },
-      function (err, def) {
-        if (err) {
-          return done(err);
-        }
-
-        if (null === def.findSchemaType('getDataResponse', 'http://test-soap.com/api/mixedsequence')) {
-          return done('Unable to find "getDataResponse" complex type');
-        }
-
-        var requestBody = {
-          getDataResult: {
-            a: 0,
-            b: 10,
-            $arrayChoice: [
-              {
-                c: {
-                  id: '1',
-                  value1: 'test 1',
-                },
-              },
-              {
-                d: {
-                  id: '3',
-                  value2: 'test 3',
-                },
-              },
-              {
-                c: {
-                  id: '2',
-                  value1: 'test 2',
-                },
-              },
-            ],
-          },
-        };
-
-        var requestAsXML = def.objectToDocumentXML('getDataResponse', requestBody, 'acme', 'http://test-soap.com/api/mixedsequence', 'getDataResponse');
-
-        /**
-         * Expected XML:
-         * <acme:getDataResponse xmlns:acme="http://test-soap.com/api/mixedsequence">
-         *     <acme:getDataResult>
-         *         <acme:a>0</acme:a>
-         *         <acme:b>10</acme:b>
-         *         <acme:c>
-         *             <acme:id>1</acme:id>
-         *             <acme:value1>test 1</acme:value1>
-         *         </acme:c>
-         *         <acme:d>
-         *             <acme:id>3</acme:id>
-         *             <acme:value2>test 3</acme:value2>
-         *         </acme:d>
-         *         <acme:c>
-         *             <acme:id>2</acme:id>
-         *             <acme:value1>test 2</acme:value1>
-         *         </acme:c>
-         *     </acme:getDataResult>
-         * </acme:getDataResponse>
-         */
-        assert.strictEqual(
-          requestAsXML,
-          '<acme:getDataResponse xmlns:acme="http://test-soap.com/api/mixedsequence" xmlns="http://test-soap.com/api/mixedsequence"><acme:getDataResult><acme:a>0</acme:a><acme:b>10</acme:b><acme:c><acme:id>1</acme:id><acme:value1>test 1</acme:value1></acme:c><acme:d><acme:id>3</acme:id><acme:value2>test 3</acme:value2></acme:d><acme:c><acme:id>2</acme:id><acme:value1>test 2</acme:value1></acme:c></acme:getDataResult></acme:getDataResponse>',
-        );
-
-        done();
-      },
-    );
-  });
-
-  it('should parse complex wsdls with mixed choice and minOccurs maxOccurs with default $sequence', function (done) {
-    open_wsdl(
-      path.resolve(__dirname, 'wsdl/complex/mixed-sequence.wsdl'),
       function (err, def) {
         if (err) {
           return done(err);
@@ -285,6 +213,74 @@ describe(__filename, function () {
         assert.strictEqual(
           requestAsXML,
           '<acme:getDataResponse xmlns:acme="http://test-soap.com/api/mixedsequence" xmlns="http://test-soap.com/api/mixedsequence"><acme:getDataResult><acme:a>0</acme:a><acme:b>10</acme:b><acme:c><acme:id>1</acme:id><acme:value1>test 1</acme:value1></acme:c><acme:d><acme:id>3</acme:id><acme:value2>test 3</acme:value2></acme:d><acme:c><acme:id>2</acme:id><acme:value1>test 2</acme:value1></acme:c></acme:getDataResult></acme:getDataResponse>',
+        );
+
+        done();
+      },
+    );
+  });
+
+  it('should parse complex wsdls with mixed choice and minOccurs maxOccurs with omitted arrayWithChoiceTag tag key', function (done) {
+    open_wsdl(
+      path.resolve(__dirname, 'wsdl/complex/mixed-sequence.wsdl'),
+      function (err, def) {
+        if (err) {
+          return done(err);
+        }
+
+        if (null === def.findSchemaType('getDataResponse', 'http://test-soap.com/api/mixedsequence')) {
+          return done('Unable to find "getDataResponse" complex type');
+        }
+
+        var requestBody = {
+          getDataResult: {
+            a: 0,
+            b: 10,
+            c: [
+              {
+                  id: '1',
+                  value1: 'test 1',
+              },
+              {
+                id: '2',
+                value1: 'test 2',
+              }
+            ],
+            d: [
+              {
+                  id: '3',
+                  value2: 'test 3',
+              }
+            ],
+          },
+        };
+
+        var requestAsXML = def.objectToDocumentXML('getDataResponse', requestBody, 'acme', 'http://test-soap.com/api/mixedsequence', 'getDataResponse');
+
+        /**
+         * Expected XML:
+         * <acme:getDataResponse xmlns:acme="http://test-soap.com/api/mixedsequence">
+         *     <acme:getDataResult>
+         *         <acme:a>0</acme:a>
+         *         <acme:b>10</acme:b>
+         *         <acme:c>
+         *             <acme:id>1</acme:id>
+         *             <acme:value1>test 1</acme:value1>
+         *         </acme:c>
+         *         <acme:c>
+         *             <acme:id>2</acme:id>
+         *             <acme:value1>test 2</acme:value1>
+         *         </acme:c>
+         *         <acme:d>
+         *             <acme:id>3</acme:id>
+         *             <acme:value2>test 3</acme:value2>
+         *         </acme:d>
+         *     </acme:getDataResult>
+         * </acme:getDataResponse>
+         */
+        assert.strictEqual(
+          requestAsXML,
+          '<acme:getDataResponse xmlns:acme="http://test-soap.com/api/mixedsequence" xmlns="http://test-soap.com/api/mixedsequence"><acme:getDataResult><acme:a>0</acme:a><acme:b>10</acme:b><acme:c><acme:id>1</acme:id><acme:value1>test 1</acme:value1></acme:c><acme:c><acme:id>2</acme:id><acme:value1>test 2</acme:value1></acme:c><acme:d><acme:id>3</acme:id><acme:value2>test 3</acme:value2></acme:d></acme:getDataResult></acme:getDataResponse>',
         );
 
         done();
