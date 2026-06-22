@@ -750,31 +750,36 @@ export class WSDL {
 
       for (i = 0, n = obj.length; i < n; i++) {
         const item = obj[i];
-        const arrayAttr = this.processAttributes(item, nsContext);
+        const isArrayWithChoiceTagContainer = name === this.options.arrayWithChoiceTag;
+        const arrayAttr = isArrayWithChoiceTagContainer ? '' : this.processAttributes(item, nsContext);
         const correctOuterNsPrefix = nonSubNameSpace || parentNsPrefix || ns; // using the parent namespace prefix if given
 
         const body = this.objectToXML(item, name, nsPrefix, nsURI, false, null, schemaObject, nsContext);
 
-        let openingTagParts = ['<', name, arrayAttr, xmlnsAttrib];
-        if (!emptyNonSubNameSpaceForArray) {
-          openingTagParts = ['<', appendColon(correctOuterNsPrefix), name, arrayAttr, xmlnsAttrib];
-        }
-
-        if (body === '' && this.options.useEmptyTag) {
-          // Use empty (self-closing) tags if no contents
-          openingTagParts.push(' />');
-          parts.push(openingTagParts.join(''));
-        } else {
-          openingTagParts.push('>');
-          if (this.options.namespaceArrayElements || i === 0) {
-            parts.push(openingTagParts.join(''));
-          }
+        if (isArrayWithChoiceTagContainer) {
           parts.push(body);
-          if (this.options.namespaceArrayElements || i === n - 1) {
-            if (emptyNonSubNameSpaceForArray) {
-              parts.push(['</', name, '>'].join(''));
-            } else {
-              parts.push(['</', appendColon(correctOuterNsPrefix), name, '>'].join(''));
+        } else {
+          let openingTagParts = ['<', name, arrayAttr, xmlnsAttrib];
+          if (!emptyNonSubNameSpaceForArray) {
+            openingTagParts = ['<', appendColon(correctOuterNsPrefix), name, arrayAttr, xmlnsAttrib];
+          }
+
+          if (body === '' && this.options.useEmptyTag) {
+            // Use empty (self-closing) tags if no contents
+            openingTagParts.push(' />');
+            parts.push(openingTagParts.join(''));
+          } else {
+            openingTagParts.push('>');
+            if (this.options.namespaceArrayElements || i === 0) {
+              parts.push(openingTagParts.join(''));
+            }
+            parts.push(body);
+            if (this.options.namespaceArrayElements || i === n - 1) {
+              if (emptyNonSubNameSpaceForArray) {
+                parts.push(['</', name, '>'].join(''));
+              } else {
+                parts.push(['</', appendColon(correctOuterNsPrefix), name, '>'].join(''));
+              }
             }
           }
         }
@@ -939,7 +944,7 @@ export class WSDL {
                   }
                 }
 
-                value = this.objectToXML(child, name, nsPrefix, nsURI, false, null, null, nsContext);
+                value = this.objectToXML(child, name, nsPrefix, nsURI, false, null, name === this.options.arrayWithChoiceTag ? schemaObject : null, nsContext);
               }
             } else {
               value = this.objectToXML(child, name, nsPrefix, nsURI, false, null, null, nsContext);
@@ -1178,6 +1183,7 @@ export class WSDL {
     } else {
       this.options.namespaceArrayElements = true;
     }
+    this.options.arrayWithChoiceTag = options.arrayWithChoiceTag;
 
     // Allow any request headers to keep passing through
     this.options.wsdl_headers = options.wsdl_headers;
