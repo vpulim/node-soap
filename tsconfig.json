@@ -2,16 +2,17 @@
   "compileOnSave": true,
   "compilerOptions": {
     "target": "es2020",
-    "module": "NodeNext",
+    "module": "commonjs",
     "moduleResolution": "nodenext",
     "outDir": "lib",
-    "rootDir": "src",
     "sourceMap": true,
     "declaration": true,
-    "stripInternal": true,
-    "skipLibCheck": true,
-    "types": ["node"]
+    "stripInternal": true
   },
-  "include": ["src", "./eslint.config.mjs"],
-  "exclude": ["node_modules"]
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

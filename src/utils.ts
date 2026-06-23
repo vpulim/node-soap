@@ -1,148 +1,7 @@
+
 import * as crypto from 'crypto';
 import { IMTOMAttachments, IWSDLCache } from './types';
 import { WSDL } from './wsdl';
-
-// ---------------------------------------------------------------------------
-// Utility functions extracted from lodash (https://lodash.com/)
-// MIT License – Copyright JS Foundation and other contributors
-// ---------------------------------------------------------------------------
-
-// --- START lodash replacement ---
-
-export function isObject(value: unknown): value is object {
-  const type = typeof value;
-  return value != null && (type === 'object' || type === 'function');
-}
-
-export function isPlainObject(value: unknown): value is Record<string, unknown> {
-  if (value === null || typeof value !== 'object') {
-    return false;
-  }
-  const proto = Object.getPrototypeOf(value);
-  return proto === null || proto === Object.prototype;
-}
-
-export function merge<T>(target: T, ...sources: any[]): T {
-  return mergeWith(target, ...sources, undefined);
-}
-
-export function mergeWith<T>(target: T, ...args: any[]): T {
-  const customizer: ((a: any, b: any, key: string) => any) | undefined = args.pop();
-  const sources: any[] = args;
-
-  for (const source of sources) {
-    if (source == null) {
-      continue;
-    }
-    for (const key of Object.keys(source)) {
-      baseMergeValue(target as any, source, key, customizer);
-    }
-  }
-  return target;
-}
-
-function baseMergeValue(target: Record<string, any>, source: Record<string, any>, key: string, customizer?: (a: any, b: any, key: string) => any): void {
-  const srcValue = source[key];
-  const objValue = target[key];
-
-  if (customizer) {
-    const customResult = customizer(objValue, srcValue, key);
-    if (customResult !== undefined) {
-      target[key] = customResult;
-      return;
-    }
-  }
-
-  if (srcValue === undefined) {
-    return;
-  }
-
-  if (isPlainObject(srcValue)) {
-    if (isPlainObject(objValue)) {
-      for (const k of Object.keys(srcValue)) {
-        baseMergeValue(objValue as Record<string, any>, srcValue as Record<string, any>, k, customizer);
-      }
-    } else {
-      target[key] = merge({}, srcValue);
-    }
-  } else if (Array.isArray(srcValue)) {
-    if (Array.isArray(objValue)) {
-      for (let i = 0; i < srcValue.length; i++) {
-        if (isPlainObject(srcValue[i]) && isPlainObject(objValue[i])) {
-          merge(objValue[i], srcValue[i]);
-        } else if (srcValue[i] !== undefined) {
-          objValue[i] = srcValue[i];
-        }
-      }
-    } else {
-      target[key] = srcValue.slice();
-    }
-  } else {
-    target[key] = srcValue;
-  }
-}
-
-export function defaults<T>(target: T, ...sources: any[]): T {
-  for (const source of sources) {
-    if (source == null) {
-      continue;
-    }
-    for (const key of Object.keys(source)) {
-      if ((target as any)[key] === undefined) {
-        (target as any)[key] = source[key];
-      }
-    }
-  }
-  return target;
-}
-
-export function defaultsDeep<T>(target: T, ...sources: any[]): T {
-  for (const source of sources) {
-    if (source == null) {
-      continue;
-    }
-    for (const key of Object.keys(source)) {
-      const tVal = (target as any)[key];
-      const sVal = source[key];
-      if (isPlainObject(tVal) && isPlainObject(sVal)) {
-        defaultsDeep(tVal, sVal);
-      } else if (tVal === undefined) {
-        (target as any)[key] = sVal;
-      }
-    }
-  }
-  return target;
-}
-
-export function pickBy<T extends Record<string, any>>(object: T, predicate: (value: any, key: string) => boolean): Partial<T> {
-  const result: Partial<T> = {};
-  for (const key of Object.keys(object)) {
-    if (predicate(object[key], key)) {
-      (result as any)[key] = object[key];
-    }
-  }
-  return result;
-}
-
-export function once<T extends (...args: any[]) => any>(func: T): T {
-  let called = false;
-  let result: ReturnType<T>;
-  return function (this: any, ...args: Parameters<T>): ReturnType<T> {
-    if (!called) {
-      called = true;
-      result = func.apply(this, args);
-    }
-    return result;
-  } as T;
-}
-
-export function getByPath(obj: any, path: any) {
-  return path.split('.').reduce(function (o: { [x: string]: any }, k: string | number) {
-    return o && o[k];
-  }, obj);
-}
-
-// --- END lodash replacement ---
 
 export function passwordDigest(nonce: string, created: string, password: string): string {
   // digest = base64 ( sha1 ( nonce + created + password ) )
@@ -167,9 +26,7 @@ export const TNS_PREFIX = '__tns__'; // Prefix for targetNamespace
  */
 export function findPrefix(xmlnsMapping, nsURI) {
   for (const n in xmlnsMapping) {
-    if (n === TNS_PREFIX) {
-      continue;
-    }
+    if (n === TNS_PREFIX) { continue; }
     if (xmlnsMapping[n] === nsURI) {
       return n;
     }
@@ -195,11 +52,16 @@ export function splitQName<T>(nsName: T) {
 }
 
 export function xmlEscape(obj) {
-  if (typeof obj === 'string') {
+  if (typeof (obj) === 'string') {
     if (obj.substr(0, 9) === '<![CDATA[' && obj.substr(-3) === ']]>') {
       return obj;
     }
-    return obj.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
+    return obj
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&apos;');
   }
 
   return obj;
@@ -253,27 +115,9 @@ export function parseMTOMResp(payload: Buffer, boundary: string, callback: (err?
     .catch(callback);
 }
 
-export async function streamToText(stream: NodeJS.ReadableStream): Promise<string> {
-  const chunks: Buffer[] = [];
-  for await (const chunk of stream) {
-    chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
-  }
-  return Buffer.concat(chunks).toString('utf8');
-}
-
-/**
- * Strip UTF-8 byte order mark (BOM) from a string.
- */
-export function stripBom(str: string): string {
-  if (str.charCodeAt(0) === 0xfeff) {
-    return str.slice(1);
-  }
-  return str;
-}
-
 class DefaultWSDLCache implements IWSDLCache {
   private cache: {
-    [key: string]: WSDL;
+    [key: string]: WSDL,
   };
   constructor() {
     this.cache = {};

@@ -8,57 +8,20 @@ import { NtlmClient } from 'axios-ntlm';
 import { randomUUID } from 'crypto';
 import debugBuilder from 'debug';
 import { ReadStream } from 'fs';
-import { MIMEType } from 'whatwg-mimetype';
+import * as url from 'url';
+import MIMEType = require('whatwg-mimetype');
 import { gzipSync } from 'zlib';
 import { IExOptions, IHeaders, IHttpClient, IOptions } from './types';
 import { parseMTOMResp } from './utils';
 
 const debug = debugBuilder('node-soap');
-import { version } from '../package.json';
+const VERSION = require('../package.json').version;
 
 export interface IAttachment {
   name: string;
   contentId: string;
   mimetype: string;
   body: NodeJS.ReadableStream;
-}
-
-// The URL API normalizes away default ports (:80 on http, :443 on https),
-// so parse the port from the raw URL string to preserve ports.
-function getPortFromUrl(url: string): string {
-  // Capture the authority section (everything between :// and the first /?#)
-  const authorityMatch = /^[a-z][a-z0-9+.-]*:\/\/([^/?#]+)/i.exec(url);
-  if (!authorityMatch) {
-    return '';
-  }
-
-  const hostPort = authorityMatch[1];
-
-  // IPv6 address: [::1] or [::1]:port
-  if (hostPort.startsWith('[')) {
-    const bracketEnd = hostPort.indexOf(']');
-    if (bracketEnd !== -1 && hostPort[bracketEnd + 1] === ':') {
-      const port = hostPort.slice(bracketEnd + 2);
-      return /^\d+$/.test(port) ? port : '';
-    }
-    return '';
-  }
-
-  // IPv4 / hostname: host or host:port
-  const colonIndex = hostPort.lastIndexOf(':');
-  if (colonIndex === -1) {
-    return '';
-  }
-  const port = hostPort.slice(colonIndex + 1);
-  return /^\d+$/.test(port) ? port : '';
-}
-
-// Add brackets to IPv6 addresses
-function bracketIPv6(hostname: string): string {
-  if (hostname.startsWith('[') || hostname.indexOf(':') === -1) {
-    return hostname;
-  }
-  return `[${hostname}]`;
 }
 
 /**
@@ -69,6 +32,7 @@ function bracketIPv6(hostname: string): string {
  * @constructor
  */
 export class HttpClient implements IHttpClient {
+
   private _request: req.AxiosInstance;
   private options: IOptions;
 
@@ -87,18 +51,18 @@ export class HttpClient implements IHttpClient {
    * @returns {Object} The http request object for the `request` module
    */
   public buildRequest(rurl: string, data: any, exheaders?: IHeaders, exoptions: IExOptions = {}): any {
-    const curl = new URL(rurl);
+    const curl = url.parse(rurl);
     const method = data ? 'POST' : 'GET';
 
-    const port = getPortFromUrl(rurl);
-    const host = port ? `${bracketIPv6(curl.hostname)}:${port}` : curl.host || curl.hostname;
+    const host = curl.hostname;
+    const port = parseInt(curl.port, 10);
     const headers: IHeaders = {
-      'User-Agent': 'node-soap/' + version,
+      'User-Agent': 'node-soap/' + VERSION,
       'Accept': 'text/html,application/xhtml+xml,application/xml,text/xml;q=0.9,*/*;q=0.8',
       'Accept-Encoding': 'none',
       'Accept-Charset': 'utf-8',
-      ...(exoptions.forever && { Connection: 'keep-alive' }),
-      'Host': host,
+      'Connection': exoptions.forever ? 'keep-alive' : 'close',
+      'Host': host + (isNaN(port) ? '' : ':' + port),
     };
     const mergeOptions = ['headers'];
 
@@ -139,13 +103,11 @@ export class HttpClient implements IHttpClient {
       if (action) {
         headers['Content-Type'] = headers['Content-Type'] + '; ' + action;
       }
-      const multipart: any[] = [
-        {
-          'Content-Type': 'application/xop+xml; charset=UTF-8; type="text/xml"',
-          'Content-ID': '<' + start + '>',
-          'body': data,
-        },
-      ];
+      const multipart: any[] = [{
+        'Content-Type': 'application/xop+xml; charset=UTF-8; type="text/xml"',
+        'Content-ID': '<' + start + '>',
+        'body': data,
+      }];
 
       attachments.forEach((attachment) => {
         multipart.push({
@@ -165,7 +127,13 @@ export class HttpClient implements IHttpClient {
             options.data.push(Buffer.from(`${key}: ${part[key]}\r\n`));
           }
         });
-        options.data.push(Buffer.from('\r\n'), Buffer.from(part.body), Buffer.from(`\r\n--${boundary}${multipartCount === multipart.length - 1 ? '--' : ''}\r\n`));
+        options.data.push(
+          Buffer.from('\r\n'),
+          Buffer.from(part.body),
+          Buffer.from(`\r\n--${boundary}${
+            multipartCount === multipart.length - 1 ? '--' : ''
+          }\r\n`),
+        );
         multipartCount++;
       });
       options.data = Buffer.concat(options.data);
@@ -213,22 +181,23 @@ export class HttpClient implements IHttpClient {
     return body;
   }
 
-  public request(rurl: string, data: any, callback: (error: any, res?: any, body?: any) => any, exheaders?: IHeaders, exoptions?: IExOptions) {
+  public request(
+    rurl: string,
+    data: any,
+    callback: (error: any, res?: any, body?: any) => any,
+    exheaders?: IHeaders,
+    exoptions?: IExOptions,
+    caller?,
+  ) {
     const options = this.buildRequest(rurl, data, exheaders, exoptions);
     let req: req.AxiosPromise;
     if (exoptions !== undefined && exoptions.ntlm) {
-      const ntlmReq = NtlmClient(
-        {
-          username: exoptions.username,
-          password: exoptions.password,
-          workstation: exoptions.workstation || '',
-          domain: exoptions.domain || '',
-        },
-        // Change wanted in the OG PR:
-        //{ httpAgent: exoptions.httpAgent, httpsAgent: exoptions.httpsAgent },
-        // A better change per axios-ntlm API?
-        options,
-      );
+      const ntlmReq = NtlmClient({
+        username: exoptions.username,
+        password: exoptions.password,
+        workstation: exoptions.workstation || '',
+        domain: exoptions.domain || '',
+      });
       req = ntlmReq(options);
     } else {
       if (this.options.parseReponseAttachments) {
@@ -237,56 +206,51 @@ export class HttpClient implements IHttpClient {
       }
       req = this._request(options);
     }
-    //eslint-disable-next-line @typescript-eslint/no-this-alias
     const _this = this;
-    req.then(
-      (res) => {
-        const handleBody = (body?: string) => {
-          res.data = this.handleResponse(req, res, body || res.data);
-          callback(null, res, res.data);
-          return res;
-        };
+    req.then((res) => {
 
-        if (_this.options.parseReponseAttachments) {
-          const contentTypeHeader = res.headers['content-type'];
-          const contentType = typeof contentTypeHeader === 'string' ? contentTypeHeader : Array.isArray(contentTypeHeader) ? contentTypeHeader[0] : '';
-          const isMultipartResp = contentType.toLowerCase().indexOf('multipart/related') > -1;
-          if (isMultipartResp) {
-            let boundary;
-            const parsedContentType = new MIMEType(contentType);
-            if (parsedContentType) {
-              boundary = parsedContentType.parameters.get('boundary');
-            }
-            if (!boundary) {
-              return callback(new Error('Missing boundary from content-type'));
-            }
-            return parseMTOMResp(res.data, boundary, (err, multipartResponse) => {
-              if (err) {
-                return callback(err);
-              }
-              // first part is the soap response
-              const firstPart = multipartResponse.parts.shift();
-              if (!firstPart || !firstPart.body) {
-                return callback(new Error('Cannot parse multipart response'));
-              }
-              (res as any).mtomResponseAttachments = multipartResponse;
-              return handleBody(firstPart.body.toString(_this.options.encoding || 'utf8'));
-            });
-          } else {
-            return handleBody(res.data.toString(_this.options.encoding || 'utf8'));
+      const handleBody = (body?: string) => {
+        res.data = this.handleResponse(req, res, body || res.data);
+        callback(null, res, res.data);
+        return res;
+      };
+
+      if (_this.options.parseReponseAttachments) {
+        const isMultipartResp = res.headers['content-type'] && res.headers['content-type'].toLowerCase().indexOf('multipart/related') > -1;
+        if (isMultipartResp) {
+          let boundary;
+          const parsedContentType = MIMEType.parse(res.headers['content-type']);
+          if (parsedContentType) {
+            boundary = parsedContentType.parameters.get('boundary');
           }
+          if (!boundary) {
+            return callback(new Error('Missing boundary from content-type'));
+          }
+          return parseMTOMResp(res.data, boundary, (err, multipartResponse) => {
+            if (err) {
+              return callback(err);
+            }
+            // first part is the soap response
+            const firstPart = multipartResponse.parts.shift();
+            if (!firstPart || !firstPart.body) {
+              return callback(new Error('Cannot parse multipart response'));
+            }
+            (res as any).mtomResponseAttachments = multipartResponse;
+            return handleBody(firstPart.body.toString('utf8'));
+          });
         } else {
-          return handleBody();
+          return handleBody(res.data.toString('utf8'));
         }
-      },
-      (err) => {
-        return callback(err);
-      },
-    );
+      } else {
+        return handleBody();
+      }
+    }, (err) => {
+      return callback(err);
+    });
     return req;
   }
 
-  public requestStream(rurl: string, data: any, exheaders?: IHeaders, exoptions?: IExOptions): req.AxiosPromise<ReadStream> {
+  public requestStream(rurl: string, data: any, exheaders?: IHeaders, exoptions?: IExOptions, caller?): req.AxiosPromise<ReadStream> {
     const options = this.buildRequest(rurl, data, exheaders, exoptions);
     options.responseType = 'stream';
     const req = this._request(options).then((res) => {

@@ -1,3 +1,4 @@
+
 import * as req from 'axios';
 import { ReadStream } from 'fs';
 import { WSDL } from './wsdl';
@@ -25,7 +26,11 @@ export type SoapMethod = (
   mtomAttachments?: IMTOMAttachments,
 ) => void;
 
-export type SoapMethodAsync = (args: any, options?: any, extraHeaders?: any) => Promise<[any, any, any, any, IMTOMAttachments?]>;
+export type SoapMethodAsync = (
+  args: any,
+  options?: any,
+  extraHeaders?: any,
+) => Promise<[any, any, any, any, IMTOMAttachments?]>;
 
 export type ISoapServiceMethod = (args: any, callback?: (data: any) => void, headers?: any, req?: any, res?: any, sender?: any) => any;
 
@@ -49,8 +54,8 @@ export interface ISoapFault11 {
 // Role, Node, Detail. Should be added when soap module implements them
 // https://www.w3.org/TR/soap12/#soapfault
 export interface ISoapFault12 {
-  Code: { Value: string; Subcode?: { Value: string } };
-  Reason: { Text: string };
+  Code: { Value: string; Subcode?: { Value: string; }; };
+  Reason: { Text: string; };
   statusCode?: number;
 }
 
@@ -84,9 +89,8 @@ export interface IWsdlBaseOptions {
   attributesKey?: string;
   valueKey?: string;
   xmlKey?: string;
-  overrideRootElement?: { namespace: string; xmlnsAttributes?: IXmlAttribute[] };
-  overrideElementKey?: object;
-  ignoredNamespaces?: boolean | string[] | { namespaces?: string[]; override?: boolean };
+  overrideRootElement?: { namespace: string; xmlnsAttributes?: IXmlAttribute[]; };
+  ignoredNamespaces?: boolean | string[] | { namespaces?: string[]; override?: boolean; };
   ignoreBaseNameSpaces?: boolean;
   /** escape special XML characters in SOAP message (e.g. &, >, < etc), default: true. */
   escapeXML?: boolean;
@@ -99,8 +103,6 @@ export interface IWsdlBaseOptions {
   preserveWhitespace?: boolean;
   /** provides support for nonstandard array semantics. If true, JSON arrays of the form {list: [{elem: 1}, {elem: 2}]} are marshalled into xml as <list><elem>1</elem></list> <list><elem>2</elem></list>. If false, marshalls into <list> <elem>1</elem> <elem>2</elem> </list>. Default: true. */
   namespaceArrayElements?: boolean;
-  /** provides support for sequence with choice semantics. If sequence key matches, JSON arrays of the form {$sequence: [{elem: 1}, {elem: 2}]} are marshalled into xml as <elem>1</elem><elem>2</elem> where $sequence is example value for the option. Disabled if option is not set. Example value: $sequence. */
-  arrayWithChoiceTag?: string;
   useEmptyTag?: boolean;
   strict?: boolean;
   /** custom HTTP headers to be sent on WSDL requests. */
@@ -109,8 +111,6 @@ export interface IWsdlBaseOptions {
   wsdl_options?: { [key: string]: any };
   /** set proper headers for SOAP v1.2. */
   forceSoap12Headers?: boolean;
-  /** Force to use schema xmlns when schema prefix not found, this is needed when schema prefix is different for the same namespace in different files, for example wsdl and in imported xsd file fir complex types*/
-  forceUseSchemaXmlns?: boolean;
 }
 
 /** @deprecated use IOptions */
@@ -141,8 +141,6 @@ export interface IOptions extends IWsdlBaseOptions {
   WSDL_CACHE?;
   /** handle MTOM soapAttachments in response */
   parseReponseAttachments?: boolean;
-  /** handle endpoint response.data enconding when using parseReponseAttachments */
-  encoding?: BufferEncoding;
 }
 
 export interface IOneWayOptions {
@@ -161,31 +159,17 @@ export interface IServerOptions extends IWsdlBaseOptions {
   oneWay?: IOneWayOptions;
   /** A boolean for controlling chunked transfer encoding in response. Some client (such as Windows 10's MDM enrollment SOAP client) is sensitive to transfer-encoding mode and can't accept chunked response. This option let user disable chunked transfer encoding for such a client. Default to true for backward compatibility. */
   enableChunkedEncoding?: boolean;
-  envelopeKey?: string;
-}
-
-export interface IServerlessRequest {
-  url?: string;
-  method?: string;
-  headers?: IHeaders;
-  connection?: any;
-}
-
-export interface IServerlessResponse {
-  body: string;
-  statusCode: number;
-  headers: IHeaders;
 }
 
 export interface IMTOMAttachments {
   parts: Array<{
-    body: Buffer;
-    headers: { [key: string]: string };
+    body: Buffer,
+    headers: { [key: string]: string },
   }>;
 }
 
 export interface IWSDLCache {
-  has(key: string): boolean;
-  get(key: string): WSDL;
-  set(key: string, wsdl: WSDL): void;
+    has(key: string): boolean;
+    get(key: string): WSDL;
+    set(key: string, wsdl: WSDL): void;
 }
