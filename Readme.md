@@ -1,4 +1,4 @@
-[![NPM version][npm-image]][npm-url] [![Downloads][downloads-image]][npm-url] [![Coveralls Status][coveralls-image]][coveralls-url]
+[![NPM version][npm-image]][npm-url] [![Downloads][downloads-image]][npm-url] ![Coverage](coverage-image)
 
 [![Support][buy-me-a-coffee-image]][buy-me-a-coffee-url]
 
@@ -1683,7 +1683,6 @@ ignoredNamespaces: true
 [downloads-image]: http://img.shields.io/npm/dm/soap.svg
 [npm-url]: https://npmjs.org/package/soap
 [npm-image]: http://img.shields.io/npm/v/soap.svg
-[coveralls-url]: https://coveralls.io/r/vpulim/node-soap
-[coveralls-image]: http://img.shields.io/coveralls/vpulim/node-soap/master.svg
+[coverage-image]: https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/vpulim/node-soap/master/badges/coverage.json
 [buy-me-a-coffee-url]: https://coff.ee/vasily.m
 [buy-me-a-coffee-image]: https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png
