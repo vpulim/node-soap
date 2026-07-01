@@ -10,7 +10,8 @@ import { WSDL } from './wsdl';
 import { BindingElement, IPort } from './wsdl/elements';
 import zlib from 'zlib';
 
-interface IExpressApp extends http.Server {
+interface IExpressApp {
+  address?: () => { address: string; port: number; family: string } | string;
   route;
   use;
 }
