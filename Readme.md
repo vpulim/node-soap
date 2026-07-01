@@ -1,4 +1,4 @@
-[![NPM version][npm-image]][npm-url] [![Downloads][downloads-image]][npm-url] ![Coverage](coverage-image)
+[![NPM version][npm-image]][npm-url] [![Downloads][downloads-image]][npm-url] ![Coverage][coverage-image]
 
 [![Support][buy-me-a-coffee-image]][buy-me-a-coffee-url]
 
