@@ -199,7 +199,8 @@ export function xmlEscape(obj) {
     if (obj.substr(0, 9) === '<![CDATA[' && obj.substr(-3) === ']]>') {
       return obj;
     }
-    return obj.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
+    // https://github.com/vpulim/node-soap/issues/1510
+    return obj.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;').replace(/\t/g, '&#x9;').replace(/\r/g, '&#xD;').replace(/\n/g, '&#xA;');
   }
 
   return obj;
