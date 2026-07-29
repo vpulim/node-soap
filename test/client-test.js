@@ -2148,11 +2148,47 @@ describe('Uncategorised', function () {
         client.MyService.MyServicePort.MyOperation(
           { parameter: 'dummy', marameter: 'mummy' },
           function (err, result, resp, soap, req) {
+            // Make sure we don't find Request tags
+            assert.ok(req.indexOf('<Request>') === -1);
             assert.ok(req.indexOf('</Request>') === -1);
+            // Make sure the in-body content looks the way we expect
+            assert.ok(req.indexOf('<soap:Body><parameter xmlns="http://www.example.com/v1">dummy</parameter><marameter xmlns="http://www.example.com/v1">mummy</marameter></soap:Body>') > 0);
             done();
           },
           {
             overrideBaseElement: true,
+          },
+          null,
+        );
+      },
+      // p4 -- endpoint
+      baseUrl,
+    );
+  });
+
+  it('should NOT replace the InputMessage "Request" element for arg elements', function (done) {
+    soap.createClient(
+      // p1
+      __dirname + '/wsdl/default_namespace.wsdl',
+      // p2 -- options
+      {
+        ignoredNamespaces: true,
+        ignoreBaseNameSpaces: true,
+      },
+      // p3 -- callback
+      function (err, client) {
+        assert.ok(client);
+        assert.ifError(err);
+
+        client.MyService.MyServicePort.MyOperation(
+          { parameter: 'dummy', marameter: 'mummy' },
+          function (err, result, resp, soap, req) {
+            // Make sure the in-body content looks the way we expect
+            assert.ok(req.indexOf('<soap:Body><Request xmlns="http://www.example.com/v1"><parameter>dummy</parameter><marameter>mummy</marameter></Request>') > 0);
+            done();
+          },
+          {
+            overrideBaseElement: false
           },
           null,
         );
