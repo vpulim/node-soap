@@ -1022,6 +1022,7 @@ export class WSDL {
           attr += ` xmlns:${v.prefix}="${v.xmlns}"`;
         }
       } else {
+        // https://github.com/vpulim/node-soap/issues/1510
         attr += ` ${k}="${xmlEscape(v)}"`;
       }
     });
