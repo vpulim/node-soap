@@ -852,6 +852,49 @@ client.MyService.MyPort.MyFunction({ name: 'value' }, options, extraHeaders, fun
 });
 ```
 
+## Overriding the base element
+
+Set `overrideBaseElement=true` in options in order to strip default
+`InputMessage` base element and assume anything that follows is the
+part of the body. To do so `node-soap` allows passing of `options`
+to `objectToDocumentXML()` API as the last parameter. See, e.g.,
+from the corresponding test:
+
+```javascript
+    soap.createClient(
+      // p1
+      __dirname + '/wsdl/default_namespace.wsdl',
+      // p2 -- options
+      {
+        ignoredNamespaces: true,
+        ignoreBaseNameSpaces: true,
+      },
+      // p3 -- callback
+      function (err, client) {
+        assert.ok(client);
+        assert.ifError(err);
+
+        client.MyService.MyServicePort.MyOperation(
+          { parameter: 'dummy', marameter: 'mummy' },
+          function (err, result, resp, soap, req) {
+            // Make sure we don't find Request tags
+            assert.ok(req.indexOf('<Request>') === -1);
+            assert.ok(req.indexOf('</Request>') === -1);
+            // Make sure the in-body content looks the way we expect
+            assert.ok(req.indexOf('<soap:Body><parameter xmlns="http://www.example.com/v1">dummy</parameter><marameter xmlns="http://www.example.com/v1">mummy</marameter></soap:Body>') > 0);
+            done();
+          },
+          {
+            overrideBaseElement: true,
+          },
+          null,
+        );
+      },
+      // p4 -- endpoint
+      baseUrl,
+    );
+```
+
 ## Overriding the namespace prefix
 
 `node-soap` is still working out some kinks regarding namespaces. If you find that an element is given the wrong namespace prefix in the request body, you can add the prefix to it's name in the containing object. I.E.:
