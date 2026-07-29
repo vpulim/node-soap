@@ -2188,7 +2188,7 @@ describe('Uncategorised', function () {
             done();
           },
           {
-            overrideBaseElement: false
+            overrideBaseElement: false,
           },
           null,
         );
