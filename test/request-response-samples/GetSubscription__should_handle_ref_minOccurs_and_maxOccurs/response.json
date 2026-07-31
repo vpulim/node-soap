@@ -1,0 +1,13 @@
+{
+  "Status": {
+    "Result": "OK"
+  },
+  "Subscriptions": {
+    "Subscription": [
+      {
+        "SubscriptionID": "a24610ec-4069-4efc-a87e-5ab1d944ec5f",
+        "TerminationTime": "2024-10-31T20:00:27.567+01:00"
+      }
+    ]
+  }
+}

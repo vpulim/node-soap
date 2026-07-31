@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://test.example.com/SchemaB" xmlns="http://test.example.com/SchemaB" elementFormDefault="qualified">
+  <xs:element name="ResponseB">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="fieldB" type="TypeA">
+          <xs:annotation>
+            <xs:documentation xml:lang="en">Test field using TypeA (conflicting name)</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:complexType name="DetailTypeB">
+    <xs:sequence>
+      <xs:element name="valueB" minOccurs="0" type="xs:integer" />
+      <xs:element name="labelB" minOccurs="0" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="TypeA">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">TypeA from SchemaB (same name, different namespace)</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="childB" maxOccurs="99" type="DetailTypeB">
+        <xs:annotation>
+          <xs:documentation xml:lang="en">Child element B</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tns="http://www.Dummy.com">
+   <soap:Body>
+      <tns:DummyResponse>
+         <tns:foo>
+            <tns:string_simple></tns:string_simple>
+            <tns:string_pattern></tns:string_pattern>
+            <tns:string_simple_list></tns:string_simple_list>
+            <tns:string_pattern_list></tns:string_pattern_list>
+         </tns:foo>
+      </tns:DummyResponse>
+   </soap:Body>
+</soap:Envelope>

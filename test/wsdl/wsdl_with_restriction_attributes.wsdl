@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:tns="http://example.com/wsdl"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             targetNamespace="http://example.com/wsdl"
+             name="SampleService">
+
+    <types>
+        <xsd:schema targetNamespace="http://example.com/wsdl">
+
+            <xsd:simpleType name="Age">
+                <xsd:restriction base="xsd:int">
+                    <xsd:minInclusive value="0"/>
+                    <xsd:maxInclusive value="120"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+
+            <xsd:complexType name="objectKey">
+                <xsd:sequence/>
+                <xsd:attribute name="id" type="xsd:string"/>
+                <xsd:attribute name="internalName" type="xsd:string"/>
+                <xsd:attribute name="key" type="xsd:string"/>
+                <xsd:attribute name="type" type="xsd:long" use="required"/>
+                <xsd:attribute name="origin" type="xsd:string"/>
+            </xsd:complexType>
+
+            <xsd:complexType name="objectDef">
+                <xsd:complexContent>
+                    <xsd:restriction base="tns:objectKey">
+                        <xsd:attribute name="id" type="xsd:string" use="required"/>
+                        <xsd:attribute fixed="-500020" name="type" type="xsd:long" use="required"/>
+                    </xsd:restriction>
+                </xsd:complexContent>
+            </xsd:complexType>
+
+            <xsd:complexType name="Person">
+                <xsd:sequence>
+                    <xsd:element name="Name" type="xsd:string"/>
+                    <xsd:element name="Age" type="tns:Age"/>
+                    <xsd:element name="ObjectDetails" type="tns:objectDef"/>
+                </xsd:sequence>
+                <xsd:attribute name="id" type="xsd:string" use="required"/>
+            </xsd:complexType>
+
+            <xsd:element name="Person" type="tns:Person"/>
+
+        </xsd:schema>
+    </types>
+
+    <message name="GetPersonRequest">
+        <part name="personId" type="xsd:string"/>
+    </message>
+
+    <message name="GetPersonResponse">
+        <part name="Person" element="tns:Person"/>
+    </message>
+
+    <portType name="SamplePortType">
+        <operation name="GetPerson">
+            <input message="tns:GetPersonRequest"/>
+            <output message="tns:GetPersonResponse"/>
+        </operation>
+    </portType>
+
+    <binding name="SampleBinding" type="tns:SamplePortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <operation name="GetPerson">
+            <soap:operation soapAction="http://example.com/wsdl/GetPerson" style="document"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+
+    <service name="SampleService">
+        <port name="SamplePort" binding="tns:SampleBinding">
+            <soap:address location="http://example.com/SampleService"/>
+        </port>
+    </service>
+
+</definitions>

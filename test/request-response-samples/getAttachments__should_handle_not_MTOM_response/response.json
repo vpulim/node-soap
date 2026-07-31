@@ -1,1 +1,5 @@
-{"attributes":{"soapenv:encodingStyle":"http://schemas.xmlsoap.org/soap/encoding/"},"attachment1":{"attributes":{"xsi:type":"xsd:base64Binary"},"$value":"cid:1186818862128"},"attachment2":{"attributes":{"xsi:type":"xsd:base64Binary"},"$value":"cid:536857424511"}}
+{
+  "attributes": { "soapenv:encodingStyle": "http://schemas.xmlsoap.org/soap/encoding/" },
+  "attachment1": { "attributes": { "xsi:type": "xsd:base64Binary" }, "$value": "cid:1186818862128" },
+  "attachment2": { "attributes": { "xsi:type": "xsd:base64Binary" }, "$value": "cid:536857424511" }
+}

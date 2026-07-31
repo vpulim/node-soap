@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions name="MixedSequenceApi"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                  xmlns:tns="http://test-soap.com/api/mixedsequence"
+                  targetNamespace="http://test-soap.com/api/mixedsequence">
+
+    <wsdl:types>
+        <xs:schema targetNamespace="http://test-soap.com/api/mixedsequence" elementFormDefault="qualified">
+            <xs:simpleType name="id">
+                <xs:restriction base="xs:string">
+                    <xs:maxLength value="255"/>
+                </xs:restriction>
+            </xs:simpleType>
+
+            <xs:element name="id" type="tns:id"/>
+
+            <xs:element name="getData">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="tns:id"/>
+                        <xs:element name="index" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="getDataResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="getDataResult" type="tns:dataList"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:complexType name="dataList">
+                <xs:sequence>
+                    <xs:element name="a" type="xs:int"/>
+                    <xs:element name="b" type="xs:int"/>
+                    <xs:choice minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="c" type="tns:Data1"/>
+                        <xs:element name="d" type="tns:Data2"/>
+                    </xs:choice>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="AbstractData" abstract="true">
+                <xs:sequence>
+                    <xs:element ref="tns:id"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="Data1">
+                <xs:complexContent>
+                    <xs:extension base="tns:AbstractData">
+                        <xs:sequence>
+                            <xs:element name="value1" type="xs:string" minOccurs="0"/>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:complexType name="Data2">
+                <xs:complexContent>
+                    <xs:extension base="tns:AbstractData">
+                        <xs:sequence>
+                            <xs:element name="value2" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+
+            <xs:element name="customFault">
+                <xs:complexType>
+                    <xs:choice>
+                        <xs:sequence>
+                            <xs:element name="Error" type="xs:int"/>
+                            <xs:element name="ExceptionInfo" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:choice>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </wsdl:types>
+
+    <wsdl:message name="getDataIn">
+        <wsdl:part name="parameters" element="tns:getData"/>
+    </wsdl:message>
+
+    <wsdl:message name="getDataOut">
+        <wsdl:part name="parameters" element="tns:getDataResponse"/>
+    </wsdl:message>
+
+    <wsdl:message name="customFault">
+        <wsdl:part name="customFault" element="tns:customFault"/>
+    </wsdl:message>
+
+    <wsdl:portType name="AcmeService">
+        <wsdl:operation name="getData">
+            <wsdl:input message="tns:getDataIn"/>
+            <wsdl:output message="tns:getDataOut"/>
+            <wsdl:fault message="tns:customFault" name="customFault"/>
+        </wsdl:operation>
+    </wsdl:portType>
+
+    <wsdl:binding name="AcmeService" type="tns:AcmeService">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="getData">
+            <soap:operation soapAction="http://test-soap.com/api/mixedsequence#getData" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="customFault">
+                <soap:fault name="customFault" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <wsdl:service name="AcmeService">
+        <wsdl:port name="AcmeService" binding="tns:AcmeService">
+            <soap:address location="http://api.acme.com/TestService.php"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

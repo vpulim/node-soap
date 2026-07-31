@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:tns="bar"
+    targetNamespace="bar">
+</wsdl:definitions>

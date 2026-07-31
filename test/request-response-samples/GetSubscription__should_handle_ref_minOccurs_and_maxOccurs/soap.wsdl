@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
+  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:EVT="http://ws.gematik.de/conn/EventService/v7.2"
+  xmlns:EVTW="http://ws.gematik.de/conn/EventService/WSDL/v7.2"
+  targetNamespace="http://ws.gematik.de/conn/EventService/WSDL/v7.2">
+  <documentation>
+    Copyright (c) 2014, gematik - Gesellschaft für Telematikanwendungen der Gesundheitskarte mbH.
+    Alle Rechte
+    vorbehalten.
+    Beschreibung: Konnektor Ereignisdienst
+    version=7.2.0
+  </documentation>
+  <types>
+    <xs:schema>
+      <xs:import schemaLocation="EventService.xsd"
+        namespace="http://ws.gematik.de/conn/EventService/v7.2" />
+    </xs:schema>
+  </types>
+  <message name="SubscribeRequestMessage">
+    <part name="parameter" element="EVT:Subscribe" />
+  </message>
+  <message name="SubscribeResponseMessage">
+    <part name="parameter" element="EVT:SubscribeResponse" />
+  </message>
+  <message name="GetSubscriptionRequestMessage">
+    <part name="parameter" element="EVT:GetSubscription" />
+  </message>
+  <message name="GetSubscriptionResponseMessage">
+    <part name="parameter" element="EVT:GetSubscriptionResponse" />
+  </message>
+  <portType name="EventServicePortType">
+    <operation name="Subscribe">
+      <input message="EVTW:SubscribeRequestMessage" />
+      <output message="EVTW:SubscribeResponseMessage" />
+      <fault name="FaultMessage" message="EVTW:FaultMessage" />
+    </operation>
+    <operation name="GetSubscription">
+      <input message="EVTW:GetSubscriptionRequestMessage" />
+      <output message="EVTW:GetSubscriptionResponseMessage" />
+      <fault name="FaultMessage" message="EVTW:FaultMessage" />
+    </operation>
+  </portType>
+  <binding name="EventServiceBinding" type="EVTW:EventServicePortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+    <operation name="Subscribe">
+      <soap:operation soapAction="http://ws.gematik.de/conn/EventService/v7.2#Subscribe" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+      <fault name="FaultMessage">
+        <soap:fault name="FaultMessage" use="literal" />
+      </fault>
+    </operation>
+    <operation name="GetSubscription">
+      <soap:operation soapAction="http://ws.gematik.de/conn/EventService/v7.2#GetSubscription" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+      <fault name="FaultMessage">
+        <soap:fault name="FaultMessage" use="literal" />
+      </fault>
+    </operation>
+  </binding>
+  <service name="EventService">
+    <port name="EventServicePort" binding="EVTW:EventServiceBinding">
+      <soap:address location="http://127.0.0.1:8001/eventservice" />
+    </port>
+  </service>
+</definitions>

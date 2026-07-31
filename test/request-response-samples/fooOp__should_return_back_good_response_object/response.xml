@@ -1,0 +1,10 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope" xmlns:uba="http://example.com/bar1/xsd">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <cus:Response1 xmlns:cus="http://example.com/bar/xsd">
+            <cus:responseHeader>
+                <uba:requestId>79d9372c-d2fe-4f86-a637-d1f5710bb439</uba:requestId>
+            </ns2:requestHeader>
+        </cus:Request1>
+    </soapenv:Body>
+</soapenv:Envelope>

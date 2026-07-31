@@ -7,10 +7,8 @@ var assert = require('assert');
 describe(__filename, function () {
   it('should parse recursive elements', function (done) {
     open_wsdl(path.resolve(__dirname, 'wsdl/recursive.wsdl'), function (err, def) {
-      assert.equal(def.definitions.messages.operationRequest.parts['constraint[]'].expression,
-          def.definitions.messages.operationRequest.parts['constraint[]'].expression.expression);
-      assert.equal(def.definitions.messages.operationRequest.parts['constraint[]'].expression,
-          def.definitions.messages.operationRequest.parts['constraint[]'].expression.expression['constraint[]'].expression);
+      assert.equal(def.definitions.messages.operationRequest.parts['constraint[]'].expression, def.definitions.messages.operationRequest.parts['constraint[]'].expression.expression);
+      assert.equal(def.definitions.messages.operationRequest.parts['constraint[]'].expression, def.definitions.messages.operationRequest.parts['constraint[]'].expression.expression['constraint[]'].expression);
       done();
     });
   });
@@ -18,17 +16,17 @@ describe(__filename, function () {
   it('should parse recursive wsdls', function (done) {
     open_wsdl(path.resolve(__dirname, 'wsdl/recursive/file.wsdl'), function (err, def) {
       // If we get here then we succeeded
-      done( err );
+      done(err);
     });
   });
 
-  it('should parse recursive wsdls keeping default options', function(done) {
+  it('should parse recursive wsdls keeping default options', function (done) {
     open_wsdl(path.resolve(__dirname, 'wsdl/recursive/file.wsdl'), function (err, def) {
       if (err) {
-        return done( err );
+        return done(err);
       }
 
-      def._includesWsdl.forEach(function(currentWsdl) {
+      def._includesWsdl.forEach(function (currentWsdl) {
         assert.deepEqual(def.options, currentWsdl.options);
       });
 
@@ -36,31 +34,35 @@ describe(__filename, function () {
     });
   });
 
-  it('should parse recursive wsdls keeping provided options', function(done) {
-    open_wsdl(path.resolve(__dirname, 'wsdl/recursive/file.wsdl'), {
-      ignoredNamespaces: {
-        namespaces: ['targetNamespace', 'typedNamespace'],
-        override: true
-      }
-    } , function (err, def) {
-      if (err) {
-        return done( err );
-      }
+  it('should parse recursive wsdls keeping provided options', function (done) {
+    open_wsdl(
+      path.resolve(__dirname, 'wsdl/recursive/file.wsdl'),
+      {
+        ignoredNamespaces: {
+          namespaces: ['targetNamespace', 'typedNamespace'],
+          override: true,
+        },
+      },
+      function (err, def) {
+        if (err) {
+          return done(err);
+        }
 
-      def._includesWsdl.forEach(function(currentWsdl, index) {
-        assert.deepEqual(def.options, currentWsdl.options);
-      });
+        def._includesWsdl.forEach(function (currentWsdl, index) {
+          assert.deepEqual(def.options, currentWsdl.options);
+        });
 
-      done();
-    });
+        done();
+      },
+    );
   });
 
   it('should parse recursive wsdls with element references', function (done) {
     open_wsdl(path.resolve(__dirname, 'wsdl/recursive_with_ref.wsdl'), function (err, def) {
-        assert.ifError(err);
-        var desc = def.definitions.portTypes.CloudSignService.description(def.definitions);
-        assert.equal(desc.AddSignature.input.properties.property && desc.AddSignature.input.properties.property.value2, 'string');
-        done();
+      assert.ifError(err);
+      var desc = def.definitions.portTypes.CloudSignService.description(def.definitions);
+      assert.equal(desc.AddSignature.input.properties.property && desc.AddSignature.input.properties.property.value2, 'string');
+      done();
     });
   });
 
@@ -76,20 +78,20 @@ describe(__filename, function () {
   it('should parse complex wsdls', function (done) {
     open_wsdl(path.resolve(__dirname, 'wsdl/complex/registration-common.wsdl'), function (err, def) {
       if (err) {
-        return done( err );
+        return done(err);
       }
 
       if (null === def.findSchemaType('recipientAddress', 'http://test-soap.com/api/common/types')) {
-        return done( 'Unable to find "recipientAddress" complex type' );
+        return done('Unable to find "recipientAddress" complex type');
       }
       if (null === def.findSchemaType('commonAddress', 'http://test-soap.com/api/common/types')) {
-        return done( 'Unable to find "commonAddress" complex type' );
+        return done('Unable to find "commonAddress" complex type');
       }
       if (null === def.findSchemaType('companyAddress', 'http://test-soap.com/api/common/types')) {
-        return done( 'Unable to find "companyAddress" complex type' );
+        return done('Unable to find "companyAddress" complex type');
       }
       if (null === def.findSchemaObject('http://test-soap.com/api/registration/messages', 'registerUserRequest')) {
-        return done( 'Unable to find "registerUserRequest" schema object' );
+        return done('Unable to find "registerUserRequest" schema object');
       }
 
       var requestBody = {
@@ -105,19 +107,13 @@ describe(__filename, function () {
             streetName: 'Street',
             postalCode: 'Code',
             city: 'City',
-            countryCode: 'US'
+            countryCode: 'US',
           },
-          companyName: 'ACME'
-        }
-      }
+          companyName: 'ACME',
+        },
+      };
 
-      var requestAsXML = def.objectToDocumentXML(
-        'registerUserRequest', 
-        requestBody, 
-        'msg',
-        'http://test-soap.com/api/registration/messages',
-        'registerUserRequest' 
-      );
+      var requestAsXML = def.objectToDocumentXML('registerUserRequest', requestBody, 'msg', 'http://test-soap.com/api/registration/messages', 'registerUserRequest');
 
       /*
       Expected XML:
@@ -140,7 +136,150 @@ describe(__filename, function () {
         </msg:companyAddress>
       </msg:registerUserRequest>
       */
-      assert.strictEqual(requestAsXML, '<msg:registerUserRequest xmlns:msg="http://test-soap.com/api/registration/messages" xmlns="http://test-soap.com/api/registration/messages"><msg:id>ID00000000000000000000000000000000</msg:id><msg:lastName>Doe</msg:lastName><msg:firstName>John</msg:firstName><msg:dateOfBirth>1970-01-01</msg:dateOfBirth><msg:correspondenceLanguage>ENG</msg:correspondenceLanguage><msg:emailAddress>jdoe@doe.com</msg:emailAddress><msg:lookupPermission>ALLOWED</msg:lookupPermission><msg:companyAddress><ct:address xmlns:ct="http://test-soap.com/api/common/types"><ct:streetName>Street</ct:streetName><ct:postalCode>Code</ct:postalCode><ct:city>City</ct:city><ct:countryCode>US</ct:countryCode></ct:address><ct:companyName xmlns:ct="http://test-soap.com/api/common/types">ACME</ct:companyName></msg:companyAddress></msg:registerUserRequest>');
+      assert.strictEqual(
+        requestAsXML,
+        '<msg:registerUserRequest xmlns:msg="http://test-soap.com/api/registration/messages" xmlns="http://test-soap.com/api/registration/messages"><msg:id>ID00000000000000000000000000000000</msg:id><msg:lastName>Doe</msg:lastName><msg:firstName>John</msg:firstName><msg:dateOfBirth>1970-01-01</msg:dateOfBirth><msg:correspondenceLanguage>ENG</msg:correspondenceLanguage><msg:emailAddress>jdoe@doe.com</msg:emailAddress><msg:lookupPermission>ALLOWED</msg:lookupPermission><msg:companyAddress><ct:address xmlns:ct="http://test-soap.com/api/common/types"><ct:streetName>Street</ct:streetName><ct:postalCode>Code</ct:postalCode><ct:city>City</ct:city><ct:countryCode>US</ct:countryCode></ct:address><ct:companyName xmlns:ct="http://test-soap.com/api/common/types">ACME</ct:companyName></msg:companyAddress></msg:registerUserRequest>',
+      );
+
+      done();
+    });
+  });
+
+  it('should parse complex wsdls with mixed choice and minOccurs maxOccurs with specified arrayWithChoiceTag tag key', function (done) {
+    open_wsdl(
+      path.resolve(__dirname, 'wsdl/complex/mixed-sequence.wsdl'),
+      {
+        arrayWithChoiceTag: '$sequence',
+      },
+      function (err, def) {
+        if (err) {
+          return done(err);
+        }
+
+        if (null === def.findSchemaType('getDataResponse', 'http://test-soap.com/api/mixedsequence')) {
+          return done('Unable to find "getDataResponse" complex type');
+        }
+
+        var requestBody = {
+          getDataResult: {
+            a: 0,
+            b: 10,
+            $sequence: [
+              {
+                c: {
+                  id: '1',
+                  value1: 'test 1',
+                },
+              },
+              {
+                d: {
+                  id: '3',
+                  value2: 'test 3',
+                },
+              },
+              {
+                c: {
+                  id: '2',
+                  value1: 'test 2',
+                },
+              },
+            ],
+          },
+        };
+
+        var requestAsXML = def.objectToDocumentXML('getDataResponse', requestBody, 'acme', 'http://test-soap.com/api/mixedsequence', 'getDataResponse');
+
+        /**
+         * Expected XML:
+         * <acme:getDataResponse xmlns:acme="http://test-soap.com/api/mixedsequence">
+         *     <acme:getDataResult>
+         *         <acme:a>0</acme:a>
+         *         <acme:b>10</acme:b>
+         *         <acme:c>
+         *             <acme:id>1</acme:id>
+         *             <acme:value1>test 1</acme:value1>
+         *         </acme:c>
+         *         <acme:d>
+         *             <acme:id>3</acme:id>
+         *             <acme:value2>test 3</acme:value2>
+         *         </acme:d>
+         *         <acme:c>
+         *             <acme:id>2</acme:id>
+         *             <acme:value1>test 2</acme:value1>
+         *         </acme:c>
+         *     </acme:getDataResult>
+         * </acme:getDataResponse>
+         */
+        assert.strictEqual(
+          requestAsXML,
+          '<acme:getDataResponse xmlns:acme="http://test-soap.com/api/mixedsequence" xmlns="http://test-soap.com/api/mixedsequence"><acme:getDataResult><acme:a>0</acme:a><acme:b>10</acme:b><acme:c><acme:id>1</acme:id><acme:value1>test 1</acme:value1></acme:c><acme:d><acme:id>3</acme:id><acme:value2>test 3</acme:value2></acme:d><acme:c><acme:id>2</acme:id><acme:value1>test 2</acme:value1></acme:c></acme:getDataResult></acme:getDataResponse>',
+        );
+
+        done();
+      },
+    );
+  });
+
+  it('should parse complex wsdls with mixed choice and minOccurs maxOccurs with omitted arrayWithChoiceTag tag key', function (done) {
+    open_wsdl(path.resolve(__dirname, 'wsdl/complex/mixed-sequence.wsdl'), function (err, def) {
+      if (err) {
+        return done(err);
+      }
+
+      if (null === def.findSchemaType('getDataResponse', 'http://test-soap.com/api/mixedsequence')) {
+        return done('Unable to find "getDataResponse" complex type');
+      }
+
+      var requestBody = {
+        getDataResult: {
+          a: 0,
+          b: 10,
+          c: [
+            {
+              id: '1',
+              value1: 'test 1',
+            },
+            {
+              id: '2',
+              value1: 'test 2',
+            },
+          ],
+          d: [
+            {
+              id: '3',
+              value2: 'test 3',
+            },
+          ],
+        },
+      };
+
+      var requestAsXML = def.objectToDocumentXML('getDataResponse', requestBody, 'acme', 'http://test-soap.com/api/mixedsequence', 'getDataResponse');
+
+      /**
+       * Expected XML:
+       * <acme:getDataResponse xmlns:acme="http://test-soap.com/api/mixedsequence">
+       *     <acme:getDataResult>
+       *         <acme:a>0</acme:a>
+       *         <acme:b>10</acme:b>
+       *         <acme:c>
+       *             <acme:id>1</acme:id>
+       *             <acme:value1>test 1</acme:value1>
+       *         </acme:c>
+       *         <acme:c>
+       *             <acme:id>2</acme:id>
+       *             <acme:value1>test 2</acme:value1>
+       *         </acme:c>
+       *         <acme:d>
+       *             <acme:id>3</acme:id>
+       *             <acme:value2>test 3</acme:value2>
+       *         </acme:d>
+       *     </acme:getDataResult>
+       * </acme:getDataResponse>
+       */
+      assert.strictEqual(
+        requestAsXML,
+        '<acme:getDataResponse xmlns:acme="http://test-soap.com/api/mixedsequence" xmlns="http://test-soap.com/api/mixedsequence"><acme:getDataResult><acme:a>0</acme:a><acme:b>10</acme:b><acme:c><acme:id>1</acme:id><acme:value1>test 1</acme:value1></acme:c><acme:c><acme:id>2</acme:id><acme:value1>test 2</acme:value1></acme:c><acme:d><acme:id>3</acme:id><acme:value2>test 3</acme:value2></acme:d></acme:getDataResult></acme:getDataResponse>',
+      );
 
       done();
     });

@@ -3,6 +3,6 @@
   "username": "basicuser",
   "password": "basicpass",
   "options": {
-  			 	"hasTokenCreated": false 			
-			 }
+    "hasTokenCreated": false
+  }
 }

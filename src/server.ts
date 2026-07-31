@@ -5,58 +5,77 @@
 
 import { EventEmitter } from 'events';
 import * as http from 'http';
-import * as url from 'url';
-import { IOneWayOptions, ISecurity, IServerOptions, IServices, ISoapFault, ISoapServiceMethod } from './types';
-import { findPrefix } from './utils';
+import { IOneWayOptions, IServerOptions, IServerlessRequest, IServerlessResponse, IServices, ISoapFault, ISoapServiceMethod } from './types';
 import { WSDL } from './wsdl';
 import { BindingElement, IPort } from './wsdl/elements';
-
-let zlib;
-try {
-  zlib = require('zlib');
-} catch (error) {
-}
+import zlib from 'zlib';
 
 interface IExpressApp {
+  address?: () => { address: string; port: number; family: string } | string;
   route;
   use;
 }
 
 export type ServerType = http.Server | IExpressApp;
+
 type Request = http.IncomingMessage & { body?: any };
 type Response = http.ServerResponse;
 
 function isExpress(server): server is IExpressApp {
-  return (typeof server.route === 'function' && typeof server.use === 'function');
+  return typeof server.route === 'function' && typeof server.use === 'function';
 }
 
 function isPromiseLike<T>(obj): obj is PromiseLike<T> {
-  return (!!obj && typeof obj.then === 'function');
+  return !!obj && typeof obj.then === 'function';
 }
 
 function getDateString(d) {
   function pad(n) {
     return n < 10 ? '0' + n : n;
   }
-  return d.getUTCFullYear() + '-'
-    + pad(d.getUTCMonth() + 1) + '-'
-    + pad(d.getUTCDate()) + 'T'
-    + pad(d.getUTCHours()) + ':'
-    + pad(d.getUTCMinutes()) + ':'
-    + pad(d.getUTCSeconds()) + 'Z';
+  return d.getUTCFullYear() + '-' + pad(d.getUTCMonth() + 1) + '-' + pad(d.getUTCDate()) + 'T' + pad(d.getUTCHours()) + ':' + pad(d.getUTCMinutes()) + ':' + pad(d.getUTCSeconds()) + 'Z';
 }
 
-// tslint:disable unified-signatures
-// tslint:disable-next-line:interface-name
+function getServerBaseUrl(server: ServerType): string {
+  if (!server) {
+    return `http://localhost:8080`;
+  }
+
+  if (typeof server.address !== 'function') {
+    return `http://${server.address}`;
+  }
+
+  const address = server.address();
+
+  if (address === null) {
+    return `http://localhost:8080`;
+  }
+
+  if (typeof address === 'string') {
+    return `http://${address}`;
+  }
+
+  if (address.family.toLowerCase() === 'ipv6') {
+    return `http://localhost:${address.port}`;
+  }
+
+  return `http://${address.address}:${address.port}`;
+}
+
+//eslint-disable-next-line  @typescript-eslint/no-unsafe-declaration-merging
 export interface Server {
   emit(event: 'request', request: any, methodName: string): boolean;
+
   emit(event: 'headers', headers: any, methodName: string): boolean;
+
   emit(event: 'response', headers: any, methodName: string): boolean;
 
   /** Emitted for every received messages. */
   on(event: 'request', listener: (request: any, methodName: string) => void): this;
+
   /** Emitted when the SOAP Headers are not empty. */
   on(event: 'headers', listener: (headers: any, methodName: string) => void): this;
+
   /** Emitted before sending SOAP response. */
   on(event: 'response', listener: (response: any, methodName: string) => void): this;
 }
@@ -71,22 +90,24 @@ interface IExecuteMethodOptions {
   style?: 'document' | 'rpc';
 }
 
+//eslint-disable-next-line  @typescript-eslint/no-unsafe-declaration-merging
 export class Server extends EventEmitter {
   public path: string | RegExp;
   public services: IServices;
-  public log: (type: string, data: any) => any;
+  public log: (type: string, data: any, req: Request) => any;
   public authorizeConnection: (req: Request, res?: Response) => boolean;
   public authenticate: (security: any, processAuthResult?: (result: boolean) => void, req?: Request, obj?: any) => boolean | void | Promise<boolean>;
 
   private wsdl: WSDL;
   private suppressStack: boolean;
   private returnFault: boolean;
-  private onewayOptions: IOneWayOptions & { statusCode?: number; };
+  private onewayOptions: IOneWayOptions & { statusCode?: number };
   private enableChunkedEncoding: boolean;
   private soapHeaders: any[];
   private callback?: (err: any, res: any) => void;
+  private baseUrl: string;
 
-  constructor(server: ServerType, path: string | RegExp, services: IServices, wsdl: WSDL, options?: IServerOptions) {
+  constructor(server: ServerType | null, path: string | RegExp, services: IServices, wsdl: WSDL, options?: IServerOptions) {
     super();
 
     options = options || {
@@ -98,16 +119,21 @@ export class Server extends EventEmitter {
     this.wsdl = wsdl;
     this.suppressStack = options && options.suppressStack;
     this.returnFault = options && options.returnFault;
-    this.onewayOptions = options && options.oneWay || {};
-    this.enableChunkedEncoding =
-      options.enableChunkedEncoding === undefined ? true : !!options.enableChunkedEncoding;
-    this.callback = options.callback ? options.callback : () => { };
+    this.onewayOptions = (options && options.oneWay) || {};
+    this.enableChunkedEncoding = options.enableChunkedEncoding === undefined ? true : !!options.enableChunkedEncoding;
+    this.callback = options.callback ? options.callback : () => {};
+    this.baseUrl = getServerBaseUrl(server);
     if (typeof path === 'string' && path[path.length - 1] !== '/') {
       path += '/';
     } else if (path instanceof RegExp && path.source[path.source.length - 1] !== '/') {
       path = new RegExp(path.source + '(?:\\/|)');
     }
     wsdl.onReady((err) => {
+      if (!server) {
+        this.callback(err, this);
+        return;
+      }
+
       if (isExpress(server)) {
         // handle only the required URL path for express server
         server.route(path).all((req, res) => {
@@ -130,7 +156,7 @@ export class Server extends EventEmitter {
               return;
             }
           }
-          let reqPath = url.parse(req.url).pathname;
+          let reqPath = new URL(req.url, this.baseUrl).pathname;
           if (reqPath[reqPath.length - 1] !== '/') {
             reqPath += '/';
           }
@@ -173,16 +199,66 @@ export class Server extends EventEmitter {
     this.soapHeaders = null;
   }
 
+  public processRequest(xml: string, reqOptions: IServerlessRequest = {}): Promise<IServerlessResponse> {
+    const request = this._createServerlessRequest(reqOptions);
+    const responseState: IServerlessResponse = {
+      body: '',
+      statusCode: 200,
+      headers: {},
+    };
+
+    return new Promise((resolve) => {
+      const response = {
+        statusCode: 200,
+        setHeader: (name: string, value: string) => {
+          responseState.headers[name.toLowerCase()] = value;
+        },
+        write: (chunk) => {
+          if (typeof chunk !== 'undefined') {
+            responseState.body += Buffer.isBuffer(chunk) ? chunk.toString() : String(chunk);
+          }
+          return true;
+        },
+        end: (chunk?) => {
+          if (typeof chunk !== 'undefined') {
+            response.write(chunk);
+          }
+          responseState.statusCode = response.statusCode || 200;
+          resolve(responseState);
+        },
+      } as unknown as Response;
+
+      if (typeof request.headers['content-type'] !== 'undefined') {
+        response.setHeader('Content-Type', request.headers['content-type'] as string);
+      } else {
+        response.setHeader('Content-Type', 'application/xml');
+      }
+
+      this._processRequestXml(request, response, xml);
+    });
+  }
+
+  private _createServerlessRequest(reqOptions: IServerlessRequest = {}): Request {
+    const requestPath = typeof this.path === 'string' ? this.path : '/';
+    return {
+      method: reqOptions.method || 'POST',
+      headers: reqOptions.headers || {},
+      url: reqOptions.url || requestPath,
+      connection: reqOptions.connection || {
+        remoteAddress: undefined,
+      },
+    } as Request;
+  }
+
   private _processSoapHeader(soapHeader, name, namespace, xmlns) {
     switch (typeof soapHeader) {
       case 'object':
         return this.wsdl.objectToXML(soapHeader, name, namespace, xmlns, true);
-      case 'function':
+      case 'function': {
+        //eslint-disable-next-line @typescript-eslint/no-this-alias
         const _this = this;
-        // arrow function does not support arguments variable
-        // tslint:disable-next-line
-        return function () {
-          const result = soapHeader.apply(null, arguments);
+        return (...args: any) => {
+          const result = soapHeader.apply(null, [...args]);
 
           if (typeof result === 'object') {
             return _this.wsdl.objectToXML(result, name, namespace, xmlns, true);
@@ -190,6 +266,7 @@ export class Server extends EventEmitter {
             return result;
           }
         };
+      }
       default:
         return soapHeader;
     }
@@ -199,52 +276,55 @@ export class Server extends EventEmitter {
     this.wsdl.options.attributesKey = options.attributesKey || 'attributes';
     this.onewayOptions.statusCode = this.onewayOptions.responseCode || 200;
     this.onewayOptions.emptyBody = !!this.onewayOptions.emptyBody;
+    this.wsdl.options.envelopeKey = options.envelopeKey || 'soap';
   }
 
   private _processRequestXml(req: Request, res: Response, xml) {
     let error;
     try {
       if (typeof this.log === 'function') {
-        this.log('received', xml);
+        this.log('received', xml, req);
       }
       this._process(xml, req, res, (result, statusCode) => {
         this._sendHttpResponse(res, statusCode, result);
         if (typeof this.log === 'function') {
-          this.log('replied', result);
+          this.log('replied', result, req);
         }
       });
     } catch (err) {
       if (err.Fault !== undefined) {
-        return this._sendError(err.Fault, (result, statusCode) => {
-          this._sendHttpResponse(res, statusCode || 500, result);
-          if (typeof this.log === 'function') {
-            this.log('error', err);
-          }
-        }, new Date().toISOString());
+        return this._sendError(
+          err.Fault,
+          (result, statusCode) => {
+            this._sendHttpResponse(res, statusCode || 500, result);
+            if (typeof this.log === 'function') {
+              this.log('error', err, req);
+            }
+          },
+          new Date().toISOString(),
+        );
       } else {
         error = err.stack ? (this.suppressStack === true ? err.message : err.stack) : err;
         this._sendHttpResponse(res, /* statusCode */ 500, error);
         if (typeof this.log === 'function') {
-          this.log('error', error);
+          this.log('error', err, req);
         }
       }
     }
   }
 
   private _requestListener(req: Request, res: Response) {
-    const reqParse = url.parse(req.url);
-    const reqPath = reqParse.pathname;
+    const reqParse = new URL(req.url, this.baseUrl);
     const reqQuery = reqParse.search;
 
     if (typeof this.log === 'function') {
-      this.log('info', 'Handling ' + req.method + ' on ' + req.url);
+      this.log('info', 'Handling ' + req.method + ' on ' + req.url, req);
     }
 
     if (req.method === 'GET') {
-
       if (reqQuery && reqQuery.toLowerCase().startsWith('?wsdl')) {
         if (typeof this.log === 'function') {
-          this.log('info', 'Wants the WSDL');
+          this.log('info', 'Wants the WSDL', req);
         }
         res.setHeader('Content-Type', 'application/xml');
         res.write(this.wsdl.toXML());
@@ -285,25 +365,27 @@ export class Server extends EventEmitter {
 
   private _getSoapAction(req: Request) {
     if (typeof req.headers.soapaction === 'undefined') {
-         return;
-     }
+      return;
+    }
     const soapAction: string = req.headers.soapaction as string;
-    return (soapAction.indexOf('"') === 0)
-         ? soapAction.slice(1, -1)
-         : soapAction;
+    return soapAction.indexOf('"') === 0 ? soapAction.slice(1, -1) : soapAction;
   }
 
   private _process(input, req: Request, res: Response, cb: (result: any, statusCode?: number) => any) {
-    const pathname = url.parse(req.url).pathname.replace(/\/$/, '');
+    const pathname = new URL(req.url, this.baseUrl).pathname.replace(/\/$/, '');
     const obj = this.wsdl.xmlToObject(input);
-    const body = obj.Body;
+    const body = obj.Body ? obj.Body : obj;
     const headers = obj.Header;
     let binding: BindingElement;
     let methodName: string;
     let serviceName: string;
     let portName: string;
     const includeTimestamp = obj.Header && obj.Header.Security && obj.Header.Security.Timestamp;
-    const authenticate = this.authenticate || function defaultAuthenticate() { return true; };
+    const authenticate =
+      this.authenticate ||
+      function defaultAuthenticate() {
+        return true;
+      };
 
     const callback = (result, statusCode) => {
       const response = { result: result };
@@ -312,9 +394,8 @@ export class Server extends EventEmitter {
     };
 
     const process = () => {
-
       if (typeof this.log === 'function') {
-        this.log('info', 'Attempting to bind to ' + pathname);
+        this.log('info', 'Attempting to bind to ' + pathname, req);
       }
 
       // Avoid Cannot convert undefined or null to object due to Object.keys(body)
@@ -335,10 +416,10 @@ export class Server extends EventEmitter {
           for (name in ports) {
             portName = name;
             const port = ports[portName];
-            const portPathname = url.parse(port.location).pathname.replace(/\/$/, '');
+            const portPathname = new URL(port.location, 'http://localhost').pathname.replace(/\/$/, '');
 
             if (typeof this.log === 'function') {
-              this.log('info', 'Trying ' + portName + ' from path ' + portPathname);
+              this.log('info', 'Trying ' + portName + ' from path ' + portPathname, req);
             }
 
             if (portPathname === pathname) {
@@ -360,10 +441,10 @@ export class Server extends EventEmitter {
 
       try {
         const soapAction = this._getSoapAction(req);
-        const messageElemName = (Object.keys(body)[0] === 'attributes' ? Object.keys(body)[1] : Object.keys(body)[0]);
-        const pair = binding.topElements[messageElemName];
+        const messageElemName = Object.keys(body)[0] === 'attributes' ? Object.keys(body)[1] : Object.keys(body)[0];
+        const pair = binding.topElements[messageElemName] ? binding.topElements[messageElemName] : binding.topElements[soapAction];
         if (soapAction) {
-          methodName = this._getMethodNameBySoapAction(binding, soapAction);
+          methodName = this._getMethodNameBySoapActionSuffix(binding, soapAction);
         } else {
           methodName = pair ? pair.methodName : messageElemName;
         }
@@ -376,25 +457,36 @@ export class Server extends EventEmitter {
         }
 
         if (style === 'rpc') {
-          this._executeMethod({
-            serviceName: serviceName,
-            portName: portName,
-            methodName: methodName,
-            outputName: messageElemName + 'Response',
-            args: body[messageElemName],
-            headers: headers,
-            style: 'rpc',
-          }, req, res, callback);
+          this._executeMethod(
+            {
+              serviceName: serviceName,
+              portName: portName,
+              methodName: methodName,
+              outputName: messageElemName + 'Response',
+              args: body[messageElemName],
+              headers: headers,
+              style: 'rpc',
+            },
+            req,
+            res,
+            callback,
+          );
         } else {
-          this._executeMethod({
-            serviceName: serviceName,
-            portName: portName,
-            methodName: methodName,
-            outputName: pair.outputName,
-            args: body[messageElemName],
-            headers: headers,
-            style: 'document',
-          }, req, res, callback, includeTimestamp);
+          this._executeMethod(
+            {
+              serviceName: serviceName,
+              portName: portName,
+              methodName: methodName,
+              outputName: pair.outputName,
+              args: body[messageElemName],
+              headers: headers,
+              style: 'document',
+            },
+            req,
+            res,
+            callback,
+            includeTimestamp,
+          );
         }
       } catch (error) {
         if (error.Fault !== undefined) {
@@ -416,14 +508,18 @@ export class Server extends EventEmitter {
         authResultProcessed = true;
         // Handle errors
         if (authResult instanceof Error) {
-          return this._sendError({
-            Code: {
-              Value: 'SOAP-ENV:Server',
-              Subcode: { Value: 'InternalServerError' },
+          return this._sendError(
+            {
+              Code: {
+                Value: 'SOAP-ENV:Server',
+                Subcode: { Value: 'InternalServerError' },
+              },
+              Reason: { Text: authResult.toString() },
+              statusCode: 500,
             },
-            Reason: { Text: authResult.toString() },
-            statusCode: 500,
-          }, callback, includeTimestamp);
+            callback,
+            includeTimestamp,
+          );
         }
 
         // Handle actual results
@@ -435,35 +531,46 @@ export class Server extends EventEmitter {
               if (error.Fault !== undefined) {
                 return this._sendError(error.Fault, callback, includeTimestamp);
               }
-              return this._sendError({
-                Code: {
-                  Value: 'SOAP-ENV:Server',
-                  Subcode: { Value: 'InternalServerError' },
+              return this._sendError(
+                {
+                  Code: {
+                    Value: 'SOAP-ENV:Server',
+                    Subcode: { Value: 'InternalServerError' },
+                  },
+                  Reason: { Text: error.toString() },
+                  statusCode: 500,
                 },
-                Reason: { Text: error.toString() },
-                statusCode: 500,
-              }, callback, includeTimestamp);
+                callback,
+                includeTimestamp,
+              );
             }
           } else {
-            return this._sendError({
-              Code: {
-                Value: 'SOAP-ENV:Client',
-                Subcode: { Value: 'AuthenticationFailure' },
+            return this._sendError(
+              {
+                Code: {
+                  Value: 'SOAP-ENV:Client',
+                  Subcode: { Value: 'AuthenticationFailure' },
+                },
+                Reason: { Text: 'Invalid username or password' },
+                statusCode: 401,
               },
-              Reason: { Text: 'Invalid username or password' },
-              statusCode: 401,
-            }, callback, includeTimestamp);
+              callback,
+              includeTimestamp,
+            );
           }
         }
       };
 
       const functionResult = authenticate(obj.Header && obj.Header.Security, processAuthResult, req, obj);
       if (isPromiseLike<boolean>(functionResult)) {
-        functionResult.then((result: boolean) => {
-          processAuthResult(result);
-        }, (err: any) => {
-          processAuthResult(err);
-        });
+        functionResult.then(
+          (result: boolean) => {
+            processAuthResult(result);
+          },
+          (err: any) => {
+            processAuthResult(err);
+          },
+        );
       }
       if (typeof functionResult === 'boolean') {
         processAuthResult(functionResult);
@@ -473,21 +580,30 @@ export class Server extends EventEmitter {
     }
   }
 
-  private _getMethodNameBySoapAction(binding: BindingElement, soapAction: string) {
+  private _getMethodNameBySoapActionSuffix(binding: BindingElement, soapAction: string): string | null {
+    const methodName = this._getMethodNameBySoapAction(binding, soapAction);
+
+    if (methodName) {
+      return methodName;
+    }
     for (const methodName in binding.methods) {
-      if (binding.methods[methodName].soapAction === soapAction) {
+      const parts = binding.methods[methodName].soapAction.split('/');
+      if (parts.reverse()[0] === soapAction) {
         return methodName;
       }
     }
   }
 
-  private _executeMethod(
-    options: IExecuteMethodOptions,
-    req: Request,
-    res: Response,
-    callback: (result: any, statusCode?: number) => any,
-    includeTimestamp?,
-  ) {
+  private _getMethodNameBySoapAction(binding: BindingElement, soapAction: string): string | null {
+    for (const methodName in binding.methods) {
+      if (binding.methods[methodName].soapAction === soapAction) {
+        return methodName;
+      }
+    }
+    return null;
+  }
+
+  private _executeMethod(options: IExecuteMethodOptions, req: Request, res: Response, callback: (result: any, statusCode?: number) => any, includeTimestamp?) {
     options = options || {};
     let method: ISoapServiceMethod;
     let body;
@@ -501,18 +617,20 @@ export class Server extends EventEmitter {
     const style = options.style;
 
     if (this.soapHeaders) {
-      headers = this.soapHeaders.map((header) => {
-        if (typeof header === 'function') {
-          return header(methodName, args, options.headers, req, res, this);
-        } else {
-          return header;
-        }
-      }).join('\n');
+      headers = this.soapHeaders
+        .map((header) => {
+          if (typeof header === 'function') {
+            return header(methodName, args, options.headers, req, res, this);
+          } else {
+            return header;
+          }
+        })
+        .join('\n');
     }
 
     try {
       method = this.services[serviceName][portName][methodName];
-    } catch (error) {
+    } catch {
       return callback(this._envelope('', headers, includeTimestamp));
     }
 
@@ -527,14 +645,18 @@ export class Server extends EventEmitter {
         if (error.Fault !== undefined) {
           return this._sendError(error.Fault, callback, includeTimestamp);
         } else {
-          return this._sendError({
-            Code: {
-              Value: 'SOAP-ENV:Server',
-              Subcode: { Value: 'InternalServerError' },
+          return this._sendError(
+            {
+              Code: {
+                Value: 'SOAP-ENV:Server',
+                Subcode: { Value: 'InternalServerError' },
+              },
+              Reason: { Text: error.toString() },
+              statusCode: 500,
             },
-            Reason: { Text: error.toString() },
-            statusCode: 500,
-          }, callback, includeTimestamp);
+            callback,
+            includeTimestamp,
+          );
         }
       }
 
@@ -580,14 +702,17 @@ export class Server extends EventEmitter {
       handleResult(error, result);
     };
 
-    const result = method(args, methodCallback, options.headers, req, res, this);
+    const result = method.apply(this, [args, methodCallback, options.headers, req, res]);
     if (typeof result !== 'undefined') {
       if (isPromiseLike<any>(result)) {
-        result.then((value) => {
-          handleResult(null, value);
-        }, (err) => {
-          handleResult(err);
-        });
+        result.then(
+          (value) => {
+            handleResult(null, value);
+          },
+          (err) => {
+            handleResult(err);
+          },
+        );
       } else {
         handleResult(null, result);
       }
@@ -595,49 +720,46 @@ export class Server extends EventEmitter {
   }
 
   private _envelope(body, headers, includeTimestamp) {
-    const defs = this.wsdl.definitions;
-    const ns = defs.$targetNamespace;
     const encoding = '';
-    const alias = findPrefix(defs.xmlns, ns);
+    const envelopeKey = this.wsdl.options.envelopeKey;
 
-    const envelopeDefinition = this.wsdl.options.forceSoap12Headers
-      ? 'http://www.w3.org/2003/05/soap-envelope'
-      : 'http://schemas.xmlsoap.org/soap/envelope/';
+    const envelopeDefinition = this.wsdl.options.forceSoap12Headers ? 'http://www.w3.org/2003/05/soap-envelope' : 'http://schemas.xmlsoap.org/soap/envelope/';
 
-    let xml = '<?xml version="1.0" encoding="utf-8"?>' +
-      '<soap:Envelope xmlns:soap="' + envelopeDefinition + '" ' +
-      encoding +
-      this.wsdl.xmlnsInEnvelope + '>';
+    let xml = '<?xml version="1.0" encoding="utf-8"?>' + '<' + envelopeKey + ':Envelope' + ' xmlns:' + envelopeKey + '=' + '"' + envelopeDefinition + '" ' + encoding + this.wsdl.xmlnsInEnvelope + '>';
 
     headers = headers || '';
 
     if (includeTimestamp) {
       const now = new Date();
       const created = getDateString(now);
-      const expires = getDateString(new Date(now.getTime() + (1000 * 600)));
+      const expires = getDateString(new Date(now.getTime() + 1000 * 600));
 
-      headers += '<o:Security soap:mustUnderstand="1" ' +
+      headers +=
+        '<o:Security soap:mustUnderstand="1" ' +
         'xmlns:o="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" ' +
         'xmlns:u="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">' +
         '    <u:Timestamp u:Id="_0">' +
-        '      <u:Created>' + created + '</u:Created>' +
-        '      <u:Expires>' + expires + '</u:Expires>' +
+        '      <u:Created>' +
+        created +
+        '</u:Created>' +
+        '      <u:Expires>' +
+        expires +
+        '</u:Expires>' +
         '    </u:Timestamp>' +
         '  </o:Security>\n';
     }
 
     if (headers !== '') {
-      xml += '<soap:Header>' + headers + '</soap:Header>';
+      xml += '<' + envelopeKey + ':Header>' + headers + '</' + envelopeKey + ':Header>';
     }
-
-    xml += body ? '<soap:Body>' + body + '</soap:Body>' : '<soap:Body/>';
-
-    xml += '</soap:Envelope>';
+    xml += body ? '<' + envelopeKey + ':Body>' + body + '</' + envelopeKey + ':Body>' : '<' + envelopeKey + ':Body/>';
+    xml += '</' + envelopeKey + ':Envelope>';
     return xml;
   }
 
   private _sendError(soapFault: ISoapFault, callback: (result: any, statusCode?: number) => any, includeTimestamp) {
     let fault;
+    const envelopeKey = this.wsdl.options.envelopeKey;
 
     let statusCode: number;
     if (soapFault.statusCode) {
@@ -649,12 +771,12 @@ export class Server extends EventEmitter {
       // Soap 1.1 error style
       // Root element will be prependend with the soap NS
       // It must match the NS defined in the Envelope (set by the _envelope method)
-      fault = this.wsdl.objectToDocumentXML('soap:Fault', soapFault, undefined);
+      fault = this.wsdl.objectToDocumentXML(envelopeKey + ':Fault', soapFault, undefined);
     } else {
       // Soap 1.2 error style.
       // 3rd param is the NS prepended to all elements
       // It must match the NS defined in the Envelope (set by the _envelope method)
-      fault = this.wsdl.objectToDocumentXML('Fault', soapFault, 'soap');
+      fault = this.wsdl.objectToDocumentXML('Fault', soapFault, envelopeKey);
     }
 
     return callback(this._envelope(fault, '', includeTimestamp), statusCode);
@@ -666,11 +788,11 @@ export class Server extends EventEmitter {
     }
 
     /*
-    * Calling res.write(result) follow by res.end() will cause Node.js to use
-    * chunked encoding, while calling res.end(result) directly will cause
-    * Node.js to calculate and send Content-Length header. See
-    * nodejs/node#26005.
-    */
+     * Calling res.write(result) follow by res.end() will cause Node.js to use
+     * chunked encoding, while calling res.end(result) directly will cause
+     * Node.js to calculate and send Content-Length header. See
+     * nodejs/node#26005.
+     */
 
     if (this.enableChunkedEncoding) {
       res.write(result);

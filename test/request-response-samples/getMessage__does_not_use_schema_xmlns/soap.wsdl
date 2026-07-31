@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<wsdl:definitions
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:dto10="urn:de:brak:bea:application:dto:soap:dto10"
+	xmlns:beatns="urn:de:brak:bea:application:dto:soap:types10"
+	xmlns="urn:de:brak:bea:application:dto:soap:types10" name="beA"
+	targetNamespace="urn:de:brak:bea:application:dto:soap:types10">
+	<wsdl:types>
+		<xsd:schema
+			xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+			xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+			xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+			xmlns:dto10="urn:de:brak:bea:application:dto:soap:dto10"
+			xmlns:beatns="urn:de:brak:bea:application:dto:soap:types10"
+			xmlns="urn:de:brak:bea:application:dto:soap:types10">
+			<xsd:import namespace="urn:de:brak:bea:application:dto:soap:types10"
+				schemaLocation="types10.xsd" />
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="getMessageResponse">
+		<wsdl:part element="getMessageResponse" name="parameters"></wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="getMessageRequest">
+		<wsdl:part element="getMessageRequest" name="parameters"></wsdl:part>
+	</wsdl:message>
+
+	<wsdl:portType name="beAServicePortType">
+		<wsdl:operation name="getMessage">
+			<wsdl:input message="getMessageRequest"></wsdl:input>
+			<wsdl:output message="getMessageResponse"></wsdl:output>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="beAServiceHttpBinding" type="beAServicePortType">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="getMessage">
+			<soap:operation soapAction="getMessage" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="BeAPortType">
+		<wsdl:port binding="beAServiceHttpBinding" name="BeAServiceV10">
+			<soap:address location="https://schulung-ksw.bea-brak.de/bea/BeAPortType/BeAServiceV10" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

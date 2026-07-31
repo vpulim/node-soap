@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema targetNamespace="http://schemas.vecozo.nl/berichtuitwisseling/messages/v3" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:messages="http://schemas.vecozo.nl/berichtuitwisseling/messages/v3" xmlns:types="http://schemas.vecozo.nl/berichtuitwisseling/types/v3" elementFormDefault="qualified">
+
+  <xs:import schemaLocation="./Vecozo.Berichtuitwisseling.Push.Types.V3.xsd" namespace="http://schemas.vecozo.nl/berichtuitwisseling/types/v3"/>
+
+  <xs:complexType name="DataBinary">
+    <xs:complexContent>
+      <xs:extension base="messages:Bericht">
+        <xs:sequence>
+          <xs:element name="Data" type="xs:base64Binary" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="BerichtInfo">
+    <xs:sequence>
+      <xs:any namespace="##any" processContents="lax" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Bericht">
+    <xs:sequence/>
+  </xs:complexType>
+
+  <xs:complexType name="DataXml">
+    <xs:complexContent>
+      <xs:extension base="messages:Bericht">
+        <xs:sequence>
+          <xs:any namespace="##any" processContents="lax" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="IndienenBerichtRequest">
+    <xs:sequence>
+      <xs:element name="BerichtInfo" type="messages:BerichtInfo" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Bericht" type="messages:Bericht" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="IndienenBerichtResponse">
+    <xs:sequence>
+      <xs:element name="ConversatieId" type="types:ConversatieId" minOccurs="1" maxOccurs="1" />
+      <xs:element name="TraceerId" type="types:UUID" minOccurs="1" maxOccurs="1" />
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>

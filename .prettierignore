@@ -1,0 +1,9 @@
+**/*.yml
+**/*.yaml
+.github/
+.nyc_output/
+node_modules/
+lib/
+coverage/
+.vscode/
+.jshintrc

@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<xsd:schema
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:beadto10="urn:de:brak:bea:application:dto:soap:dto10" attributeFormDefault="qualified"
+	elementFormDefault="qualified" targetNamespace="urn:de:brak:bea:application:dto:soap:dto10">
+	<xsd:complexType name="MessageResponseSoapDTO">
+		<xsd:sequence>
+			<xsd:element name="exported" type="xsd:boolean">
+				<xsd:annotation>
+					<xsd:documentation>Die Nachricht wurde als "exportiert" markiert.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+</xsd:schema>

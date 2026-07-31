@@ -1,4 +1,3 @@
-
 interface INamespace {
   declared: boolean;
   prefix: string;
@@ -13,7 +12,7 @@ interface INamespace {
  */
 class NamespaceScope {
   public parent: NamespaceScope;
-  public namespaces: {[key: string]: INamespace};
+  public namespaces: { [key: string]: INamespace };
 
   constructor(parent: NamespaceScope) {
     this.parent = parent;
@@ -32,7 +31,7 @@ class NamespaceScope {
         return 'http://www.w3.org/XML/1998/namespace';
       case 'xmlns':
         return 'http://www.w3.org/2000/xmlns/';
-      default:
+      default: {
         const nsUri = this.namespaces[prefix];
         /*jshint -W116 */
         if (nsUri != null) {
@@ -42,6 +41,7 @@ class NamespaceScope {
         } else {
           return null;
         }
+      }
     }
   }
 
@@ -59,7 +59,7 @@ class NamespaceScope {
           prefix: 'xmlns',
           declared: true,
         };
-      default:
+      default: {
         const mapping = this.namespaces[prefix];
         /*jshint -W116 */
         if (mapping != null) {
@@ -69,6 +69,7 @@ class NamespaceScope {
         } else {
           return null;
         }
+      }
     }
   }
 
@@ -196,7 +197,7 @@ export class NamespaceContext {
     } else {
       // Try to generate a unique namespace
       while (true) {
-        prefix = 'ns' + (++this.prefixCount);
+        prefix = 'ns' + ++this.prefixCount;
         if (!this.getNamespaceURI(prefix)) {
           // The prefix is not used
           break;

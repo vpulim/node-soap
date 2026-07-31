@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var fs = require('fs'),
   soap = require('..'),
@@ -16,14 +16,14 @@ test.service = {
         } else {
           return { price: 19.56 };
         }
-      }
-    }
-  }
+      },
+    },
+  },
 };
 
 test.sslOptions = {
   key: fs.readFileSync(__dirname + '/certs/agent2-key.pem'),
-  cert: fs.readFileSync(__dirname + '/certs/agent2-cert.pem')
+  cert: fs.readFileSync(__dirname + '/certs/agent2-cert.pem'),
 };
 
 describe('SOAP Client(SSL)', function () {
@@ -36,19 +36,21 @@ describe('SOAP Client(SSL)', function () {
   });
 
   beforeEach(function (done) {
-    test.server = https.createServer(test.sslOptions, function (req, res) {
-      res.statusCode = 404;
-      res.end();
-    }).listen(51515, function () {
-      var testSv = test.server.address();
-      test.soapServer = soap.listen(test.server, '/stockquote', test.service, test.wsdl);
-      test.baseUrl = `https://${testSv.address}:${testSv.port}`;
+    test.server = https
+      .createServer(test.sslOptions, function (req, res) {
+        res.statusCode = 404;
+        res.end();
+      })
+      .listen(51515, function () {
+        var testSv = test.server.address();
+        test.soapServer = soap.listen(test.server, '/stockquote', test.service, test.wsdl);
+        test.baseUrl = `https://${testSv.address}:${testSv.port}`;
 
-      if (testSv.address === '0.0.0.0' || testSv.address === '::') {
-        test.baseUrl = 'https://127.0.0.1:' + testSv.port;
-      }
-      done();
-    });
+        if (testSv.address === '0.0.0.0' || testSv.address === '::') {
+          test.baseUrl = 'https://127.0.0.1:' + testSv.port;
+        }
+        done();
+      });
   });
 
   afterEach(function (done) {
@@ -73,7 +75,9 @@ describe('SOAP Client(SSL)', function () {
           options.strictSSL = false;
           options.agent = new https.Agent(options);
         },
-        toXML: function () { return ''; }
+        toXML: function () {
+          return '';
+        },
       });
 
       client.GetLastTradePrice({ tickerSymbol: 'AAPL' }, function (err, result) {
@@ -87,5 +91,4 @@ describe('SOAP Client(SSL)', function () {
       });
     });
   });
-
 });
