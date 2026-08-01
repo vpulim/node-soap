@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as https from 'https';
-import * as _ from 'lodash';
 import { ISecurity } from '../types';
+import { merge } from '../utils';
 
 /**
  * activates SSL for an already existing client using a PFX cert
@@ -38,7 +38,7 @@ export class ClientSSLSecurityPFX implements ISecurity {
       }
     }
     this.defaults = {};
-    _.merge(this.defaults, defaults);
+    merge(this.defaults, defaults);
   }
 
   public toXML(): string {
@@ -50,7 +50,7 @@ export class ClientSSLSecurityPFX implements ISecurity {
     if (this.passphrase) {
       options.passphrase = this.passphrase;
     }
-    _.merge(options, this.defaults);
+    merge(options, this.defaults);
     options.httpsAgent = new https.Agent(options);
   }
 }

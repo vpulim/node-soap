@@ -1,7 +1,11 @@
 'use strict';
 
+var soap = require('../..');
+
 var fs = require('fs'),
   join = require('path').join;
+
+var assert = require('assert');
 
 describe('WSSecurityCert', function () {
   var WSSecurityCert = require('../../').WSSecurityCert;
@@ -324,5 +328,40 @@ describe('WSSecurityCert', function () {
     xml.should.containEql('ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3"/>');
     xml.should.containEql(instance.publicP12PEM);
     xml.should.containEql(instance.signer.getSignatureXml());
+  });
+
+  it('should produce valid XML with WSSecurityCert when no SOAP headers are added', async function () {
+    const baseUrl = 'http://localhost:80';
+    const client = await soap.createClientAsync(__dirname + '/../wsdl/default_namespace.wsdl', {}, baseUrl);
+
+    const security = new soap.WSSecurityCert(key, cert, '', {
+      hasTimeStamp: true,
+      signatureTransformations: ['http://www.w3.org/2001/10/xml-exc-c14n#'],
+    });
+
+    client.setSecurity(security);
+
+    let requestXml;
+    client.on('request', function (xml) {
+      requestXml = xml;
+    });
+
+    client.MyOperation({}, function () {});
+
+    assert.ok(requestXml, 'request XML should have been captured');
+    assert.ok(requestXml.indexOf('<soap:Header>') !== -1, 'XML must contain <soap:Header>');
+    assert.ok(requestXml.indexOf('</soap:Header>') !== -1, 'XML must contain </soap:Header>');
+    assert.ok(requestXml.indexOf('<wsse:Security') !== -1, 'XML must contain <wsse:Security');
+
+    const headerStart = requestXml.indexOf('<soap:Header>');
+    const headerEnd = requestXml.indexOf('</soap:Header>');
+    const securityStart = requestXml.indexOf('<wsse:Security');
+    assert.ok(securityStart > headerStart, 'wsse:Security must appear after <soap:Header>');
+    assert.ok(securityStart < headerEnd, 'wsse:Security must appear before </soap:Header>');
+
+    assert.ok(requestXml.endsWith('</soap:Envelope>'), 'XML must end with </soap:Envelope>');
+
+    const envelopeCloseIdx = requestXml.indexOf('</soap:Envelope>');
+    assert.strictEqual(envelopeCloseIdx + '</soap:Envelope>'.length, requestXml.length, 'No content should appear after </soap:Envelope>');
   });
 });

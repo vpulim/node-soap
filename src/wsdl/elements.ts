@@ -1,8 +1,7 @@
 import { ok as assert } from 'assert';
 import debugBuilder from 'debug';
-import * as _ from 'lodash';
 import { IWsdlBaseOptions } from '../types';
-import { splitQName, TNS_PREFIX } from '../utils';
+import { defaults, defaultsDeep, merge, pickBy, splitQName, TNS_PREFIX } from '../utils';
 
 const debug = debugBuilder('node-soap');
 
@@ -150,7 +149,7 @@ export class Element {
       }
       const parent = stack[stack.length - 2];
       if (this !== stack[0]) {
-        _.defaultsDeep(stack[0].xmlns, this.xmlns);
+        defaultsDeep(stack[0].xmlns, this.xmlns);
         // delete this.xmlns;
         parent.children.push(this);
         parent.addChild(this);
@@ -421,9 +420,9 @@ export class RestrictionElement extends Element {
       if (typeElement) {
         const baseDescription = typeElement.description(definitions, schema.xmlns);
         if (baseDescription[AttributeElement.Symbol]) {
-          _.defaults($attributes, baseDescription[AttributeElement.Symbol]);
+          defaults($attributes, baseDescription[AttributeElement.Symbol]);
         }
-        desc = _.defaults(desc, baseDescription);
+        desc = defaults(desc, baseDescription);
       }
       return desc;
     }
@@ -461,7 +460,7 @@ export class ExtensionElement extends Element {
         const typeElement = schema && (schema.complexTypes[typeName] || schema.types[typeName] || schema.elements[typeName]);
         if (typeElement) {
           const base = typeElement.description(definitions, schema.xmlns);
-          desc = typeof base === 'string' ? base : _.defaults(base, desc);
+          desc = typeof base === 'string' ? base : defaults(base, desc);
         }
       }
     }
@@ -800,15 +799,15 @@ export class SchemaElement extends Element {
   public merge(source: SchemaElement) {
     assert(source instanceof SchemaElement);
 
-    _.merge(this.complexTypes, source.complexTypes);
-    _.merge(this.types, source.types);
-    _.merge(this.elements, source.elements);
-    _.merge(this.xmlns, source.xmlns);
+    merge(this.complexTypes, source.complexTypes);
+    merge(this.types, source.types);
+    merge(this.elements, source.elements);
+    merge(this.xmlns, source.xmlns);
 
     // Merge attributes from source without overwriting our's
-    _.merge(
+    merge(
       this,
-      _.pickBy(source, (value, key) => {
+      pickBy(source, (value, key) => {
         return key.startsWith('$') && !Object.hasOwnProperty.call(this, key);
       }),
     );
@@ -1110,7 +1109,7 @@ export class DefinitionsElement extends Element {
   public addChild(child) {
     if (child instanceof TypesElement) {
       // Merge types.schemas into definitions.schemas
-      _.merge(this.schemas, child.schemas);
+      merge(this.schemas, child.schemas);
     } else if (child instanceof MessageElement) {
       this.messages[child.$name] = child;
     } else if (child.name === 'import') {

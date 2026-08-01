@@ -5,18 +5,19 @@
 
 import { EventEmitter } from 'events';
 import * as http from 'http';
-import * as url from 'url';
-import { IOneWayOptions, IServerOptions, IServices, ISoapFault, ISoapServiceMethod } from './types';
+import { IOneWayOptions, IServerOptions, IServerlessRequest, IServerlessResponse, IServices, ISoapFault, ISoapServiceMethod } from './types';
 import { WSDL } from './wsdl';
 import { BindingElement, IPort } from './wsdl/elements';
 import zlib from 'zlib';
 
 interface IExpressApp {
+  address?: () => { address: string; port: number; family: string } | string;
   route;
   use;
 }
 
 export type ServerType = http.Server | IExpressApp;
+
 type Request = http.IncomingMessage & { body?: any };
 type Response = http.ServerResponse;
 
@@ -35,16 +36,46 @@ function getDateString(d) {
   return d.getUTCFullYear() + '-' + pad(d.getUTCMonth() + 1) + '-' + pad(d.getUTCDate()) + 'T' + pad(d.getUTCHours()) + ':' + pad(d.getUTCMinutes()) + ':' + pad(d.getUTCSeconds()) + 'Z';
 }
 
+function getServerBaseUrl(server: ServerType): string {
+  if (!server) {
+    return `http://localhost:8080`;
+  }
+
+  if (typeof server.address !== 'function') {
+    return `http://${server.address}`;
+  }
+
+  const address = server.address();
+
+  if (address === null) {
+    return `http://localhost:8080`;
+  }
+
+  if (typeof address === 'string') {
+    return `http://${address}`;
+  }
+
+  if (address.family.toLowerCase() === 'ipv6') {
+    return `http://localhost:${address.port}`;
+  }
+
+  return `http://${address.address}:${address.port}`;
+}
+
 //eslint-disable-next-line  @typescript-eslint/no-unsafe-declaration-merging
 export interface Server {
   emit(event: 'request', request: any, methodName: string): boolean;
+
   emit(event: 'headers', headers: any, methodName: string): boolean;
+
   emit(event: 'response', headers: any, methodName: string): boolean;
 
   /** Emitted for every received messages. */
   on(event: 'request', listener: (request: any, methodName: string) => void): this;
+
   /** Emitted when the SOAP Headers are not empty. */
   on(event: 'headers', listener: (headers: any, methodName: string) => void): this;
+
   /** Emitted before sending SOAP response. */
   on(event: 'response', listener: (response: any, methodName: string) => void): this;
 }
@@ -74,8 +105,9 @@ export class Server extends EventEmitter {
   private enableChunkedEncoding: boolean;
   private soapHeaders: any[];
   private callback?: (err: any, res: any) => void;
+  private baseUrl: string;
 
-  constructor(server: ServerType, path: string | RegExp, services: IServices, wsdl: WSDL, options?: IServerOptions) {
+  constructor(server: ServerType | null, path: string | RegExp, services: IServices, wsdl: WSDL, options?: IServerOptions) {
     super();
 
     options = options || {
@@ -90,12 +122,18 @@ export class Server extends EventEmitter {
     this.onewayOptions = (options && options.oneWay) || {};
     this.enableChunkedEncoding = options.enableChunkedEncoding === undefined ? true : !!options.enableChunkedEncoding;
     this.callback = options.callback ? options.callback : () => {};
+    this.baseUrl = getServerBaseUrl(server);
     if (typeof path === 'string' && path[path.length - 1] !== '/') {
       path += '/';
     } else if (path instanceof RegExp && path.source[path.source.length - 1] !== '/') {
       path = new RegExp(path.source + '(?:\\/|)');
     }
     wsdl.onReady((err) => {
+      if (!server) {
+        this.callback(err, this);
+        return;
+      }
+
       if (isExpress(server)) {
         // handle only the required URL path for express server
         server.route(path).all((req, res) => {
@@ -118,7 +156,7 @@ export class Server extends EventEmitter {
               return;
             }
           }
-          let reqPath = url.parse(req.url).pathname;
+          let reqPath = new URL(req.url, this.baseUrl).pathname;
           if (reqPath[reqPath.length - 1] !== '/') {
             reqPath += '/';
           }
@@ -159,6 +197,57 @@ export class Server extends EventEmitter {
 
   public clearSoapHeaders(): void {
     this.soapHeaders = null;
+  }
+
+  public processRequest(xml: string, reqOptions: IServerlessRequest = {}): Promise<IServerlessResponse> {
+    const request = this._createServerlessRequest(reqOptions);
+    const responseState: IServerlessResponse = {
+      body: '',
+      statusCode: 200,
+      headers: {},
+    };
+
+    return new Promise((resolve) => {
+      const response = {
+        statusCode: 200,
+        setHeader: (name: string, value: string) => {
+          responseState.headers[name.toLowerCase()] = value;
+        },
+        write: (chunk) => {
+          if (typeof chunk !== 'undefined') {
+            responseState.body += Buffer.isBuffer(chunk) ? chunk.toString() : String(chunk);
+          }
+          return true;
+        },
+        end: (chunk?) => {
+          if (typeof chunk !== 'undefined') {
+            response.write(chunk);
+          }
+          responseState.statusCode = response.statusCode || 200;
+          resolve(responseState);
+        },
+      } as unknown as Response;
+
+      if (typeof request.headers['content-type'] !== 'undefined') {
+        response.setHeader('Content-Type', request.headers['content-type'] as string);
+      } else {
+        response.setHeader('Content-Type', 'application/xml');
+      }
+
+      this._processRequestXml(request, response, xml);
+    });
+  }
+
+  private _createServerlessRequest(reqOptions: IServerlessRequest = {}): Request {
+    const requestPath = typeof this.path === 'string' ? this.path : '/';
+    return {
+      method: reqOptions.method || 'POST',
+      headers: reqOptions.headers || {},
+      url: reqOptions.url || requestPath,
+      connection: reqOptions.connection || {
+        remoteAddress: undefined,
+      },
+    } as Request;
   }
 
   private _processSoapHeader(soapHeader, name, namespace, xmlns) {
@@ -225,7 +314,7 @@ export class Server extends EventEmitter {
   }
 
   private _requestListener(req: Request, res: Response) {
-    const reqParse = url.parse(req.url);
+    const reqParse = new URL(req.url, this.baseUrl);
     const reqQuery = reqParse.search;
 
     if (typeof this.log === 'function') {
@@ -283,9 +372,9 @@ export class Server extends EventEmitter {
   }
 
   private _process(input, req: Request, res: Response, cb: (result: any, statusCode?: number) => any) {
-    const pathname = url.parse(req.url).pathname.replace(/\/$/, '');
+    const pathname = new URL(req.url, this.baseUrl).pathname.replace(/\/$/, '');
     const obj = this.wsdl.xmlToObject(input);
-    const body = obj.Body;
+    const body = obj.Body ? obj.Body : obj;
     const headers = obj.Header;
     let binding: BindingElement;
     let methodName: string;
@@ -327,7 +416,7 @@ export class Server extends EventEmitter {
           for (name in ports) {
             portName = name;
             const port = ports[portName];
-            const portPathname = url.parse(port.location).pathname.replace(/\/$/, '');
+            const portPathname = new URL(port.location, 'http://localhost').pathname.replace(/\/$/, '');
 
             if (typeof this.log === 'function') {
               this.log('info', 'Trying ' + portName + ' from path ' + portPathname, req);
@@ -353,9 +442,9 @@ export class Server extends EventEmitter {
       try {
         const soapAction = this._getSoapAction(req);
         const messageElemName = Object.keys(body)[0] === 'attributes' ? Object.keys(body)[1] : Object.keys(body)[0];
-        const pair = binding.topElements[messageElemName];
+        const pair = binding.topElements[messageElemName] ? binding.topElements[messageElemName] : binding.topElements[soapAction];
         if (soapAction) {
-          methodName = this._getMethodNameBySoapAction(binding, soapAction);
+          methodName = this._getMethodNameBySoapActionSuffix(binding, soapAction);
         } else {
           methodName = pair ? pair.methodName : messageElemName;
         }
@@ -491,12 +580,27 @@ export class Server extends EventEmitter {
     }
   }
 
-  private _getMethodNameBySoapAction(binding: BindingElement, soapAction: string) {
+  private _getMethodNameBySoapActionSuffix(binding: BindingElement, soapAction: string): string | null {
+    const methodName = this._getMethodNameBySoapAction(binding, soapAction);
+
+    if (methodName) {
+      return methodName;
+    }
+    for (const methodName in binding.methods) {
+      const parts = binding.methods[methodName].soapAction.split('/');
+      if (parts.reverse()[0] === soapAction) {
+        return methodName;
+      }
+    }
+  }
+
+  private _getMethodNameBySoapAction(binding: BindingElement, soapAction: string): string | null {
     for (const methodName in binding.methods) {
       if (binding.methods[methodName].soapAction === soapAction) {
         return methodName;
       }
     }
+    return null;
   }
 
   private _executeMethod(options: IExecuteMethodOptions, req: Request, res: Response, callback: (result: any, statusCode?: number) => any, includeTimestamp?) {

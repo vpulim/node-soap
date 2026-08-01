@@ -1,5 +1,5 @@
-import * as _ from 'lodash';
 import { IHeaders, ISecurity } from '../types';
+import { merge } from '../utils';
 
 export class NTLMSecurity implements ISecurity {
   private defaults;
@@ -29,6 +29,6 @@ export class NTLMSecurity implements ISecurity {
   }
 
   public addOptions(options: any): void {
-    _.merge(options, this.defaults);
+    merge(options, this.defaults);
   }
 }

@@ -12,8 +12,12 @@ updates:
     ignore:
       - dependency-name: "@types/node"
       - dependency-name: "typedoc"
-    cooldown:
-      default-days: 14
+    # cooldown:
+    #   default-days: 14
+    #   semver-major-days: 14
+    #   semver-minor-days: 14
+    #   semver-patch-day: 5
+    open-pull-requests-limit: 0 # only security updates
 
   - package-ecosystem: "github-actions" # See documentation for possible values
     directory: "/" # Location of package manifests

@@ -9,8 +9,9 @@
     "sourceMap": true,
     "declaration": true,
     "stripInternal": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "types": ["node"]
   },
-  "include": ["src"],
+  "include": ["src", "./eslint.config.mjs"],
   "exclude": ["node_modules"]
 }

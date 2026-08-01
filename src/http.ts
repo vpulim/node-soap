@@ -8,8 +8,7 @@ import { NtlmClient } from 'axios-ntlm';
 import { randomUUID } from 'crypto';
 import debugBuilder from 'debug';
 import { ReadStream } from 'fs';
-import * as url from 'url';
-import MIMEType from 'whatwg-mimetype';
+import { MIMEType } from 'whatwg-mimetype';
 import { gzipSync } from 'zlib';
 import { IExOptions, IHeaders, IHttpClient, IOptions } from './types';
 import { parseMTOMResp } from './utils';
@@ -22,6 +21,44 @@ export interface IAttachment {
   contentId: string;
   mimetype: string;
   body: NodeJS.ReadableStream;
+}
+
+// The URL API normalizes away default ports (:80 on http, :443 on https),
+// so parse the port from the raw URL string to preserve ports.
+function getPortFromUrl(url: string): string {
+  // Capture the authority section (everything between :// and the first /?#)
+  const authorityMatch = /^[a-z][a-z0-9+.-]*:\/\/([^/?#]+)/i.exec(url);
+  if (!authorityMatch) {
+    return '';
+  }
+
+  const hostPort = authorityMatch[1];
+
+  // IPv6 address: [::1] or [::1]:port
+  if (hostPort.startsWith('[')) {
+    const bracketEnd = hostPort.indexOf(']');
+    if (bracketEnd !== -1 && hostPort[bracketEnd + 1] === ':') {
+      const port = hostPort.slice(bracketEnd + 2);
+      return /^\d+$/.test(port) ? port : '';
+    }
+    return '';
+  }
+
+  // IPv4 / hostname: host or host:port
+  const colonIndex = hostPort.lastIndexOf(':');
+  if (colonIndex === -1) {
+    return '';
+  }
+  const port = hostPort.slice(colonIndex + 1);
+  return /^\d+$/.test(port) ? port : '';
+}
+
+// Add brackets to IPv6 addresses
+function bracketIPv6(hostname: string): string {
+  if (hostname.startsWith('[') || hostname.indexOf(':') === -1) {
+    return hostname;
+  }
+  return `[${hostname}]`;
 }
 
 /**
@@ -50,18 +87,18 @@ export class HttpClient implements IHttpClient {
    * @returns {Object} The http request object for the `request` module
    */
   public buildRequest(rurl: string, data: any, exheaders?: IHeaders, exoptions: IExOptions = {}): any {
-    const curl = url.parse(rurl);
+    const curl = new URL(rurl);
     const method = data ? 'POST' : 'GET';
 
-    const host = curl.hostname;
-    const port = parseInt(curl.port, 10);
+    const port = getPortFromUrl(rurl);
+    const host = port ? `${bracketIPv6(curl.hostname)}:${port}` : curl.host || curl.hostname;
     const headers: IHeaders = {
       'User-Agent': 'node-soap/' + version,
       'Accept': 'text/html,application/xhtml+xml,application/xml,text/xml;q=0.9,*/*;q=0.8',
       'Accept-Encoding': 'none',
       'Accept-Charset': 'utf-8',
       ...(exoptions.forever && { Connection: 'keep-alive' }),
-      'Host': host + (isNaN(port) ? '' : ':' + port),
+      'Host': host,
     };
     const mergeOptions = ['headers'];
 
@@ -180,12 +217,18 @@ export class HttpClient implements IHttpClient {
     const options = this.buildRequest(rurl, data, exheaders, exoptions);
     let req: req.AxiosPromise;
     if (exoptions !== undefined && exoptions.ntlm) {
-      const ntlmReq = NtlmClient({
-        username: exoptions.username,
-        password: exoptions.password,
-        workstation: exoptions.workstation || '',
-        domain: exoptions.domain || '',
-      });
+      const ntlmReq = NtlmClient(
+        {
+          username: exoptions.username,
+          password: exoptions.password,
+          workstation: exoptions.workstation || '',
+          domain: exoptions.domain || '',
+        },
+        // Change wanted in the OG PR:
+        //{ httpAgent: exoptions.httpAgent, httpsAgent: exoptions.httpsAgent },
+        // A better change per axios-ntlm API?
+        options,
+      );
       req = ntlmReq(options);
     } else {
       if (this.options.parseReponseAttachments) {
@@ -205,10 +248,12 @@ export class HttpClient implements IHttpClient {
         };
 
         if (_this.options.parseReponseAttachments) {
-          const isMultipartResp = res.headers['content-type'] && res.headers['content-type'].toLowerCase().indexOf('multipart/related') > -1;
+          const contentTypeHeader = res.headers['content-type'];
+          const contentType = typeof contentTypeHeader === 'string' ? contentTypeHeader : Array.isArray(contentTypeHeader) ? contentTypeHeader[0] : '';
+          const isMultipartResp = contentType.toLowerCase().indexOf('multipart/related') > -1;
           if (isMultipartResp) {
             let boundary;
-            const parsedContentType = MIMEType.parse(res.headers['content-type']);
+            const parsedContentType = new MIMEType(contentType);
             if (parsedContentType) {
               boundary = parsedContentType.parameters.get('boundary');
             }

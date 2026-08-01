@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:tns="http://www.example.com/datetime"
+    xmlns:ns="http://schemas.xmlsoap.org/soap/encoding/"
+    targetNamespace="http://www.example.com/datetime">
+    <wsdl:types>
+        <xs:schema targetNamespace="http://www.example.com/datetime" elementFormDefault="qualified">
+            <xs:element name="DummyRequest">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="EventName" type="xs:string" minOccurs="1" />
+                        <xs:element name="EventDateTime" type="xs:dateTime" minOccurs="1" />
+                        <xs:element name="CreatedAt" type="xs:dateTime" minOccurs="0" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="DummyResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="EventId" type="xs:string" />
+                        <xs:element name="ProcessedDateTime" type="xs:dateTime" />
+                        <xs:element name="NextScheduledDateTime" type="xs:dateTime" minOccurs="0" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="DummyRequest">
+        <wsdl:part name="DummyRequest" element="tns:DummyRequest" />
+    </wsdl:message>
+    <wsdl:message name="DummyResponse">
+        <wsdl:part name="DummyResponse" element="tns:DummyResponse" />
+    </wsdl:message>
+    <wsdl:portType name="DummyPortType">
+        <wsdl:operation name="Dummy">
+            <wsdl:input message="tns:DummyRequest" />
+            <wsdl:output message="tns:DummyResponse" />
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="DummyBinding" type="tns:DummyPortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+        <wsdl:operation name="Dummy">
+            <soap:operation soapAction="http://www.example.com/datetime#Dummy" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="DummyService">
+        <wsdl:port name="DummyPortType" binding="tns:DummyBinding">
+            <soap:address location="http://localhost:8080/datetime" />
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

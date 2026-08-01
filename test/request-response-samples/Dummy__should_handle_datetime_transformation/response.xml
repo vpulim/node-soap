@@ -1,0 +1,12 @@
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+    xmlns:tns="http://www.example.com/datetime"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <soap:Header></soap:Header>
+    <soap:Body>
+        <tns:DummyResponse>
+            <tns:EventId>EVT-2026-001</tns:EventId>
+            <tns:ProcessedDateTime>2026-01-29T12:00:45.000Z</tns:ProcessedDateTime>
+            <tns:NextScheduledDateTime>2026-03-15T09:00:00</tns:NextScheduledDateTime>
+        </tns:DummyResponse>
+    </soap:Body>
+</soap:Envelope>

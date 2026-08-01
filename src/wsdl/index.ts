@@ -8,15 +8,13 @@
 import { ok as assert } from 'assert';
 import debugBuilder from 'debug';
 import * as fs from 'fs';
-import * as _ from 'lodash';
+import { isPlainObject, mergeWith } from '../utils';
 import * as path from 'path';
 import * as sax from 'sax';
-import stripBom from 'strip-bom';
-import * as url from 'url';
 import { HttpClient } from '../http';
 import { NamespaceContext } from '../nscontext';
 import { IOptions } from '../types';
-import { findPrefix, splitQName, TNS_PREFIX, xmlEscape } from '../utils';
+import { findPrefix, splitQName, stripBom, TNS_PREFIX, xmlEscape } from '../utils';
 import * as elements from './elements';
 
 const debug = debugBuilder('node-soap');
@@ -367,7 +365,12 @@ export class WSDL {
       const topSchema = top.schema;
       const name = splitQName(nsName).name;
 
-      if (typeof cur.schema === 'string' && (cur.schema === 'string' || cur.schema.split(':')[1] === 'string')) {
+      /**
+       * When parsing a string element, we need to correctly transform `<tag></tag>`
+       * to an empty string.
+       */
+      const isStringElement = typeof cur.schema === 'string' && splitQName(cur.schema).name === 'string';
+      if (isStringElement) {
         if (typeof obj === 'object' && Object.keys(obj).length === 0) {
           obj = cur.object = this.options.preserveWhitespace ? cur.text || '' : '';
         }
@@ -381,7 +384,7 @@ export class WSDL {
         }
       }
 
-      if (_.isPlainObject(obj) && !Object.keys(obj).length) {
+      if (isPlainObject(obj) && !Object.keys(obj).length) {
         obj = null;
       }
 
@@ -747,31 +750,36 @@ export class WSDL {
 
       for (i = 0, n = obj.length; i < n; i++) {
         const item = obj[i];
-        const arrayAttr = this.processAttributes(item, nsContext);
+        const isArrayWithChoiceTagContainer = name === this.options.arrayWithChoiceTag;
+        const arrayAttr = isArrayWithChoiceTagContainer ? '' : this.processAttributes(item, nsContext);
         const correctOuterNsPrefix = nonSubNameSpace || parentNsPrefix || ns; // using the parent namespace prefix if given
 
         const body = this.objectToXML(item, name, nsPrefix, nsURI, false, null, schemaObject, nsContext);
 
-        let openingTagParts = ['<', name, arrayAttr, xmlnsAttrib];
-        if (!emptyNonSubNameSpaceForArray) {
-          openingTagParts = ['<', appendColon(correctOuterNsPrefix), name, arrayAttr, xmlnsAttrib];
-        }
-
-        if (body === '' && this.options.useEmptyTag) {
-          // Use empty (self-closing) tags if no contents
-          openingTagParts.push(' />');
-          parts.push(openingTagParts.join(''));
-        } else {
-          openingTagParts.push('>');
-          if (this.options.namespaceArrayElements || i === 0) {
-            parts.push(openingTagParts.join(''));
-          }
+        if (isArrayWithChoiceTagContainer) {
           parts.push(body);
-          if (this.options.namespaceArrayElements || i === n - 1) {
-            if (emptyNonSubNameSpaceForArray) {
-              parts.push(['</', name, '>'].join(''));
-            } else {
-              parts.push(['</', appendColon(correctOuterNsPrefix), name, '>'].join(''));
+        } else {
+          let openingTagParts = ['<', name, arrayAttr, xmlnsAttrib];
+          if (!emptyNonSubNameSpaceForArray) {
+            openingTagParts = ['<', appendColon(correctOuterNsPrefix), name, arrayAttr, xmlnsAttrib];
+          }
+
+          if (body === '' && this.options.useEmptyTag) {
+            // Use empty (self-closing) tags if no contents
+            openingTagParts.push(' />');
+            parts.push(openingTagParts.join(''));
+          } else {
+            openingTagParts.push('>');
+            if (this.options.namespaceArrayElements || i === 0) {
+              parts.push(openingTagParts.join(''));
+            }
+            parts.push(body);
+            if (this.options.namespaceArrayElements || i === n - 1) {
+              if (emptyNonSubNameSpaceForArray) {
+                parts.push(['</', name, '>'].join(''));
+              } else {
+                parts.push(['</', appendColon(correctOuterNsPrefix), name, '>'].join(''));
+              }
             }
           }
         }
@@ -936,7 +944,7 @@ export class WSDL {
                   }
                 }
 
-                value = this.objectToXML(child, name, nsPrefix, nsURI, false, null, null, nsContext);
+                value = this.objectToXML(child, name, nsPrefix, nsURI, false, null, name === this.options.arrayWithChoiceTag ? schemaObject : null, nsContext);
               }
             } else {
               value = this.objectToXML(child, name, nsPrefix, nsURI, false, null, null, nsContext);
@@ -1007,6 +1015,7 @@ export class WSDL {
           attr += ` xmlns:${v.prefix}="${v.xmlns}"`;
         }
       } else {
+        // https://github.com/vpulim/node-soap/issues/1510
         attr += ` ${k}="${xmlEscape(v)}"`;
       }
     });
@@ -1050,6 +1059,7 @@ export class WSDL {
     }
 
     let found = null;
+    //eslint-disable-next-line no-useless-assignment
     let i = 0;
     let ref;
 
@@ -1174,6 +1184,7 @@ export class WSDL {
     } else {
       this.options.namespaceArrayElements = true;
     }
+    this.options.arrayWithChoiceTag = options.arrayWithChoiceTag;
 
     // Allow any request headers to keep passing through
     this.options.wsdl_headers = options.wsdl_headers;
@@ -1225,7 +1236,15 @@ export class WSDL {
         includePath = path.resolve(path.dirname(this.uri), include.location);
       }
     } else {
-      includePath = url.resolve(this.uri || '', include.location);
+      if (/^https?:/i.test(include.location)) {
+        includePath = include.location;
+      } else {
+        try {
+          includePath = new URL(include.location, this.uri || '').toString();
+        } catch {
+          includePath = include.location;
+        }
+      }
     }
 
     const options = Object.assign({}, this.options);
@@ -1249,7 +1268,7 @@ export class WSDL {
       this._includesWsdl.push(wsdl);
 
       if (wsdl.definitions instanceof elements.DefinitionsElement) {
-        _.mergeWith(this.definitions, wsdl.definitions, (a, b) => {
+        mergeWith(this.definitions, wsdl.definitions, (a, b) => {
           return a instanceof elements.SchemaElement ? a.merge(b) : undefined;
         });
       } else {

@@ -8,11 +8,9 @@ import { AxiosResponseHeaders, RawAxiosResponseHeaders } from 'axios';
 import { randomUUID } from 'crypto';
 import debugBuilder from 'debug';
 import { EventEmitter } from 'events';
-import getStream from 'get-stream';
-import * as _ from 'lodash';
 import { HttpClient } from './http';
 import { IHeaders, IHttpClient, IMTOMAttachments, IOptions, ISecurity, SoapMethod, SoapMethodAsync } from './types';
-import { findPrefix } from './utils';
+import { findPrefix, isObject, once, streamToText } from './utils';
 import { WSDL } from './wsdl';
 import { IPort, OperationElement, ServiceElement } from './wsdl/elements';
 
@@ -307,6 +305,7 @@ export class Client extends EventEmitter {
     const envelopeSoapUrl = this.wsdl.options.envelopeSoapUrl;
     const ns: string = defs.$targetNamespace;
     let encoding = '';
+    //eslint-disable-next-line no-useless-assignment
     let message = '';
     let xml: string = null;
     let soapAction: string;
@@ -370,7 +369,7 @@ export class Client extends EventEmitter {
         if (!output || !output.$lookupTypes) {
           debug('Response element is not present. Unable to convert response xml to json.');
           //  If the response is JSON then return it as-is.
-          const json = _.isObject(body) ? body : tryJSONparse(body);
+          const json = isObject(body) ? body : tryJSONparse(body);
           if (json) {
             return callback(null, response, json, undefined, xml);
           }
@@ -407,6 +406,9 @@ export class Client extends EventEmitter {
     if (this.security && this.security.addOptions) {
       this.security.addOptions(options);
     }
+    if (this.security && typeof this.security?.toXML !== 'function') {
+      this.security.toXML = () => '';
+    }
 
     if (style === 'rpc' && (input.parts || input.name === 'element' || args === null)) {
       assert.ok(!style || style === 'rpc', 'invalid message definition for document style binding');
@@ -442,7 +444,7 @@ export class Client extends EventEmitter {
       encoding +
       this.wsdl.xmlnsInEnvelope +
       '>' +
-      (decodedHeaders || (this.security && this.security.toXML())
+      (decodedHeaders || (this.security && (this.security.toXML() || this.security.postProcess))
         ? '<' +
           envelopeKey +
           ':Header' +
@@ -505,7 +507,7 @@ export class Client extends EventEmitter {
     };
 
     if (this.streamAllowed && typeof this.httpClient.requestStream === 'function') {
-      callback = _.once(callback);
+      callback = once(callback);
       const startTime = Date.now();
       const onError = (err) => {
         this.lastResponse = null;
@@ -533,7 +535,7 @@ export class Client extends EventEmitter {
         // When the output element cannot be looked up in the wsdl,
         // play it safe and don't stream
         if (res.status !== 200 || !output || !output.$lookupTypes) {
-          getStream(res.data).then((body) => {
+          streamToText(res.data).then((body) => {
             this.lastResponse = body;
             this.lastElapsedTime = Date.now() - startTime;
             this.lastResponseHeaders = res && res.headers;
