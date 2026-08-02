@@ -47,6 +47,7 @@ This module lets you connect to web services using SOAP. It also provides a serv
     - [Options (optional)](#options-optional)
     - [Extra Headers (optional)](#extra-headers-optional)
     - [Alternative method call using callback-last pattern](#alternative-method-call-using-callback-last-pattern)
+  - [Overriding the base element](#overriding-the-base-element)
   - [Overriding the namespace prefix](#overriding-the-namespace-prefix)
   - [_lastRequest_](#lastrequest)
   - [_setEndpoint_(url)](#_setendpoint_url)
@@ -850,6 +851,49 @@ client.MyService.MyPort.MyFunction({ name: 'value' }, options, function (err, re
 client.MyService.MyPort.MyFunction({ name: 'value' }, options, extraHeaders, function (err, result) {
   // result is a javascript object
 });
+```
+
+## Overriding the base element
+
+Set `overrideBaseElement=true` in options in order to strip default
+`InputMessage` base element and assume anything that follows is the
+part of the body. To do so `node-soap` allows passing of `options`
+to `objectToDocumentXML()` API as the last parameter. See, e.g.,
+from the corresponding test:
+
+```javascript
+soap.createClient(
+  // p1
+  __dirname + '/wsdl/default_namespace.wsdl',
+  // p2 -- options
+  {
+    ignoredNamespaces: true,
+    ignoreBaseNameSpaces: true,
+  },
+  // p3 -- callback
+  function (err, client) {
+    assert.ok(client);
+    assert.ifError(err);
+
+    client.MyService.MyServicePort.MyOperation(
+      { parameter: 'dummy', marameter: 'mummy' },
+      function (err, result, resp, soap, req) {
+        // Make sure we don't find Request tags
+        assert.ok(req.indexOf('<Request>') === -1);
+        assert.ok(req.indexOf('</Request>') === -1);
+        // Make sure the in-body content looks the way we expect
+        assert.ok(req.indexOf('<soap:Body><parameter xmlns="http://www.example.com/v1">dummy</parameter><marameter xmlns="http://www.example.com/v1">mummy</marameter></soap:Body>') > 0);
+        done();
+      },
+      {
+        overrideBaseElement: true,
+      },
+      null,
+    );
+  },
+  // p4 -- endpoint
+  baseUrl,
+);
 ```
 
 ## Overriding the namespace prefix
