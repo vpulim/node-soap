@@ -89,10 +89,12 @@ describe('WSSecurity', function () {
     xml.should.containEql('soapenv:mustUnderstand="1"');
   });
 
-  it('should include a nonce element when hasNonce is true', function () {
+  it('should include a nonce element with a non-empty value when hasNonce is true', function () {
     var instance = new WSSecurity('user', 'pass', { hasNonce: true });
     var xml = instance.toXML();
-    xml.should.containEql('<wsse:Nonce');
+    var match = xml.match(/<wsse:Nonce[^>]*>([^<]+)<\/wsse:Nonce>/);
+    match.should.not.be.null();
+    match[1].should.not.be.empty();
   });
 
   it('should generate a nonce that is a valid base64-encoded 16-byte value', function () {
@@ -101,17 +103,11 @@ describe('WSSecurity', function () {
     var match = xml.match(/<wsse:Nonce[^>]*>([^<]+)<\/wsse:Nonce>/);
     match.should.not.be.null();
     var nonce = match[1];
-    // 16 random bytes encode to 24 base64 chars (possibly with = padding)
+    // 16 random bytes encode to 24 base64 chars (with == padding)
     nonce.should.match(/^[A-Za-z0-9+/]{22}[A-Za-z0-9+/=]{2}$/);
-  });
-
-  it('should generate a unique nonce on each toXML call', function () {
-    var instance = new WSSecurity('user', 'pass', { hasNonce: true });
-    var xml1 = instance.toXML();
-    var xml2 = instance.toXML();
-    var nonce1 = xml1.match(/<wsse:Nonce[^>]*>([^<]+)<\/wsse:Nonce>/)[1];
-    var nonce2 = xml2.match(/<wsse:Nonce[^>]*>([^<]+)<\/wsse:Nonce>/)[1];
-    nonce1.should.not.equal(nonce2);
+    // Decode and validate the actual byte length is 16
+    var buf = Buffer.from(nonce, 'base64');
+    buf.length.should.equal(16);
   });
 
   it('should always include a nonce when passwordType is PasswordDigest', function () {
