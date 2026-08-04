@@ -113,7 +113,9 @@ describe('WSSecurity', function () {
   it('should always include a nonce when passwordType is PasswordDigest', function () {
     var instance = new WSSecurity('user', 'pass', { passwordType: 'PasswordDigest' });
     var xml = instance.toXML();
-    xml.should.containEql('<wsse:Nonce');
+    var match = xml.match(/<wsse:Nonce[^>]*>([^<]+)<\/wsse:Nonce>/);
+    match.should.not.be.null();
+    match[1].should.not.be.empty();
   });
 
   it('should add appendElement when provided', function () {
