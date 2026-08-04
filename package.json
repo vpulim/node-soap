@@ -33,7 +33,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "toc": "./node_modules/.bin/doctoc Readme.md --github --maxlevel 3",
-    "cover": "OPENSSL_ENABLE_SHA1_SIGNATURES=1 TZ=UTC nyc --extension=.ts --reporter=lcov --reporter=html --reporter=text --reporter=json-summary mocha --no-parallel --timeout 30000 --exit test/*-test.js test/security/*.js",
+    "cover": "TZ=UTC nyc --extension=.ts --reporter=lcov --reporter=html --reporter=text --reporter=json-summary mocha --no-parallel --timeout 30000 --exit test/*-test.js test/security/*.js",
     "postcover": "node ./scripts/update-coverage-badge.js",
     "cover:badge": "npm run cover && npm run postcover",
     "docs": "typedoc --out docs",

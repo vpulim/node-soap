@@ -275,12 +275,16 @@ describe('WSSecurityCert', function () {
   });
 
   it('should use rsa-sha1 signature method when the signatureAlgorithm option is set to WSSecurityCert', function () {
+    // See: https://github.com/vpulim/node-soap/issues/1323
+    const originalEnv = process.env.OPENSSL_ENABLE_SHA1_SIGNATURES;
+    process.env.OPENSSL_ENABLE_SHA1_SIGNATURES = 1;
     var instance = new WSSecurityCert(key, cert, '', {
       hasTimeStamp: false,
       signatureAlgorithm: 'http://www.w3.org/2000/09/xmldsig#rsa-sha1',
     });
     var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body></soap:Body></soap:Envelope>', 'soap');
     xml.should.containEql('SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"');
+    process.env.OPENSSL_ENABLE_SHA1_SIGNATURES = originalEnv;
   });
 
   it('should use rsa-sha512 signature method when the signatureAlgorithm option is set to WSSecurityCert', function () {
