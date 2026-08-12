@@ -382,14 +382,7 @@ export class SimpleTypeElement extends Element {
 }
 
 export class RestrictionElement extends Element {
-  public readonly allowedChildren = buildAllowedChildren([
-    'all',
-    'choice',
-    'enumeration',
-    'group',
-    'sequence',
-    'attribute',
-  ]);
+  public readonly allowedChildren = buildAllowedChildren(['all', 'choice', 'enumeration', 'group', 'sequence', 'attribute']);
   public $base: string;
 
   public description(definitions?: DefinitionsElement, xmlns?: IXmlNs) {
@@ -445,12 +438,7 @@ export class RestrictionElement extends Element {
 }
 
 export class ExtensionElement extends Element {
-  public readonly allowedChildren = buildAllowedChildren([
-    'all',
-    'choice',
-    'group',
-    'sequence',
-  ]);
+  public readonly allowedChildren = buildAllowedChildren(['all', 'choice', 'group', 'sequence']);
   public $base: string;
 
   public description(definitions: DefinitionsElement, xmlns?: IXmlNs) {
@@ -481,13 +469,7 @@ export class ExtensionElement extends Element {
 }
 
 export class ChoiceElement extends Element {
-  public readonly allowedChildren = buildAllowedChildren([
-    'any',
-    'choice',
-    'element',
-    'group',
-    'sequence',
-  ]);
+  public readonly allowedChildren = buildAllowedChildren(['any', 'choice', 'element', 'group', 'sequence']);
   public description(definitions: DefinitionsElement, xmlns: IXmlNs) {
     const choice = {};
     for (const child of this.children) {
@@ -501,12 +483,7 @@ export class ChoiceElement extends Element {
 }
 
 export class GroupElement extends Element {
-  public readonly allowedChildren = buildAllowedChildren([
-    'annotation',
-    'all',
-    'choice',
-    'sequence',
-  ]);
+  public readonly allowedChildren = buildAllowedChildren(['annotation', 'all', 'choice', 'sequence']);
 
   public $ref?: string;
 
@@ -544,16 +521,7 @@ export class EnumerationElement extends Element {
 }
 
 export class ComplexTypeElement extends Element {
-  public readonly allowedChildren = buildAllowedChildren([
-    'all',
-    'annotation',
-    'choice',
-    'complexContent',
-    'group',
-    'sequence',
-    'simpleContent',
-    'attribute',
-  ]);
+  public readonly allowedChildren = buildAllowedChildren(['all', 'annotation', 'choice', 'complexContent', 'group', 'sequence', 'simpleContent', 'attribute']);
   public description(definitions: DefinitionsElement, xmlns: IXmlNs) {
     let ret = {};
     let isFirstChild = false;
@@ -565,12 +533,10 @@ export class ComplexTypeElement extends Element {
         continue;
       }
 
-      if (!isFirstChild && (child instanceof ChoiceElement ||
-        child instanceof SequenceElement ||
-        child instanceof GroupElement ||
-        child instanceof AllElement ||
-        child instanceof SimpleContentElement ||
-        child instanceof ComplexContentElement)) {
+      if (
+        !isFirstChild &&
+        (child instanceof ChoiceElement || child instanceof SequenceElement || child instanceof GroupElement || child instanceof AllElement || child instanceof SimpleContentElement || child instanceof ComplexContentElement)
+      ) {
         isFirstChild = true;
         ret = child.description(definitions, xmlns);
       }
@@ -610,13 +576,7 @@ export class SimpleContentElement extends Element {
 }
 
 export class SequenceElement extends Element {
-  public readonly allowedChildren = buildAllowedChildren([
-    'any',
-    'choice',
-    'element',
-    'group',
-    'sequence',
-  ]);
+  public readonly allowedChildren = buildAllowedChildren(['any', 'choice', 'element', 'group', 'sequence']);
   public description(definitions: DefinitionsElement, xmlns: IXmlNs) {
     const sequence = {};
     for (const child of this.children) {
@@ -866,14 +826,7 @@ export interface IInclude {
 }
 
 export class SchemaElement extends Element {
-  public readonly allowedChildren = buildAllowedChildren([
-    'complexType',
-    'element',
-    'group',
-    'import',
-    'include',
-    'simpleType',
-  ]);
+  public readonly allowedChildren = buildAllowedChildren(['complexType', 'element', 'group', 'import', 'include', 'simpleType']);
   public complexTypes: { [name: string]: ComplexTypeElement } = {};
   public groups: { [name: string]: GroupElement } = {};
   public types: { [name: string]: SimpleTypeElement } = {};
