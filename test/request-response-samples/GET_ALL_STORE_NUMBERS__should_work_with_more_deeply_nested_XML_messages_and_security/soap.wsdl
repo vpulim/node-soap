@@ -1,0 +1,523 @@
+<wsdl:definitions xmlns:ns0="urn:company-com:document:company:rfc:functions"
+    xmlns:p1="urn:example:SYSTEM:RETAIL:StoreData"
+    xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+    xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" name="SI_O_SYSTEM_STOREDATA"
+    targetNamespace="urn:example:SYSTEM:RETAIL:StoreData">
+    <wsdl:documentation />
+    <wsp:UsingPolicy wsdl:required="true" />
+    <wsp:Policy wsu:Id="OP_GET_ALL_STORE_NUMBERS" />
+    <wsp:Policy wsu:Id="OP_GET_DATA" />
+    <wsdl:types>
+        <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns="urn:company-com:document:company:rfc:functions"
+            targetNamespace="urn:company-com:document:company:rfc:functions">
+            <xsd:element name="Z_STORE_TEMPLATE_GET_DATA">
+                <xsd:complexType>
+                    <xsd:all>
+                        <xsd:element name="IT_STORE_NUMBERS" minOccurs="0">
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:element name="item" type="ZSTORE_S_STORE_NUMBERS"
+                                        minOccurs="0" maxOccurs="unbounded" />
+                                </xsd:sequence>
+                            </xsd:complexType>
+                        </xsd:element>
+                        <xsd:element name="IV_REQUESTER" minOccurs="0">
+                            <xsd:simpleType>
+                                <xsd:restriction base="xsd:string">
+                                    <xsd:maxLength value="10" />
+                                </xsd:restriction>
+                            </xsd:simpleType>
+                        </xsd:element>
+                    </xsd:all>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="Z_STORE_TEMPLATE_GET_ALL.Response">
+                <xsd:complexType>
+                    <xsd:all>
+                        <xsd:element name="ET_ALL_STORES" minOccurs="0">
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:element name="item" type="ZSTORE_S_STORE_NUMBERS"
+                                        minOccurs="0" maxOccurs="unbounded" />
+                                </xsd:sequence>
+                            </xsd:complexType>
+                        </xsd:element>
+                        <xsd:element name="ET_RETURN" minOccurs="0">
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:element name="item" type="BAPIRET2" minOccurs="0"
+                                        maxOccurs="unbounded" />
+                                </xsd:sequence>
+                            </xsd:complexType>
+                        </xsd:element>
+                    </xsd:all>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="Z_STORE_TEMPLATE_GET_DATA.Response">
+                <xsd:complexType>
+                    <xsd:all>
+                        <xsd:element name="ET_STORE_DATA" minOccurs="0">
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:element name="item" type="ZSTORE_S_STORE_DATA"
+                                        minOccurs="0"
+                                        maxOccurs="unbounded" />
+                                </xsd:sequence>
+                            </xsd:complexType>
+                        </xsd:element>
+                        <xsd:element name="ET_RETURN" minOccurs="0">
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:element name="item" type="BAPIRET2" minOccurs="0"
+                                        maxOccurs="unbounded" />
+                                </xsd:sequence>
+                            </xsd:complexType>
+                        </xsd:element>
+                    </xsd:all>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="Z_STORE_TEMPLATE_GET_ALL">
+                <xsd:complexType>
+                    <xsd:all>
+                        <xsd:element name="IV_REQUESTER" minOccurs="0">
+                            <xsd:simpleType>
+                                <xsd:restriction base="xsd:string">
+                                    <xsd:maxLength value="10" />
+                                </xsd:restriction>
+                            </xsd:simpleType>
+                        </xsd:element>
+                    </xsd:all>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:simpleType name="genericDate">
+                <xsd:restriction base="xsd:string">
+                    <xsd:pattern value="....-..-.." />
+                </xsd:restriction>
+            </xsd:simpleType>
+            <xsd:simpleType name="date">
+                <xsd:union xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                    xmlns="urn:company-com:document:company:rfc:functions"
+                    memberTypes="xsd:date genericDate" />
+            </xsd:simpleType>
+            <xsd:complexType name="ZSTORE_S_STORE_SD_DATA">
+                <xsd:sequence>
+                    <xsd:element name="BRAND_CODE" minOccurs="0">
+                        <xsd:simpleType>
+                            <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="4" />
+                            </xsd:restriction>
+                        </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="CUSTOMER_GROUP" minOccurs="0">
+                        <xsd:simpleType>
+                            <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="2" />
+                            </xsd:restriction>
+                        </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="STORE_TYPE" minOccurs="0">
+                        <xsd:simpleType>
+                            <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="2" />
+                            </xsd:restriction>
+                        </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="IS_INACTIVE" minOccurs="0">
+                        <xsd:simpleType>
+                            <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="1" />
+                            </xsd:restriction>
+                        </xsd:simpleType>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="ZSTORE_S_STORE_DEPARTMENT_ASSIGN">
+                <xsd:sequence>
+                    <xsd:element name="DEPARTMENT" minOccurs="0">
+                        <xsd:simpleType>
+                            <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="3" />
+                            </xsd:restriction>
+                        </xsd:simpleType>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="ZSTORE_T_STORE_SALES_DATA">
+                <xsd:sequence>
+                    <xsd:element name="item" type="ZSTORE_S_STORE_SALES_DATA" minOccurs="0"
+                        maxOccurs="unbounded" />
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="ZSTORE_T_STORE_DEPARTMENT_ASSIGN">
+                <xsd:sequence>
+                    <xsd:element name="item" type="ZSTORE_S_STORE_DEPARTMENT_ASSIGN" minOccurs="0"
+                        maxOccurs="unbounded" />
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="ZSTORE_S_STORE_PLANNING_DATA">
+                <xsd:sequence>
+                    <xsd:element name="YEAR" minOccurs="0">
+                        <xsd:simpleType>
+                            <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="4" />
+                                <xsd:pattern value="\d+" />
+                            </xsd:restriction>
+                        </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="SEASON" minOccurs="0">
+                        <xsd:simpleType>
+                            <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="1" />
+                            </xsd:restriction>
+                        </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="STORE_GROUP" minOccurs="0">
+                        <xsd:simpleType>
+                            <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="3" />
+                                <xsd:pattern value="\d+" />
+                            </xsd:restriction>
+                        </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="STORE_FLAG" minOccurs="0">
+                        <xsd:simpleType>
+                            <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="1" />
+                            </xsd:restriction>
+                        </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="COMPETITIVE_FLAG" minOccurs="0">
+                        <xsd:simpleType>
+                            <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="1" />
+                            </xsd:restriction>
+                        </xsd:simpleType>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="ZSTORE_S_STORE_NUMBERS">
+                <xsd:sequence>
+                    <xsd:element name="STORE_ID" minOccurs="0">
+                        <xsd:simpleType>
+                            <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="4" />
+                            </xsd:restriction>
+                        </xsd:simpleType>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="ZSTORE_T_STORE_PLANNING_DATA">
+                <xsd:sequence>
+                    <xsd:element name="item" type="ZSTORE_S_STORE_PLANNING_DATA" minOccurs="0"
+                        maxOccurs="unbounded" />
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="ZSTORE_S_STORE_SALES_DATA">
+                <xsd:sequence>
+                    <xsd:element name="SALES_ORG" minOccurs="0">
+                        <xsd:simpleType>
+                            <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="4" />
+                            </xsd:restriction>
+                        </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="DISTRIBUTION_CHANNEL" minOccurs="0">
+                        <xsd:simpleType>
+                            <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="2" />
+                            </xsd:restriction>
+                        </xsd:simpleType>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="BAPIRET2">
+                <xsd:sequence>
+                    <xsd:element name="TYPE" minOccurs="0">
+                        <xsd:simpleType>
+                            <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="1" />
+                            </xsd:restriction>
+                        </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="ID" minOccurs="0">
+                        <xsd:simpleType>
+                            <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="20" />
+                            </xsd:restriction>
+                        </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="NUMBER" minOccurs="0">
+                        <xsd:simpleType>
+                            <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="3" />
+                                <xsd:pattern value="\d+" />
+                            </xsd:restriction>
+                        </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="MESSAGE" minOccurs="0">
+                        <xsd:simpleType>
+                            <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="220" />
+                            </xsd:restriction>
+                        </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="LOG_NO" minOccurs="0">
+                        <xsd:simpleType>
+                            <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="20" />
+                            </xsd:restriction>
+                        </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="LOG_MSG_NO" minOccurs="0">
+                        <xsd:simpleType>
+                            <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="6" />
+                                <xsd:pattern value="\d+" />
+                            </xsd:restriction>
+                        </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="MESSAGE_V1" minOccurs="0">
+                        <xsd:simpleType>
+                            <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="50" />
+                            </xsd:restriction>
+                        </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="MESSAGE_V2" minOccurs="0">
+                        <xsd:simpleType>
+                            <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="50" />
+                            </xsd:restriction>
+                        </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="MESSAGE_V3" minOccurs="0">
+                        <xsd:simpleType>
+                            <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="50" />
+                            </xsd:restriction>
+                        </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="MESSAGE_V4" minOccurs="0">
+                        <xsd:simpleType>
+                            <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="50" />
+                            </xsd:restriction>
+                        </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="PARAMETER" minOccurs="0">
+                        <xsd:simpleType>
+                            <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="32" />
+                            </xsd:restriction>
+                        </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="ROW" type="xsd:integer" minOccurs="0" />
+                    <xsd:element name="FIELD" minOccurs="0">
+                        <xsd:simpleType>
+                            <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="30" />
+                            </xsd:restriction>
+                        </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="SYSTEM" minOccurs="0">
+                        <xsd:simpleType>
+                            <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="10" />
+                            </xsd:restriction>
+                        </xsd:simpleType>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="ZSTORE_T_STORE_SD_DATA">
+                <xsd:sequence>
+                    <xsd:element name="item" type="ZSTORE_S_STORE_SD_DATA" minOccurs="0"
+                        maxOccurs="unbounded" />
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="ZSTORE_S_STORE_DATA">
+                <xsd:sequence>
+                    <xsd:element name="STORE_ID" minOccurs="0">
+                        <xsd:simpleType>
+                            <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="4" />
+                            </xsd:restriction>
+                        </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="COMPANY_CODE" minOccurs="0">
+                        <xsd:simpleType>
+                            <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="4" />
+                            </xsd:restriction>
+                        </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="STORE_CUSTOMER_ID" minOccurs="0">
+                        <xsd:simpleType>
+                            <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="8" />
+                            </xsd:restriction>
+                        </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="NAME1" minOccurs="0">
+                        <xsd:simpleType>
+                            <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="30" />
+                            </xsd:restriction>
+                        </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="POSTAL_CODE" minOccurs="0">
+                        <xsd:simpleType>
+                            <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="10" />
+                            </xsd:restriction>
+                        </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="CITY" minOccurs="0">
+                        <xsd:simpleType>
+                            <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="25" />
+                            </xsd:restriction>
+                        </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="STREET" minOccurs="0">
+                        <xsd:simpleType>
+                            <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="30" />
+                            </xsd:restriction>
+                        </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="PHONE_NUMBER" minOccurs="0">
+                        <xsd:simpleType>
+                            <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="30" />
+                            </xsd:restriction>
+                        </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="OPENING_DATE" type="date" minOccurs="0" />
+                    <xsd:element name="LOCATION_CODE" minOccurs="0">
+                        <xsd:simpleType>
+                            <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="4" />
+                            </xsd:restriction>
+                        </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="CLOSING_DATE" type="date" minOccurs="0" />
+                    <xsd:element name="RENOVATION_DATE" type="date" minOccurs="0" />
+                    <xsd:element name="COUNTRY_CODE" minOccurs="0">
+                        <xsd:simpleType>
+                            <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="2" />
+                            </xsd:restriction>
+                        </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="PURCHASING_ORG" minOccurs="0">
+                        <xsd:simpleType>
+                            <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="4" />
+                            </xsd:restriction>
+                        </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="PURCHASING_GROUP" minOccurs="0">
+                        <xsd:simpleType>
+                            <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="4" />
+                            </xsd:restriction>
+                        </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="POS_SYSTEM" minOccurs="0">
+                        <xsd:simpleType>
+                            <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="5" />
+                            </xsd:restriction>
+                        </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="COUNTRY" minOccurs="0">
+                        <xsd:simpleType>
+                            <xsd:restriction base="xsd:string">
+                                <xsd:maxLength value="3" />
+                            </xsd:restriction>
+                        </xsd:simpleType>
+                    </xsd:element>
+                    <xsd:element name="DEPARTMENT_ASSIGNMENTS"
+                        type="ZSTORE_T_STORE_DEPARTMENT_ASSIGN"
+                        minOccurs="0" />
+                    <xsd:element name="PLANNING_DATA" type="ZSTORE_T_STORE_PLANNING_DATA"
+                        minOccurs="0" />
+                    <xsd:element name="SALES_AND_DISTRIBUTION_DATA" type="ZSTORE_T_STORE_SD_DATA"
+                        minOccurs="0" />
+                    <xsd:element name="SALES_DATA" type="ZSTORE_T_STORE_SALES_DATA" minOccurs="0" />
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:schema>
+    </wsdl:types>
+    <wsdl:message name="ns0.Z_STORE_TEMPLATE_GET_ALL.Input">
+        <wsdl:documentation />
+        <wsdl:part name="parameters" element="ns0:Z_STORE_TEMPLATE_GET_ALL" />
+    </wsdl:message>
+    <wsdl:message name="ns0.Z_STORE_TEMPLATE_GET_ALL.Output">
+        <wsdl:documentation />
+        <wsdl:part name="parameters" element="ns0:Z_STORE_TEMPLATE_GET_ALL.Response" />
+    </wsdl:message>
+    <wsdl:message name="ns0.Z_STORE_TEMPLATE_GET_DATA.Input">
+        <wsdl:documentation />
+        <wsdl:part name="parameters" element="ns0:Z_STORE_TEMPLATE_GET_DATA" />
+    </wsdl:message>
+    <wsdl:message name="ns0.Z_STORE_TEMPLATE_GET_DATA.Output">
+        <wsdl:documentation />
+        <wsdl:part name="parameters" element="ns0:Z_STORE_TEMPLATE_GET_DATA.Response" />
+    </wsdl:message>
+    <wsdl:portType name="SI_O_SYSTEM_STOREDATA">
+        <wsdl:documentation />
+        <wsdl:operation name="GET_ALL_STORE_NUMBERS">
+            <wsdl:documentation />
+            <wsp:Policy>
+                <wsp:PolicyReference URI="#OP_GET_ALL_STORE_NUMBERS" />
+            </wsp:Policy>
+            <wsdl:input message="p1:ns0.Z_STORE_TEMPLATE_GET_ALL.Input" />
+            <wsdl:output message="p1:ns0.Z_STORE_TEMPLATE_GET_ALL.Output" />
+        </wsdl:operation>
+        <wsdl:operation name="GET_DATA">
+            <wsdl:documentation />
+            <wsp:Policy>
+                <wsp:PolicyReference URI="#OP_GET_DATA" />
+            </wsp:Policy>
+            <wsdl:input message="p1:ns0.Z_STORE_TEMPLATE_GET_DATA.Input" />
+            <wsdl:output message="p1:ns0.Z_STORE_TEMPLATE_GET_DATA.Output" />
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="SI_O_SYSTEM_STOREDATABinding" type="p1:SI_O_SYSTEM_STOREDATA">
+        <soap:binding xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" style="document"
+            transport="http://schemas.xmlsoap.org/soap/http" />
+        <wsdl:operation name="GET_ALL_STORE_NUMBERS">
+            <soap:operation xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                soapAction="http://example.com/xi/WebService/soap1.1" />
+            <wsdl:input>
+                <soap:body xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GET_DATA">
+            <soap:operation xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                soapAction="http://example.com/xi/WebService/soap1.1" />
+            <wsdl:input>
+                <soap:body xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="SI_O_SYSTEM_STOREDATAService">
+        <wsdl:port name="HTTP_Port" binding="p1:SI_O_SYSTEM_STOREDATABinding">
+            <soap:address xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                location="http://example-server.company.com:8080/SOAPAdapter/MessageServlet?senderParty=&amp;senderService=INTEGRATION_ENGINE&amp;receiverParty=&amp;receiverService=&amp;interface=SI_O_SYSTEM_STOREDATA&amp;interfaceNamespace=urn%3Aexample%3ASYSTEM%3ARETAIL%3AStoreData" />
+        </wsdl:port>
+        <wsdl:port name="HTTPS_Port" binding="p1:SI_O_SYSTEM_STOREDATABinding">
+            <soap:address xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                location="https://example-server.company.com:8443/SOAPAdapter/MessageServlet?senderParty=&amp;senderService=INTEGRATION_ENGINE&amp;receiverParty=&amp;receiverService=&amp;interface=SI_O_SYSTEM_STOREDATA&amp;interfaceNamespace=urn%3Aexample%3ASYSTEM%3ARETAIL%3AStoreData" />
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

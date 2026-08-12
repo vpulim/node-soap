@@ -1,31 +1,32 @@
 {
-  "readResponse":{
-    "status":{
-      "attributes":{
-        "isSuccess":"true"
+  "readResponse": {
+    "status": {
+      "attributes": {
+        "isSuccess": "true"
       }
-    },"record":{
-      "attributes":{
-        "internalId":"42",
-        "externalId":"Alex Dniprovskyy",
-        "xsi:type":"listRel:Contact"
+    },
+    "record": {
+      "attributes": {
+        "internalId": "42",
+        "externalId": "Alex Dniprovskyy",
+        "xsi:type": "listRel:Contact"
       },
-      "customForm":{
-        "attributes":{
-          "internalId":"-40"
+      "customForm": {
+        "attributes": {
+          "internalId": "-40"
         },
-        "name":"Standard Contact Form"
+        "name": "Standard Contact Form"
       },
-      "entityId":"Allister Sullivan",
-      "company":{
-        "attributes":{
-          "internalId":"43"
+      "entityId": "Allister Sullivan",
+      "company": {
+        "attributes": {
+          "internalId": "43"
         },
-        "name":"Sullivan Distributors, Inc."
+        "name": "Sullivan Distributors, Inc."
       },
-      "salutation":"Mr.",
-      "firstName":"Allister",
-      "lastName":"Sullivan"
+      "salutation": "Mr.",
+      "firstName": "Allister",
+      "lastName": "Sullivan"
     }
   }
 }

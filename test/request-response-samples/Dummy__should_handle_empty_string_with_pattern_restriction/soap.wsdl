@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:tns="http://www.Dummy.com"
+    targetNamespace="http://www.Dummy.com">
+
+  <wsdl:types>
+    <xs:schema targetNamespace="http://www.Dummy.com" elementFormDefault="qualified">
+      <xs:complexType name="ComplexType" abstract="false">
+        <xs:sequence>
+          <xs:element name="string_simple" minOccurs="1" maxOccurs="1">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element name="string_pattern" minOccurs="1" maxOccurs="1">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:pattern value="[a-zA-Z0-9_ \-\+/\\\|\*=&lt;&gt;,.;:?!'`&quot;~@#$%^&amp;\(\)\[\]\{\}\r\n]{0,255}"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element name="string_simple_list" minOccurs="0" maxOccurs="25">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element name="string_pattern_list" minOccurs="0" maxOccurs="25">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:pattern value="[a-zA-Z0-9_ \-\+/\\\|\*=&lt;&gt;,.;:?!'`&quot;~@#$%^&amp;\(\)\[\]\{\}\r\n]{0,255}"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+
+      <xs:element name="DummyRequest">
+        <xs:complexType>
+           <xs:sequence/>
+        </xs:complexType>
+      </xs:element>
+
+      <xs:element name="DummyResponse">
+         <xs:complexType>
+            <xs:sequence>
+                <xs:element name="foo" type="tns:ComplexType"/>
+            </xs:sequence>
+         </xs:complexType>
+      </xs:element>
+    </xs:schema>
+  </wsdl:types>
+
+  <wsdl:message name="DummyRequest">
+    <wsdl:part name="parameters" element="tns:DummyRequest"/>
+  </wsdl:message>
+  <wsdl:message name="DummyResponse">
+    <wsdl:part name="parameters" element="tns:DummyResponse"/>
+  </wsdl:message>
+
+  <wsdl:portType name="DummyPortType">
+    <wsdl:operation name="Dummy">
+      <wsdl:input message="tns:DummyRequest"/>
+      <wsdl:output message="tns:DummyResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+
+  <wsdl:binding name="DummyBinding" type="tns:DummyPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="Dummy">
+      <soap:operation soapAction="Dummy"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+
+  <wsdl:service name="DummyService">
+    <wsdl:port name="DummyPort" binding="tns:DummyBinding">
+      <soap:address location="http://localhost:1509/test"/>
+    </wsdl:port>
+  </wsdl:service>
+
+</wsdl:definitions>

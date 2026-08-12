@@ -1,16 +1,16 @@
 {
-  "writeResponse":{
-    "status":{
-      "attributes":{
-        "isSuccess":"true"
+  "writeResponse": {
+    "status": {
+      "attributes": {
+        "isSuccess": "true"
       }
     },
-    "baseRef":{
-      "attributes":{
-        "internalId":"42",
-        "externalId":"Alex Dniprovskyy",
-        "type":"contact",
-        "xsi:type":"platformCore:RecordRef"
+    "baseRef": {
+      "attributes": {
+        "internalId": "42",
+        "externalId": "Alex Dniprovskyy",
+        "type": "contact",
+        "xsi:type": "platformCore:RecordRef"
       }
     }
   }

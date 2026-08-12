@@ -1,0 +1,10 @@
+{
+  "Body": {
+    "getMessageRequest": {
+      "message": {
+        "sessionId": "123",
+        "markAsExport": false
+      }
+    }
+  }
+}

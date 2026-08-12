@@ -3,15 +3,12 @@
  * MIT Licensed
  */
 
-import debugBuilder from 'debug';
 import { Client } from './client';
 import * as _security from './security';
 import { Server, ServerType } from './server';
 import { IOptions, IServerOptions, IServices, IWSDLCache } from './types';
 import { wsdlCacheSingleton } from './utils';
 import { open_wsdl, WSDL } from './wsdl';
-
-const debug = debugBuilder('node-soap:soap');
 
 export const security = _security;
 export { Client } from './client';
@@ -90,18 +87,23 @@ export function createClientAsync(url: string, options?: IOptions, endpoint?: st
     options = {};
   }
   return new Promise((resolve, reject) => {
-    createClient(url, options, (err, client) => {
-      if (err) {
-        reject(err);
-      }
-      resolve(client);
-    }, endpoint);
+    createClient(
+      url,
+      options,
+      (err, client) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(client);
+      },
+      endpoint,
+    );
   });
 }
 
-export function listen(server: ServerType, path: string | RegExp, services: IServices, wsdl: string, callback?: (err: any, res: any) => void): Server;
-export function listen(server: ServerType, options: IServerOptions): Server;
-export function listen(server: ServerType, p2: string | RegExp | IServerOptions, services?: IServices, xml?: string, callback?: (err: any, res: any) => void): Server {
+export function listen(server: ServerType | null, path: string | RegExp, services: IServices, wsdl: string, callback?: (err: any, res: any) => void): Server;
+export function listen(server: ServerType | null, options: IServerOptions): Server;
+export function listen(server: ServerType | null, p2: string | RegExp | IServerOptions, services?: IServices, xml?: string, callback?: (err: any, res: any) => void): Server {
   let options: IServerOptions;
   let path: string | RegExp;
   let uri = '';
@@ -127,4 +129,8 @@ export function listen(server: ServerType, p2: string | RegExp | IServerOptions,
 
   const wsdl = new WSDL(xml || services, uri, options);
   return new Server(server, path, services, wsdl, options);
+}
+
+export async function createServerless(options: IServerOptions): Promise<Server> {
+  return listen(null, options);
 }

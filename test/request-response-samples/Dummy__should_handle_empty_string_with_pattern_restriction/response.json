@@ -1,0 +1,8 @@
+{
+  "foo": {
+    "string_simple": "",
+    "string_pattern": "",
+    "string_simple_list": [""],
+    "string_pattern_list": [""]
+  }
+}

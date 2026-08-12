@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:dto10="urn:de:brak:bea:application:dto:soap:dto10"
+    xmlns:beatns="urn:de:brak:bea:application:dto:soap:types10">
+    <soap:Body>
+        <getMessageRequest xmlns="urn:de:brak:bea:application:dto:soap:types10">
+            <Body>
+                <getMessageRequest>
+                    <message>
+                        <sessionId>123</sessionId>
+                        <markAsExport>false</markAsExport>
+                    </message>
+                </getMessageRequest>
+            </Body>
+        </getMessageRequest>
+    </soap:Body>
+</soap:Envelope>

@@ -7,16 +7,12 @@ const { default: axios } = require('axios');
 var server;
 var url;
 
-var wsdl = '<definitions name="HelloService" targetNamespace="http://www.examples.com/wsdl/HelloService.wsdl" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.examples.com/wsdl/HelloService.wsdl" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><message name="SayHelloRequest"><part name="firstName" type="xsd:string"/></message><message name="SayHelloResponse"><part name="greeting" type="xsd:string"/></message><portType name="Hello_PortType"><operation name="sayHello"><input message="tns:SayHelloRequest"/><output message="tns:SayHelloResponse"/></operation></portType><binding name="Hello_Binding" type="tns:Hello_PortType"><soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/><operation name="sayHello"><soap:operation soapAction="sayHello"/><input><soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:examples:helloservice" use="encoded"/></input><output><soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:examples:helloservice" use="encoded"/></output></operation></binding><service name="Hello_Service"><documentation>WSDL File for HelloService</documentation><port binding="tns:Hello_Binding" name="Hello_Port"><soap:address location="http://localhost:51515/SayHello/" /></port></service></definitions>';
-var requestXML = '<Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">' +
-  '<Body>' +
-  '<sayHello xmlns="http://www.examples.com/wsdl/HelloService.wsdl">' +
-  '<firstName>Bob</firstName>' +
-  '</sayHello>' +
-  '</Body>' +
-  '</Envelope>';
+var wsdl =
+  '<definitions name="HelloService" targetNamespace="http://www.examples.com/wsdl/HelloService.wsdl" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.examples.com/wsdl/HelloService.wsdl" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><message name="SayHelloRequest"><part name="firstName" type="xsd:string"/></message><message name="SayHelloResponse"><part name="greeting" type="xsd:string"/></message><portType name="Hello_PortType"><operation name="sayHello"><input message="tns:SayHelloRequest"/><output message="tns:SayHelloResponse"/></operation></portType><binding name="Hello_Binding" type="tns:Hello_PortType"><soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/><operation name="sayHello"><soap:operation soapAction="sayHello"/><input><soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:examples:helloservice" use="encoded"/></input><output><soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:examples:helloservice" use="encoded"/></output></operation></binding><service name="Hello_Service"><documentation>WSDL File for HelloService</documentation><port binding="tns:Hello_Binding" name="Hello_Port"><soap:address location="http://localhost:51515/SayHello/" /></port></service></definitions>';
+var requestXML = '<Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">' + '<Body>' + '<sayHello xmlns="http://www.examples.com/wsdl/HelloService.wsdl">' + '<firstName>Bob</firstName>' + '</sayHello>' + '</Body>' + '</Envelope>';
 
-var responseXML = '<?xml version="1.0" encoding="utf-8"?>' +
+var responseXML =
+  '<?xml version="1.0" encoding="utf-8"?>' +
   '<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"  xmlns:tns="http://www.examples.com/wsdl/HelloService.wsdl">' +
   '<soap:Body>' +
   '<tns:sayHelloResponse>' +
@@ -25,7 +21,8 @@ var responseXML = '<?xml version="1.0" encoding="utf-8"?>' +
   '</soap:Body>' +
   '</soap:Envelope>';
 
-var responseXMLChanged = '<?xml version="1.0" encoding="utf-8"?>' +
+var responseXMLChanged =
+  '<?xml version="1.0" encoding="utf-8"?>' +
   '<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"  xmlns:tns="http://www.examples.com/wsdl/HelloService.wsdl">' +
   '<soap:Body>' +
   '<tns:sayHelloResponse>' +
@@ -39,18 +36,15 @@ var service = {
     Hello_Port: {
       sayHello: function (args) {
         return {
-          greeting: args.firstName
+          greeting: args.firstName,
         };
-      }
-    }
-  }
+      },
+    },
+  },
 };
 
 describe('server response event test', function () {
-
   before(function (done) {
-
-
     server = http.createServer(function (request, response) {
       response.end('404: Not Found: ' + request.url);
     });
@@ -77,20 +71,19 @@ describe('server response event test', function () {
   });
 
   it('should replace Bob with John', function (done) {
-    axios.post(
-      url + '/SayHello',
-      requestXML,
-      {
+    axios
+      .post(url + '/SayHello', requestXML, {
         headers: {
-          SOAPAction: "sayHello",
-          "Content-Type": 'text/xml; charset="utf-8"'
+          'SOAPAction': 'sayHello',
+          'Content-Type': 'text/xml; charset="utf-8"',
         },
-      }).then(res => {
+      })
+      .then((res) => {
         assert.equal(res.data, responseXMLChanged);
         done();
-      }).catch(err => {
+      })
+      .catch((err) => {
         throw err;
       });
   });
-
 });

@@ -1,0 +1,40 @@
+{
+  "ET_STORE_DATA": {
+    "item": [
+      {
+        "STORE_ID": "1001",
+        "COMPANY_CODE": "C001",
+        "STORE_CUSTOMER_ID": "CUST1234",
+        "NAME1": "Downtown Store",
+        "POSTAL_CODE": "12345",
+        "CITY": "Metropolis",
+        "STREET": "Main St 1",
+        "PHONE_NUMBER": "+1-555-1111",
+        "OPENING_DATE": "2020-01-01",
+        "COUNTRY_CODE": "US"
+      },
+      {
+        "STORE_ID": "1002",
+        "COMPANY_CODE": "C002",
+        "STORE_CUSTOMER_ID": "CUST5678",
+        "NAME1": "Uptown Store",
+        "POSTAL_CODE": "67890",
+        "CITY": "Gotham",
+        "STREET": "High St 99",
+        "PHONE_NUMBER": "+1-555-2222",
+        "OPENING_DATE": "2021-06-15",
+        "COUNTRY_CODE": "US"
+      }
+    ]
+  },
+  "ET_RETURN": {
+    "item": [
+      {
+        "TYPE": "S",
+        "ID": "MSG001",
+        "NUMBER": "000",
+        "MESSAGE": "Data retrieved successfully"
+      }
+    ]
+  }
+}

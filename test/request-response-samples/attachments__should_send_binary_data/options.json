@@ -1,8 +1,10 @@
 {
-    "attachments": [{
-        "mimetype": "plain/txt",
-        "contentId": "file_0",
-        "name": "data.txt",
-        "body": "some data"
-      }]
+  "attachments": [
+    {
+      "mimetype": "plain/txt",
+      "contentId": "file_0",
+      "name": "data.txt",
+      "body": "some data"
+    }
+  ]
 }

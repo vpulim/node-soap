@@ -1,5 +1,5 @@
 {
-    "tns:Request": {
-        "messages:BerichtInfo": {}
-    }
+  "tns:Request": {
+    "messages:BerichtInfo": {}
+  }
 }

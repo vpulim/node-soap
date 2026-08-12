@@ -14,15 +14,14 @@ const serviceImplementation = {
     Hello_Port: {
       sayHello: function (args) {
         return {
-          greeting: args.firstName
+          greeting: args.firstName,
         };
-      }
-    }
-  }
+      },
+    },
+  },
 };
 
 describe('SOAP Client', function () {
-
   before(function (done) {
     // start test soap server (hello.wsdl)
     server = http.createServer(function (request, response) {
@@ -48,16 +47,20 @@ describe('SOAP Client', function () {
 
   it('lastElapsedTime is computed', function (done) {
     soap.createClientAsync(__dirname + '/wsdl/hello.wsdl', { endpoint: `${url}${servicePath}` }).then(function (client) {
-      assert.ok(client);
-      console.log('client created:', client.describe());
-      client.sayHelloAsync({ firstName: 'LastElapsedTime Tester' }, { time: true }).then(() => {
-        assert.ok(Object.prototype.hasOwnProperty.call(client, 'lastElapsedTime'));
-        assert.ok(typeof client.lastElapsedTime === 'number');
-        console.log('api finished in ms:', client.lastElapsedTime);
-        assert.ok(client.lastElapsedTime > 0);
-        done();
-      });
+      try {
+        assert.ok(client);
+        console.log('client created:', client.describe());
+        client.sayHelloAsync({ firstName: 'LastElapsedTime Tester' }, { time: true }).then(() => {
+          assert.ok(Object.prototype.hasOwnProperty.call(client, 'lastElapsedTime'));
+          assert.ok(typeof client.lastElapsedTime === 'number');
+          console.log('api finished in ms:', client.lastElapsedTime);
+          assert.ok(client.lastElapsedTime > 0);
+        });
+      } catch (err) {
+        done(err);
+        throw err;
+      }
+      done();
     });
   });
-
 });

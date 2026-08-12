@@ -1,0 +1,12 @@
+<soap:Envelope
+    xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+    <soap:Body>
+        <getMessageResponse
+            xmlns="urn:de:brak:bea:application:dto:soap:types10"
+            xmlns:ns2="urn:de:brak:bea:application:dto:soap:dto10">
+            <message>
+                <ns2:exported>false</ns2:exported>
+            </message>
+        </getMessageResponse>
+    </soap:Body>
+</soap:Envelope>
