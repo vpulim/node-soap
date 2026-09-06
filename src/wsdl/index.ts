@@ -791,7 +791,7 @@ export class WSDL {
           }
         }
       }
-    } else if (typeof obj === 'object') {
+    } else if (obj !== null && typeof obj === 'object') {
       let currentChildXmlnsAttrib = '';
 
       const orderedKeys = this._addSpecialKeys(obj, this._orderElementKeys(obj, schemaObject, schema));
