@@ -510,7 +510,35 @@ export class WSDL {
     }
     p.write(xml).close();
 
+    //eslint-disable-next-line @typescript-eslint/no-this-alias
+    const wsdl = this;
     return finish();
+
+    function normalizeSchemaArrayValues(value: Record<string, any> | null | undefined, schema: Record<string, any> | null | undefined): Record<string, any> | null | undefined {
+      if (!value || typeof value !== 'object' || !schema || typeof schema !== 'object' || Array.isArray(schema)) {
+        return value;
+      }
+
+      Object.keys(schema).forEach((key: string) => {
+        if (!key.endsWith('[]')) {
+          return;
+        }
+
+        const itemKey = key.slice(0, -2);
+        if (Object.prototype.hasOwnProperty.call(value, itemKey) && !Array.isArray(value[itemKey])) {
+          value[itemKey] = [value[itemKey]];
+        }
+      });
+
+      Object.keys(value).forEach((key: string) => {
+        const childSchema: Record<string, any> | undefined = schema[key] || schema[`${key}[]`];
+        if (childSchema && value[key] && typeof value[key] === 'object' && !Array.isArray(value[key])) {
+          normalizeSchemaArrayValues(value[key], childSchema);
+        }
+      });
+
+      return value;
+    }
 
     function finish() {
       // MultiRef support: merge objects instead of replacing
@@ -543,6 +571,15 @@ export class WSDL {
           error.root = root;
           throw error;
         }
+
+        Object.keys(body || {}).forEach((bodyKey) => {
+          const message = wsdl.definitions.messages[bodyKey];
+          if (message) {
+            const messageSchema = message.description(wsdl.definitions);
+            normalizeSchemaArrayValues(body[bodyKey], messageSchema[bodyKey] || messageSchema);
+          }
+        });
+
         return root.Envelope;
       }
       return root;

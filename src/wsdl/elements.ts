@@ -748,12 +748,14 @@ export class MessageElement extends Element {
     this.deleteFixedAttrs();
   }
 
-  public description(definitions: DefinitionsElement) {
+  public description(definitions: DefinitionsElement): Record<string, any> {
     if (this.element) {
       return this.element && this.element.description(definitions);
     }
-    const desc = {};
-    desc[this.$name] = this.parts;
+    const desc: Record<string, any> = {};
+    if (this.$name) {
+      desc[this.$name] = this.parts;
+    }
     return desc;
   }
 

@@ -1,0 +1,10 @@
+<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope">
+  <s:Body>
+    <GetItemsResponse xmlns="http://example.com/service/" xmlns:b="http://example.com/data/">
+      <b:Item>
+        <b:amountField>12.34</b:amountField>
+        <b:countField>5</b:countField>
+      </b:Item>
+    </GetItemsResponse>
+  </s:Body>
+</s:Envelope>
