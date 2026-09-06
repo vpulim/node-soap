@@ -351,10 +351,14 @@ export class WSDL {
         }
       }
 
-      if (topSchema && topSchema[name + '[]']) {
-        name = name + '[]';
+      const arrayName = `${originalName}[]`;
+      if (topSchema && topSchema[arrayName]) {
+        name = arrayName;
       }
-      stack.push({ name: originalName, object: obj, schema: xsiTypeSchema || (topSchema && topSchema[name]), id: attrs.id, nil: hasNilAttribute });
+      const schemaFromParent = topSchema && (topSchema[originalName] || topSchema[arrayName] || topSchema[name] || topSchema[`${name}[]`]);
+      const responseSchema = this.definitions.messages && this.definitions.messages[originalName] && this.definitions.messages[originalName].description(this.definitions);
+      const schemaName = xsiTypeSchema || schemaFromParent || (responseSchema && (responseSchema[originalName] || responseSchema[arrayName] || responseSchema[name] || responseSchema[`${name}[]`]));
+      stack.push({ name: originalName, object: obj, schema: schemaName, id: attrs.id, nil: hasNilAttribute });
     };
 
     p.onclosetag = (nsName) => {
@@ -388,7 +392,8 @@ export class WSDL {
         obj = null;
       }
 
-      if (topSchema && topSchema[name + '[]']) {
+      const arrayName = `${name}[]`;
+      if (topSchema && topSchema[arrayName]) {
         if (!topObject[name]) {
           topObject[name] = [];
         }
