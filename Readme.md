@@ -141,8 +141,8 @@ Creates a new SOAP client from a WSDL URL. Also supports a local filesystem path
   - `arrayWithChoiceTag` (_string_): Support for mixed value sequence with choice semantics instead of ordered by type one. If `arrayWithChoiceTag` option is set and sequence key matches the option value, JSON arrays of the form `{$sequence: [{a: {elem: 1}}, {b: {elem: 2}}, {a: {elem: 3}}]}` (where `$sequence` is example value for the option) are marshaled into xml as `<a><elem>1</elem></a> <b><elem>2</elem></b> <a><elem>3</elem></a>` preserving the original JSON order. By default, if option is not set, it will be marshaled as `<$sequence> <a><elem>1</elem></a> <a><elem>3</elem></a> <b><elem>2</elem></b> </$sequence>`. (**Default:** Disabled if option is not set)
   - `stream` (_boolean_): Use streams to parse the XML SOAP responses. (**Default:** `false`)
   - `returnSaxStream` (_boolean_): Return the SAX stream, transferring responsibility of parsing XML to the end user. Only valid when the _stream_ option is set to `true`. (**Default:** `false`)
-  - `parseReponseAttachments` (_boolean_): Treat response as multipart/related response with MTOM attachment. Reach attachments on the `lastResponseAttachments` property of SoapClient. (**Default:** `false`)
-  - `encoding` (_string_): Response data enconding, used with `parseReponseAttachments`. (**Default:** `utf8`)
+  - `parseResponseAttachments` (_boolean_): Treat response as multipart/related response with MTOM attachment. Reach attachments on the `lastResponseAttachments` property of SoapClient. (**Default:** `false`)
+  - `encoding` (_string_): Response data encoding, used with `parseResponseAttachments`. (**Default:** `utf8`)
   - `forceUseSchemaXmlns` (_boolean_): Force to use schema xmlns when schema prefix not found, this is needed when schema prefix is different for the same namespace in different files, for example wsdl and in imported xsd file fir complex types (**Default** `false`)
 - `callback` (_Function_):
   - `err` (_Error_ | _\<AggregateError\>_)

@@ -167,7 +167,7 @@ function generateTest(name, methodName, wsdlPath, headerJSON, securityJSON, requ
     }
 
     if (responseXML) {
-      if (wsdlOptions.parseReponseAttachments) {
+      if (wsdlOptions.parseResponseAttachments || wsdlOptions.parseReponseAttachments) {
         //all LF to CRLF
         responseXML = responseXML.replace(/\r\n/g, '\n');
         responseXML = responseXML.replace(/\n/g, '\r\n');

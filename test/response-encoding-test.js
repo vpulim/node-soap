@@ -24,7 +24,7 @@ describe('Preserve data encoding from endpoint response', function () {
     server.close();
   });
 
-  it('Should read special characters with enconding option with success', function (done) {
+  it('Should read special characters with encoding option with success', function (done) {
     var url = 'http://' + server.address().address + ':' + server.address().port;
 
     if (server.address().address === '0.0.0.0' || server.address().address === '::') {
@@ -36,7 +36,7 @@ describe('Preserve data encoding from endpoint response', function () {
       {
         endpoint: url,
         disableCache: true, // disable wsdl cache, otherwise 'mocha test/client-response-options-test.js test/response-preserve-whitespace-test.js' will fail.
-        parseReponseAttachments: true,
+        parseResponseAttachments: true,
         encoding: 'latin1',
       },
       function (err, client) {
@@ -63,7 +63,7 @@ describe('Preserve data encoding from endpoint response', function () {
     );
   });
 
-  it('Should read special characters with enconding option with error', function (done) {
+  it('Should read special characters with encoding option with error', function (done) {
     var url = 'http://' + server.address().address + ':' + server.address().port;
 
     if (server.address().address === '0.0.0.0' || server.address().address === '::') {

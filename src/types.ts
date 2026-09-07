@@ -140,8 +140,10 @@ export interface IOptions extends IWsdlBaseOptions {
   /** @internal */
   WSDL_CACHE?;
   /** handle MTOM soapAttachments in response */
+  parseResponseAttachments?: boolean;
+  /** @deprecated Use parseResponseAttachments instead */
   parseReponseAttachments?: boolean;
-  /** handle endpoint response.data enconding when using parseReponseAttachments */
+  /** handle endpoint response.data encoding when using parseResponseAttachments */
   encoding?: BufferEncoding;
 }
 

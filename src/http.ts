@@ -231,7 +231,7 @@ export class HttpClient implements IHttpClient {
       );
       req = ntlmReq(options);
     } else {
-      if (this.options.parseReponseAttachments) {
+      if (this.options.parseResponseAttachments || this.options.parseReponseAttachments) {
         options.responseType = 'arraybuffer';
         options.responseEncoding = 'binary';
       }
@@ -247,7 +247,7 @@ export class HttpClient implements IHttpClient {
           return res;
         };
 
-        if (_this.options.parseReponseAttachments) {
+        if (_this.options.parseResponseAttachments || _this.options.parseReponseAttachments) {
           const contentTypeHeader = res.headers['content-type'];
           const contentType = typeof contentTypeHeader === 'string' ? contentTypeHeader : Array.isArray(contentTypeHeader) ? contentTypeHeader[0] : '';
           const isMultipartResp = contentType.toLowerCase().indexOf('multipart/related') > -1;
