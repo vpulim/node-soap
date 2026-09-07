@@ -1430,6 +1430,47 @@ export class WSDL {
       return null;
     };
 
+    const resolveTypeNode = (qname: string, context: any = schema): any => {
+      if (!qname) return null;
+      const q = splitQName(qname);
+      let ns = null;
+
+      if (q.prefix === TNS_PREFIX) {
+        ns = schema && schema.targetNamespace;
+      } else {
+        ns =
+          (context && context.xmlns && context.xmlns[q.prefix]) ||
+          (context && context.schemaXmlns && context.schemaXmlns[q.prefix]) ||
+          (schema && schema.xmlns && schema.xmlns[q.prefix]) ||
+          (this.definitions.xmlns && this.definitions.xmlns[q.prefix]);
+      }
+
+      if (!ns || !this.definitions.schemas || !this.definitions.schemas[ns]) {
+        return null;
+      }
+      const targetSchema = this.definitions.schemas[ns];
+      return targetSchema.complexTypes[q.name] || targetSchema.types[q.name] || targetSchema.elements[q.name] || null;
+    };
+
+    const walkBaseSequence = (node: any, seen = new Set<any>()): void => {
+      if (!node || seen.has(node)) return;
+      seen.add(node);
+
+      if (node.name === 'extension' && node.$base) {
+        const baseType = resolveTypeNode(node.$base, node);
+        if (baseType) {
+          walkGroup(firstGroup(baseType));
+          walkBaseSequence(baseType, seen);
+        }
+      }
+
+      if (Array.isArray(node.children)) {
+        for (const child of node.children) {
+          walkBaseSequence(child, seen);
+        }
+      }
+    };
+
     const resolveGroupCompositor = (grp: any): any => {
       if (!grp) return null;
       if (grp.$ref) {
@@ -1511,6 +1552,7 @@ export class WSDL {
       return out;
     };
 
+    walkBaseSequence(schemaObject);
     walkGroup(firstGroup(schemaObject));
 
     this._orderIndexCache.set(schemaObject, index);
