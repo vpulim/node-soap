@@ -1750,14 +1750,14 @@ var fs = require('fs'),
               function () {
                 var sentInputContent = client.lastRequest.substring(client.lastRequest.indexOf('<Requests>') + '<Requests>'.length, client.lastRequest.indexOf('</Requests>'));
                 try {
-                assert.equal(
-                  sentInputContent,
-                  '<AddAttributeRequest><RequestIdx>1</RequestIdx><Identifier><SystemNamespace>bugrepro</SystemNamespace><ResellerId>1</ResellerId><CustomerNum>860692</CustomerNum><AccountUid>80a6e559-4d65-11e7-bd5b-0050569a12d7</AccountUid></Identifier><Attr><AttributeId>716</AttributeId><IsTemplateAttribute>0</IsTemplateAttribute><Name>domain</Name><ReadOnly>0</ReadOnly><CanBeModified>1</CanBeModified><AccountElements><AccountElement><Name>domain</Name><Value>foo</Value><ElementId>1693</ElementId><ReadOnly>0</ReadOnly><CanBeModified>1</CanBeModified></AccountElement></AccountElements></Attr><RequestedBy>blah</RequestedBy><RequestedByLogin>system</RequestedByLogin></AddAttributeRequest>',
-                );
-              } catch (e) {
-                done(e);
-                throw e;
-              }
+                  assert.equal(
+                    sentInputContent,
+                    '<AddAttributeRequest><RequestIdx>1</RequestIdx><Identifier><SystemNamespace>bugrepro</SystemNamespace><ResellerId>1</ResellerId><CustomerNum>860692</CustomerNum><AccountUid>80a6e559-4d65-11e7-bd5b-0050569a12d7</AccountUid></Identifier><Attr><AttributeId>716</AttributeId><IsTemplateAttribute>0</IsTemplateAttribute><Name>domain</Name><ReadOnly>0</ReadOnly><CanBeModified>1</CanBeModified><AccountElements><AccountElement><Name>domain</Name><Value>foo</Value><ElementId>1693</ElementId><ReadOnly>0</ReadOnly><CanBeModified>1</CanBeModified></AccountElement></AccountElements></Attr><RequestedBy>blah</RequestedBy><RequestedByLogin>system</RequestedByLogin></AddAttributeRequest>',
+                  );
+                } catch (e) {
+                  done(e);
+                  throw e;
+                }
                 done();
               },
             );
