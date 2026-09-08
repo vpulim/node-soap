@@ -1433,7 +1433,7 @@ export class WSDL {
     const resolveTypeNode = (qname: string, context: any = schema): any => {
       if (!qname) return null;
       const q = splitQName(qname);
-      let ns = null;
+      let ns;
 
       if (q.prefix === TNS_PREFIX) {
         ns = schema && schema.targetNamespace;
