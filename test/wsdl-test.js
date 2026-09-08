@@ -146,7 +146,12 @@ describe('WSDL Parser (strict)', () => {
     soap.createClient(__dirname + '/wsdl/typeref/order.wsdl', { strict: true }, function (err, client) {
       assert.ifError(err);
       client.order(reqJson, function (err, result) {
+        try{
         assert.equal(client.lastMessage, expectedMsg);
+        } catch (e) {
+          done(e);
+          throw e;
+        }
         done();
       });
     });
