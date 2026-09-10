@@ -1475,7 +1475,15 @@ export class WSDL {
       if (!grp) return null;
       if (grp.$ref) {
         const q = splitQName(grp.$ref);
-        const gdef = schema.groups && schema.groups[q.name];
+        const ns =
+          (schema && schema.xmlns && schema.xmlns[q.prefix]) ||
+          (schema && schema.schemaXmlns && schema.schemaXmlns[q.prefix]) ||
+          (this.definitions.xmlns && this.definitions.xmlns[q.prefix]) ||
+          (this.definitions.xmlns && this.definitions.xmlns[q.prefix]);
+
+        const targetSchema = ns && this.definitions.schemas && this.definitions.schemas[ns];
+        const gdef = (targetSchema && targetSchema.groups && targetSchema.groups[q.name]) || (schema && schema.groups && schema.groups[q.name]);
+
         if (gdef && Array.isArray(gdef.children)) {
           return firstGroup(gdef) || null;
         }

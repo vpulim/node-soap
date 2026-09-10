@@ -9,7 +9,7 @@ const { open_wsdl } = require('../lib/wsdl');
 const wsdlXml = fs.readFileSync(path.join(__dirname, '/wsdl/sequence_models.wsdl'), 'utf8');
 
 function posOf(xml, localName) {
-  const re = new RegExp(`<[^/][^>\\s]*:?${localName}(?=[\\s>])`);
+  const re = new RegExp(`<\\s*(?:[A-Za-z_][\\w.-]*:)?${localName}(?=[\\s>/])`);
   const m = re.exec(xml);
   return m ? m.index : -1;
 }
@@ -39,8 +39,7 @@ describe('WSDL sequence ordering (sequence / choice / group)', function () {
     return wsdl.objectToDocumentXML(wrapperName || typeName.replace(/Type$/, ''), payload, 'tns', 'urn:seq', typeName);
   }
 
-  // Skipping since there are namespace errors when group has ref
-  xit('respects <sequence> + same-namespace <group ref> order', function () {
+  it('respects <sequence> + same-namespace <group ref> order', function () {
     const xml = serialize('PersonType', { age: 7, last: 'Doe', first: 'Jane' }, 'Person');
     assertOrder(xml, ['first', 'last', 'age']);
   });
@@ -88,7 +87,7 @@ describe('WSDL sequence ordering (sequence / choice / group)', function () {
     assert.ok(z > b, 'unknown property z should come after known sequence members');
   });
 
-  it.skip('respects order when a <group ref> points to ANOTHER namespace', function () {
+  it('respects order when a <group ref> points to ANOTHER namespace', function () {
     const xml = serialize('CrossNSGroupType', { age: 11, city: 'Roma', id: '42', street: 'Via' }, 'CrossNSGroup');
     assertOrder(xml, ['id', 'street', 'city', 'age']);
   });
