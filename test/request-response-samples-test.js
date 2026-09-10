@@ -184,6 +184,10 @@ function generateTest(name, methodName, wsdlPath, headerJSON, securityJSON, requ
       wsdlPath,
       wsdlOptions,
       function (err, client) {
+        if (err) {
+          throw new Error('error creating soap client: ' + err);
+        }
+
         if (headerJSON) {
           for (var headerKey in headerJSON) {
             client.addSoapHeader(headerJSON[headerKey], headerKey);
@@ -191,6 +195,10 @@ function generateTest(name, methodName, wsdlPath, headerJSON, securityJSON, requ
         }
         if (securityJSON && securityJSON.type === 'ws') {
           client.setSecurity(new WSSecurity(securityJSON.username, securityJSON.password, securityJSON.options));
+        }
+
+        if (!client) {
+          throw new Error('soap client is not defined');
         }
 
         //throw more meaningful error

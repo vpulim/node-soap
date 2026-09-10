@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions name="ItemService"
+  targetNamespace="http://example.com/service/"
+  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+  xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:tns="http://example.com/service/">
+  <wsdl:types>
+    <xs:schema elementFormDefault="qualified"
+      targetNamespace="http://example.com/data/"
+      xmlns:xs="http://www.w3.org/2001/XMLSchema"
+      xmlns:tns="http://example.com/data/">
+      <xs:complexType name="ArrayOfItem">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Item" nillable="true" type="tns:Item"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="Item">
+        <xs:sequence>
+          <xs:element name="amountField" type="xs:decimal"/>
+          <xs:element name="countField" type="xs:int"/>
+        </xs:sequence>
+      </xs:complexType>
+    </xs:schema>
+    <xs:schema elementFormDefault="qualified"
+      targetNamespace="http://example.com/service/"
+      xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:element name="GetItemsRequest" nillable="true" type="q1:ArrayOfItem"
+        xmlns:q1="http://example.com/data/"/>
+      <xs:element name="GetItemsResponse" nillable="true" type="q2:ArrayOfItem"
+        xmlns:q2="http://example.com/data/"/>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="GetItemsRequest">
+    <wsdl:part name="GetItemsRequest" element="tns:GetItemsRequest"/>
+  </wsdl:message>
+  <wsdl:message name="GetItemsResponse">
+    <wsdl:part name="GetItemsResponse" element="tns:GetItemsResponse"/>
+  </wsdl:message>
+  <wsdl:portType name="IItemService">
+    <wsdl:operation name="GetItems">
+      <wsdl:input message="tns:GetItemsRequest"/>
+      <wsdl:output message="tns:GetItemsResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ItemBinding" type="tns:IItemService">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="GetItems">
+      <soap12:operation soapAction="http://example.com/service/IItemService/GetItems" style="document"/>
+      <wsdl:input><soap12:body use="literal"/></wsdl:input>
+      <wsdl:output><soap12:body use="literal"/></wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ItemService">
+    <wsdl:port name="ItemPort" binding="tns:ItemBinding">
+      <soap12:address location="https://example.com/service"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

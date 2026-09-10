@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tns="http://example.com/service/"
+    xmlns:q1="http://example.com/data/" xmlns:q2="http://example.com/data/">
+    <soap:Body>
+        <GetItemsRequest xmlns="http://example.com/service/">
+            <Item>
+                <amountField>12.34</amountField>
+                <countField>5</countField>
+            </Item>
+        </GetItemsRequest>
+    </soap:Body>
+</soap:Envelope>
