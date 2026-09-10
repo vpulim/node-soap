@@ -796,9 +796,12 @@ export class WSDL {
           }
         }
       }
-    } else if (typeof obj === 'object') {
+    } else if (obj !== null && typeof obj === 'object') {
       let currentChildXmlnsAttrib = '';
-      for (name in obj) {
+
+      const orderedKeys = this._addSpecialKeys(obj, this._orderElementKeys(obj, schemaObject, schema));
+
+      for (name of orderedKeys) {
         // Happens when Object.create(null) is used, it will not inherit the Object prototype
         if (!obj.hasOwnProperty) {
           obj = Object.assign({}, obj);
@@ -1395,6 +1398,227 @@ export class WSDL {
       str += ' xmlns:' + alias + '="' + ns + '"';
     }
     return str;
+  }
+
+  private _orderIndexCache: WeakMap<any, Map<string, number>> = new WeakMap();
+
+  private _getOrderIndexFor(schemaObject: any, schema: any): Map<string, number> {
+    if (!schemaObject || !schema) return new Map();
+    const cached = this._orderIndexCache.get(schemaObject);
+    if (cached) return cached;
+
+    let pos = 0;
+    const index = new Map<string, number>();
+
+    const assign = (local: string) => {
+      if (local && !index.has(local)) index.set(local, pos++);
+    };
+
+    const getLocalFromElement = (el: any): string | null => {
+      if (el.$name) return el.$name;
+      if (el.$ref) return splitQName(el.$ref).name;
+      return null;
+    };
+
+    const firstGroup = (node: any): any => {
+      if (!node || !Array.isArray(node.children)) return null;
+      for (const ch of node.children) {
+        if (ch && (ch.name === 'sequence' || ch.name === 'choice' || ch.name === 'all' || ch.name === 'group')) {
+          return ch;
+        }
+
+        if (ch && (ch.name === 'complexContent' || ch.name === 'simpleContent' || ch.name === 'extension' || ch.name === 'restriction')) {
+          const g = firstGroup(ch);
+          if (g) return g;
+        }
+      }
+      return null;
+    };
+
+    const resolveTypeNode = (qname: string, context: any = schema): any => {
+      if (!qname) return null;
+      const q = splitQName(qname);
+      let ns;
+
+      if (q.prefix === TNS_PREFIX) {
+        ns = schema && schema.targetNamespace;
+      } else {
+        ns =
+          (context && context.xmlns && context.xmlns[q.prefix]) ||
+          (context && context.schemaXmlns && context.schemaXmlns[q.prefix]) ||
+          (schema && schema.xmlns && schema.xmlns[q.prefix]) ||
+          (this.definitions.xmlns && this.definitions.xmlns[q.prefix]);
+      }
+
+      if (!ns || !this.definitions.schemas || !this.definitions.schemas[ns]) {
+        return null;
+      }
+      const targetSchema = this.definitions.schemas[ns];
+      return targetSchema.complexTypes[q.name] || targetSchema.types[q.name] || targetSchema.elements[q.name] || null;
+    };
+
+    const walkBaseSequence = (node: any, seen = new Set<any>()): void => {
+      if (!node || seen.has(node)) return;
+      seen.add(node);
+
+      if (node.name === 'extension' && node.$base) {
+        const baseType = resolveTypeNode(node.$base, node);
+        if (baseType) {
+          walkGroup(firstGroup(baseType));
+          walkBaseSequence(baseType, seen);
+        }
+      }
+
+      if (Array.isArray(node.children)) {
+        for (const child of node.children) {
+          walkBaseSequence(child, seen);
+        }
+      }
+    };
+
+    const resolveGroupCompositor = (grp: any): any => {
+      if (!grp) return null;
+      if (grp.$ref) {
+        const q = splitQName(grp.$ref);
+        const ns =
+          (schema && schema.xmlns && schema.xmlns[q.prefix]) ||
+          (schema && schema.schemaXmlns && schema.schemaXmlns[q.prefix]) ||
+          (this.definitions.xmlns && this.definitions.xmlns[q.prefix]) ||
+          (this.definitions.xmlns && this.definitions.xmlns[q.prefix]);
+
+        const targetSchema = ns && this.definitions.schemas && this.definitions.schemas[ns];
+        const gdef = (targetSchema && targetSchema.groups && targetSchema.groups[q.name]) || (schema && schema.groups && schema.groups[q.name]);
+
+        if (gdef && Array.isArray(gdef.children)) {
+          return firstGroup(gdef) || null;
+        }
+        return null;
+      }
+      return firstGroup(grp);
+    };
+
+    const walkGroup = (node: any) => {
+      if (!node) return;
+      switch (node.name) {
+        case 'sequence':
+          for (const child of node.children || []) {
+            if (!child) continue;
+            if (child.name === 'element') {
+              const nm = getLocalFromElement(child);
+              if (nm) assign(nm);
+            } else if (child.name === 'group') {
+              const comp = resolveGroupCompositor(child);
+              walkGroup(comp);
+            } else if (child.name === 'choice') {
+              const snapshotPos = pos;
+              const names = collectChoiceAlternatives(child);
+              for (const name of names) {
+                if (!index.has(name)) index.set(name, snapshotPos);
+              }
+              pos = snapshotPos + 1;
+            } else if (child.name === 'sequence') {
+              walkGroup(child);
+            }
+            // skip any's here
+          }
+          break;
+
+        case 'choice': {
+          const names = collectChoiceAlternatives(node);
+          const snapshotPos = pos;
+          for (const name of names) {
+            if (!index.has(name)) index.set(name, snapshotPos);
+          }
+          pos = snapshotPos + 1;
+          break;
+        }
+
+        case 'group':
+          walkGroup(resolveGroupCompositor(node));
+          break;
+
+        case 'all':
+        default:
+          break;
+      }
+    };
+
+    const collectChoiceAlternatives = (choice: any): string[] => {
+      const out: string[] = [];
+
+      const visit = (n: any) => {
+        if (!n) return;
+
+        if (n.name === 'element') {
+          const nm = getLocalFromElement(n);
+          if (nm) {
+            out.push(nm);
+          }
+        } else if (n.name === 'group') {
+          const comp = resolveGroupCompositor(n);
+          visit(comp);
+        } else if (n.name === 'sequence' || n.name === 'choice') {
+          for (const child of n.children || []) visit(child);
+        }
+      };
+      for (const child of choice.children || []) visit(child);
+      return out;
+    };
+
+    walkBaseSequence(schemaObject);
+    walkGroup(firstGroup(schemaObject));
+
+    this._orderIndexCache.set(schemaObject, index);
+
+    return index;
+  }
+
+  private _orderElementKeys(obj: any, schemaObject: any, schema: any): string[] {
+    const keys: { key: string; idx: number; local: string }[] = [];
+
+    let i = 0;
+
+    for (const k of Object.keys(obj)) {
+      if (!Object.prototype.hasOwnProperty.call(obj, k)) continue;
+
+      if (k === this.options.attributesKey || k === this.options.xmlKey || k === this.options.valueKey) continue;
+
+      const local = splitQName(k).name;
+
+      keys.push({ key: k, idx: i++, local });
+    }
+
+    const orderIndex = this._getOrderIndexFor(schemaObject, schema);
+    if (!orderIndex.size) {
+      return keys.map((k) => k.key);
+    }
+
+    keys.sort((a, b) => {
+      const ai = orderIndex.has(a.local) ? (orderIndex.get(a.local) as number) : Number.POSITIVE_INFINITY;
+      const bi = orderIndex.has(b.local) ? (orderIndex.get(b.local) as number) : Number.POSITIVE_INFINITY;
+      if (ai !== bi) return ai - bi;
+      return a.idx - b.idx;
+    });
+
+    return keys.map((k) => k.key);
+  }
+
+  private _addSpecialKeys(obj: any, keys: string[]) {
+    const attrsKey = this.options.attributesKey;
+    const xmlKey = this.options.xmlKey;
+    const valueKey = this.options.valueKey;
+
+    const frontSpecials = [];
+    if (Object.prototype.hasOwnProperty.call(obj, attrsKey)) {
+      frontSpecials.push(attrsKey);
+    }
+
+    const tailSpecials = [];
+    for (const k of Object.keys(obj)) {
+      if (k === xmlKey || k === valueKey) tailSpecials.push(k);
+    }
+
+    return [...frontSpecials, ...keys, ...tailSpecials];
   }
 }
 

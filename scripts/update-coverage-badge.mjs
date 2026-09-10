@@ -1,13 +1,14 @@
-#!/usr/bin/env node
-'use strict';
-
 import fs from 'node:fs';
 import path from 'node:path';
 import console from 'node:console';
 import process from 'node:process';
+import { fileURLToPath } from 'node:url';
 
-const summaryPath = path.join(path.dirname(), '..', 'coverage', 'coverage-summary.json');
-const badgeDir = path.join(path.dirname(), '..', 'badges');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const summaryPath = path.join(__dirname, '..', 'coverage', 'coverage-summary.json');
+const badgeDir = path.join(__dirname, '..', 'badges');
 const badgePath = path.join(badgeDir, 'coverage.json');
 
 function getColor(percent) {

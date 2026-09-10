@@ -34,7 +34,7 @@
     "format:check": "prettier --check .",
     "toc": "./node_modules/.bin/doctoc Readme.md --github --maxlevel 3",
     "cover": "TZ=UTC nyc --extension=.ts --reporter=lcov --reporter=html --reporter=text --reporter=json-summary mocha --no-parallel --timeout 30000 --exit test/*-test.js test/security/*.js",
-    "postcover": "node ./scripts/update-coverage-badge.js",
+    "postcover": "node ./scripts/update-coverage-badge.mjs",
     "cover:badge": "npm run cover && npm run postcover",
     "docs": "typedoc --out docs",
     "test": "TZ=UTC mocha --timeout 15000 --bail --exit test/*-test.js test/security/*.js"

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:xs="http://www.w3.org/2001/XMLSchema"
+             xmlns:tns="urn:seq"
+             xmlns:ext="urn:ext"
+             targetNamespace="urn:seq">
+
+  <types>
+    <xs:schema targetNamespace="urn:ext"
+               xmlns:xs="http://www.w3.org/2001/XMLSchema"
+               elementFormDefault="qualified">
+      <xs:group name="AddressGroup">
+        <xs:sequence>
+          <xs:element name="street" type="xs:string"/>
+          <xs:element name="city"   type="xs:string"/>
+        </xs:sequence>
+      </xs:group>
+    </xs:schema>
+
+    <xs:schema targetNamespace="urn:seq"
+               xmlns:xs="http://www.w3.org/2001/XMLSchema"
+               xmlns:tns="urn:seq"
+               xmlns:ext="urn:ext"
+               elementFormDefault="qualified">
+
+      <xs:group name="NameGroup">
+        <xs:sequence>
+          <xs:element name="first" type="xs:string"/>
+          <xs:element name="last"  type="xs:string"/>
+        </xs:sequence>
+      </xs:group>
+
+      <xs:group name="ContactGroup">
+        <xs:sequence>
+          <xs:element name="phone" type="xs:string"/>
+          <xs:element name="email" type="xs:string"/>
+        </xs:sequence>
+      </xs:group>
+
+      <xs:complexType name="PersonType">
+        <xs:sequence>
+          <xs:group ref="tns:NameGroup"/>
+          <xs:element name="age" type="xs:int"/>
+        </xs:sequence>
+      </xs:complexType>
+
+      <xs:complexType name="ChoiceMiddleType">
+        <xs:sequence>
+          <xs:element name="a" type="xs:string"/>
+          <xs:choice>
+            <xs:element name="x" type="xs:string"/>
+            <xs:element name="y" type="xs:string"/>
+          </xs:choice>
+          <xs:element name="b" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+
+      <xs:complexType name="WithAllType">
+        <xs:all>
+          <xs:element name="m" type="xs:string"/>
+          <xs:element name="n" type="xs:string"/>
+        </xs:all>
+      </xs:complexType>
+
+      <xs:complexType name="GroupLocalType">
+        <xs:sequence>
+          <xs:group ref="tns:ContactGroup"/>
+        </xs:sequence>
+      </xs:complexType>
+
+      <xs:complexType name="NestedChoiceType">
+        <xs:sequence>
+          <xs:element name="pre" type="xs:string"/>
+          <xs:choice>
+            <xs:group ref="tns:NameGroup"/>
+            <xs:element name="nick" type="xs:string"/>
+          </xs:choice>
+          <xs:element name="post" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+
+      <xs:complexType name="UnknownSlotType">
+        <xs:sequence>
+          <xs:element name="a" type="xs:string"/>
+          <xs:element name="b" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+
+      <xs:complexType name="CrossNSGroupType">
+        <xs:sequence>
+          <xs:element name="id" type="xs:string"/>
+          <xs:group ref="ext:AddressGroup"/>
+          <xs:element name="age" type="xs:int"/>
+        </xs:sequence>
+      </xs:complexType>
+
+      <xs:element name="Person" type="tns:PersonType"/>
+    </xs:schema>
+  </types>
+</definitions>
