@@ -1,3 +1,10 @@
+# 1.12.0 / 2026-09-10
+
+- [ENHANCEMENT] Add support for the group element and respect sequence element ordering (#1519)
+- [FIX] Fix XML-to-object parsing for WSDL responses where a schema-declared array appears with only one item. The parser was resolving the response element name too aggressively, which dropped the array marker and caused single-item collections to be treated as plain objects instead of arrays. Preserves primitive types for child values, so numeric fields remain numbers instead of being turned into strings. (#1525)
+- [FIX] Add alias parseResponseAttachments for parseReponseAttachments function (#1522)
+- [MAINTENANCE] Bump peer deps to resolve security issues
+
 # 1.11.0 / 2026-08-26
 
 - [SECURITY] Generate nonce using cryptographically secure random bytes (#1516)
