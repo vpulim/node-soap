@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:reply="http://xml.amadeus.com/FMPTBR_20_2_1A"
+    xmlns:tns="http://example.com/fare/service/">
+    <soap:Body>
+        <FareBoardSearchOperationRequest xmlns="http://example.com/fare/service/">
+            <origin>LHR</origin>
+            <destination>MAD</destination>
+            <paxFareProduct>
+                <paxReference>
+                    <ptc>CHD</ptc>
+                    <traveller>
+                        <travellerReference>PAX1</travellerReference>
+                    </traveller>
+                </paxReference>
+            </paxFareProduct>
+        </FareBoardSearchOperationRequest>
+    </soap:Body>
+</soap:Envelope>

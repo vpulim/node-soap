@@ -1,0 +1,16 @@
+<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope">
+    <s:Body>
+        <FareSearchReply xmlns="http://xml.amadeus.com/FMPTBR_20_2_1A">
+            <recommendation>
+                <paxFareProduct>
+                    <paxReference>
+                        <ptc>CHD</ptc>
+                        <traveller>
+                            <ref>3</ref>
+                        </traveller>
+                    </paxReference>
+                </paxFareProduct>
+            </recommendation>
+        </FareSearchReply>
+    </s:Body>
+</s:Envelope>
