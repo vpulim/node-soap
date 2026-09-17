@@ -1,0 +1,14 @@
+{
+  "origin": "LHR",
+  "destination": "MAD",
+  "paxFareProduct": [
+    {
+      "paxReference": {
+        "ptc": "CHD",
+        "traveller": {
+          "travellerReference": "PAX1"
+        }
+      }
+    }
+  ]
+}

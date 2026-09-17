@@ -1,0 +1,20 @@
+{
+  "recommendation": [
+    {
+      "paxFareProduct": [
+        {
+          "paxReference": [
+            {
+              "ptc": ["CHD"],
+              "traveller": [
+                {
+                  "ref": 3
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

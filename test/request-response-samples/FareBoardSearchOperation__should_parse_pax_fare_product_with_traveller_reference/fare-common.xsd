@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:common="http://example.com/fare/common/"
+    targetNamespace="http://example.com/fare/common/"
+    elementFormDefault="qualified"
+    attributeFormDefault="unqualified">
+
+    <xs:simpleType name="AlphaNumericString_Length1To6">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1" />
+            <xs:maxLength value="6" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="TravellerDetailsType">
+        <xs:sequence>
+            <xs:element name="travellerReference" type="xs:string" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="TravellerReferenceInformationType">
+        <xs:sequence>
+            <xs:element name="ptc" minOccurs="0" maxOccurs="4"
+                type="common:AlphaNumericString_Length1To6">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Requested passenger type</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="traveller" minOccurs="0" maxOccurs="9"
+                type="common:TravellerDetailsType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">Traveller details</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="PaxFareProductType">
+        <xs:sequence>
+            <xs:element name="paxReference" minOccurs="0" maxOccurs="6"
+                type="common:TravellerReferenceInformationType" />
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://xml.amadeus.com/FMPTBR_20_2_1A"
+    xmlns="http://xml.amadeus.com/FMPTBR_20_2_1A"
+    elementFormDefault="qualified"
+    attributeFormDefault="unqualified">
+
+    <xs:complexType name="TravellerDetailsType">
+        <xs:sequence>
+            <xs:element name="ref" minOccurs="0" type="xs:int" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="TravellerReferenceInformationType">
+        <xs:sequence>
+            <xs:element name="ptc" minOccurs="0" maxOccurs="4" type="xs:string" />
+            <xs:element name="traveller" minOccurs="0" maxOccurs="9" type="TravellerDetailsType" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="FareSearchReply">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="recommendation" minOccurs="0" maxOccurs="100000">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="paxFareProduct" maxOccurs="10">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="paxReference" minOccurs="0" maxOccurs="6"
+                                            type="TravellerReferenceInformationType" />
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

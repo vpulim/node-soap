@@ -750,7 +750,9 @@ export class MessageElement extends Element {
 
   public description(definitions: DefinitionsElement) {
     if (this.element) {
-      return this.element && this.element.description(definitions);
+      const schema = definitions.schemas[this.element.targetNamespace];
+      const xmlns = this.forceUseSchemaXmlns ? schema?.xmlns : undefined;
+      return this.element.description(definitions, xmlns);
     }
     const desc = {};
     desc[this.$name] = this.parts;
