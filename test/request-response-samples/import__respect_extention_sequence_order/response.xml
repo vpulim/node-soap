@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:tns="http://example.com/test">
+  <soap:Body>
+    <importResponse xmlns="http://example.com/test">
+      <status>OK</status>
+    </importResponse>
+  </soap:Body>
+</soap:Envelope>

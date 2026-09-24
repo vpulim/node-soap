@@ -1,0 +1,10 @@
+{
+  "Load": {
+    "Address": "test-address",
+    "ID": "123",
+    "DateOfBirth": "2000-01-01",
+    "FirstName": "John",
+    "Sex": "Male",
+    "LastName": "Doe"
+  }
+}

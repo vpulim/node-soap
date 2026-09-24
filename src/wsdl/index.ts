@@ -1464,8 +1464,8 @@ export class WSDL {
       if (node.name === 'extension' && node.$base) {
         const baseType = resolveTypeNode(node.$base, node);
         if (baseType) {
-          walkGroup(firstGroup(baseType));
           walkBaseSequence(baseType, seen);
+          walkGroup(firstGroup(baseType));
         }
       }
 

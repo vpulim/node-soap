@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:tns="http://example.com/test"
+             xmlns:xs="http://www.w3.org/2001/XMLSchema"
+             targetNamespace="http://example.com/test"
+             name="TestService">
+
+  <types>
+    <xs:schema targetNamespace="http://example.com/test"
+               elementFormDefault="qualified">
+
+      <!-- Base type: FullName -->
+      <xs:complexType name="FullNameType">
+        <xs:sequence>
+          <xs:element name="FirstName" type="xs:string"/>
+          <xs:element name="LastName" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+
+      <!-- Extension -->
+      <xs:complexType name="PersonType">
+        <xs:complexContent>
+          <xs:extension base="tns:FullNameType">
+            <xs:sequence>
+              <xs:element name="ID" type="xs:string" minOccurs="0"/>
+              <xs:element name="Sex" type="xs:string" minOccurs="0"/>
+              <xs:element name="DateOfBirth" type="xs:date" minOccurs="0"/>
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+
+      <!-- Second extension -->
+      <xs:complexType name="CitizenType">
+        <xs:complexContent>
+          <xs:extension base="tns:PersonType">
+            <xs:sequence>
+              <xs:element name="Address" type="xs:string"/>
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+
+      <xs:element name="importRequest">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Load" type="tns:CitizenType"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+
+      <xs:element name="importResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="status" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:schema>
+  </types>
+
+  <message name="importRequest">
+    <part name="parameters" element="tns:importRequest"/>
+  </message>
+
+  <message name="importResponse">
+    <part name="parameters" element="tns:importResponse"/>
+  </message>
+
+  <portType name="TestPortType">
+    <operation name="import">
+      <input message="tns:importRequest"/>
+      <output message="tns:importResponse"/>
+    </operation>
+  </portType>
+
+  <binding name="TestBinding" type="tns:TestPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="import">
+      <soap:operation soapAction="import"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+    </operation>
+
+    <operation name="import">
+      <soap:operation soapAction="import"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+  </binding>
+
+  <service name="TestService">
+    <port name="TestPort" binding="tns:TestBinding">
+      <soap:address location="http://localhost:8000/test"/>
+    </port>
+  </service>
+</definitions>
