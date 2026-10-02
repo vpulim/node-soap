@@ -94,6 +94,23 @@
         </xs:sequence>
       </xs:complexType>
 
+      <xs:complexType name="BaseType">
+        <xs:sequence>
+          <xs:element name="baseFirst" type="xs:string"/>
+          <xs:element name="baseSecond" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+
+      <xs:complexType name="UnprefixedExtensionType">
+        <xs:complexContent>
+          <xs:extension base="BaseType">
+            <xs:sequence>
+              <xs:element name="own" type="xs:string"/>
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+
       <xs:element name="Person" type="tns:PersonType"/>
     </xs:schema>
   </types>

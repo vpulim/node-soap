@@ -87,6 +87,11 @@ describe('WSDL sequence ordering (sequence / choice / group)', function () {
     assert.ok(z > b, 'unknown property z should come after known sequence members');
   });
 
+  it('puts the elements of a base type referenced without a prefix first', function () {
+    const xml = serialize('UnprefixedExtensionType', { own: 'O', baseSecond: 'S', baseFirst: 'F' }, 'UnprefixedExtension');
+    assertOrder(xml, ['baseFirst', 'baseSecond', 'own']);
+  });
+
   it('respects order when a <group ref> points to ANOTHER namespace', function () {
     const xml = serialize('CrossNSGroupType', { age: 11, city: 'Roma', id: '42', street: 'Via' }, 'CrossNSGroup');
     assertOrder(xml, ['id', 'street', 'city', 'age']);
