@@ -1,3 +1,8 @@
+# 1.13.2 / 2026-10-03
+
+- [FIX] Resolve an unprefixed extension base for element ordering (#1533)
+- [MAINTENANCE] Bump axios, brace-expansion and markdown-it (#1534)
+
 # 1.13.1 / 2026-09-26
 
 - [FIX] Fix extension element order to respect sequence order in XML requests (#1531)
