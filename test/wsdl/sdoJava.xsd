@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xsd:schema targetNamespace="commonj.sdo/java" xmlns:sdo="commonj.sdo" xmlns:sdoJava="commonj.sdo/java"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <xsd:import namespace="commonj.sdo" schemaLocation="https://ecex-test.fa.us2.oraclecloud.com:443/fscmService/PurchaseRequestService?XSD=/xml/sdoModel.xsd"/>
+    <xsd:attribute name="package" type="xsd:string"/>
+    <xsd:attribute name="instanceClass" type="xsd:string"/>
+    <xsd:attribute name="extendedInstanceClass" type="xsd:string"/>
+    <xsd:attribute name="nestedInterfaces" type="xsd:boolean"/>
+    <xsd:attribute name="javaClass" type="sdo:String"/>
+    <xsd:complexType name="JavaInfo">
+        <xsd:attribute name="javaClass" type="sdo:String"/>
+    </xsd:complexType>
+    <xsd:simpleType name="BooleanObject" sdoJava:instanceClass="java.lang.Boolean">
+        <xsd:restriction base="xsd:boolean"/>
+    </xsd:simpleType>
+    <xsd:simpleType name="ByteObject" sdoJava:instanceClass="java.lang.Byte">
+        <xsd:restriction base="xsd:byte"/>
+    </xsd:simpleType>
+    <xsd:simpleType name="CharacterObject" sdoJava:instanceClass="java.lang.Character">
+        <xsd:restriction base="xsd:string"/>
+    </xsd:simpleType>
+    <xsd:simpleType name="DoubleObject" sdoJava:instanceClass="java.lang.Double">
+        <xsd:restriction base="xsd:double"/>
+    </xsd:simpleType>
+    <xsd:simpleType name="FloatObject" sdoJava:instanceClass="java.lang.Float">
+        <xsd:restriction base="xsd:float"/>
+    </xsd:simpleType>
+    <xsd:simpleType name="IntObject" sdoJava:instanceClass="java.lang.Integer">
+        <xsd:restriction base="xsd:int"/>
+    </xsd:simpleType>
+    <xsd:simpleType name="LongObject" sdoJava:instanceClass="java.lang.Long">
+        <xsd:restriction base="xsd:long"/>
+    </xsd:simpleType>
+    <xsd:simpleType name="ShortObject" sdoJava:instanceClass="java.lang.Short">
+        <xsd:restriction base="xsd:short"/>
+    </xsd:simpleType>
+</xsd:schema>

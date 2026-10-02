@@ -48,29 +48,36 @@ describe('ClientSSLSecurityPFX', function () {
     }
   });
 
-  xit('should be usable in a request', function (done) {
+  it('should be usable in a request', function (done) {
     var https = require('https');
     var pfkBuffer = fs.readFileSync(join(__dirname, '..', 'certs', 'client-password.pfx')),
       instance;
 
     instance = new ClientSSLSecurityPFX(pfkBuffer, 'test2test');
+
     var soptions = {
       host: 'localhost',
       port: 1338,
       requestCert: true,
-      rejectUnauthorized: false,
+      rejectUnauthorized: true,
       pfx: fs.readFileSync(join(__dirname, '..', 'certs', 'server-password.pfx')),
+      ca: fs.readFileSync(join(__dirname, '..', 'certs', 'agent2-cert.pem')),
       passphrase: 'test2test',
     };
     var options = {
       port: 1338,
+      rejectUnauthorized: true,
+      ca: fs.readFileSync(join(__dirname, '..', 'certs', 'agent2-cert.pem')),
     };
     instance.addOptions(options);
 
     var server = https.createServer(soptions, function (req, res) {
+      // Use 'true' and 'null' for non-expired certs
       req.socket.should.have.property('authorized', true);
-      // Doesn't work in older versions of nodejs
-      // req.socket.should.have.property('authorizationError', null);
+      req.socket.should.have.property('authorizationError', null);
+      // Use 'false' and 'CERT_HAS_EXPIRED' for expired certs
+      //req.socket.should.have.property('authorized', false);
+      //req.socket.should.have.property('authorizationError', 'CERT_HAS_EXPIRED');
       res.writeHead(200);
       res.end('OK');
     });
