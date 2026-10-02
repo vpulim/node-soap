@@ -1441,7 +1441,7 @@ export class WSDL {
       let ns;
 
       if (q.prefix === TNS_PREFIX) {
-        ns = schema && schema.targetNamespace;
+        ns = schema && (schema.$targetNamespace || schema.targetNamespace);
       } else {
         ns =
           (context && context.xmlns && context.xmlns[q.prefix]) ||

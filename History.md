@@ -1,6 +1,6 @@
 # 1.13.1 / 2026-09-26
 
-- [FIX] Fix extension element order to respect sequence order in XML requests (#1531) 
+- [FIX] Fix extension element order to respect sequence order in XML requests (#1531)
 
 # 1.13.0 / 2026-09-20
 
