@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:tns="http://example.com/service"
+    xmlns:msg="http://example.com/messages"
+    targetNamespace="http://example.com/service">
+    <wsdl:types>
+        <xs:schema xmlns:com="http://example.com/common"
+            targetNamespace="http://example.com/messages"
+            elementFormDefault="qualified">
+            <xs:import namespace="http://example.com/common" schemaLocation="common.xsd" />
+            <xs:complexType name="GameRecord">
+                <xs:complexContent>
+                    <xs:extension base="com:Record">
+                        <xs:sequence>
+                            <xs:element name="gameInfo" type="xs:string" />
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+            <xs:element name="addRecord">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="record" type="msg:GameRecord" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addRecordResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="status" type="xs:string" minOccurs="0" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </wsdl:types>
+
+    <wsdl:message name="addRecordRequest">
+        <wsdl:part name="addRecordRequest" element="msg:addRecord" />
+    </wsdl:message>
+    <wsdl:message name="addRecordResponse">
+        <wsdl:part name="addRecordResponse" element="msg:addRecordResponse" />
+    </wsdl:message>
+
+    <wsdl:portType name="RecordPortType">
+        <wsdl:operation name="addRecord">
+            <wsdl:input message="tns:addRecordRequest" />
+            <wsdl:output message="tns:addRecordResponse" />
+        </wsdl:operation>
+    </wsdl:portType>
+
+    <wsdl:binding name="RecordBinding" type="tns:RecordPortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+        <wsdl:operation name="addRecord">
+            <soap:operation soapAction="http://example.com/service#addRecord" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <wsdl:service name="RecordService">
+        <wsdl:port name="RecordPort" binding="tns:RecordBinding">
+            <soap:address location="http://example.com/service" />
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

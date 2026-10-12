@@ -867,8 +867,8 @@ export class WSDL {
                   childName = elementQName.name;
                   if (elementQName.prefix === TNS_PREFIX) {
                     // Local element
-                    childNsURI = childSchemaObject.$targetNamespace;
-                    childNsPrefix = nsContext.registerNamespace(childNsURI);
+                    childNsURI = childSchemaObject.$targetNamespace || childSchemaObject.targetNamespace;
+                    childNsPrefix = findPrefix(this.definitions.xmlns, childNsURI) || nsContext.registerNamespace(childNsURI);
                     if (this.isIgnoredNameSpace(childNsPrefix)) {
                       childNsPrefix = nsPrefix;
                     }
@@ -1057,10 +1057,12 @@ export class WSDL {
     return schema.complexTypes[name];
   }
 
-  public findChildSchemaObject(parameterTypeObj: any, childName: any, backtrace?: any): any {
+  public findChildSchemaObject(parameterTypeObj: any, childName: any, backtrace?: any, namespaceURI?: string): any {
     if (!parameterTypeObj || !childName) {
       return null;
     }
+
+    namespaceURI = namespaceURI || parameterTypeObj.$targetNamespace || parameterTypeObj.targetNamespace;
 
     if (!backtrace) {
       backtrace = [];
@@ -1093,6 +1095,9 @@ export class WSDL {
 
     const object = parameterTypeObj;
     if (object.$name === childName && object.name === 'element') {
+      if (!object.$targetNamespace && namespaceURI) {
+        object.$targetNamespace = namespaceURI;
+      }
       return object;
     }
     if (object.$ref) {
@@ -1114,7 +1119,7 @@ export class WSDL {
       }
       const typeDef = this.findSchemaType(typeInfo.name, childNsURI);
       if (typeDef) {
-        return this.findChildSchemaObject(typeDef, childName, backtrace);
+        return this.findChildSchemaObject(typeDef, childName, backtrace, childNsURI);
       }
     }
 
@@ -1127,13 +1132,13 @@ export class WSDL {
       }
       const baseDef = this.findSchemaType(baseInfo.name, childNsURI);
       if (baseDef) {
-        return this.findChildSchemaObject(baseDef, childName, backtrace);
+        return this.findChildSchemaObject(baseDef, childName, backtrace, childNsURI);
       }
     }
 
     if (Array.isArray(object.children) && object.children.length > 0) {
       for (const child of object.children) {
-        found = this.findChildSchemaObject(child, childName, backtrace);
+        found = this.findChildSchemaObject(child, childName, backtrace, namespaceURI);
         if (found) {
           break;
         }
@@ -1141,12 +1146,12 @@ export class WSDL {
         if (child.$base) {
           const baseQName = splitQName(child.$base);
           const childNameSpace = baseQName.prefix === TNS_PREFIX ? '' : baseQName.prefix;
-          childNsURI = child.xmlns[baseQName.prefix] || child.schemaXmlns[baseQName.prefix];
+          childNsURI = child.xmlns[baseQName.prefix] || child.schemaXmlns[baseQName.prefix] || (baseQName.prefix === TNS_PREFIX && (child.$targetNamespace || child.targetNamespace || namespaceURI));
 
           const foundBase = this.findSchemaType(baseQName.name, childNsURI);
 
           if (foundBase) {
-            found = this.findChildSchemaObject(foundBase, childName, backtrace);
+            found = this.findChildSchemaObject(foundBase, childName, backtrace, childNsURI);
 
             if (found) {
               found.$baseNameSpace = childNameSpace;
@@ -1158,6 +1163,9 @@ export class WSDL {
     }
 
     if (!found && object.$name === childName) {
+      if (!object.$targetNamespace && namespaceURI) {
+        object.$targetNamespace = namespaceURI;
+      }
       return object;
     }
 
@@ -1435,13 +1443,13 @@ export class WSDL {
       return null;
     };
 
-    const resolveTypeNode = (qname: string, context: any = schema): any => {
+    const resolveTypeNode = (qname: string, context: any = schema, contextNamespace?: string): any => {
       if (!qname) return null;
       const q = splitQName(qname);
       let ns;
 
       if (q.prefix === TNS_PREFIX) {
-        ns = schema && (schema.$targetNamespace || schema.targetNamespace);
+        ns = (context && (context.$targetNamespace || context.targetNamespace)) || contextNamespace || (schema && (schema.$targetNamespace || schema.targetNamespace));
       } else {
         ns =
           (context && context.xmlns && context.xmlns[q.prefix]) ||
@@ -1457,21 +1465,25 @@ export class WSDL {
       return targetSchema.complexTypes[q.name] || targetSchema.types[q.name] || targetSchema.elements[q.name] || null;
     };
 
-    const walkBaseSequence = (node: any, seen = new Set<any>()): void => {
+    const walkBaseSequence = (node: any, seen = new Set<any>(), contextNamespace?: string): void => {
       if (!node || seen.has(node)) return;
       seen.add(node);
 
+      contextNamespace = contextNamespace || node.$targetNamespace || node.targetNamespace;
+
       if (node.name === 'extension' && node.$base) {
-        const baseType = resolveTypeNode(node.$base, node);
+        const baseQName = splitQName(node.$base);
+        const baseNamespace = baseQName.prefix === TNS_PREFIX ? contextNamespace : (node.xmlns && node.xmlns[baseQName.prefix]) || (node.schemaXmlns && node.schemaXmlns[baseQName.prefix]) || contextNamespace;
+        const baseType = resolveTypeNode(node.$base, node, contextNamespace);
         if (baseType) {
-          walkBaseSequence(baseType, seen);
+          walkBaseSequence(baseType, seen, baseType.$targetNamespace || baseType.targetNamespace || baseNamespace);
           walkGroup(firstGroup(baseType));
         }
       }
 
       if (Array.isArray(node.children)) {
         for (const child of node.children) {
-          walkBaseSequence(child, seen);
+          walkBaseSequence(child, seen, contextNamespace);
         }
       }
     };

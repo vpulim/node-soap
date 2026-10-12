@@ -1,0 +1,1 @@
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Body><msg:addRecordResponse xmlns:msg="http://example.com/messages"><msg:status>ok</msg:status></msg:addRecordResponse></soap:Body></soap:Envelope>

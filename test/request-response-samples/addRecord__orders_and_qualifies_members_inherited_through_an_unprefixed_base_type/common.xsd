@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns="http://example.com/common"
+    targetNamespace="http://example.com/common"
+    elementFormDefault="qualified">
+    <xs:complexType name="BaseRecord">
+        <xs:sequence>
+            <xs:element name="recordId" type="xs:string" />
+            <xs:element name="date" type="xs:dateTime" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Record">
+        <xs:complexContent>
+            <xs:extension base="BaseRecord">
+                <xs:sequence>
+                    <xs:element name="subRecordId" type="xs:int" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+</xs:schema>
