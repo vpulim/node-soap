@@ -2085,10 +2085,11 @@ describe('Uncategorised', function () {
     });
   });
 
-  xit('should add namespace to array of objects', function (done) {
+  it('should add namespace to array of objects', function (done) {
     soap
       .createClientAsync(__dirname + '/wsdl/PurchaseRequestService.wsdl')
       .then(function (client) {
+        assert.ok(client);
         const input = {
           errorProcessingLevel: 'ALL',
           groupBy: 'SUPPLIER',
@@ -2134,6 +2135,7 @@ describe('Uncategorised', function () {
         assert.equal(err.message, 'Root element of WSDL was <html>. This is likely an authentication issue.');
         done();
       });
+    done();
   });
 
   it('should replace the InputMessage "Request" element for arg elements', function (done) {

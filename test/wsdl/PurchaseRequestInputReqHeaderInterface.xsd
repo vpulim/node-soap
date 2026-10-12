@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xsd:schema elementFormDefault="qualified" targetNamespace="http://xmlns.oracle.com/apps/prc/po/editDocument/purchaseRequestService/"
+     sdoJava:package="oracle.apps.prc.po.editDocument.purchaseRequestService" xmlns:ns0="http://xmlns.oracle.com/adf/svc/types/"
+     xmlns:sdoJava="commonj.sdo/java" xmlns="http://xmlns.oracle.com/apps/prc/po/editDocument/purchaseRequestService/"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <xsd:annotation>
+        <xsd:documentation xmlns:oer="http://xmlns.oracle.com/oer">
+            <name>Purchase Request Create Requisition Header Service
+                Data Object Version 1</name>
+            <description>Version 1 of an object, representing the set of requisition header
+                attributes that are being used to initiate the creation of a
+                purchase request.</description>
+            <oer:attributes>
+                <oer:attribute description="The email address for the requisition approver." name="ApproverEmail"/>
+                <oer:attribute description="The unique identifier of the requisition approver." name="ApproverId"/>
+                <oer:attribute description="The user descriptive flexfield segment." name="Attribute1"/>
+                <oer:attribute description="The user descriptive flexfield segment." name="Attribute10"/>
+                <oer:attribute description="The user descriptive flexfield segment." name="Attribute11"/>
+                <oer:attribute description="The user descriptive flexfield segment." name="Attribute12"/>
+                <oer:attribute description="The user descriptive flexfield segment." name="Attribute13"/>
+                <oer:attribute description="The user descriptive flexfield segment." name="Attribute14"/>
+                <oer:attribute description="The user descriptive flexfield segment." name="Attribute15"/>
+                <oer:attribute description="The user descriptive flexfield segment." name="Attribute16"/>
+                <oer:attribute description="The user descriptive flexfield segment." name="Attribute17"/>
+                <oer:attribute description="The user descriptive flexfield segment." name="Attribute18"/>
+                <oer:attribute description="The user descriptive flexfield segment." name="Attribute19"/>
+                <oer:attribute description="The user descriptive flexfield segment." name="Attribute2"/>
+                <oer:attribute description="The user descriptive flexfield segment." name="Attribute20"/>
+                <oer:attribute description="The user descriptive flexfield segment." name="Attribute3"/>
+                <oer:attribute description="The user descriptive flexfield segment." name="Attribute4"/>
+                <oer:attribute description="The user descriptive flexfield segment." name="Attribute5"/>
+                <oer:attribute description="The user descriptive flexfield segment." name="Attribute6"/>
+                <oer:attribute description="The user descriptive flexfield segment." name="Attribute7"/>
+                <oer:attribute description="The user descriptive flexfield segment." name="Attribute8"/>
+                <oer:attribute description="The user descriptive flexfield segment." name="Attribute9"/>
+                <oer:attribute description="The user descriptive flexfield structure." name="AttributeCategory"/>
+                <oer:attribute description="The user descriptive flexfield attribute date." name="AttributeDate1"/>
+                <oer:attribute description="The user descriptive flexfield attribute date." name="AttributeDate10"/>
+                <oer:attribute description="The user descriptive flexfield attribute date." name="AttributeDate2"/>
+                <oer:attribute description="The user descriptive flexfield attribute date." name="AttributeDate3"/>
+                <oer:attribute description="The user descriptive flexfield attribute date." name="AttributeDate4"/>
+                <oer:attribute description="The user descriptive flexfield attribute date." name="AttributeDate5"/>
+                <oer:attribute description="The user descriptive flexfield attribute date." name="AttributeDate6"/>
+                <oer:attribute description="The user descriptive flexfield attribute date." name="AttributeDate7"/>
+                <oer:attribute description="The user descriptive flexfield attribute date." name="AttributeDate8"/>
+                <oer:attribute description="The user descriptive flexfield attribute date." name="AttributeDate9"/>
+                <oer:attribute description="The user descriptive flexfield attribute number." name="AttributeNumber1"/>
+                <oer:attribute description="The user descriptive flexfield attribute number." name="AttributeNumber10"/>
+                <oer:attribute description="The user descriptive flexfield attribute number." name="AttributeNumber2"/>
+                <oer:attribute description="The user descriptive flexfield attribute number." name="AttributeNumber3"/>
+                <oer:attribute description="The user descriptive flexfield attribute number." name="AttributeNumber4"/>
+                <oer:attribute description="The user descriptive flexfield attribute number." name="AttributeNumber5"/>
+                <oer:attribute description="The user descriptive flexfield attribute number." name="AttributeNumber6"/>
+                <oer:attribute description="The user descriptive flexfield attribute number." name="AttributeNumber7"/>
+                <oer:attribute description="The user descriptive flexfield attribute number." name="AttributeNumber8"/>
+                <oer:attribute description="The user descriptive flexfield attribute number." name="AttributeNumber9"/>
+                <oer:attribute description="The user descriptive flexfield attribute timestamp." name="AttributeTimestamp1"/>
+                <oer:attribute description="The user descriptive flexfield attribute timestamp." name="AttributeTimestamp10"/>
+                <oer:attribute description="The user descriptive flexfield attribute timestamp." name="AttributeTimestamp2"/>
+                <oer:attribute description="The user descriptive flexfield attribute timestamp." name="AttributeTimestamp3"/>
+                <oer:attribute description="The user descriptive flexfield attribute timestamp." name="AttributeTimestamp4"/>
+                <oer:attribute description="The user descriptive flexfield attribute timestamp." name="AttributeTimestamp5"/>
+                <oer:attribute description="The user descriptive flexfield attribute timestamp." name="AttributeTimestamp6"/>
+                <oer:attribute description="The user descriptive flexfield attribute timestamp." name="AttributeTimestamp7"/>
+                <oer:attribute description="The user descriptive flexfield attribute timestamp." name="AttributeTimestamp8"/>
+                <oer:attribute description="The user descriptive flexfield attribute timestamp." name="AttributeTimestamp9"/>
+                <oer:attribute description="A code indicating the country where the transaction is deemed to have taken place for taxation purposes."
+                     name="TaxationCountryCode"/>
+                <oer:attribute description="A code indicating the territory where the transaction is deemed to have taken place for taxation purposes."
+                     name="TaxationTerritory"/>
+                <oer:attribute description="A text description capturing the purpose of the requisition."
+                     name="Description"/>
+                <oer:attribute description="A code indicating the status of the requisition.   Valid values include INCOMPLETE and APPROVED."
+                     name="DocumentStatusCode"/>
+                <oer:attribute description="The display number used to identify a purchase order number reserved in advanced for an emergency requisition."
+                     name="EmergencyPONumber"/>
+                <oer:attribute description="The cloud interface alternate header key code for integrating applications to be able to identify the requisition header data loaded in the interface table."
+                     name="InterfaceHeaderKey"/>
+                <oer:attribute description="The unique identifier of the source transaction." name="InterfaceSourceLineId"/>
+                <oer:attribute description="A text description capturing the reason for the requisition."
+                     name="Justification"/>
+                <oer:attribute description="The email address for the requisition preparer." name="PreparerEmail"/>
+                <oer:attribute description="The unique identifier of the requisition preparer that maps to the person ID within Oracle Fusion Applications."
+                     name="PreparerId"/>
+                <oer:attribute description="The unique identifier of a requisitioning business unit."
+                     name="RequisitioningBUId"/>
+                <oer:attribute description="The display name of a requisitioning business unit." name="RequisitioningBUName"/>
+                <oer:attribute description="The display number used to identify a requisition." name="RequisitionNumber"/>
+                <oer:attribute description="A code indicating the classification used by a tax authority to categorize a document associated with a transaction for a tax."
+                     name="DocumentFiscalClassificationCode"/>
+                <oer:attribute description="The display name of a classification used by a tax authority to categorize a document associated with a transaction for a tax."
+                     name="DocumentFiscalClassification"/>
+                <oer:attribute description="Attachments of this category will be copied over from the source object to the requisition."
+                     name="AttachmentCategory"/>
+                <oer:attribute description="A code indicating the object from which the attachments should be copied."
+                     name="AttachmentEntityName"/>
+                <oer:attribute description="The unique identifier of an object from which attachments should be copied."
+                     name="AttachmentPrimaryKey1"/>
+                <oer:attribute description="The unique identifier of an object from which attachments should be copied."
+                     name="AttachmentPrimaryKey2"/>
+                <oer:attribute description="The unique identifier of an object from which attachments should be copied."
+                     name="AttachmentPrimaryKey3"/>
+                <oer:attribute description="The unique identifier of an object from which attachments should be copied."
+                     name="AttachmentPrimaryKey4"/>
+                <oer:attribute description="The unique identifier of an object from which attachments should be copied."
+                     name="AttachmentPrimaryKey5"/>
+                <oer:attribute description="Indicates whether or not the requisition line is externally managed."
+                     name="ExternallyManagedFlag"/>
+                <oer:attribute description="Unique identification of the sold-to legal entity. Sold-to Legal Entity is the party which is financially responsible for the purchases on a purchase order and hence owns the liability for the purchase."
+                     name="SoldToLegalEntityId"/>
+                <oer:attribute description="Name of the sold-to legal entity. Sold-to Legal Entity is the party which is financially responsible for the purchases on a purchase order and hence owns the liability for the purchase."
+                     name="SoldToLegalEntityName"/>
+                <oer:attribute description="Purchase Request requisition line input information."
+                     name="PurchaseRequestInputReqLineInterface"/>
+            </oer:attributes>
+        </xsd:documentation>
+    </xsd:annotation>
+    <xsd:import namespace="http://xmlns.oracle.com/adf/svc/types/" schemaLocation="https://ecex-test.fa.us2.oraclecloud.com:443/fscmService/PurchaseRequestService?XSD=/META-INF/wsdl/BC4JService.xsd"/>
+    <xsd:import namespace="commonj.sdo/java" schemaLocation="https://ecex-test.fa.us2.oraclecloud.com:443/fscmService/PurchaseRequestService?XSD=/xml/sdoJava.xsd"/>
+    <xsd:include schemaLocation="https://ecex-test.fa.us2.oraclecloud.com:443/fscmService/PurchaseRequestService?XSD=/oracle/apps/prc/po/editDocument/purchaseRequestService/PurchaseRequestInputReqLineInterface.xsd"/>
+    <xsd:complexType name="PurchaseRequestInputReqHeaderInterface">
+        <xsd:annotation>
+            <xsd:appinfo source="http://xmlns.oracle.com/adf/svc/metadata/">
+                <key xmlns="http://xmlns.oracle.com/adf/svc/metadata/">
+                    <attribute>ReqHeaderInterfaceId</attribute>
+                </key>
+            </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element minOccurs="0" name="ApproverEmail" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="ApproverId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="Attribute1" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="Attribute10" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="Attribute11" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="Attribute12" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="Attribute13" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="Attribute14" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="Attribute15" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="Attribute16" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="Attribute17" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="Attribute18" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="Attribute19" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="Attribute2" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="Attribute20" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="Attribute3" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="Attribute4" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="Attribute5" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="Attribute6" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="Attribute7" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="Attribute8" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="Attribute9" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="AttributeCategory" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="AttributeDate1" nillable="true" type="ns0:date-Date"/>
+            <xsd:element minOccurs="0" name="AttributeDate10" nillable="true" type="ns0:date-Date"/>
+            <xsd:element minOccurs="0" name="AttributeDate2" nillable="true" type="ns0:date-Date"/>
+            <xsd:element minOccurs="0" name="AttributeDate3" nillable="true" type="ns0:date-Date"/>
+            <xsd:element minOccurs="0" name="AttributeDate4" nillable="true" type="ns0:date-Date"/>
+            <xsd:element minOccurs="0" name="AttributeDate5" nillable="true" type="ns0:date-Date"/>
+            <xsd:element minOccurs="0" name="AttributeDate6" nillable="true" type="ns0:date-Date"/>
+            <xsd:element minOccurs="0" name="AttributeDate7" nillable="true" type="ns0:date-Date"/>
+            <xsd:element minOccurs="0" name="AttributeDate8" nillable="true" type="ns0:date-Date"/>
+            <xsd:element minOccurs="0" name="AttributeDate9" nillable="true" type="ns0:date-Date"/>
+            <xsd:element minOccurs="0" name="AttributeNumber1" nillable="true" type="xsd:decimal"/>
+            <xsd:element minOccurs="0" name="AttributeNumber10" nillable="true" type="xsd:decimal"/>
+            <xsd:element minOccurs="0" name="AttributeNumber2" nillable="true" type="xsd:decimal"/>
+            <xsd:element minOccurs="0" name="AttributeNumber3" nillable="true" type="xsd:decimal"/>
+            <xsd:element minOccurs="0" name="AttributeNumber4" nillable="true" type="xsd:decimal"/>
+            <xsd:element minOccurs="0" name="AttributeNumber5" nillable="true" type="xsd:decimal"/>
+            <xsd:element minOccurs="0" name="AttributeNumber6" nillable="true" type="xsd:decimal"/>
+            <xsd:element minOccurs="0" name="AttributeNumber7" nillable="true" type="xsd:decimal"/>
+            <xsd:element minOccurs="0" name="AttributeNumber8" nillable="true" type="xsd:decimal"/>
+            <xsd:element minOccurs="0" name="AttributeNumber9" nillable="true" type="xsd:decimal"/>
+            <xsd:element minOccurs="0" name="AttributeTimestamp1" nillable="true" type="ns0:dateTime-Timestamp"/>
+            <xsd:element minOccurs="0" name="AttributeTimestamp10" nillable="true" type="ns0:dateTime-Timestamp"/>
+            <xsd:element minOccurs="0" name="AttributeTimestamp2" nillable="true" type="ns0:dateTime-Timestamp"/>
+            <xsd:element minOccurs="0" name="AttributeTimestamp3" nillable="true" type="ns0:dateTime-Timestamp"/>
+            <xsd:element minOccurs="0" name="AttributeTimestamp4" nillable="true" type="ns0:dateTime-Timestamp"/>
+            <xsd:element minOccurs="0" name="AttributeTimestamp5" nillable="true" type="ns0:dateTime-Timestamp"/>
+            <xsd:element minOccurs="0" name="AttributeTimestamp6" nillable="true" type="ns0:dateTime-Timestamp"/>
+            <xsd:element minOccurs="0" name="AttributeTimestamp7" nillable="true" type="ns0:dateTime-Timestamp"/>
+            <xsd:element minOccurs="0" name="AttributeTimestamp8" nillable="true" type="ns0:dateTime-Timestamp"/>
+            <xsd:element minOccurs="0" name="AttributeTimestamp9" nillable="true" type="ns0:dateTime-Timestamp"/>
+            <xsd:element minOccurs="0" name="TaxationCountryCode" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="TaxationTerritory" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="Description" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="DocumentStatusCode" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="EmergencyPONumber" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="InterfaceHeaderKey" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="InterfaceSourceLineId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="Justification" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="PreparerEmail" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="PreparerId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="RequisitioningBUId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="RequisitioningBUName" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="RequisitionNumber" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="DocumentFiscalClassificationCode" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="DocumentFiscalClassification" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="AttachmentCategory" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="AttachmentEntityName" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="AttachmentPrimaryKey1" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="AttachmentPrimaryKey2" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="AttachmentPrimaryKey3" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="AttachmentPrimaryKey4" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="AttachmentPrimaryKey5" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="1" name="ExternallyManagedFlag" nillable="false" type="xsd:boolean"/>
+            <xsd:element minOccurs="0" name="SoldToLegalEntityId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="SoldToLegalEntityName" nillable="true" type="xsd:string"/>
+            <xsd:element maxOccurs="unbounded" minOccurs="0" name="PurchaseRequestInputReqLineInterface"
+                 type="PurchaseRequestInputReqLineInterface"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="purchaseRequestInputReqHeaderInterface" type="PurchaseRequestInputReqHeaderInterface"/>
+</xsd:schema>

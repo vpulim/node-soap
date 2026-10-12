@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xsd:schema elementFormDefault="qualified" targetNamespace="http://xmlns.oracle.com/apps/prc/po/editDocument/purchaseRequestService/"
+     sdoJava:package="oracle.apps.prc.po.editDocument.purchaseRequestService" xmlns:sdoJava="commonj.sdo/java"
+     xmlns="http://xmlns.oracle.com/apps/prc/po/editDocument/purchaseRequestService/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <xsd:annotation>
+        <xsd:documentation xmlns:oer="http://xmlns.oracle.com/oer">
+            <name>Purchase Request Control Actions Service Data Object Version 1</name>
+            <description>Version 1 of an object, representing the set of attributes that are being used to initiate a control action on a set of requisitions or purchase orders.</description>
+            <oer:category name="lba">
+                <value>PrcTop-Procurement</value>
+                <value>PrcTop-Procurement : PrcPoTop-Purchasing</value>
+                <value>PrcTop-Procurement : PrcPoTop-Purchasing : PrcPoEditDocument-Edit Purchasing Document</value>
+            </oer:category>
+            <oer:category name="ces">
+                <value>Fusion DOO to AU Order Entry/Fulfillment</value>
+            </oer:category>
+            <oer:attributes>
+                <oer:attribute description="A code indicating whether processing should continue if an errors occur. Valid values in ALL_NONE or PARTIAL."
+                     name="ErrorProcessingLevelCode"/>
+                <oer:attribute description="A code indicating the action to be performed. Valid values include HOLD_FREEZE, RELEASEHOLD_UNFREEZE, FIRM, or UNDO_FIRM."
+                     name="ControlActionCode"/>
+                <oer:attribute description="The unique identifier of a worker who is requesting the control action."
+                     name="ControlActionPerformedById"/>
+                <oer:attribute description="The email address for a worker who is requesting the control action."
+                     name="ControlActionPerformedByEmail"/>
+                <oer:attribute description="A text description capturing the reason for performing the control action."
+                     name="ControlActionReason"/>
+                <oer:attribute description="Version 1 of an object, representing the set of requisition or purchase order documents for which the control action is being performed."
+                     name="PurchaseRequestControlEntryDetail"/>
+            </oer:attributes>
+        </xsd:documentation>
+    </xsd:annotation>
+    <xsd:import namespace="commonj.sdo/java" schemaLocation="https://ecex-test.fa.us2.oraclecloud.com:443/fscmService/PurchaseRequestService?XSD=/xml/sdoJava.xsd"/>
+    <xsd:include schemaLocation="https://ecex-test.fa.us2.oraclecloud.com:443/fscmService/PurchaseRequestService?XSD=/oracle/apps/prc/po/editDocument/purchaseRequestService/PurchaseRequestControlEntryDetail.xsd"/>
+    <xsd:complexType name="PurchaseRequestControlEntry">
+        <xsd:annotation>
+            <xsd:appinfo source="http://xmlns.oracle.com/adf/svc/metadata/">
+                <key xmlns="http://xmlns.oracle.com/adf/svc/metadata/">
+                    <attribute>ControlRequestId</attribute>
+                </key>
+            </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element minOccurs="0" name="ErrorProcessingLevelCode" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="ControlActionCode" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="ControlActionPerformedById" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="ControlActionPerformedByEmail" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="ControlActionReason" nillable="true" type="xsd:string"/>
+            <xsd:element maxOccurs="unbounded" minOccurs="0" name="PurchaseRequestControlEntryDetail"
+                 type="PurchaseRequestControlEntryDetail"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="purchaseRequestControlEntry" type="PurchaseRequestControlEntry"/>
+</xsd:schema>

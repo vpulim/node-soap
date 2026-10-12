@@ -26,7 +26,7 @@ test.sslOptions = {
   cert: fs.readFileSync(__dirname + '/certs/agent2-cert.pem'),
 };
 
-describe('SOAP Client(SSL)', function () {
+describe('SOAP Client (SSL)', function () {
   before(function (done) {
     fs.readFile(__dirname + '/wsdl/strict/stockquote.wsdl', 'utf8', function (err, data) {
       assert.ifError(err);
@@ -89,6 +89,8 @@ describe('SOAP Client(SSL)', function () {
           done();
         }
       });
+
+      done(err);
     });
   });
 });

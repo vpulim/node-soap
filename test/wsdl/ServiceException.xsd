@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<schema elementFormDefault="qualified" targetNamespace="http://xmlns.oracle.com/adf/svc/errors/"
+     sdoJava:package="oracle.jbo.service.errors" xmlns:sdoJava="commonj.sdo/java" xmlns:tns="http://xmlns.oracle.com/adf/svc/errors/"
+     xmlns="http://www.w3.org/2001/XMLSchema">
+    <import namespace="commonj.sdo/java" schemaLocation="https://ecex-test.fa.us2.oraclecloud.com:443/fscmService/PurchaseRequestService?XSD=/xml/sdoJava.xsd"/>
+    <element name="ServiceErrorMessage" type="tns:ServiceErrorMessage"/>
+    <complexType name="ServiceMessage">
+        <sequence>
+            <element maxOccurs="1" minOccurs="0" name="code" type="string"/>
+            <element maxOccurs="1" minOccurs="0" name="message" type="string"/>
+            <element maxOccurs="1" minOccurs="0" name="severity" type="string"/>
+            <element maxOccurs="unbounded" minOccurs="0" name="detail" type="tns:ServiceMessage"/>
+        </sequence>
+    </complexType>
+    <complexType name="ServiceErrorMessage">
+        <complexContent>
+            <extension base="tns:ServiceMessage">
+                <sequence>
+                    <element maxOccurs="1" minOccurs="0" name="sdoObject" type="anyType"/>
+                    <element maxOccurs="1" minOccurs="0" name="exceptionClassName" type="string"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    <complexType name="ServiceAttrValErrorMessage">
+        <complexContent>
+            <extension base="tns:ServiceErrorMessage">
+                <sequence>
+                    <element maxOccurs="1" minOccurs="0" name="attributeName" type="string"/>
+                    <element maxOccurs="1" minOccurs="0" name="attributeValue" type="anySimpleType"/>
+                    <element maxOccurs="1" minOccurs="0" name="objectName" type="string"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    <complexType name="ServiceRowValErrorMessage">
+        <complexContent>
+            <extension base="tns:ServiceErrorMessage">
+                <sequence>
+                    <element maxOccurs="1" minOccurs="0" name="objectName" type="string"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+    <complexType name="ServiceDMLErrorMessage">
+        <complexContent>
+            <extension base="tns:ServiceErrorMessage">
+                <sequence>
+                    <element maxOccurs="1" minOccurs="0" name="operation" type="string"/>
+                    <element maxOccurs="1" minOccurs="0" name="statement" type="string"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+</schema>

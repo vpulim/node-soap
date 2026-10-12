@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xsd:schema elementFormDefault="qualified" targetNamespace="http://xmlns.oracle.com/apps/prc/po/editDocument/purchaseRequestService/"
+     sdoJava:package="oracle.apps.prc.po.editDocument.purchaseRequestService" xmlns:sdoJava="commonj.sdo/java"
+     xmlns="http://xmlns.oracle.com/apps/prc/po/editDocument/purchaseRequestService/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <xsd:annotation>
+        <xsd:documentation xmlns:oer="http://xmlns.oracle.com/oer">
+            <name>Purchase Request Control Documents Service Data Object Version 1</name>
+            <description>Version 1 of an object, representing the set of requisition or
+                purchase order documents for which the control action is being
+                performed.</description>
+            <oer:category name="lba">
+                <value>PrcTop-Procurement</value>
+                <value>PrcTop-Procurement : PrcPoTop-Purchasing</value>
+                <value>PrcTop-Procurement : PrcPoTop-Purchasing :
+                    PrcPoEditDocument-Edit Purchasing Document</value>
+            </oer:category>
+            <oer:category name="ces">
+                <value>Fusion DOO to AU Order Entry/Fulfillment</value>
+            </oer:category>
+            <oer:attributes>
+                <oer:attribute description="The unique identifier of a requisition line." name="RequisitionLineId"/>
+                <oer:attribute description="The unique identifier of a purchase order." name="POHeaderId"/>
+                <oer:attribute description="The unique identifier of a purchase order change order."
+                     name="BaseLineChangeOrderSequence"/>
+                <oer:attribute description="The unique identifier of a purchase order schedule." name="LineLocationId"/>
+            </oer:attributes>
+        </xsd:documentation>
+    </xsd:annotation>
+    <xsd:import namespace="commonj.sdo/java" schemaLocation="https://ecex-test.fa.us2.oraclecloud.com:443/fscmService/PurchaseRequestService?XSD=/xml/sdoJava.xsd"/>
+    <xsd:complexType name="PurchaseRequestControlEntryDetail">
+        <xsd:annotation>
+            <xsd:appinfo source="http://xmlns.oracle.com/adf/svc/metadata/">
+                <key xmlns="http://xmlns.oracle.com/adf/svc/metadata/">
+                    <attribute>ControlRequestId</attribute>
+                </key>
+            </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element minOccurs="0" name="RequisitionLineId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="POHeaderId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="BaseLineChangeOrderSequence" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="LineLocationId" nillable="true" type="xsd:long"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="purchaseRequestControlEntryDetail" type="PurchaseRequestControlEntryDetail"/>
+</xsd:schema>
