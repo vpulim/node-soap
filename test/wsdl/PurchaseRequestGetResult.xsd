@@ -1,0 +1,606 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xsd:schema elementFormDefault="qualified" targetNamespace="http://xmlns.oracle.com/apps/prc/po/editDocument/purchaseRequestService/"
+     sdoJava:package="oracle.apps.prc.po.editDocument.purchaseRequestService" xmlns:ns0="http://xmlns.oracle.com/adf/svc/types/"
+     xmlns:sdoJava="commonj.sdo/java" xmlns="http://xmlns.oracle.com/apps/prc/po/editDocument/purchaseRequestService/"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <xsd:annotation>
+        <xsd:documentation xmlns:oer="http://xmlns.oracle.com/oer">
+            <name>Purchase Request Get Confirmation Service Data Object Version 1</name>
+            <description>Version 1 of an object, representing the attributes that are
+                returned when the purchase request get operation is completed.</description>
+            <oer:category name="lba">
+                <value>PrcTop-Procurement</value>
+                <value>PrcTop-Procurement : PrcPoTop-Purchasing</value>
+                <value>PrcTop-Procurement : PrcPoTop-Purchasing :
+                    PrcPoEditDocument-Edit Purchasing Document</value>
+            </oer:category>
+            <oer:category name="ces">
+                <value>Fusion DOO to AU Order Entry/Fulfillment</value>
+            </oer:category>
+            <oer:attributes>
+                <oer:attribute description="The unique identifier of a requisition." name="RequisitionHeaderId"/>
+                <oer:attribute description="The display number used to identify a requisition." name="RequisitionNumber"/>
+                <oer:attribute description="The unique identifier of a requisition line." name="RequisitionLineId"/>
+                <oer:attribute description="The display number used to identify a requisition line."
+                     name="RequisitionLine"/>
+                <oer:attribute description="The unique identifier of a purchase order." name="POHeaderId"/>
+                <oer:attribute description="The display number used to identify a purchase order."
+                     name="OrderNumber"/>
+                <oer:attribute description="The display number used to identify a purchase order revision."
+                     name="OrderRevision"/>
+                <oer:attribute description="The unique identifier of a purchase order change order."
+                     name="BaseLineChangeOrderSequence"/>
+                <oer:attribute description="The display number used  to identify a purchase order change order."
+                     name="BaseLineChangeOrderNumber"/>
+                <oer:attribute description="The unique identifier of a purchase order line." name="POLineId"/>
+                <oer:attribute description="The display number used to identify a purchase order line."
+                     name="LineNumber"/>
+                <oer:attribute description="The unique identifier of a purchase order schedule." name="LineLocationId"/>
+                <oer:attribute description="The display number used to identify a purchase order schedule."
+                     name="ScheduleNumber"/>
+                <oer:attribute description="A code indicating the outside source that the data was imported from. Reserved values for internal use include ORA_FUSION_DOO, ORA_FUSION_SCO, ORA_FUSION_INV."
+                     name="InterfaceSourceCode"/>
+                <oer:attribute description="A code indicating if the integrating application is orchestrating changes between their application and Fusion Procurement. Example values include DOO_TRACKED and SCO_TRACKED."
+                     name="OrchestrationCode"/>
+                <oer:attribute description="A code indicating the type of change completed. Valid values include SPLIT, ORDER_CANCELED, REQUEST_CANCELED, or CHANGED. ORDER_CANCELED indicates that the purchase order schedule is canceled and the backing requisition line is reinstated. REQUEST_CANCELED indicates that the both the purchase order schedule and backing requisition line are canceled."
+                     name="ChangeTypeCode"/>
+                <oer:attribute description="A text description capturing the reason for the change."
+                     name="ChangeReason"/>
+                <oer:attribute description="A text description capturing the reason or purpose of the change order."
+                     name="ChangeOrderDescription"/>
+                <oer:attribute description="A code indicating the party who originated the purchase document change request. Valid values include REQUESTER, BUYER, and SUPPLIER."
+                     name="ChangeOrderInitiatingParty"/>
+                <oer:attribute description="The unique identifier of a schedule that has been split to create a new schedule."
+                     name="ParentLineLocationId"/>
+                <oer:attribute description="The unique identifier of the requisition line that was created to hold the unfulfilled quantity of a canceled order schedule, before processing it in a new order."
+                     name="ReinstatedRequisitionLineId"/>
+                <oer:attribute description="The display number used to identify a requisition line that was created to hold the unfulfilled quantity of a canceled order schedule, before processing it in a new order."
+                     name="ReinstatedRequisitionLine"/>
+                <oer:attribute description="The quantity of a requisition line that was created to hold the unfulfilled quantity of a canceled order schedule, before processing it in a new order."
+                     name="ReinstatedRequisitionLineQuantity"/>
+                <oer:attribute description="A code indicating the state that the purchase order is in relative to the entire document lifecycle."
+                     name="DocumentStatusCode"/>
+                <oer:attribute description="The display name of a purchase order state relative to the entire document lifecycle."
+                     name="DocumentStatus"/>
+                <oer:attribute description="Indicates whether or not a user is allowed to create a change order on the document."
+                     name="FrozenFlag"/>
+                <oer:attribute description="A code indicating the state that the purchase order schedule is in relative to the entire schedule lifecycle."
+                     name="ScheduleStatusCode"/>
+                <oer:attribute description="The display name of a purchase order schedule state relative to the entire schedule lifecycle."
+                     name="ScheduleStatus"/>
+                <oer:attribute description="A text description capturing user entered comments provided during a cancellation request."
+                     name="CancelReason"/>
+                <oer:attribute description="The unique identifier of a requisitioning business unit."
+                     name="RequisitioningBUId"/>
+                <oer:attribute description="The display name of a requisitioning business unit." name="RequisitioningBUName"/>
+                <oer:attribute description="The unique identifier of a legal entity that is liable for the purchase order amount."
+                     name="SoldToLegalEntityId"/>
+                <oer:attribute description="The display name of a legal entity that is liable for the purchase order amount."
+                     name="SoldToLegalEntityName"/>
+                <oer:attribute description="The unique identifier of a buyer specified on the document."
+                     name="BuyerId"/>
+                <oer:attribute description="The display name of a buyer specified on the document."
+                     name="BuyerName"/>
+                <oer:attribute description="The email address for a buyer specified on the document."
+                     name="BuyerEmail"/>
+                <oer:attribute description="The day the purchase order was first communicated, acknowledged, or implemented."
+                     name="OrderDate"/>
+                <oer:attribute description="The unique identifier of an organization or individual that provides goods or services to the buying organization for payment, bound by a contractual obligation."
+                     name="SupplierId"/>
+                <oer:attribute description="The display name of an organization or individual that provides goods or services to the buying organization for payment, bound by a contractual obligation."
+                     name="SupplierName"/>
+                <oer:attribute description="The display number used to identify an organization or individual that provides goods or services to the buying organization for payment, bound by a contractual obligation."
+                     name="SupplierNumber"/>
+                <oer:attribute description="The unique identifier of an entity that models how the buying organization conducts business with the supplier."
+                     name="SupplierSiteId"/>
+                <oer:attribute description="The display name of an entity that models how the buying organization conducts business with the supplier."
+                     name="SupplierSiteName"/>
+                <oer:attribute description="The unique identifier of a supplier employee who represents the supplier in communications with the buying organization."
+                     name="SupplierContactId"/>
+                <oer:attribute description="The display name of a supplier employee who represents the supplier in communications with the buying organization."
+                     name="SupplierContactName"/>
+                <oer:attribute description="The email address for a supplier employee who represents the supplier in communications with the buying organization."
+                     name="SupplierContactEmail"/>
+                <oer:attribute description="The phone number for a supplier employee who represents the supplier in communications with the buying organization."
+                     name="SupplierContactPhone"/>
+                <oer:attribute description="The fax for a supplier employee who represents the supplier in communications with the buying organization."
+                     name="SupplierContactFax"/>
+                <oer:attribute description="The unique identifier of the tax registration record corresponding to the sold-to legal entity on the purchase order."
+                     name="FirstPartyTaxRegistrationId"/>
+                <oer:attribute description="The unique display number assigned to the sold-to legal entity by a tax authority in order to manage tax liabilities"
+                     name="FirstPartyTaxRegistrationNumber"/>
+                <oer:attribute description="The unique tax registration identifier assigned to the supplier site on the purchase order when a tax authority registered the legal entity."
+                     name="ThirdPartyTaxRegistrationId"/>
+                <oer:attribute description="The display number used to identify a supplier site on the purchase order when a tax authority registered the legal entity."
+                     name="ThirdPartyTaxRegistrationNumber"/>
+                <oer:attribute description="The display number of the document that the supplier has created in its system against the purchase order."
+                     name="SupplierOrderNumber"/>
+                <oer:attribute description="The display number of the document line that the supplier has created in its system against a purchase order schedule."
+                     name="SupplierOrderLineNumber"/>
+                <oer:attribute description="A text description capturing the instructions to the supplier."
+                     name="NoteToSupplier"/>
+                <oer:attribute description="The display number used to identify an imported purchase order from a legacy system."
+                     name="ReferenceNumber"/>
+                <oer:attribute description="The unique identifier of a line type that indicates whether a purchase is for goods or services."
+                     name="LineTypeId"/>
+                <oer:attribute description="The display name of a line type that indicates whether a purchase is for goods or services."
+                     name="LineType"/>
+                <oer:attribute description="The unique identifier of an item." name="ItemId"/>
+                <oer:attribute description="The display number of an item representing anything you make, purchase, or sell, including components, subassemblies, finished products, or supplies."
+                     name="ItemNumber"/>
+                <oer:attribute description="The identifier of an inventory item version being referenced on an order line."
+                     name="ItemRevision"/>
+                <oer:attribute description="A text description capturing details about the item being purchased."
+                     name="ItemDescription"/>
+                <oer:attribute description="The unique identifier of a category used to group items with similar characteristics."
+                     name="CategoryId"/>
+                <oer:attribute description="The display name of a category used to group items with similar characteristics."
+                     name="CategoryName"/>
+                <oer:attribute description="The display name of a supplier&apos;s identification number or code for the goods ordered on your order line."
+                     name="SupplierItemNumber"/>
+                <oer:attribute description="The display name of a work order product." name="WorkOrderProduct"/>
+                <oer:attribute description="The display number that uniquely identifies a work order in a plant."
+                     name="WorkOrderNumber"/>
+                <oer:attribute description="The unique identifier of a work order in a plant." name="WorkOrderId"/>
+                <oer:attribute description="A code indicating the division of quantity defined as a standard of measurement or exchange."
+                     name="UnitOfMeasureCode"/>
+                <oer:attribute description="The display name of a division of quantity defined as a standard of measurement or exchange."
+                     name="UnitOfMeasure"/>
+                <oer:attribute description="The ordered quantity for the purchase order schedule."
+                     name="Quantity"/>
+                <oer:attribute description="A code indicating the three-letter ISO code associated with a currency."
+                     name="CurrencyCode"/>
+                <oer:attribute description="The price of the item on the document line." name="Price"/>
+                <oer:attribute description="The total amount of the order according to the quantities and prices of the goods and service items specified on the order line."
+                     name="Amount"/>
+                <oer:attribute description="The sum of the recoverable and non-recoverable tax amounts."
+                     name="TotalTaxAmount"/>
+                <oer:attribute description="The sum of ordered amount and total tax amount." name="TotalAmount"/>
+                <oer:attribute description="A code indicating the alternative unit of measure that is allowed to quantify a dual UOM controlled item."
+                     name="SecondaryUOMCode"/>
+                <oer:attribute description="The display name of an alternative unit of measure that is allowed to quantify a dual UOM controlled item."
+                     name="SecondaryUOM"/>
+                <oer:attribute description="The quantity converted in the secondary unit of measure of a dual UOM controlled item."
+                     name="SecondaryQuantity"/>
+                <oer:attribute description="Indicates whether or not the item will be purchased under a consignment arrangement from a supplier. A consignment arrangement is a business process wherein materials that are in the possession of one party (for example, customers, dealers, agents) remain the property of another party (for example, the manufacturer) by agreement with those in possession till it is consumed."
+                     name="ConsignmentLineFlag"/>
+                <oer:attribute description="The unique identifier of a model from which an ATO configuration was created."
+                     name="BaseModelId"/>
+                <oer:attribute description="The display name of a model from which an ATO configuration was created."
+                     name="BaseModelNumber"/>
+                <oer:attribute description="The model price from which an ATO configuration was created."
+                     name="BaseModelPrice"/>
+                <oer:attribute description="The price of the option. An option is a configurable add-on that is part of a larger configuration."
+                     name="SelectedOptionsPrice"/>
+                <oer:attribute description="The day that the buying company has requested that the supplier deliver the item."
+                     name="RequestedDeliveryDate"/>
+                <oer:attribute description="The day that the supplier has promised to deliver the ordered item."
+                     name="PromisedDeliveryDate"/>
+                <oer:attribute description="The first promised delivery day that is recorded for a purchase order schedule."
+                     name="OriginalPromisedDeliveryDate"/>
+                <oer:attribute description="The day that the buying company has requested that the ordered item is ready to be shipped."
+                     name="RequestedShipDate"/>
+                <oer:attribute description="The day that the supplier has promised to ship the item ordered by the buying company."
+                     name="PromisedShipDate"/>
+                <oer:attribute description="The first promised ship day that is recorded for a purchase order schedule."
+                     name="OriginalPromisedShipDate"/>
+                <oer:attribute description="The unique identifier of a purchase agreement against which this purchase order line is released."
+                     name="SourceAgreementId"/>
+                <oer:attribute description="The display number used to identify a purchase agreement against which this purchase order line is released."
+                     name="SourceAgreementNumber"/>
+                <oer:attribute description="The unique identifier of a purchase agreement line against which this purchase order line is released."
+                     name="SourceAgreementLineId"/>
+                <oer:attribute description="The display number used to identify a purchase agreement line against which this purchase order line is released."
+                     name="SourceAgreementLineNumber"/>
+                <oer:attribute description="The unique identifier of a location where the supplier should ship the goods."
+                     name="ShipToLocationId"/>
+                <oer:attribute description="A code indicating the location where the supplier should ship the goods."
+                     name="ShipToLocationCode"/>
+                <oer:attribute description="The unique identifier of an inventory organization where the supplier should ship the goods."
+                     name="ShipToOrganizationId"/>
+                <oer:attribute description="A code indicating the inventory organization where the supplier should ship the goods."
+                     name="ShipToOrganizationCode"/>
+                <oer:attribute description="The display name of an inventory organization where the supplier should ship the goods."
+                     name="ShipToOrganizationName"/>
+                <oer:attribute description="The unique identifier of a third-party to which materials need to be shipped."
+                     name="ShipToCustomerId"/>
+                <oer:attribute description="The display name of a third-party to which materials need to be shipped."
+                     name="ShipToCustomerName"/>
+                <oer:attribute description="The display number of a third-party to which materials need to be shipped."
+                     name="ShipToCustomerNumber"/>
+                <oer:attribute description="The unique identifier for a third-party location to which materials need to be shipped."
+                     name="ShipToCustomerLocationId"/>
+                <oer:attribute description="The original system reference for a third-party location to which materials need to be shipped."
+                     name="ShipToCustomerLocationOriginalSystemReference"/>
+                <oer:attribute description="The CLLI Code for a third-party location to which materials need to be shipped."
+                     name="ShipToCustomerLocationCLLICode"/>
+                <oer:attribute description="The unique identifier of a third-party contact to which materials need to be shipped."
+                     name="ShipToCustomerContactId"/>
+                <oer:attribute description="The display name of a third-party contact to which materials need to be shipped."
+                     name="ShipToCustomerContactName"/>
+                <oer:attribute description="The display number of a third-party contact to which materials need to be shipped."
+                     name="ShipToCustomerContactNumber"/>
+                <oer:attribute description="Indicates whether or not the purchase order schedule has a backing sales order that is fulfilled using a back to back order."
+                     name="BackToBackFlag"/>
+                <oer:attribute description="The display number used to identify a backing customer sales order number."
+                     name="SalesOrderNumber"/>
+                <oer:attribute description="The display number used to identify a backing customer sales order line number."
+                     name="SalesOrderLineNumber"/>
+                <oer:attribute description="The display number used to identify a backing customer sales order schedule number."
+                     name="SalesOrderScheduleNumber"/>
+                <oer:attribute description="The display number used to identify a purchase order from the customer that originated the sales order which is being fulfilled by the material being procured in a drop ship arrangement."
+                     name="CustomerPONumber"/>
+                <oer:attribute description="The display number used to identify a purchase order line from the customer that originated the sales order which is being fulfilled by the material being procured in a drop ship arrangement."
+                     name="CustomerPOLineNumber"/>
+                <oer:attribute description="The display number used to identify a purchase order schedule from the customer that originated the sales order which is being fulfilled by the material being procured in a drop ship arrangement."
+                     name="CustomerPOScheduleNumber"/>
+                <oer:attribute description="The display name of a customer&apos;s identification number or code for the goods ordered on your order line."
+                     name="CustomerItemNumber"/>
+                <oer:attribute description="A text description capturing a customer&apos;s identification number or code for the goods ordered on your order line."
+                     name="CustomerItemDescription"/>
+                <oer:attribute description="The unique identifier of a company that transports goods from one point to another by land, sea, or air."
+                     name="CarrierId"/>
+                <oer:attribute description="The display name of a company that transports goods from one point to another by land, sea, or air."
+                     name="Carrier"/>
+                <oer:attribute description="A code indicating the various modes of transportation used for the movement of goods."
+                     name="ModeOfTransportCode"/>
+                <oer:attribute description="The display name of a mode of transportation used to describe the movement of goods."
+                     name="ModeOfTransport"/>
+                <oer:attribute description="A code indicating the priority of transportation that affects how quickly goods are transported."
+                     name="ServiceLevelCode"/>
+                <oer:attribute description="The display name of a transportation priority that affects how quickly goods are transported."
+                     name="ServiceLevel"/>
+                <oer:attribute description="The unique identifier of a United Nations identification number for the hazardous material."
+                     name="UNNumberId"/>
+                <oer:attribute description="The display name of a United Nations identification number for the hazardous material."
+                     name="UNNumber"/>
+                <oer:attribute description="The unique identifier of a classification of hazardous materials, to facilitate safety regulations compliance."
+                     name="HazardClassId"/>
+                <oer:attribute description="The display name of a classification of hazardous materials, to facilitate safety regulations compliance."
+                     name="HazardClass"/>
+                <oer:attribute description="A code indicating the country from which goods are exported."
+                     name="CountryOfOriginCode"/>
+                <oer:attribute description="The display name of a country from which goods are exported."
+                     name="CountryOfOrigin"/>
+                <oer:attribute description="The first day that the buying company will accept the delivery of the ordered goods."
+                     name="EarliestDeliveryDate"/>
+                <oer:attribute description="The last day that the buying company will accept the delivery of the ordered goods."
+                     name="LatestDeliveryDate"/>
+                <oer:attribute description="The first day that the buying company will accept the requested goods to be shipped."
+                     name="EarliestShipDate"/>
+                <oer:attribute description="The last day that the buying company will accept the requested goods to be shipped."
+                     name="LatestShipDate"/>
+                <oer:attribute description="A code indicating the action that is triggered when the ordered quantity or amount is not yet received before the late receipt tolerance days."
+                     name="ReceiptDateExceptionActionCode"/>
+                <oer:attribute description="The display name of an action that is triggered when the ordered quantity or amount is not yet received before the late receipt tolerance days."
+                     name="ReceiptDateExceptionAction"/>
+                <oer:attribute description="A code indicating how to handle receipts when the receiving location differs from the ship-to location."
+                     name="ShipToExceptionActionCode"/>
+                <oer:attribute description="The display name of how to handle receipts when the receiving location differs from the ship-to location."
+                     name="ShipToExceptionAction"/>
+                <oer:attribute description="The tolerance that allows a purchase order schedule to receive more than ordered quantity or amount without triggering the over-receipt action."
+                     name="OverReceiptTolerancePercent"/>
+                <oer:attribute description="A code indicating how to handle receipts that exceed the received quantity tolerance."
+                     name="OverReceiptActionCode"/>
+                <oer:attribute description="The display name of how to handle receipts that exceed the received quantity tolerance."
+                     name="OverReceiptAction"/>
+                <oer:attribute description="The unique identifier of a method of simplifying transaction entry by specifying routing steps for receipts."
+                     name="ReceiptRoutingId"/>
+                <oer:attribute description="The display name of a method used to simplify transaction entry by specifying routing steps for receipts."
+                     name="ReceiptRouting"/>
+                <oer:attribute description="Indicates whether or not the purchase order schedule can receive substitute item in place of ordered item."
+                     name="AllowSubstituteReceiptsFlag"/>
+                <oer:attribute description="The maximum acceptable number of days early for receipts."
+                     name="DaysEarlyReceiptAllowed"/>
+                <oer:attribute description="The maximum acceptable number of days late for receipts."
+                     name="DaysLateReceiptAllowed"/>
+                <oer:attribute description="A text description capturing the instructions to the receiver in the docking area to be reviewed while performing the receipt."
+                     name="NoteToReceiver"/>
+                <oer:attribute description="Indicates whether or not there are multiple distributions associated with the purchase order schedule."
+                     name="MultipleDistributionsOnPOFlag"/>
+                <oer:attribute description="A code indicating if the item is for inventory, expense, drop ship, or manufacturing."
+                     name="DestinationTypeCode"/>
+                <oer:attribute description="The display name indicating if the item should be charged to an inventory or should be expensed."
+                     name="DestinationType"/>
+                <oer:attribute description="The unique identifier of an organization to which the requested item should be delivered."
+                     name="DeliverToOrganizationId"/>
+                <oer:attribute description="A code indicating the organization to which the requested item should be delivered."
+                     name="DeliverToOrganizationCode"/>
+                <oer:attribute description="The unique identifier of a final delivery location for goods previously received from a supplier."
+                     name="DeliverToLocationId"/>
+                <oer:attribute description="A code indicating the final delivery location for goods previously received from a supplier."
+                     name="DeliverToLocationCode"/>
+                <oer:attribute description="The display name of a subinventory to which the requested item should be delivered."
+                     name="DestinationSubinventory"/>
+                <oer:attribute description="The unique identifier of a requester." name="RequesterId"/>
+                <oer:attribute description="The display name of a requester." name="RequesterName"/>
+                <oer:attribute description="The email address for a requester." name="RequesterEmail"/>
+                <oer:attribute description="The unique identifier of a third-party to which materials need to be delivered."
+                     name="DeliverToCustomerId"/>
+                <oer:attribute description="The display name of a third-party to which materials need to be delivered."
+                     name="DeliverToCustomerName"/>
+                <oer:attribute description="The display number of a third-party to which materials need to be delivered."
+                     name="DeliverToCustomerNumber"/>
+                <oer:attribute description="The unique identifier for a third-party location to which materials need to be delivered."
+                     name="DeliverToCustomerLocationId"/>
+                <oer:attribute description="The original system reference for a third-party location to which materials need to be delivered."
+                     name="DeliverToCustomerLocationOriginalSystemReference"/>
+                <oer:attribute description="The CLLI Code for a third-party location to which materials need to be delivered."
+                     name="DeliverToCustomerLocationCLLICode"/>
+                <oer:attribute description="The unique identifier of a third-party contact to which materials need to be delivered."
+                     name="DeliverToCustomerContactId"/>
+                <oer:attribute description="The display name of a third-party contact to which materials need to be delivered."
+                     name="DeliverToCustomerContactName"/>
+                <oer:attribute description="The display number of a third-party contact to which materials need to be delivered."
+                     name="DeliverToCustomerContactNumber"/>
+                <oer:attribute description="A code indicating the business classification used by Oracle Fusion Tax to identify and categorize an external transaction into a Fusion Tax transaction."
+                     name="TransactionBusinessCategory"/>
+                <oer:attribute description="The display name of a business classification used by Oracle Fusion Tax to identify and categorize an external transaction into a Fusion Tax transaction."
+                     name="TransactionBusinessCategoryName"/>
+                <oer:attribute description="A code indicating the type of product fiscal classification used to classify products. Related term(s): product fiscal classification."
+                     name="ProductType"/>
+                <oer:attribute description="The display name of a product fiscal classification type used to classify products."
+                     name="ProductTypeName"/>
+                <oer:attribute description="The unique identifier of a classification used by a tax authority to categorize a product for a tax. There could be more than one by tax. For example, for Brazil two classifications are required."
+                     name="ProductFiscalClassificationId"/>
+                <oer:attribute description="A code indicating the classification used by a tax authority to categorize a product for a tax. There could be more than one by tax. For example, for Brazil two classifications are required."
+                     name="ProductFiscalClassification"/>
+                <oer:attribute description="The display name of a classification used by a tax authority to categorize a product for a tax. There could be more than one by tax. For example, for Brazil two classifications are required."
+                     name="ProductFiscalClassificationName"/>
+                <oer:attribute description="A code indicating the type of product fiscal classification used to classify products."
+                     name="ProductCategory"/>
+                <oer:attribute description="The display name of a product fiscal classification type used to classify products."
+                     name="ProductCategoryName"/>
+                <oer:attribute description="The unique identifier of a tax classification that is based on the purpose for which a product is used."
+                     name="LineIntendedUseId"/>
+                <oer:attribute description="A code indicating the type of the tax classification that is based on the purpose for which a product is used."
+                     name="LineIntendedUse"/>
+                <oer:attribute description="The display name of a tax classification that is based on the purpose for which a product is used."
+                     name="LineIntendedUseName"/>
+                <oer:attribute description="A coding indicating the classification for any tax requirement that you cannot define using the existing fiscal classification types."
+                     name="UserDefinedFiscalClassification"/>
+                <oer:attribute description="The display name of a classification for any tax requirement that you cannot define using the existing fiscal classification types."
+                     name="UserDefinedFiscalClassificationName"/>
+                <oer:attribute description="A code indicating the group of taxes for reporting and processing purposes."
+                     name="TaxClassificationCode"/>
+                <oer:attribute description="The display name of a group of taxes for reporting and processing purposes."
+                     name="TaxClassificationName"/>
+                <oer:attribute description="The deemed price at which a product is valued, by a tax authority, for tax calculation purposes. The same product can have more than one assessable value, as given by different tax authorities."
+                     name="AssessableAmount"/>
+                <oer:attribute description="A code indicating the final destination location for the purchases made by the customer. The location of the final customer or where the goods would be used is not necessarily the same as the initial ship-to location."
+                     name="LocationOfFinalDischargeCode"/>
+                <oer:attribute description="The unique identifier of a final destination location for the purchases made by the customer. The location of the final customer or where the goods would be used is not necessarily the same as the initial ship-to location."
+                     name="LocationOfFinalDischargeId"/>
+                <oer:attribute description="The display name of a country where the transaction is deemed to have taken place for taxation purposes."
+                     name="TaxationCountry"/>
+                <oer:attribute description="A code indicating the country where the transaction is deemed to have taken place for taxation purposes."
+                     name="TaxationCountryCode"/>
+                <oer:attribute description="The display name of a classification used by a tax authority to categorize a document associated with a transaction for a tax."
+                     name="DocumentFiscalClassification"/>
+                <oer:attribute description="A code indicating the classification used by a tax authority to categorize a document associated with a transaction for a tax."
+                     name="DocumentFiscalClassificationCode"/>
+                <oer:attribute description="The display number used to identify the work order operation sequence."
+                     name="WorkOrderOperationSequence"/>
+                <oer:attribute description="The unique identifier of a work order operation." name="WorkOrderOperationId"/>
+                <oer:attribute description="A code indicating the work order operation subtype." name="WorkOrderSubTypeCode"/>
+                <oer:attribute description="A date in UTC when the buying company requests the ordered item or service to be delivered."
+                     name="RequestedDeliveryDateUTC"/>
+                <oer:attribute description="A date in UTC by when the supplier has promised to deliver the ordered item or service."
+                     name="PromisedDeliveryDateUTC"/>
+                <oer:attribute description="The date in UTC when the buying company has requested the ordered item is ready to be shipped."
+                     name="RequestedShipDateUTC"/>
+                <oer:attribute description="A date in UTC by when the supplier has promised to ship the item ordered by the buying company."
+                     name="PromisedShipDateUTC"/>
+            </oer:attributes>
+        </xsd:documentation>
+    </xsd:annotation>
+    <xsd:import namespace="http://xmlns.oracle.com/adf/svc/types/" schemaLocation="https://ecex-test.fa.us2.oraclecloud.com:443/fscmService/PurchaseRequestService?XSD=/META-INF/wsdl/BC4JService.xsd"/>
+    <xsd:import namespace="commonj.sdo/java" schemaLocation="https://ecex-test.fa.us2.oraclecloud.com:443/fscmService/PurchaseRequestService?XSD=/xml/sdoJava.xsd"/>
+    <xsd:complexType name="PurchaseRequestGetResult">
+        <xsd:annotation>
+            <xsd:appinfo source="http://xmlns.oracle.com/adf/svc/metadata/">
+                <key xmlns="http://xmlns.oracle.com/adf/svc/metadata/"/>
+            </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element minOccurs="0" name="RequisitionHeaderId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="RequisitionNumber" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="RequisitionLineId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="RequisitionLine" nillable="true" type="xsd:decimal"/>
+            <xsd:element minOccurs="0" name="POHeaderId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="OrderNumber" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="OrderRevision" nillable="true" type="xsd:decimal"/>
+            <xsd:element minOccurs="0" name="BaseLineChangeOrderSequence" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="BaseLineChangeOrderNumber" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="POLineId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="LineNumber" nillable="true" type="xsd:decimal"/>
+            <xsd:element minOccurs="0" name="LineLocationId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="ScheduleNumber" nillable="true" type="xsd:decimal"/>
+            <xsd:element minOccurs="0" name="InterfaceSourceCode" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="OrchestrationCode" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="ChangeTypeCode" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="ChangeReason" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="ChangeOrderDescription" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="ChangeOrderInitiatingParty" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="ParentLineLocationId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="ReinstatedRequisitionLineId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="ReinstatedRequisitionLine" nillable="true" type="xsd:decimal"/>
+            <xsd:element minOccurs="0" name="ReinstatedRequisitionLineQuantity" nillable="true" type="ns0:MeasureType"/>
+            <xsd:element minOccurs="0" name="DocumentStatusCode" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="DocumentStatus" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="FrozenFlag" nillable="true" type="xsd:boolean"/>
+            <xsd:element minOccurs="0" name="ScheduleStatusCode" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="ScheduleStatus" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="CancelReason" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="RequisitioningBUId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="RequisitioningBUName" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="SoldToLegalEntityId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="SoldToLegalEntityName" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="BuyerId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="BuyerName" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="BuyerEmail" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="OrderDate" nillable="true" type="ns0:date-Date"/>
+            <xsd:element minOccurs="0" name="SupplierId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="SupplierName" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="SupplierNumber" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="SupplierSiteId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="SupplierSiteName" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="SupplierContactId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="SupplierContactName" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="SupplierContactEmail" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="SupplierContactPhone" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="SupplierContactFax" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="FirstPartyTaxRegistrationId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="FirstPartyTaxRegistrationNumber" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="ThirdPartyTaxRegistrationId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="ThirdPartyTaxRegistrationNumber" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="SupplierOrderNumber" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="SupplierOrderLineNumber" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="NoteToSupplier" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="ReferenceNumber" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="LineTypeId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="LineType" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="ItemId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="ItemNumber" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="ItemRevision" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="ItemDescription" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="CategoryId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="CategoryName" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="SupplierItemNumber" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="WorkOrderProduct" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="WorkOrderNumber" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="WorkOrderId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="UnitOfMeasureCode" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="UnitOfMeasure" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="Quantity" nillable="true" type="ns0:MeasureType"/>
+            <xsd:element minOccurs="0" name="CurrencyCode" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="Price" nillable="true" type="ns0:AmountType"/>
+            <xsd:element minOccurs="0" name="Amount" nillable="true" type="ns0:AmountType"/>
+            <xsd:element minOccurs="0" name="TotalTaxAmount" nillable="true" type="ns0:AmountType"/>
+            <xsd:element minOccurs="0" name="TotalAmount" nillable="true" type="ns0:AmountType"/>
+            <xsd:element minOccurs="0" name="SecondaryUOMCode" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="SecondaryUOM" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="SecondaryQuantity" nillable="true" type="ns0:MeasureType"/>
+            <xsd:element minOccurs="0" name="ConsignmentLineFlag" nillable="true" type="xsd:boolean"/>
+            <xsd:element minOccurs="0" name="BaseModelId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="BaseModelNumber" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="BaseModelPrice" nillable="true" type="ns0:AmountType"/>
+            <xsd:element minOccurs="0" name="SelectedOptionsPrice" nillable="true" type="ns0:AmountType"/>
+            <xsd:element minOccurs="0" name="RequestedDeliveryDate" nillable="true" type="ns0:date-Date"/>
+            <xsd:element minOccurs="0" name="PromisedDeliveryDate" nillable="true" type="ns0:date-Date"/>
+            <xsd:element minOccurs="0" name="OriginalPromisedDeliveryDate" nillable="true" type="ns0:date-Date"/>
+            <xsd:element minOccurs="0" name="RequestedShipDate" nillable="true" type="ns0:date-Date"/>
+            <xsd:element minOccurs="0" name="PromisedShipDate" nillable="true" type="ns0:date-Date"/>
+            <xsd:element minOccurs="0" name="OriginalPromisedShipDate" nillable="true" type="ns0:date-Date"/>
+            <xsd:element minOccurs="0" name="SourceAgreementId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="SourceAgreementNumber" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="SourceAgreementLineId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="SourceAgreementLineNumber" nillable="true" type="xsd:decimal"/>
+            <xsd:element minOccurs="0" name="ShipToLocationId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="ShipToLocationCode" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="ShipToOrganizationId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="ShipToOrganizationCode" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="ShipToOrganizationName" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="ShipToCustomerId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="ShipToCustomerName" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="ShipToCustomerNumber" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="ShipToCustomerLocationId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="ShipToCustomerLocationOriginalSystemReference" nillable="true"
+                 type="xsd:string"/>
+            <xsd:element minOccurs="0" name="ShipToCustomerLocationCLLICode" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="ShipToCustomerContactId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="ShipToCustomerContactName" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="ShipToCustomerContactNumber" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="BackToBackFlag" nillable="true" type="xsd:boolean"/>
+            <xsd:element minOccurs="0" name="SalesOrderNumber" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="SalesOrderLineNumber" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="SalesOrderScheduleNumber" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="CustomerPONumber" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="CustomerPOLineNumber" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="CustomerPOScheduleNumber" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="CustomerItemNumber" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="CustomerItemDescription" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="CarrierId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="Carrier" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="ModeOfTransportCode" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="ModeOfTransport" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="ServiceLevelCode" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="ServiceLevel" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="UNNumberId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="UNNumber" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="HazardClassId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="HazardClass" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="CountryOfOriginCode" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="CountryOfOrigin" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="EarliestDeliveryDate" nillable="true" type="ns0:date-Date"/>
+            <xsd:element minOccurs="0" name="LatestDeliveryDate" nillable="true" type="ns0:date-Date"/>
+            <xsd:element minOccurs="0" name="EarliestShipDate" nillable="true" type="ns0:date-Date"/>
+            <xsd:element minOccurs="0" name="LatestShipDate" nillable="true" type="ns0:date-Date"/>
+            <xsd:element minOccurs="0" name="ReceiptDateExceptionActionCode" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="ReceiptDateExceptionAction" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="ShipToExceptionActionCode" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="ShipToExceptionAction" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="OverReceiptTolerancePercent" nillable="true" type="xsd:decimal"/>
+            <xsd:element minOccurs="0" name="OverReceiptActionCode" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="OverReceiptAction" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="ReceiptRoutingId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="ReceiptRouting" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="AllowSubstituteReceiptsFlag" nillable="true" type="xsd:boolean"/>
+            <xsd:element minOccurs="0" name="DaysEarlyReceiptAllowed" nillable="true" type="xsd:decimal"/>
+            <xsd:element minOccurs="0" name="DaysLateReceiptAllowed" nillable="true" type="xsd:decimal"/>
+            <xsd:element minOccurs="0" name="NoteToReceiver" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="MultipleDistributionsOnPOFlag" nillable="true" type="xsd:boolean"/>
+            <xsd:element minOccurs="0" name="DestinationTypeCode" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="DestinationType" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="DeliverToOrganizationId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="DeliverToOrganizationCode" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="DeliverToLocationId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="DeliverToLocationCode" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="DestinationSubinventory" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="RequesterId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="RequesterName" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="RequesterEmail" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="DeliverToCustomerId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="DeliverToCustomerName" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="DeliverToCustomerNumber" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="DeliverToCustomerLocationId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="DeliverToCustomerLocationOriginalSystemReference" nillable="true"
+                 type="xsd:string"/>
+            <xsd:element minOccurs="0" name="DeliverToCustomerLocationCLLICode" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="DeliverToCustomerContactId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="DeliverToCustomerContactName" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="DeliverToCustomerContactNumber" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="TransactionBusinessCategory" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="TransactionBusinessCategoryName" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="ProductType" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="ProductTypeName" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="ProductFiscalClassificationId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="ProductFiscalClassification" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="ProductFiscalClassificationName" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="ProductCategory" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="ProductCategoryName" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="LineIntendedUseId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="LineIntendedUse" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="LineIntendedUseName" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="UserDefinedFiscalClassification" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="UserDefinedFiscalClassificationName" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="TaxClassificationCode" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="TaxClassificationName" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="AssessableAmount" nillable="true" type="ns0:AmountType"/>
+            <xsd:element minOccurs="0" name="LocationOfFinalDischargeCode" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="LocationOfFinalDischargeId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="TaxationCountry" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="TaxationCountryCode" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="DocumentFiscalClassification" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="DocumentFiscalClassificationCode" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="WorkOrderOperationSequence" nillable="true" type="xsd:decimal"/>
+            <xsd:element minOccurs="0" name="WorkOrderOperationId" nillable="true" type="xsd:long"/>
+            <xsd:element minOccurs="0" name="WorkOrderSubTypeCode" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="RequestedDeliveryDateUTC" nillable="true" type="ns0:dateTime-Timestamp"/>
+            <xsd:element minOccurs="0" name="PromisedDeliveryDateUTC" nillable="true" type="ns0:dateTime-Timestamp"/>
+            <xsd:element minOccurs="0" name="RequestedShipDateUTC" nillable="true" type="ns0:dateTime-Timestamp"/>
+            <xsd:element minOccurs="0" name="PromisedShipDateUTC" nillable="true" type="ns0:dateTime-Timestamp"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="purchaseRequestGetResult" type="PurchaseRequestGetResult"/>
+</xsd:schema>
