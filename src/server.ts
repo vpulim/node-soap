@@ -10,6 +10,12 @@ import { WSDL } from './wsdl';
 import { BindingElement, IPort } from './wsdl/elements';
 import zlib from 'zlib';
 
+// The request listener buffers a whole SOAP envelope before parsing it, and a
+// gzip body can decompress to far more bytes than it occupies on the wire. Cap
+// what one request may buffer so a small upload cannot exhaust the process's
+// memory or push the envelope past V8's maximum string length.
+export const MAX_REQUEST_BYTES = 16 * 1024 * 1024;
+
 interface IExpressApp {
   address?: () => { address: string; port: number; family: string } | string;
   route;
@@ -343,18 +349,51 @@ export class Server extends EventEmitter {
         return this._processRequestXml(req, res, req.body.toString());
       }
 
-      const chunks = [];
+      const chunks: Buffer[] = [];
+      let received = 0;
       let gunzip;
       let source = req;
       if (req.headers['content-encoding'] === 'gzip') {
         gunzip = zlib.createGunzip();
+        gunzip.on('error', () => {
+          if (!res.writableEnded) {
+            res.statusCode = 400;
+            res.setHeader('Content-Type', 'text/plain');
+            res.end('Invalid gzip body');
+          }
+        });
         req.pipe(gunzip);
         source = gunzip;
       }
-      source.on('data', (chunk) => {
+      const rejectBody = () => {
+        if (res.writableEnded) {
+          return;
+        }
+        res.statusCode = 413;
+        res.setHeader('Content-Type', 'text/plain');
+        res.end('Request body too large');
+      };
+      source.on('data', (chunk: Buffer) => {
+        if (res.writableEnded) {
+          return;
+        }
+        received += chunk.length;
+        if (received > MAX_REQUEST_BYTES) {
+          // Release what was buffered before answering: the cap is meant to
+          // bound the memory a single request can make the server hold.
+          chunks.length = 0;
+          if (gunzip) {
+            gunzip.destroy();
+          }
+          rejectBody();
+          return;
+        }
         chunks.push(chunk);
       });
       source.on('end', () => {
+        if (res.writableEnded) {
+          return;
+        }
         const xml = Buffer.concat(chunks).toString();
         this._processRequestXml(req, res, xml);
       });
