@@ -356,36 +356,21 @@ export class Server extends EventEmitter {
       if (req.headers['content-encoding'] === 'gzip') {
         gunzip = zlib.createGunzip();
         gunzip.on('error', () => {
-          if (!res.writableEnded) {
-            res.statusCode = 400;
-            res.setHeader('Content-Type', 'text/plain');
-            res.end('Invalid gzip body');
-          }
+          this._sendRequestFault(res, 400, 'Invalid gzip body');
         });
         req.pipe(gunzip);
         source = gunzip;
       }
-      const rejectBody = () => {
-        if (res.writableEnded) {
-          return;
-        }
-        res.statusCode = 413;
-        res.setHeader('Content-Type', 'text/plain');
-        res.end('Request body too large');
-      };
       source.on('data', (chunk: Buffer) => {
         if (res.writableEnded) {
           return;
         }
         received += chunk.length;
         if (received > MAX_REQUEST_BYTES) {
-          // Release what was buffered before answering: the cap is meant to
-          // bound the memory a single request can make the server hold.
-          chunks.length = 0;
           if (gunzip) {
             gunzip.destroy();
           }
-          rejectBody();
+          this._sendRequestFault(res, 413, 'Request body too large');
           return;
         }
         chunks.push(chunk);
@@ -794,6 +779,30 @@ export class Server extends EventEmitter {
     xml += body ? '<' + envelopeKey + ':Body>' + body + '</' + envelopeKey + ':Body>' : '<' + envelopeKey + ':Body/>';
     xml += '</' + envelopeKey + ':Envelope>';
     return xml;
+  }
+
+  private _sendRequestFault(res: Response, statusCode: number, faultstring: string) {
+    if (res.writableEnded) {
+      return;
+    }
+
+    const envelopeKey = this.wsdl.options.envelopeKey;
+    const soap12 = this.wsdl.options.forceSoap12Headers;
+
+    // Build the fault envelope only when a request is actually rejected. The
+    // cap almost never fires, so constructing the body up front would be work
+    // thrown away on every request.
+    const fault: ISoapFault = soap12 ? { Code: { Value: envelopeKey + ':Sender' }, Reason: { Text: faultstring }, statusCode } : { faultcode: envelopeKey + ':Client', faultstring, statusCode };
+
+    res.setHeader('Content-Type', soap12 ? 'application/soap+xml; charset=utf-8' : 'text/xml; charset=utf-8');
+
+    this._sendError(
+      fault,
+      (result, code) => {
+        this._sendHttpResponse(res, code || statusCode, result);
+      },
+      false,
+    );
   }
 
   private _sendError(soapFault: ISoapFault, callback: (result: any, statusCode?: number) => any, includeTimestamp) {
