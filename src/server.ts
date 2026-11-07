@@ -3,6 +3,7 @@
  * MIT Licensed
  */
 
+import { constants as bufferConstants } from 'buffer';
 import { EventEmitter } from 'events';
 import * as http from 'http';
 import { IOneWayOptions, IServerOptions, IServerlessRequest, IServerlessResponse, IServices, ISoapFault, ISoapServiceMethod } from './types';
@@ -13,8 +14,34 @@ import zlib from 'zlib';
 // The request listener buffers a whole SOAP envelope before parsing it, and a
 // gzip body can decompress to far more bytes than it occupies on the wire. Cap
 // what one request may buffer so a small upload cannot exhaust the process's
-// memory or push the envelope past V8's maximum string length.
-export const MAX_REQUEST_BYTES = 16 * 1024 * 1024;
+// memory or push the envelope past V8's maximum string length. The cap is a
+// per-server option (`maxRequestBodyBytes`); this is the value used when it is
+// not set.
+export const DEFAULT_MAX_REQUEST_BYTES = 20 * 1024 * 1024;
+
+// The buffered body is turned into a string with `Buffer#toString()`, so a cap
+// above the build's maximum string length would still let a request that
+// passed the cap throw `ERR_STRING_TOO_LONG`. `buffer.constants` reports that
+// length for the architecture the process runs on (about 512 MiB on 64-bit
+// Node.js and about 256 MiB on 32-bit), which is the ceiling a configured
+// limit must respect.
+const MAX_SUPPORTED_REQUEST_BYTES = bufferConstants.MAX_STRING_LENGTH;
+
+function resolveMaxRequestBytes(value?: number): number {
+  if (value === undefined) {
+    // The default is far below every supported build's ceiling (the smallest
+    // is about 256 MiB), but the cap should never sit above the ceiling even
+    // if a build reported a smaller one.
+    return Math.min(DEFAULT_MAX_REQUEST_BYTES, MAX_SUPPORTED_REQUEST_BYTES);
+  }
+  if (typeof value !== 'number' || !Number.isInteger(value) || value <= 0) {
+    throw new TypeError('maxRequestBodyBytes must be a positive integer number of bytes');
+  }
+  if (value > MAX_SUPPORTED_REQUEST_BYTES) {
+    throw new RangeError(`maxRequestBodyBytes must not exceed ${MAX_SUPPORTED_REQUEST_BYTES} bytes, the maximum string length supported by this Node.js build`);
+  }
+  return value;
+}
 
 interface IExpressApp {
   address?: () => { address: string; port: number; family: string } | string;
@@ -109,6 +136,7 @@ export class Server extends EventEmitter {
   private returnFault: boolean;
   private onewayOptions: IOneWayOptions & { statusCode?: number };
   private enableChunkedEncoding: boolean;
+  private maxRequestBytes: number;
   private soapHeaders: any[];
   private callback?: (err: any, res: any) => void;
   private baseUrl: string;
@@ -127,6 +155,7 @@ export class Server extends EventEmitter {
     this.returnFault = options && options.returnFault;
     this.onewayOptions = (options && options.oneWay) || {};
     this.enableChunkedEncoding = options.enableChunkedEncoding === undefined ? true : !!options.enableChunkedEncoding;
+    this.maxRequestBytes = resolveMaxRequestBytes(options.maxRequestBodyBytes);
     this.callback = options.callback ? options.callback : () => {};
     this.baseUrl = getServerBaseUrl(server);
     if (typeof path === 'string' && path[path.length - 1] !== '/') {
@@ -366,7 +395,7 @@ export class Server extends EventEmitter {
           return;
         }
         received += chunk.length;
-        if (received > MAX_REQUEST_BYTES) {
+        if (received > this.maxRequestBytes) {
           if (gunzip) {
             gunzip.destroy();
           }
