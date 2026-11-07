@@ -163,6 +163,8 @@ export interface IServerOptions extends IWsdlBaseOptions {
   oneWay?: IOneWayOptions;
   /** A boolean for controlling chunked transfer encoding in response. Some client (such as Windows 10's MDM enrollment SOAP client) is sensitive to transfer-encoding mode and can't accept chunked response. This option let user disable chunked transfer encoding for such a client. Default to true for backward compatibility. */
   enableChunkedEncoding?: boolean;
+  /** Maximum number of bytes the server buffers for one request body, measured after gzip decompression. A larger body is answered with HTTP 413 and a SOAP Fault. Must not exceed `buffer.constants.MAX_STRING_LENGTH` for the running Node.js build (about 512 MiB on 64-bit, 256 MiB on 32-bit); a larger value throws a `RangeError`. Defaults to 20 MiB (20971520 bytes). */
+  maxRequestBodyBytes?: number;
   envelopeKey?: string;
 }
 

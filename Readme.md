@@ -269,6 +269,7 @@ Creates a new SOAP server that listens on `path` and provides `services`.
   - `crl` (_string_ | _string[]_: PEM encoded CRLs (Certificate Revocation List)
   - `ciphers` (_string_): A description of the ciphers to use or exclude, separated by `:`. The default cipher suite is:
   - `enableChunkedEncoding` (_boolean_): Controls chunked transfer encoding in response. Some clients (such as Windows 10's MDM enrollment SOAP client) are sensitive to transfer-encoding mode and can't accept chunked response. This option lets users disable chunked transfer encoding for such clients. (**Default:** `true`)
+  - `maxRequestBodyBytes` (_number_): Maximum number of bytes the server buffers for one request body, measured after gzip decompression. A larger body is answered with HTTP `413` and a SOAP Fault (`Request body too large`). It must not exceed the maximum string length supported by the running Node.js build — `buffer.constants.MAX_STRING_LENGTH`, about 512 MiB on 64-bit and 256 MiB on 32-bit Node.js — otherwise the server throws a `RangeError`. (**Default:** `20971520` bytes, i.e. 20 MiB)
 - `services` (_Object_)
 - `wsdl` (_string_): An XML string that defines the service.
 - `callback` (_Function_): A function to run after the server has been initialized.
@@ -362,6 +363,9 @@ soap.listen(server, {
   path: '/wsdl',
   services: myService,
   xml: xml,
+  // Optional: cap one request body at 8 MiB. Defaults to 20 MiB
+  // (20971520 bytes), measured after gzip decompression.
+  maxRequestBodyBytes: 8 * 1024 * 1024,
 
   // WSDL options.
   attributesKey: 'theAttrs',
