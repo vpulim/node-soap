@@ -210,7 +210,7 @@ export class WSDL {
     let envPrefix: string = 'soap';
     const xmlns: any = {};
 
-    const refs = {};
+    const refs = Object.create(null);
 
     p.onopentag = (node) => {
       const nsName = node.name;
