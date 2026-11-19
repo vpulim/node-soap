@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<definitions name="S" targetNamespace="http://ex.com/" xmlns="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:tns="http://ex.com/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+    <message name="PI">
+        <part name="a" type="xsd:string" />
+    </message>
+    <message name="PO">
+        <part name="r" type="xsd:string" />
+    </message>
+    <portType name="PT">
+        <operation name="Ping">
+            <input message="tns:PI" />
+            <output message="tns:PO" />
+        </operation>
+    </portType>
+    <binding name="B" type="tns:PT">
+        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http" />
+        <operation name="Ping">
+            <soap:operation soapAction="Ping" />
+            <input>
+                <soap:body use="literal" namespace="http://ex.com/" />
+            </input>
+            <output>
+                <soap:body use="literal" namespace="http://ex.com/" />
+            </output>
+        </operation>
+    </binding>
+    <service name="S">
+        <port name="P" binding="tns:B">
+            <soap:address location="http://localhost:8099/s" />
+        </port>
+    </service>
+</definitions>
