@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xsd:schema elementFormDefault="qualified" targetNamespace="http://xmlns.oracle.com/apps/prc/po/editDocument/purchaseRequestService/"
+     sdoJava:package="oracle.apps.prc.po.editDocument.purchaseRequestService" xmlns:sdoJava="commonj.sdo/java"
+     xmlns="http://xmlns.oracle.com/apps/prc/po/editDocument/purchaseRequestService/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <xsd:annotation>
+        <xsd:documentation xmlns:oer="http://xmlns.oracle.com/oer">
+            <name>Purchase Request Control Overall Confirmation Service Data
+                Object Version 1</name>
+            <description>Version 1 of an object, representing the overall status that is
+                returned when the purchase request control operation is
+                completed.</description>
+            <oer:category name="lba">
+                <value>PrcTop-Procurement</value>
+                <value>PrcTop-Procurement : PrcPoTop-Purchasing</value>
+                <value>PrcTop-Procurement : PrcPoTop-Purchasing :
+                    PrcPoEditDocument-Edit Purchasing Document</value>
+            </oer:category>
+            <oer:category name="ces">
+                <value>Fusion DOO to AU Order Entry/Fulfillment</value>
+            </oer:category>
+            <oer:attributes>
+                <oer:attribute description="A code indicating the status of the entire purchase request web service call. Valid values include SUCCESS, ERROR, or PARTIAL."
+                     name="OverallRequestStatusCode"/>
+                <oer:attribute description="Version 1 of an object, representing the status of each requisition or purchase order that is returned when the purchase request control operation is completed."
+                     name="PurchaseRequestControlResultDetail"/>
+            </oer:attributes>
+        </xsd:documentation>
+    </xsd:annotation>
+    <xsd:import namespace="commonj.sdo/java" schemaLocation="https://ecex-test.fa.us2.oraclecloud.com:443/fscmService/PurchaseRequestService?XSD=/xml/sdoJava.xsd"/>
+    <xsd:include schemaLocation="https://ecex-test.fa.us2.oraclecloud.com:443/fscmService/PurchaseRequestService?XSD=/oracle/apps/prc/po/editDocument/purchaseRequestService/PurchaseRequestControlResultDetail.xsd"/>
+    <xsd:complexType name="PurchaseRequestControlResult">
+        <xsd:annotation>
+            <xsd:appinfo source="http://xmlns.oracle.com/adf/svc/metadata/">
+                <key xmlns="http://xmlns.oracle.com/adf/svc/metadata/">
+                    <attribute>ControlOutputId</attribute>
+                </key>
+            </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element minOccurs="0" name="OverallRequestStatusCode" nillable="true" type="xsd:string"/>
+            <xsd:element maxOccurs="unbounded" minOccurs="0" name="PurchaseRequestControlResultDetail"
+                 type="PurchaseRequestControlResultDetail"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="purchaseRequestControlResult" type="PurchaseRequestControlResult"/>
+</xsd:schema>
