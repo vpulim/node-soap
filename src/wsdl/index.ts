@@ -20,7 +20,7 @@ import * as elements from './elements';
 const debug = debugBuilder('node-soap');
 
 const XSI_URI = 'http://www.w3.org/2001/XMLSchema-instance';
-const ENV_URI = 'http://schemas.xmlsoap.org/soap/envelope/';
+const DEFAULT_ENVELOPE_URIS = ['http://schemas.xmlsoap.org/soap/envelope/', 'http://www.w3.org/2003/05/soap-envelope'];
 
 export function trim(text) {
   return text.trim();
@@ -207,7 +207,7 @@ export class WSDL {
     };
     const stack: any[] = [{ name: null, object: root, schema: schema }];
     const xsiPrefixes: Map<any, any> = new Map();
-    let envPrefix: string = 'soap';
+    const acceptedEnvelopeURIs = this.options.wsdl_options?.acceptedEnvelopeURIs ?? DEFAULT_ENVELOPE_URIS;
     const xmlns: any = {};
 
     const refs = Object.create(null);
@@ -247,9 +247,6 @@ export class WSDL {
           if (value === XSI_URI) {
             xsiPrefixes.set(name, value);
           }
-          if (value === ENV_URI) {
-            envPrefix = name;
-          }
           continue;
         }
         hasNonXmlnsAttribute = true;
@@ -268,7 +265,7 @@ export class WSDL {
         obj[this.options.attributesKey] = elementAttributes;
       }
 
-      if (!objectName && xmlns[envPrefix] && top.name === 'Body' && name !== 'Fault') {
+      if (!objectName && top.isSoapBody && name !== 'Fault') {
         let message = this.definitions.messages[name];
         // Support RPC/literal messages where response body contains one element named
         // after the operation + 'Response'. See http://www.w3.org/TR/wsdl#_names
@@ -358,7 +355,21 @@ export class WSDL {
       const schemaFromParent = topSchema && (topSchema[originalName] || topSchema[arrayName] || topSchema[name] || topSchema[`${name}[]`]);
       const responseSchema = this.definitions.messages && this.definitions.messages[originalName] && this.definitions.messages[originalName].description(this.definitions);
       const schemaName = xsiTypeSchema || schemaFromParent || (responseSchema && (responseSchema[originalName] || responseSchema[arrayName] || responseSchema[name] || responseSchema[`${name}[]`]));
-      stack.push({ name: originalName, object: obj, schema: schemaName, id: attrs.id, nil: hasNilAttribute });
+      const prefixEnd = nsName.indexOf(':');
+      const namespaceAttribute = prefixEnd === -1 ? 'xmlns' : 'xmlns:' + nsName.slice(0, prefixEnd);
+      const isEnvelope = stack.length === 1 && originalName === 'Envelope';
+      const isSoapBody =
+        top.envelopeNamespace !== undefined && originalName === 'Body' && (attrs[namespaceAttribute] ?? top.envelopeAttributes[namespaceAttribute]) === top.envelopeNamespace && acceptedEnvelopeURIs.includes(top.envelopeNamespace);
+      stack.push({
+        name: originalName,
+        object: obj,
+        schema: schemaName,
+        id: attrs.id,
+        nil: hasNilAttribute,
+        envelopeNamespace: isEnvelope ? attrs[namespaceAttribute] : undefined,
+        envelopeAttributes: isEnvelope ? attrs : undefined,
+        isSoapBody,
+      });
     };
 
     p.onclosetag = (nsName) => {

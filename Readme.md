@@ -84,6 +84,7 @@ This module lets you connect to web services using SOAP. It also provides a serv
   - [Overriding the `attributes` key](#overriding-the-attributes-key)
   - [Overriding imports relative paths](#overriding-imports-relative-paths)
   - [Overriding import locations](#overriding-import-locations)
+  - [Configuring accepted SOAP envelope namespaces](#configuring-accepted-soap-envelope-namespaces)
   - [Specifying the exact namespace definition of the root element](#specifying-the-exact-namespace-definition-of-the-root-element)
   - [Overriding element key specification in XML](#overriding-element-key-specification-in-xml)
   - [Custom Deserializer](#custom-deserializer)
@@ -135,6 +136,7 @@ Creates a new SOAP client from a WSDL URL. Also supports a local filesystem path
   - `request` (_Object_): Override the default request module ([Axios](https://axios-http.com/) as of `v0.40.0`).
   - `wsdl_headers` (_Object_): Set HTTP headers with values to be sent on WSDL requests.
   - `wsdl_options` (_Object_): Set options for the request module on WSDL requests. If using the default request module, see [Request Config | Axios Docs](https://axios-http.com/docs/req_config).
+    - `acceptedEnvelopeURIs` (_string[]_): Configure [accepted SOAP envelope namespaces](#configuring-accepted-soap-envelope-namespaces) for incoming messages.
   - `disableCache` (_boolean_): Prevents caching WSDL files and option objects.
   - `wsdlCache` (_IWSDLCache_): Custom cache implementation. If not provided, defaults to caching WSDLs indefinitely.
   - `overridePromiseSuffix` (_string_): Override the default method name suffix of WSDL operations for Promise-based methods. If any WSDL operation name ends with `Async', you must use this option. (**Default:** `Async`)
@@ -1562,6 +1564,25 @@ soap.createClient('https://127.0.0.1/service.wsdl', options, function(err, clien
     // your code
 });
 ```
+
+## Configuring accepted SOAP envelope namespaces
+
+`wsdl_options.acceptedEnvelopeURIs` controls which envelope namespaces enable WSDL-based SOAP body message lookup when parsing incoming XML. By default, the parser uses both standard namespaces:
+
+- SOAP 1.1 `http://schemas.xmlsoap.org/soap/envelope/`
+- SOAP 1.2 `http://www.w3.org/2003/05/soap-envelope`
+
+A supplied list replaces the defaults. Include the standard URIs in that list if you also want to use them. An empty list (`[]`) disables WSDL-based body message lookup.
+
+```javascript
+const client = await soap.createClientAsync(wsdlUrl, {
+  wsdl_options: {
+    acceptedEnvelopeURIs: ['urn:example:soap-envelope'],
+  },
+});
+```
+
+Set `disableCache: true` when creating clients for the same WSDL with different lists.
 
 ## Specifying the exact namespace definition of the root element
 
