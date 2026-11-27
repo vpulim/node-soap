@@ -106,7 +106,11 @@ export interface IWsdlBaseOptions {
   /** custom HTTP headers to be sent on WSDL requests. */
   wsdl_headers?: { [key: string]: any };
   /** custom options for the request module on WSDL requests. */
-  wsdl_options?: { [key: string]: any };
+  wsdl_options?: {
+    /** Envelope namespace URIs that enable WSDL body message lookup. Defaults to SOAP 1.1 and 1.2. */
+    acceptedEnvelopeURIs?: readonly string[];
+    [key: string]: any;
+  };
   /** set proper headers for SOAP v1.2. */
   forceSoap12Headers?: boolean;
   /** Force to use schema xmlns when schema prefix not found, this is needed when schema prefix is different for the same namespace in different files, for example wsdl and in imported xsd file fir complex types*/
