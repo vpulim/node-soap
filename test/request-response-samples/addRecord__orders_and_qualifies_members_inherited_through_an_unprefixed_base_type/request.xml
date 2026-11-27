@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tns="http://example.com/service"
+    xmlns:msg="http://example.com/messages" xmlns:com="http://example.com/common">
+    <soap:Body>
+        <msg:addRecord xmlns:msg="http://example.com/messages" xmlns="http://example.com/messages">
+            <msg:record>
+                <com:recordId xmlns:com="http://example.com/common">R1</com:recordId>
+                <com:date xmlns:com="http://example.com/common">2026-01-01T00:00:00Z</com:date>
+                <com:subRecordId xmlns:com="http://example.com/common">1</com:subRecordId>
+                <msg:gameInfo xmlns:com="http://example.com/common">G</msg:gameInfo>
+            </msg:record>
+        </msg:addRecord>
+    </soap:Body>
+</soap:Envelope>

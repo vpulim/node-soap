@@ -117,28 +117,38 @@ describe(__filename, function () {
 
       /*
       Expected XML:
-      <msg:registerUserRequest xmlns:msg="http://test-soap.com/api/registration/messages" xmlns="http://test-soap.com/api/registration/messages">
-        <msg:id>ID00000000000000000000000000000000</msg:id>
-        <msg:lastName>Doe</msg:lastName>
-        <msg:firstName>John</msg:firstName>
-        <msg:dateOfBirth>1970-01-01</msg:dateOfBirth>
-        <msg:correspondenceLanguage>ENG</msg:correspondenceLanguage>
-        <msg:emailAddress>jdoe@doe.com</msg:emailAddress>
-        <msg:lookupPermission>ALLOWED</msg:lookupPermission>
-        <msg:companyAddress>
-          <ct:address xmlns:ct="http://test-soap.com/api/common/types">
-            <ct:streetName>Street</ct:streetName>
-            <ct:postalCode>Code</ct:postalCode>
-            <ct:city>City</ct:city>
-            <ct:countryCode>US</ct:countryCode>
-          </ct:address>
-          <ct:companyName xmlns:ct="http://test-soap.com/api/common/types">ACME</ct:companyName>
-        </msg:companyAddress>
+      <msg:registerUserRequest xmlns:msg="http://test-soap.com/api/registration/messages"
+          xmlns="http://test-soap.com/api/registration/messages">
+          <registrationMessages:id
+              xmlns:registrationMessages="http://test-soap.com/api/registration/messages">
+              ID00000000000000000000000000000000</registrationMessages:id>
+          <registrationMessages:lastName
+              xmlns:registrationMessages="http://test-soap.com/api/registration/messages">Doe</registrationMessages:lastName>
+          <registrationMessages:firstName
+              xmlns:registrationMessages="http://test-soap.com/api/registration/messages">John</registrationMessages:firstName>
+          <registrationMessages:dateOfBirth
+              xmlns:registrationMessages="http://test-soap.com/api/registration/messages">1970-01-01</registrationMessages:dateOfBirth>
+          <registrationMessages:correspondenceLanguage
+              xmlns:registrationMessages="http://test-soap.com/api/registration/messages">ENG</registrationMessages:correspondenceLanguage>
+          <registrationMessages:emailAddress
+              xmlns:registrationMessages="http://test-soap.com/api/registration/messages">jdoe@doe.com</registrationMessages:emailAddress>
+          <registrationMessages:lookupPermission
+              xmlns:registrationMessages="http://test-soap.com/api/registration/messages">ALLOWED</registrationMessages:lookupPermission>
+          <registrationMessages:companyAddress
+              xmlns:registrationMessages="http://test-soap.com/api/registration/messages">
+              <ct:address xmlns:ct="http://test-soap.com/api/common/types">
+                  <ct:streetName>Street</ct:streetName>
+                  <ct:postalCode>Code</ct:postalCode>
+                  <ct:city>City</ct:city>
+                  <ct:countryCode>US</ct:countryCode>
+              </ct:address>
+              <ct:companyName xmlns:ct="http://test-soap.com/api/common/types">ACME</ct:companyName>
+          </registrationMessages:companyAddress>
       </msg:registerUserRequest>
       */
       assert.strictEqual(
         requestAsXML,
-        '<msg:registerUserRequest xmlns:msg="http://test-soap.com/api/registration/messages" xmlns="http://test-soap.com/api/registration/messages"><msg:id>ID00000000000000000000000000000000</msg:id><msg:lastName>Doe</msg:lastName><msg:firstName>John</msg:firstName><msg:dateOfBirth>1970-01-01</msg:dateOfBirth><msg:correspondenceLanguage>ENG</msg:correspondenceLanguage><msg:emailAddress>jdoe@doe.com</msg:emailAddress><msg:lookupPermission>ALLOWED</msg:lookupPermission><msg:companyAddress><ct:address xmlns:ct="http://test-soap.com/api/common/types"><ct:streetName>Street</ct:streetName><ct:postalCode>Code</ct:postalCode><ct:city>City</ct:city><ct:countryCode>US</ct:countryCode></ct:address><ct:companyName xmlns:ct="http://test-soap.com/api/common/types">ACME</ct:companyName></msg:companyAddress></msg:registerUserRequest>',
+        '<msg:registerUserRequest xmlns:msg="http://test-soap.com/api/registration/messages" xmlns="http://test-soap.com/api/registration/messages"><registrationMessages:id xmlns:registrationMessages="http://test-soap.com/api/registration/messages">ID00000000000000000000000000000000</registrationMessages:id><registrationMessages:lastName xmlns:registrationMessages="http://test-soap.com/api/registration/messages">Doe</registrationMessages:lastName><registrationMessages:firstName xmlns:registrationMessages="http://test-soap.com/api/registration/messages">John</registrationMessages:firstName><registrationMessages:dateOfBirth xmlns:registrationMessages="http://test-soap.com/api/registration/messages">1970-01-01</registrationMessages:dateOfBirth><registrationMessages:correspondenceLanguage xmlns:registrationMessages="http://test-soap.com/api/registration/messages">ENG</registrationMessages:correspondenceLanguage><registrationMessages:emailAddress xmlns:registrationMessages="http://test-soap.com/api/registration/messages">jdoe@doe.com</registrationMessages:emailAddress><registrationMessages:lookupPermission xmlns:registrationMessages="http://test-soap.com/api/registration/messages">ALLOWED</registrationMessages:lookupPermission><registrationMessages:companyAddress xmlns:registrationMessages="http://test-soap.com/api/registration/messages"><ct:address xmlns:ct="http://test-soap.com/api/common/types"><ct:streetName>Street</ct:streetName><ct:postalCode>Code</ct:postalCode><ct:city>City</ct:city><ct:countryCode>US</ct:countryCode></ct:address><ct:companyName xmlns:ct="http://test-soap.com/api/common/types">ACME</ct:companyName></registrationMessages:companyAddress></msg:registerUserRequest>',
       );
 
       done();

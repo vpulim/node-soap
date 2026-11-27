@@ -1,3 +1,14 @@
+# 1.14.1 / 2026-11-17
+
+- [SECURITY] Prevent prototype pollution in multiRef parsing (#1542)
+- [MAINTENANCE] npm audit
+
+# 1.14.0 / 2026-10-12
+
+- [ENHANCEMENT] Prefer WSDL-declared prefixes for inherited type namespaces (#1537)
+- [MAINTENANCE] Disable coderabbit review status (#1538)
+- [MAINTENANCE] Bump peer dep proxy-addr to 2.0.8
+
 # 1.13.3 / 2026-10-07
 
 - [FIX] Rebuild project to republish on npmjs
