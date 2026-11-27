@@ -6,12 +6,21 @@ var fs = require('fs'),
   join = require('path').join;
 
 var assert = require('assert');
+var should = require('should');
+var SignedXml = require('xml-crypto').SignedXml;
 
 describe('WSSecurityCert', function () {
   var WSSecurityCert = require('../../').WSSecurityCert;
   var cert = fs.readFileSync(join(__dirname, '..', 'certs', 'agent2-cert.pem'));
   var key = fs.readFileSync(join(__dirname, '..', 'certs', 'agent2-key.pem'));
   var keyWithPassword = fs.readFileSync(join(__dirname, '..', 'certs', 'agent2-key-with-password.pem')); // The passphrase protecting the private key is "soap"
+  var envelope = '<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Header></soap:Header><soap:Body><Example/></soap:Body></soap:Envelope>';
+
+  function assertValidSignature(xml) {
+    var verifier = new SignedXml({ publicCert: cert });
+    verifier.loadSignature(xml.match(/<Signature\b[\s\S]*?<\/Signature>/)[0]);
+    assert.strictEqual(verifier.checkSignature(xml), true);
+  }
 
   it('is a function', function () {
     WSSecurityCert.should.be.type('function');
@@ -126,7 +135,9 @@ describe('WSSecurityCert', function () {
   it('Verifies that Soap Timestamp reference is not added to wsse:Security when it is excluded from signing', function () {
     var instance = new WSSecurityCert(key, cert, '', { excludeReferencesFromSigning: ['Timestamp'] });
     var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body><Timestamp></Timestamp></soap:Body></soap:Envelope>', 'soap');
-    xml.should.not.containEql('<Reference URI="#Timestamp">');
+    xml.match(/<Reference URI="#/g).should.have.length(1);
+    xml.should.match(/<Timestamp\b[^>]*>/);
+    xml.should.not.match(/<Timestamp\b[^>]*\sId="/);
   });
 
   it('should only add one Reference elements, for Soap Body wsse:Security element when addTimestamp is false', function () {
@@ -141,11 +152,44 @@ describe('WSSecurityCert', function () {
     xml.match(/<Reference URI="#/g).should.have.length(1);
   });
 
-  it('double post process should not add extra alments', function () {
+  it('should not add extra signature references on a second postProcess call', function () {
     var instance = new WSSecurityCert(key, cert, '');
-    var _ = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body><Timestamp></Timestamp></soap:Body></soap:Envelope>', 'soap');
-    var xml = instance.postProcess('<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body><Timestamp></Timestamp></soap:Body></soap:Envelope>', 'soap');
-    xml.match(/<Reference URI="#/g).should.have.length(2);
+    var input = '<soap:Envelope><soap:Header></soap:Header><soap:Body><Body></Body><Timestamp></Timestamp></soap:Body></soap:Envelope>';
+
+    var first = instance.postProcess(input, 'soap');
+    var second = instance.postProcess(input, 'soap');
+
+    first.match(/<Reference URI="#/g).should.have.length(2);
+    second.match(/<Reference URI="#/g).should.have.length(2);
+  });
+
+  it('should sign Body and Timestamp with distinct IDs on consecutive requests (#1381)', function () {
+    var instance = new WSSecurityCert(key, cert, '', {
+      hasTimeStamp: true,
+      signerOptions: { attrs: { Id: '_body_custom' } },
+    });
+
+    for (var request = 0; request < 2; request++) {
+      var xml = instance.postProcess(envelope, 'soap');
+      var bodyId = xml.match(/<soap:Body\b[^>]*\sId="([^"]+)"/)[1];
+      var timestampId = xml.match(/<Timestamp\b[^>]*\sId="([^"]+)"/)[1];
+      assert.notStrictEqual(bodyId, timestampId);
+      assert.notStrictEqual(bodyId, '_body_custom');
+      assert.deepStrictEqual(
+        Array.from(xml.matchAll(/<Reference URI="#([^"]+)"/g), (match) => match[1]),
+        [bodyId, timestampId],
+      );
+      xml.should.containEql('<Signature Id="_body_custom"');
+      assertValidSignature(xml);
+    }
+  });
+
+  it('should sign a custom ID already present on the Body', function () {
+    var instance = new WSSecurityCert(key, cert, '');
+    var xml = instance.postProcess(envelope.replace('<soap:Body>', '<soap:Body Id="request-body">'), 'soap');
+    xml.should.containEql('<soap:Body Id="request-body">');
+    xml.should.containEql('<Reference URI="#request-body">');
+    assertValidSignature(xml);
   });
 
   it('should have no timestamp when addTimestamp is false', function () {
@@ -210,7 +254,7 @@ describe('WSSecurityCert', function () {
     xml.should.containEql('</ds:KeyInfo>');
   });
 
-  it('should add attributes to the security tag', function () {
+  it('should add attributes to the Signature element', function () {
     var instance = new WSSecurityCert(key, cert, '', {
       signerOptions: {
         attrs: { Id: 'security_123' },
@@ -242,11 +286,13 @@ describe('WSSecurityCert', function () {
 
   it('should not sign additional headers that are excluded from signing', function () {
     var instance = new WSSecurityCert(key, cert, '', {
-      excludedReferences: ['To', 'Action'],
+      additionalReferences: ['To', 'Action'],
+      excludeReferencesFromSigning: ['To'],
     });
-    var xml = instance.postProcess('<soap:Envelope><soap:Header><To Id="To">localhost.com</To><Action Id="action-1234">testing</Action></soap:Header><soap:Body><Body></Body></soap:Body></soap:Envelope>', 'soap');
+    var xml = instance.postProcess(envelope.replace('<soap:Header>', '<soap:Header><To Id="To">localhost.com</To><Action Id="action-1234">testing</Action>'), 'soap');
     xml.should.not.containEql('<Reference URI="#To">');
-    xml.should.not.containEql('<Reference URI="#action-1234">');
+    xml.should.containEql('<Reference URI="#action-1234">');
+    assertValidSignature(xml);
   });
 
   it('should add a WSSecurity signing block when valid envelopeKey is passed', function () {
